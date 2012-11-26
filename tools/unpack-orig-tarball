@@ -1,0 +1,10 @@
+#!/bin/sh
+
+dir=$2
+
+if [ -z "$dir" ]
+then
+    dir=$(echo $1 | sed -n 's/\(.*\)_.*/\1/p')
+fi
+
+tar -z -x -f $1 --strip-components=1 -C $dir
