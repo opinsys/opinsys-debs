@@ -1,3 +1,4 @@
 version=3
 
-http://githubredir.debian.net/github/opinsys/puavo-wlanap (.+)\.tar\.gz
+opts=filenamemangle=s/.*\/(.*)\.tar\.gz/puavo-wlanap_$1.orig.tar.gz/ \
+    http://githubredir.debian.net/github/opinsys/puavo-wlanap/(.+)\.tar\.gz
