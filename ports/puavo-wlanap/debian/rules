@@ -20,5 +20,5 @@ SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):
 TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
 .PHONY: get-orig-source
 get-orig-source:
-       wget https://github.com/opinsys/puavo-wlanap/archive/$(SRC_VERSION).tar.gz -O../$(TARBALL)
-       ../../tools/unpack-orig-tarball ../$(TARBALL)
+	wget https://github.com/opinsys/puavo-wlanap/archive/$(SRC_VERSION).tar.gz -O../$(TARBALL)
+	../../tools/unpack-orig-tarball ../$(TARBALL)
