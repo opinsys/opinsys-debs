@@ -1,0 +1,35 @@
+=========================
+ Opinsys Debian Packages
+=========================
+
+Repository Index
+================
+
+packages/ ......... Contains one directory per package, each containing
+                    only debian directory. Upstream source code is
+                    stored elsewhere and fetched when making a new
+                    package. Directory names must match package names.
+
+tools/ ............ Miscellaneous helper scripts.
+
+FAQ
+===
+
+How to re-package a new upstream release?
+-----------------------------------------
+
+Shell:
+cd packages/${package_name}
+dch -i # Insert a new entry to debian/changelog.
+fakeroot debian/rules get-orig-source # Fetch and unpack tarball.
+# Make changes as needed.
+debuild -S -us -uc
+
+How to patch upstream source?
+-----------------------------
+
+Shell:
+cd packages/${package_name}
+fakeroot debian/rules get-orig-source
+# Edit upstream files.
+dpkg-source --commit
