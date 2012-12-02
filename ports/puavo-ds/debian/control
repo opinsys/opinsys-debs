@@ -1,0 +1,14 @@
+Source: puavo-ds
+Section: admin
+Priority: extra
+Maintainer: Juha Erkkilä <Juha.Erkkila@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+Homepage: https://github.com/opinsys/puavo-ds/
+
+Package: puavo-ds-slave
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, ruby, slapd, ldap-utils, krb5-admin-server, krb5-kdc-ldap
+Description: LDAP slave replication tool
+ puavo-ds-slave handles LDAP slave replication from master
+ server.
