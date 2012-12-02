@@ -1,0 +1,16 @@
+Source: puavo-tftp
+Section: utils
+Priority: extra
+Maintainer: Tuomas Jorma Juhani Räsänen <tuomasjjrasanen@opinsys.fi>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+Homepage: http://github.com/opinsys/puavo-tftp/
+
+Package: puavo-tftp
+Architecture: all
+Depends: ${misc:Depends}, ruby1.9.3, ruby-eventmachine, libldap-ruby1.8
+Recommends: ruby-minitest
+Description: TFTP server for LTSP environments
+ puavo-tftp provides a TFTP server which dynamically queries ldap server
+ for pxelinux boot configuration.
+ .
