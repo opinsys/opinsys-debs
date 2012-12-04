@@ -1,0 +1,23 @@
+liitu-themes (0.2.2+opinsys1) quantal; urgency=low
+
+  * Add a background image and an icon for webmenu.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Tue, 04 Dec 2012 13:57:14 +0200
+
+liitu-themes (0.2.1) unstable; urgency=low
+
+  * Add plymouth-theme.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Thu, 19 Jul 2012 14:33:29 +0300
+
+liitu-themes (0.2) unstable; urgency=low
+
+  * New themes, removed old ones.  Package name change.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Thu, 19 Jul 2012 12:47:03 +0300
+
+opinsys-themes (0.1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Mon, 04 Jun 2012 13:40:06 +0300
