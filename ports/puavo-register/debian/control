@@ -1,0 +1,16 @@
+Source: puavo-register
+Section: admin
+Priority: extra
+Maintainer: Tuomas Jorma Juhani Räsänen <tuomasjjrasanen@opinsys.fi>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+Homepage: http://github.com/opinsys/puavo-register/
+
+Package: puavo-register
+Architecture: all
+Depends: ${misc:Depends}, ruby1.8, facter, libhighline-ruby, libjson-ruby
+XS-Ruby-Versions: ruby1.8
+Description: Puavo device registration tool
+ puavo-register provides a simple command-line tool for registering devices
+ to the Puavo Devices Server.
+ .
