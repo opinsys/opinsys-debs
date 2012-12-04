@@ -1,13 +1,13 @@
 Source: liitu-themes
 Section: misc
 Priority: extra
-Maintainer: Juha Erkkil‰ <Juha.Erkkila@opinsys.fi>
-Build-Depends: debhelper (>= 7)
-Standards-Version: 3.8.3
-Homepage: http://www.opinsys.fi/
+Maintainer: Juha Erkkil√§ <Juha.Erkkila@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+Homepage: https://github.com/opinsys/liitu-themes/
 
 Package: liitu-themes
 Architecture: all
 Depends: ${misc:Depends}
 Description: Themes for Liitu-systems
- Themes for Liitu-systems (including GTK, XFCE, ...)
+ Themes and graphics for Liitu-systems (including GTK, XFCE, ...)

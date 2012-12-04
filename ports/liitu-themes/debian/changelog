@@ -1,4 +1,4 @@
-liitu-themes (0.2.2+opinsys1) quantal; urgency=low
+liitu-themes (0.2.2-0+opinsys1) quantal; urgency=low
 
   * Add a background image and an icon for webmenu.
 
