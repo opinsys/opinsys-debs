@@ -1,11 +1,11 @@
-puavo-ds (0.1.7-0+opinsys1) UNRELEASED; urgency=low
+puavo-ds (0.1.7-0+opinsys1) precise; urgency=low
 
   * Import debian packaging from upstream
     - Source format changed from native to 3.0 (quilt)
   * Rename package to match upstream naming
     - puavo-ds-slave will still be one of the binary packages
 
- -- Tuomas Jorma Juhani Räsänen <tuomasjjrasanen@opinsys.fi>  Sun, 02 Dec 2012 21:42:57 +0200
+ -- Tuomas Jorma Juhani Räsänen <tuomasjjrasanen@opinsys.fi>  Wed, 05 Dec 2012 16:07:34 +0200
 
 puavo-ds-slave (0.1.7) precise; urgency=low
 
