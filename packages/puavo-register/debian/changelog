@@ -1,3 +1,15 @@
+puavo-register (0.1.2-0+opinsys1) precise; urgency=low
+
+  * New upstream release.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Tue, 11 Dec 2012 14:54:07 +0200
+
+puavo-register (0.1.1-0+opinsys1) precise; urgency=low
+
+  * New upstream release.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Wed, 05 Dec 2012 16:03:10 +0200
+
 puavo-register (0.1.0-0+opinsys1) quantal; urgency=low
 
   * Initial release
