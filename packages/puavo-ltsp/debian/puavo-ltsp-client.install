@@ -9,12 +9,10 @@ usr/share/puavo-ltsp/init-puavo.d/50-rm-session-services
 usr/share/puavo-ltsp/init-puavo.d/50-rm-system-services
 usr/share/puavo-ltsp/init-puavo.d/50-client-mac
 usr/share/puavo-ltsp/init-puavo.d/20-modules
-usr/share/puavo-ltsp/init-puavo.d/COPYING
 usr/share/puavo-ltsp/init-puavo.d/03-kernel-cmdline
 usr/share/puavo-ltsp/init-puavo.d/05-getltsconffile
 usr/share/puavo-ltsp/init-puavo.d/50-disable-inittab-entries
 usr/share/puavo-ltsp/init-puavo.d/10-resolv-conf
-usr/share/puavo-ltsp/init-puavo.d/README
 usr/share/puavo-ltsp/init-puavo.d/50-syslog
 usr/share/puavo-ltsp/init-puavo.d/01-clean-cache
 usr/share/puavo-ltsp/init-puavo.d/50-jetpipe
