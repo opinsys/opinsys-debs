@@ -1,5 +1,5 @@
 Source: puavo-ltsp
-Section: unknown
+Section: admin
 Priority: extra
 Maintainer: Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>
 Build-Depends: debhelper (>= 8.0.0)
