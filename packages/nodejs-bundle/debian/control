@@ -1,0 +1,16 @@
+Source: nodejs-bundle
+Section: utils
+Priority: extra
+Maintainer: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
+Build-Depends: debhelper (>= 8.0.0), libssl-dev, python, make
+Standards-Version: 3.9.3
+Homepage: http://nodejs.org/
+
+Package: nodejs-bundle
+Conflicts: node, nodejs, npm
+Architecture: any
+Depends: ${misc:Depends}, openssl
+Description: node.js with npm
+ node.js and npm in a single package. Replaces any other package providing
+ node.js or npm.
+ .
