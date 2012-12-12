@@ -3,8 +3,10 @@ etc/init/ltspssh.conf
 usr/sbin/ltspsshd
 usr/sbin/puavo-dns-client
 usr/sbin/puavo-ltsp-login
+usr/sbin/puavo-ltsp-mount-nfs-home
 usr/sbin/puavo-configure-client
 usr/share/puavo-ltsp-client/templates/etc/krb5.conf
+usr/share/puavo-ltsp-client/templates/etc/init/gssd.conf-userprincipal
 usr/share/puavo-ltsp-client/templates/etc/ssh/sshd_config
 usr/share/puavo-ltsp-client/templates/etc/ssh/ltspsshd_config
 usr/share/puavo-ltsp-client/templates/etc/pam.d/ltspsshd
@@ -45,7 +47,7 @@ usr/share/puavo-ltsp/init-puavo.d/09-hostname
 usr/share/puavo-ltsp/init-puavo.d/50-default-display-manager
 usr/share/puavo-ltsp/init-puavo.d/50-cron
 usr/share/puavo-ltsp/init-puavo.d/05-getltsconffile
-usr/share/puavo-ltsp/init-puavo.d/30-puavo-config-partition
 usr/share/puavo-ltsp/init-puavo.d/50-keyboard
 usr/share/puavo-ltsp/init-puavo.d/50-saned
+usr/share/puavo-ltsp/init-puavo.d/30-puavo-local-partitions
 sbin/init-puavo
