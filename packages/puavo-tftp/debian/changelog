@@ -1,3 +1,10 @@
+puavo-tftp (0.3.2-0+opinsys2) precise; urgency=low
+
+  * Rename puavo-tftp to puavo-tftpd
+  * New package: puavo-tftpd-hooks
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 12 Dec 2012 14:23:05 +0200
+
 puavo-tftp (0.3.2-0+opinsys1) precise; urgency=low
 
   * New upstream release
