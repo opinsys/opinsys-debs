@@ -1,5 +1,6 @@
 etc/init/puavo-ltsp-client.conf
 etc/init/ltspssh.conf
+usr/sbin/ltspsshd
 usr/sbin/puavo-dns-client
 usr/sbin/puavo-ltsp-login
 usr/sbin/puavo-configure-client
