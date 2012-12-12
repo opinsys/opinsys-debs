@@ -1,0 +1,8 @@
+etc/puavo-tftp.yml
+usr/lib/ruby/vendor_ruby/puavo-tftp/tftpconnection.rb
+usr/lib/ruby/vendor_ruby/puavo-tftp/tftpfilesender.rb
+usr/lib/ruby/vendor_ruby/puavo-tftp/log.rb
+usr/lib/ruby/vendor_ruby/puavo-tftp/tftpserver.rb
+usr/lib/ruby/vendor_ruby/puavo-tftp/cachedfilereader.rb
+usr/lib/ruby/vendor_ruby/puavo-tftp/constants.rb
+usr/sbin/puavo-tftpd
