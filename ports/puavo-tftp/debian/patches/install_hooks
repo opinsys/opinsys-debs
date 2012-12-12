@@ -1,0 +1,28 @@
+Description: modify Makefile to install hooks
+ 
+ Installing hooks by Makefile makes it really easy to create multiple
+ binary packages from one source package. However, upstream does not
+ want to install hooks by default.
+ .
+ puavo-tftp (0.3.2-0+opinsys2) precise; urgency=low
+ .
+   * Rename puavo-tftp to puavo-tftpd
+   * New package: puavo-tftpd-hooks
+Author: Opinsys Developers <dev@opinsys.fi>
+
+---
+
+Index: puavo-tftp/Makefile
+===================================================================
+--- puavo-tftp.orig/Makefile	2012-12-12 14:28:03.921056014 +0200
++++ puavo-tftp/Makefile	2012-12-12 14:28:20.125055998 +0200
+@@ -21,3 +21,9 @@
+ 	  $(DESTDIR)$(prefix)/sbin/puavo-tftpd
+ 	install -o root -g root -m 644 puavo-tftp/* $(DESTDIR)$(prefix)/lib/ruby/vendor_ruby/puavo-tftp
+ 	install -o root -g root -m 644 puavo-tftp.yml $(DESTDIR)$(sysconfdir)/puavo-tftp.yml
++	install -o root -g root -m 755 hooks/puavo-ltspboot-config \
++	  $(DESTDIR)$(prefix)/sbin/puavo-ltspboot-config
++	install -o root -g root -m 755 hooks/puavo-lts-config \
++	  $(DESTDIR)$(prefix)/sbin/puavo-lts-config
++	install -o root -g root -m 755 hooks/puavo-tftp.yml $(DESTDIR)$(sysconfdir)/puavo-tftp.yml
++	install -o root -g root -m 755 hooks/puavo-ldap.rb $(DESTDIR)$(prefix)/lib/ruby/vendor_ruby
