@@ -1,0 +1,13 @@
+Source: webmenu
+Section: utils
+Priority: extra
+Maintainer: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
+Build-Depends: debhelper (>= 7), nodejs-bundle
+Standards-Version: 3.8.4
+Homepage: http://github.com/opinsys/webmenu
+
+Package: webmenu
+Architecture: any
+Depends: ${misc:Depends}, node-webkit, wmctrl, gnome-themes-extras
+Description: Webmenu
+ Next generation desktop menu
