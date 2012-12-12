@@ -1,3 +1,11 @@
+puavo-ltsp (0.3.1-0+opinsys1) quantal; urgency=low
+
+  * New upstream release
+  * Upstart scripts are installed by upstream for now
+  * Add misc depends
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 12 Dec 2012 10:43:26 +0200
+
 puavo-ltsp (0.2.1-0+opinsys1) quantal; urgency=low
 
   * New release
