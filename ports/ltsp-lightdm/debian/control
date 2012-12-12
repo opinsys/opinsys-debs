@@ -1,0 +1,19 @@
+Source: ltsp-lightdm
+Maintainer: lamikae <lamikae@opinsys.fi>
+Section: misc
+Priority: optional
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.4
+
+Package: ltsp-lightdm
+Architecture: all
+Depends: ${misc:Depends}, lightdm, lightdm-gtk-greeter, ltspfs, daemon
+Description: Hack for logging into LTSP system from LightDM
+ .
+ LDM is the login display manager in LTSP systems. This hack makes it possible to use LightDM and GDM instead of LDM as the display manager in LTSP-5 systems. This is not yet intended to be used by end-users, the primary audience are LTSP developers.
+ .
+ LDM login uses two ssh tunnels: one that is created at login, and is responsible for opening a control socket for connection sharing. The second tunnel brings the user's desktop session onto the client, using this shared connection. This hack lifts the main tasks from the LDM binary into a script that hooks up to the login process from pam_exec. During the auth phase the ssh control socket is opened, the open_session phase sets environment variables and runs the rc.d scripts. No modifications are needed in the rc.d or xinitrc.d scripts.
+ .
+ Sound using pulseaudio and external USB drives using LTSPFS are working. LDM_DIRECTX also works when the display manager is configured to allow TCP connections. The desktop session needs to be configured in lts.conf. Only thin clients are supported so far.
+ .
+ .
