@@ -1,4 +1,3 @@
-etc/puavo-tftp.yml
 usr/lib/ruby/vendor_ruby/puavo-tftp/tftpconnection.rb
 usr/lib/ruby/vendor_ruby/puavo-tftp/tftpfilesender.rb
 usr/lib/ruby/vendor_ruby/puavo-tftp/log.rb
