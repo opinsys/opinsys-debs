@@ -1,3 +1,11 @@
+puavo-tftp (0.3.2-0+opinsys1) precise; urgency=low
+
+  * New upstream release
+  * Add user and group puavo on postinst
+  * Upstart script
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 12 Dec 2012 13:27:26 +0200
+
 puavo-tftp (0.2.2-0+opinsys1) precise; urgency=low
 
   * New release
