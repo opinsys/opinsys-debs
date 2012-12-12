@@ -1,0 +1,5 @@
+ltsp-lightdm (0.1.0-1) unstable; urgency=low
+
+  * initial version; login using sshsock2 with lightdm
+
+ -- lamikae <lamikae@opinsys.fi>  Wed, 12 Sep 2012 17:44:39 +0300
