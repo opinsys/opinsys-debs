@@ -1,3 +1,9 @@
+ltsp-lightdm (0.2.0-0+opinsys1) quantal; urgency=low
+
+  * New release
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 12 Dec 2012 12:18:09 +0200
+
 ltsp-lightdm (0.1.0-1) unstable; urgency=low
 
   * initial version; login using sshsock2 with lightdm
