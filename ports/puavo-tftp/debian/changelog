@@ -1,3 +1,9 @@
+puavo-tftp (0.3.2~23e9bf66493adcb797491675acfe2b840b21f3bc-0+opinsys3) precise; urgency=low
+
+  * Test
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 13 Dec 2012 11:14:41 +0200
+
 puavo-tftp (0.3.2-0+opinsys3) precise; urgency=low
 
   * Do not install etc/puavo-tftp.yml in puavo-tftpd
