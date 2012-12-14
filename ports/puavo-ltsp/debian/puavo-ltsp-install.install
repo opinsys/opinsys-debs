@@ -1,0 +1,4 @@
+usr/sbin/puavo-install
+usr/sbin/puavo-install-grub
+usr/sbin/puavo-install-ltspimages
+usr/sbin/puavo-setup-filesystems
