@@ -3,6 +3,8 @@ etc/init
 usr
 usr/sbin
 usr/share
+usr/share/ltsp
+usr/share/ltsp/screen.d
 usr/share/puavo-ltsp-client
 usr/share/puavo-ltsp-client/templates
 usr/share/puavo-ltsp-client/templates/etc
