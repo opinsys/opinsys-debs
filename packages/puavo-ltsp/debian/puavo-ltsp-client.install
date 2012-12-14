@@ -5,6 +5,7 @@ usr/sbin/puavo-dns-client
 usr/sbin/puavo-ltsp-login
 usr/sbin/puavo-ltsp-mount-nfs-home
 usr/sbin/puavo-configure-client
+usr/share/puavo-ltsp-client/templates/etc/idmapd.conf
 usr/share/puavo-ltsp-client/templates/etc/krb5.conf
 usr/share/puavo-ltsp-client/templates/etc/init/gssd.conf-userprincipal
 usr/share/puavo-ltsp-client/templates/etc/ssh/sshd_config
