@@ -1,3 +1,9 @@
+nodejs-bundle (0.8.15-0+opinsys2) quantal; urgency=low
+
+  * Remove build-depend on make
+
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 14 Dec 2012 10:30:44 +0200
+
 nodejs-bundle (0.8.15-0+opinsys1) quantal; urgency=low
 
   * Initial package.
