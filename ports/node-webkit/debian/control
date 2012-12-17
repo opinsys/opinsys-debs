@@ -8,7 +8,7 @@ Homepage: https://github.com/rogerwang/node-webkit
 
 Package: node-webkit
 Architecture: i386
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, openssl, zlib1g
 Description: Call all Node.js modules directly from DOM
  node-webkit is an app runtime based on Chromium and node.js. You can write
  native apps in HTML and Javascript with node-webkit. It also lets you to call
