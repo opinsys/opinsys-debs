@@ -20,5 +20,5 @@ SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):
 TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
 .PHONY: get-orig-source
 get-orig-source:
-	wget https://s3.amazonaws.com/node-webkit/v0.3.4/node-webkit-v$(SRC_VERSION)-linux-ia32.tar.gz -O../$(TARBALL)
+	wget https://s3.amazonaws.com/node-webkit/v$(SRC_VERSION)/node-webkit-v$(SRC_VERSION)-linux-ia32.tar.gz -O../$(TARBALL)
 	../../tools/unpack-orig-tarball ../$(TARBALL)
