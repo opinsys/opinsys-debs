@@ -1,3 +1,9 @@
+node-webkit (0.3.6-0+opinsys1) quantal; urgency=low
+
+  * Release 0.3.6
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 17 Dec 2012 10:17:44 +0200
+
 node-webkit (0.3.4-0+opinsys1) quantal; urgency=low
 
   * Initial release.
