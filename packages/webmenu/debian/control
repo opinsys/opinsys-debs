@@ -8,6 +8,6 @@ Homepage: http://github.com/opinsys/webmenu
 
 Package: webmenu
 Architecture: any
-Depends: ${misc:Depends}, node-webkit, wmctrl, gnome-themes-extras
+Depends: ${misc:Depends}, node-webkit (>= 0.3.6), wmctrl, gnome-themes-extras
 Description: Webmenu
  Next generation desktop menu
