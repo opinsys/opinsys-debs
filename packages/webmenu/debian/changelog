@@ -1,3 +1,10 @@
+webmenu (0.3.0-0+opinsys1) quantal; urgency=low
+
+  * Cool new release with animations
+  * Search
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 19 Dec 2012 16:09:39 +0200
+
 webmenu (0.2.2-0+opinsys1) quantal; urgency=low
 
   * Fix installation
