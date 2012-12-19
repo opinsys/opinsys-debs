@@ -15,10 +15,12 @@
 override_dh_auto_install:
 	dh_auto_install -- prefix=/usr sysconfdir=/etc
 
+# Skip tests. We run these on travis-ci
 override_dh_auto_test:
-	echo "Skipping Webmenu tests!"
 
+# Disable rules that break shit
 override_dh_shlibdeps:
+override_dh_strip:
 
 PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
