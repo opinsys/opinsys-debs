@@ -1,3 +1,9 @@
+webmenu (0.3.1-0+opinsys1) quantal; urgency=low
+
+  * https://github.com/opinsys/webmenu/compare/0.3.0...0.3.1
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Fri, 21 Dec 2012 14:37:58 +0200
+
 webmenu (0.3.0-0+opinsys1) quantal; urgency=low
 
   * Cool new release with animations
