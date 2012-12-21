@@ -1,19 +1,23 @@
 webmenu (0.3.1-0+opinsys1) quantal; urgency=low
 
   * https://github.com/opinsys/webmenu/compare/0.3.0...0.3.1
+  * Faenza icons
+  * Navigation fixes
+  * Spawn fix
 
  -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Fri, 21 Dec 2012 14:37:58 +0200
 
 webmenu (0.3.0-0+opinsys1) quantal; urgency=low
 
-  * Cool new release with animations
+  * https://github.com/opinsys/webmenu/compare/0.2.2...0.3.0
   * Search
+  * Backbone 0.9.9
 
  -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 19 Dec 2012 16:09:39 +0200
 
 webmenu (0.2.2-0+opinsys1) quantal; urgency=low
 
-  * Fix installation
+  * https://github.com/opinsys/webmenu/compare/0.2.0...0.2.2
 
  -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Fri, 14 Dec 2012 12:53:30 +0200
 
