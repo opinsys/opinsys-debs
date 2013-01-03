@@ -193,7 +193,8 @@ case "$1" in
 	if [ "$LTSP_HANDLE_DAEMONS" = "false" ]; then
 	    # This is an ltsp build, so save the ld.so.cache, put things
 	    # back to the sensible default, and generate ld.so.cache again.
-	    cp -p #SYSCONFDIR#/ld.so.cache #SYSCONFDIR#/ld.so.cache-$PACKAGE_NAME
+	    cp -p #SYSCONFDIR#/ld.so.cache \
+		  #SYSCONFDIR#/ld.so.cache-$PACKAGE_NAME
 	    update-alternatives --set #DEB_HOST_MULTIARCH#_gl_conf \
 		#LIBDIR#/#DEB_HOST_MULTIARCH#/mesa/ld.so.conf
             update-alternatives --remove #OTHER_ARCH#_gl_conf \
@@ -201,8 +202,10 @@ case "$1" in
 	    LDCONFIG_NOTRIGGER=y ldconfig
 	fi
 	if boolean_is_true "$LTSP_CLIENT_BOOT"; then
-	    # This is an ltsp client boot, so install the ld.so.cache from the
-	    # file generated at ltsp image build.
+	    # This is an ltsp client boot, so setup nvidia for real, and also
+	    # setup the ld.so.cache from the file generated at ltsp image build.
+            update-alternatives --set #DEB_HOST_MULTIARCH#_gl_conf #LDSOCONF#
+	    update-alternatives --set #OTHER_ARCH#_gl_conf #ALTLDSOCONF#
 	    cp -p #SYSCONFDIR#/ld.so.cache-$PACKAGE_NAME #SYSCONFDIR#/ld.so.cache
         fi
 
