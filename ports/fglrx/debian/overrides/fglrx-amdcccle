@@ -1,0 +1,5 @@
+#We are in restricted, whether lintian has ever heard of it or not
+fglrx-amdcccle: unknown-section restricted
+
+#AMD doesn't appear to document these binaries
+fglrx-amdcccle: binary-without-manpage usr/bin/amdcccle
