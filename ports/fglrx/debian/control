@@ -28,18 +28,11 @@ Recommends: fglrx-amdcccle
 Depends: ${shlibs:Depends}, xserver-xorg-core, lib32gcc1 [amd64], libc6-i386 [amd64], dkms, make, linux-libc-dev,
  linux-headers-generic | linux-headers,
  ${xviddriver:Depends}
-Provides: fglrx-driver, nvidia-current, nvidia-current-updates, nvidia-experimental,
- nvidia-173, nvidia-173-updates, nvidia-96, nvidia-96-updates, fglrx-updates,
- ${xviddriver:Provides}
+Provides: fglrx-driver, fglrx-updates, ${xviddriver:Provides}
 Conflicts: fglrx-driver, xfree86-driver-fglrx, xorg-driver-fglrx, fglrx-kernel-source,
- libamdxvba1, fglrx-modaliases, nvidia-experimental, nvidia-current,
- nvidia-current-updates, nvidia-173, nvidia-173-updates, nvidia-96,
- nvidia-96-updates, fglrx-updates
+ libamdxvba1, fglrx-modaliases, fglrx-updates
 Replaces: fglrx-driver, xfree86-driver-fglrx, xorg-driver-fglrx, fglrx-kernel-source,
- libamdxvba1, fglrx-modaliases, fglrx, nvidia-current-modaliases,
- nvidia-180-modaliases, nvidia-185-modaliases, nvidia-experimental,
- nvidia-current, nvidia-current-updates, nvidia-173, nvidia-173-updates,
- nvidia-96, nvidia-96-updates, fglrx-updates, fglrx-amdcccle
+ libamdxvba1, fglrx-modaliases, fglrx, fglrx-updates, fglrx-amdcccle
 XB-Modaliases: ${modaliases}
 Description: Video driver for the AMD graphics accelerators
  Video driver for the AMD Radeon and FireGL graphics accelerators.
