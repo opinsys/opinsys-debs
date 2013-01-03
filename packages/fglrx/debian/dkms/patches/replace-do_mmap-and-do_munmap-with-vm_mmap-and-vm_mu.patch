@@ -1,0 +1,55 @@
+From e7fd110cc0af89b0e0e92bd75b46def496e1caf1 Mon Sep 17 00:00:00 2001
+From: Alberto Milone <alberto.milone@canonical.com>
+Date: Fri, 15 Jun 2012 18:24:35 +0200
+Subject: [PATCH 1/1] Replace do_mmap() and do_munmap() with vm_mmap() and
+ vm_munmap()
+
+---
+ firegl_public.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/firegl_public.c b/firegl_public.c
+index 1612722..4871746 100755
+--- a/firegl_public.c
++++ b/firegl_public.c
+@@ -2146,7 +2146,11 @@ unsigned long ATI_API_CALL KCL_MEM_AllocLinearAddrInterval(
+     prot  = PROT_READ|PROT_WRITE;
+ 
+     down_write(&current->mm->mmap_sem);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 5, 0)
++    vaddr = (void *) vm_mmap(file, 0, len, prot, flags, pgoff);
++#else
+     vaddr = (void *) do_mmap(file, 0, len, prot, flags, pgoff);
++#endif
+     up_write(&current->mm->mmap_sem);
+     if (IS_ERR(vaddr))
+        return 0;
+@@ -2159,6 +2163,17 @@ int ATI_API_CALL KCL_MEM_ReleaseLinearAddrInterval(unsigned long addr, unsigned
+     int retcode = 0;
+ 
+     down_write(&current->mm->mmap_sem);
++
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 5, 0)
++#ifdef FGL_LINUX_RHEL_MUNMAP_API
++    retcode = vm_munmap(addr,
++                        len,
++                        1);
++#else
++    retcode = vm_munmap(addr,
++                        len);
++#endif
++#else
+ #ifdef FGL_LINUX_RHEL_MUNMAP_API
+     retcode = do_munmap(current->mm,
+                         addr,
+@@ -2169,6 +2184,7 @@ int ATI_API_CALL KCL_MEM_ReleaseLinearAddrInterval(unsigned long addr, unsigned
+                         addr,
+                         len);
+ #endif                        
++#endif
+     up_write(&current->mm->mmap_sem);
+     return retcode;
+ }
+-- 
+1.7.9.5
+

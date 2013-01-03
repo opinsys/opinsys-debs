@@ -1,0 +1,70 @@
+Source: fglrx-installer
+Section: restricted/misc
+Priority: extra
+Maintainer: Ubuntu Core Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Uploaders: Mario Limonciello <superm1@ubuntu.com>, Alberto Milone <albertomilone@alice.it>
+Build-Depends: debhelper (>= 7),
+               dh-modaliases,
+               libxext6,
+               libxrandr2,
+               libice6,
+               libsm6,
+               libfontconfig1,
+               libxi6,
+               libxcursor1,
+               fakeroot,
+               libdrm2,
+               libgl1-mesa-glx,
+               libxinerama1,
+               libqtgui4,
+               xserver-xorg-dev (>= 2:1.10.0),
+               execstack
+Standards-Version: 3.8.3
+Homepage: http://support.amd.com
+
+Package: fglrx
+Architecture: amd64 i386
+Recommends: fglrx-amdcccle
+Depends: ${shlibs:Depends}, xserver-xorg-core, lib32gcc1 [amd64], libc6-i386 [amd64], dkms, make, linux-libc-dev,
+ linux-headers-generic | linux-headers,
+ ${xviddriver:Depends}
+Provides: fglrx-driver, nvidia-current, nvidia-current-updates, nvidia-experimental,
+ nvidia-173, nvidia-173-updates, nvidia-96, nvidia-96-updates, fglrx-updates,
+ ${xviddriver:Provides}
+Conflicts: fglrx-driver, xfree86-driver-fglrx, xorg-driver-fglrx, fglrx-kernel-source,
+ libamdxvba1, fglrx-modaliases, nvidia-experimental, nvidia-current,
+ nvidia-current-updates, nvidia-173, nvidia-173-updates, nvidia-96,
+ nvidia-96-updates, fglrx-updates
+Replaces: fglrx-driver, xfree86-driver-fglrx, xorg-driver-fglrx, fglrx-kernel-source,
+ libamdxvba1, fglrx-modaliases, fglrx, nvidia-current-modaliases,
+ nvidia-180-modaliases, nvidia-185-modaliases, nvidia-experimental,
+ nvidia-current, nvidia-current-updates, nvidia-173, nvidia-173-updates,
+ nvidia-96, nvidia-96-updates, fglrx-updates, fglrx-amdcccle
+XB-Modaliases: ${modaliases}
+Description: Video driver for the AMD graphics accelerators
+ Video driver for the AMD Radeon and FireGL graphics accelerators.
+ .
+ This package provides 2D display drivers
+ and hardware accelerated OpenGL.
+
+Package: fglrx-dev
+Architecture: amd64 i386
+Depends: fglrx
+Conflicts: fglrx-driver-dev, xfree86-driver-fglrx-dev
+Replaces: fglrx-driver-dev, xfree86-driver-fglrx-dev, xorg-driver-fglrx-dev, fglrx-updates-dev
+Provides: fglrx-driver-dev
+Description: Video driver for the AMD graphics accelerators (devel files)
+ Video driver for the AMD Radeon and FireGL graphics accelerators.
+ .
+ This package provides definitions for the GL and GLX extensions.
+
+Package: fglrx-amdcccle
+Architecture: amd64 i386
+Depends: fglrx, ${shlibs:Depends}
+Conflicts: fglrx-control-qt2, fglrx-control
+Replaces: fglrx-control, fglrx-amdcccle-updates
+Provides: fglrx-control
+Description: Catalyst Control Center for the AMD graphics accelerators
+ Catalyst Control Center for the AMD Radeon and FireGL graphics accelerators.
+ .
+ This package provides the Catalyst Control Center, Linux Edition

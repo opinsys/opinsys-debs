@@ -1,0 +1,5 @@
+debian/overrides/fglrx-dev                  usr/share/lintian/overrides
+
+usr/include/*                               usr/include
+
+arch/#SRCARCH#/usr/X11R6/#SRCLIBDIR#/*.a          usr/lib

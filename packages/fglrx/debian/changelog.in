@@ -1,0 +1,414 @@
+fglrx-installer (2:8.660-0ubuntu4) karmic; urgency=low
+
+  * Force fglrx-rt-compat.patch applied only on 2.6.28
+  * Added new patch for rt kernel flavour (rt_preempt_31.patch) (LP: #159941)
+
+ -- Alessio Igor Bogani <abogani@ubuntu.com>  Mon, 12 Oct 2009 22:31:02 +0200
+
+fglrx-installer (2:8.660-0ubuntu3) karmic; urgency=low
+
+  [ Alberto Milone]
+  * debian/control:
+    - Change the section of the -modaliases package to "admin" as
+      the package is not "restricted" (LP: #429153).
+
+  [ Kees Cook ]
+  * debian/control:
+    - Add build dependency on execstack.
+  * debian/rules:
+    - Drop executable stack markings from precompiled
+      binaries (LP: #409440).
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Fri, 25 Sep 2009 18:36:42 +0200
+
+fglrx-installer (2:8.660-0ubuntu2) karmic; urgency=low
+
+  * The XVBA libraries have silently removed the dependency on libstdc++5
+    in driver version 8.63. Remove the dependency of the libamdxvba1 package
+    on libstdc++5. LP: #432021.
+
+ -- Matthias Klose <doko@ubuntu.com>  Sat, 19 Sep 2009 17:24:58 +0200
+
+fglrx-installer (2:8.660-0ubuntu1) karmic; urgency=low
+
+  * New upstream release.
+    + Fix freeze on boot with purple and green ubuntu logos
+      (LP: #423711)
+    + Fix boot failure due to DKMS change.  Sometimes X crashes as result.
+      (LP: #417617, #413751)
+    + Make fglrx compile with dkms on 2.6.30 and 2.6.31 for amd64
+      (LP: #410062)
+    + Fix "Desktop effects could not be enabled" on HD 4850 and HD 4870
+      (LP: #417500, #408633)
+    + Provide support for 2.6.31 kernel
+      (LP: #413791)
+    + Use Catalyst Control Center for display configuration
+      (LP: #410512)
+    + Catalyst Control Center shows up in Apps > Accessories, should be in
+      System > Administration > Display
+      (LP: #423670)
+
+ -- Bryce Harrington <bryce@ubuntu.com>  Fri, 04 Sep 2009 15:05:07 -0700
+
+fglrx-installer (2:8.620-0ubuntu3) karmic; urgency=low
+
+  * debian/dkms/patches/missing-flush_tlb.patch (LP: #394176)
+    - Borrow this patch from debian to fix missing symbol.
+  * debian/dkms.conf.in:
+    - Apply patches on 2.6.30 and 2.6.31.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Thu, 02 Jul 2009 12:05:20 -0500
+
+fglrx-installer (2:8.620-0ubuntu2) karmic; urgency=low
+
+  * Issues resolved since 9.4 (No package changes; Mario just beat me to the upload):
+    + With desktop effects enabled, transparent desktop no longer causes desktop icons and
+      application windows to disappear
+    + Video playback no longer exhibits corruption when desktop effects are enabled and
+      Composite is not explicitly disabled
+    + [Ubuntu 8.10] System now functions properly when starting X on surround view
+      systems
+    + Resizing DVD playback window on Mplayer no longer causes blank video
+    + System instability no longer occurring when switching to full screen DVD playback
+      with Totem Player
+    + Terminal window no longer displays error message when launching Catalyst Control
+      Center in MultiView
+    + [Ubuntu 9.04] Xserver now starts properly with ATI Radeon HD 4870 GPU
+      configurations
+    + [Ubuntu 9.04] When xrandr --prop is evoked, Xserver failure no longer occurs under
+      various system configurations
+    + The engine clock and memory clock values are now reported properly by ATI CAL
+    + Catalyst Control Center, the primary display is now identified when using the
+      Identify Displays button
+    + Error message no longer occurs while setting the TV geometry
+    + Game corruption does not happen in full screen when 2 monitors are connected and
+      RandR 1.2 is enabled
+    + TV screen corruption is no longer visible while starting the X-server on some ASICs
+    + Executing the following command : aticonfig --initial -f does not cause the following
+      message "No supported adapters detected" on some display adapters
+    + Detecting second display using amdccle "Detect Display" button no longer results in
+      error and will require a relaunch to detect both displays properly
+      (LP: #348400)
+    + Mplayer does not fail to render video when resizing DVD playback window
+    + Fixed: Some system may become unresponsive after starting and killing X-server
+      (LP: #355821)
+    + System no longer fail to respond when executing multiple server
+      generations
+    + Memory leak on RV630 (LP: #368271)
+    + dpms switches off backlight on laptop screen properly (LP: #363059)
+    + Display Preferences no longer causes 100% CPU usage and failure (LP: #366757)
+
+ -- Bryce Harrington <bryce@ubuntu.com>  Fri, 26 Jun 2009 22:07:19 -0700
+
+fglrx-installer (2:8.620-0ubuntu1) karmic; urgency=low
+
+  * New upstream release (9-6)
+  * Add a series of patches to get this compiling on 2.6.30. (LP: #387773)
+    - Note: these are NOT in the upstream package, so be cognizant when
+      upgrading to a new version of the package in Ubuntu.
+    - config_x86_32-gentoo.patch: From Gentoo bug tracker
+    - fglrx-2.6.29-debian.patch: From Debian SVN
+    - fglrx-2.6.30-irqreturn_t.patch: From Gentoo bug tracker
+    - fglrx-missing-pci_enable_msi.patch: From Gentoo bug tracker
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Wed, 24 Jun 2009 12:26:42 -0500
+
+fglrx-installer (2:8.600-0ubuntu2) jaunty; urgency=low
+
+  * Update fglrx-rt-compat.patch.  Thanks Alessio Igor Bogani (LP: #328856)
+  * Update location of fglrx-rt-compat.patch from debian/dkms/patches/patches
+    to debian/dkms/patches
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Tue, 31 Mar 2009 12:12:37 -0500
+
+fglrx-installer (2:8.600-0ubuntu1) jaunty; urgency=low
+
+  * New upstream release.  (Closes LP: #313027, #314600)
+    - Fixes LP: #253988, #179042, #241176, #284408, #287229, #296497,
+      #288620, #289628
+  * README.Debian: Update the update procedure a bit
+
+ -- Bryce Harrington <bryce@ubuntu.com>  Tue, 17 Mar 2009 15:40:42 -0700
+
+fglrx-installer (2:8.573-0ubuntu4) jaunty; urgency=low
+
+  * debian/xorg-driver-fglrx.postinst:
+    - Transition start of atieventsd with priority 31.  It needs to start after
+      GDM and oem-config to ensure there aren't any lockups. (LP: #330188)
+  * debian/rules:
+    - Start atieventsd at 31. 
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Mon, 16 Feb 2009 16:52:25 -0600
+
+fglrx-installer (2:8.573-0ubuntu3) jaunty; urgency=low
+
+  * debian/10fglrx.in:
+    - Check if LD_LIBRARY_PATH is empty when we append to it. (LP: #323327)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Mon, 09 Feb 2009 18:50:46 -0600
+
+fglrx-installer (2:8.573-0ubuntu2) jaunty; urgency=low
+
+  * debian/control:
+    - Add libxinerama1 to build depends.
+  * debian/xorg-driver-fglrx.preinst:
+    - Move user modifications out of the way for files that are stored in 
+      /etc/ati when upgrading package.  Unfortunately, although these files
+      are stored in /etc, AMD has indicated that they should not be treated
+      as conf files. (LP: 307643)
+  * debian/fglrx-kernel-source.prerm:
+    - Add in a check for old versions of fglrx that might have DKMS directories
+      sitting around.  If any are found, they are removed so as to prevent possible
+      conflicts. (LP: #303148)
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Mon, 02 Feb 2009 14:31:34 -0600
+
+fglrx-installer (2:8.573-0ubuntu1) jaunty; urgency=low
+
+  * New upstream release. (9-1).
+    - This release still does *not* meet the Xorg server 1.6 ABI.
+      It is being uploaded to ensure that there are no other integration
+      related issues that come up.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 29 Jan 2009 20:37:38 -0600
+
+fglrx-installer (2:8.552-0ubuntu1) jaunty; urgency=low
+
+  * New upstream release.
+  * debian/control:
+    - Don't list the graphics cards supported, this is a moving target
+      that is difficult to keep up with. (LP: #292436)
+  * Move replacements for kernel source into debian/dkms
+  * Add patch for RT support to debian/dkms (LP: #286961)
+  * debian/dkms.conf.in:
+    - Use RT patch.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Thu, 13 Nov 2008 10:30:20 -0600
+
+fglrx-installer (2:8.543-0ubuntu4) intrepid; urgency=low
+
+  [ Mario Limonciello ]
+  * debian/rules:
+    - Don't copy the libAMDXvBA.so* into multiple packages
+      on AMD64 (LP: #287159)
+  * debian/control:
+    - xorg-driver-fglrx: Drop libamdxvba1 to suggests so that fglrx can be put
+      onto DVDs.
+  * Replace authatieventsd.sh with our own variation that works with KDM.
+    (LP: #38915)
+
+  [ Matthias Klose ]
+  * debian/control:
+    - xorg-driver-fglrx: Drop dependency on ia32-libs [amd64], add dependencies
+      on lib32gcc1 [amd64], libc6-i386 [amd64].
+    - libamdxvba1: Add dependency on ia32-libs [amd64].
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Wed, 22 Oct 2008 11:55:59 -0500
+
+fglrx-installer (2:8.543-0ubuntu3) intrepid; urgency=low
+
+  * debian/control:
+    - Drop build-depends on libstdc++5. (LP: #271794)
+    - Drop build-depends on ia32-libs
+    - Install libAMDXvBA.so* into it's own package.
+  * debian/rules:
+    - Work around missing libstdc++5 at build-depends time.
+  * Add the following files to support this new binary package:
+    - debian/libamdxvba.postinst
+    - debian/libamdxvba.install.in
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Thu, 16 Oct 2008 15:04:46 -0500
+
+fglrx-installer (2:8.543-0ubuntu2) intrepid; urgency=low
+
+  * debian/control:
+    - Depends on linux-headers-generic | linux-headers to help
+      cover more of the 90 percent case that people are using the
+      generic kernel (LP: #284091)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 16 Oct 2008 08:52:34 -0500
+
+fglrx-installer (2:8.543-0ubuntu1) intrepid; urgency=low
+
+  * New upstream release.  (Closes lp: #247376)
+  * control: Re-enabled provides of xserver-xorg-video-2 since
+    this upload works with the current xserver.
+  * README.Debian: Itemize update procedure
+
+ -- Bryce Harrington <bryce@ubuntu.com>  Tue, 14 Oct 2008 14:12:06 -0700
+
+fglrx-installer (2:8.532-0ubuntu5) intrepid; urgency=low
+
+  * control: xorg-driver-fglrx Provides: xserver-xorg-video-2. The 
+    driver doesn't work with the current xserver, so no reason to 
+    pretend that it would. This prevents breaking upgrades from hardy 
+    where the driver would be updated and on reboot X would fail.
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Thu, 25 Sep 2008 11:46:28 +0300
+
+fglrx-installer (2:8.532-0ubuntu4) intrepid; urgency=low
+
+  * Update 2.6.27 patch again. (LP: #266956)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 21 Sep 2008 15:32:19 -0500
+
+fglrx-installer (2:8.532-0ubuntu3) intrepid; urgency=low
+
+  [ Alberto Milone (tseliot) ]
+  * debian/modaliases/fglrx_supported:
+    - Add "xorg-driver-fglrx" to the strings printed to
+      fglrx-modules.alias.override so that Jockey can
+      detect the name of the package to install (LP: #258641)
+
+  [ Mario Limonciello ]
+  * debian/kernel-source-patches/fglrx_8.9_2.6.27.patch:
+    - Update to compile on x86_64 for 2.6.27 (LP: #266956)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Sun, 21 Sep 2008 12:29:18 -0500
+
+fglrx-installer (2:8.532-0ubuntu2) intrepid; urgency=low
+
+  * debian/fglrx-kernel-source.patches:
+    - Install to DKMS patches directory (LP: #266956)
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Fri, 19 Sep 2008 08:49:21 -0500
+
+fglrx-installer (2:8.532-0ubuntu1) intrepid; urgency=low
+
+  * Add debian/kernel-source-patches/fglrx_8.9_2.6.27.patch
+    to allow compiling against 2.6.27. (LP: #266956)
+  * debian/dkms.conf.in:
+    - Use 2.6.27 patch when building against 2.6.27
+  * debian/fglrx-kernel-source.install.in:
+    - Install patches in kernel-source-patches.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Thu, 18 Sep 2008 12:08:46 -0500
+
+fglrx-installer (2:8.522-0ubuntu4) intrepid; urgency=low
+
+  * Rebuild against the new xserver-xorg-dev. 
+
+ -- Bryce Harrington <bryce@bryceharrington.org>  Fri, 12 Sep 2008 00:54:13 +0000
+
+fglrx-installer (2:8.522-0ubuntu3) intrepid; urgency=low
+
+  "3rd time's a charm"
+  * Don't divert extensions either.  Causes big breakage when starting X.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Wed, 20 Aug 2008 12:47:26 -0500
+
+fglrx-installer (2:8.522-0ubuntu2) intrepid; urgency=low
+
+  * Don't install extensions directory as no additional
+    extensions are included in this version.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Wed, 20 Aug 2008 12:38:10 -0500
+
+fglrx-installer (2:8.522-0ubuntu1) intrepid; urgency=low
+
+  * New upstream release.
+  * Drop 02_2.6.26_support.dpatch as 2.6.26 support is available now.
+  * debian/control:
+    - Conflict w/ pentium-builder (LP: #180831)
+    - Update nvidia conflicts (LP: #254969)
+  * Correct LIBGL_DRIVERS_PATH (LP: #250944)
+  * Cleanup diversion prerm scripts (LP: #257003)
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Wed, 20 Aug 2008 12:34:16 -0500
+
+fglrx-installer (2:8.512-0ubuntu1) intrepid; urgency=low
+
+  * New upstream release.
+  * Update 02_2.6.26_support.dpatch for changes in firegl_public.c.
+  * debian/control:
+    - Depend upon libstdc++5.
+  * debian/xorg-driver-fglrx.postrm:
+    - Clean up AMD64 diversions properly.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Mon, 21 Jul 2008 13:58:26 -0500
+
+fglrx-installer (2:8.501-0ubuntu3) intrepid; urgency=low
+
+  * drop debian/patches/01_2.6.25.patch:
+    - Causes regressions on RadeonHD 3670 hardware.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Mon, 07 Jul 2008 14:37:55 -0500
+
+fglrx-installer (2:8.501-0ubuntu2) intrepid; urgency=low
+
+  [ Mario Limonciello ]
+  * debian/fglrx-modaliases.install:
+    - Install to /usr/share/jockey/modaliases instead
+  * debian/control:
+    - Bump standards version to 3.8.0.
+    - Add fglrx-amdcccle to xorg-driver-fglrx Recommends
+  * debian/rules:
+    - Don't start atieventsd on package install as it steals X permissions
+      until the next reboot.
+    - Add support to apply patches to the development release.  This is
+      determined by querying distro target in the changelog.  
+      -- Don't use packages not intended for your distro! --
+  * debian/README.Debian:
+    - Add a small blurb explaining kernel patches.
+
+  [ Žilvinas Valinskas ]
+  * debian/patches/01_2.6.25.patch:
+    - Adds 2.6.25 support (valid for AMD's 8-5 release), at least until
+      AMD formally adds it.
+  * debian/patches/02_2.6.26.patch:
+    - Adds 2.6.26 support (valid for AMD's 8-6 release), at least until
+      AMD formally adds it. (LP: #239967)
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Mon, 07 Jul 2008 12:06:05 -0500
+
+fglrx-installer (2:8.501-0ubuntu1) intrepid; urgency=low
+
+  * New upstream release.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 19 Jun 2008 01:46:54 -0500
+
+fglrx-installer (2:8.493.1-0ubuntu5) intrepid; urgency=low
+
+  * debian/replacements/*
+    - Include Makefile and make.sh that support passing kernel version
+      as a parameter until upstream resolves issues.
+  * debian/dkms.conf.in:
+    - Explicitly use kernel version as parameter to make scripts.
+  * debian/fglrx-kernel-source.in:
+    - Include our variants of make scripts since upstream hasn't fixed
+      there's yet.
+
+ -- Mario Limonciello <superm1@ubuntu.com>  Thu, 12 Jun 2008 15:34:14 -0500
+
+fglrx-installer (2:8.493.1-0ubuntu4) intrepid; urgency=low
+
+  * debian/control:
+  - Force the Section to be restricted/misc instead of just restricted.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Tue, 27 May 2008 15:26:38 -0500
+
+fglrx-installer (2:8.493.1-0ubuntu3) intrepid; urgency=low
+
+  * debian/control:
+  - Explicitly only indicate i386 and amd64 for ALL binary packages.  We don't want
+    sparc, hppa, or lpia showing up.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Tue, 27 May 2008 14:34:13 -0500
+
+fglrx-installer (2:8.493.1-0ubuntu2) intrepid; urgency=low
+
+  * debian/rules:
+    - Specify $(LIBDIR) for calculating modaliases.
+      Fixes transient failure on AMD64 boxes.
+
+ -- Mario Limonciello <mario_limonciello@dell.com>  Tue, 27 May 2008 14:23:21 -0500
+
+fglrx-installer (2:8.493.1-0ubuntu1) intrepid; urgency=low
+
+  * Initial release.
+    - This package was directly generated from the upstream AMD driver's built-in
+      scripts.  By generating this way, the driver will always be in sync without
+      integration problems.
+
+ -- Mario Limonciello <Mario_Limonciello@Dell.com>  Tue, 27 May 2008 10:50:16 -0500
+

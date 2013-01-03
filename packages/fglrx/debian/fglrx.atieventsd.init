@@ -1,0 +1,56 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          atieventsd
+# Required-Start:    $syslog
+# Required-Stop:     $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start daemon at boot time
+# Description:       Enable service provided by daemon.
+### END INIT INFO
+
+# Original design:
+# Copyright (c) 2006, ATI Technologies Inc.  All rights reserved.
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+DAEMONPATH=/usr/sbin/atieventsd
+DAEMONNAME=atieventsd
+DAEMONOPTS=""
+
+[ -f $DAEMONPATH ] || exit 0
+
+. /lib/lsb/init-functions
+
+case "$1" in
+    start)
+        log_daemon_msg "Starting $DAEMONNAME"
+	start-stop-daemon --start --quiet --oknodo --exec $DAEMONPATH -- $DAEMONOPTS
+        log_end_msg $?
+        ;;
+
+    stop)
+        log_daemon_msg "Stopping $DAEMONNAME"
+	start-stop-daemon --stop --quiet --exec $DAEMONPATH --oknodo
+        log_end_msg $?
+        ;;
+
+    restart)
+        $0 stop
+        sleep 1
+        $0 start
+        ;;
+
+    reload|force-reload) log_daemon_msg "Reloading isn't supported by $DAEMONNAME"
+        log_end_msg 0
+	;;
+
+    *)
+        echo "$0 {start|stop|restart}"
+        exit 1
+        ;;
+esac
+
+exit 0
+

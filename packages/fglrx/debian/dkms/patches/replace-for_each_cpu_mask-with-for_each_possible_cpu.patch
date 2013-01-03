@@ -1,0 +1,45 @@
+From a0548e00677143d06b009027c4f1af41a91be684 Mon Sep 17 00:00:00 2001
+From: Alberto Milone <alberto.milone@canonical.com>
+Date: Fri, 15 Jun 2012 19:07:29 +0200
+Subject: [PATCH 2/2] Replace for_each_cpu_mask() with
+ for_each_possible_cpu(p)
+
+---
+ firegl_public.c |    4 ++++
+ kcl_ioctl.c     |    4 ++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/firegl_public.c b/firegl_public.c
+index eb32037..5c61a09 100755
+--- a/firegl_public.c
++++ b/firegl_public.c
+@@ -4199,7 +4199,11 @@ static int kasInitExecutionLevels(unsigned long level_init)
+ {
+     unsigned int p;
+     KCL_DEBUG5(FN_FIREGL_KAS, "%d\n", level_init);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,4,0)
++    for_each_possible_cpu(p)
++#else
+     for_each_cpu_mask(p, cpu_possible_map)
++#endif
+     {
+         KCL_DEBUG1(FN_FIREGL_KAS,"Setting initial execution level for CPU # %d\n", p);
+         preempt_disable();
+diff --git a/kcl_ioctl.c b/kcl_ioctl.c
+index 4bf409f..f5b190a 100755
+--- a/kcl_ioctl.c
++++ b/kcl_ioctl.c
+@@ -213,6 +213,10 @@ void ATI_API_CALL KCL_IOCTL_UnregisterConversion32(unsigned int cmd)
+ #endif
+ }
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,4,0)
++DEFINE_PER_CPU(unsigned long, old_rsp);
++#endif
++
+ /** \brief Allocate user space for 32-bit app making 64-bit IOCTL
+  *  \param size [in] Number of bytes to allocate
+  *  \return Pointer to allocated memory
+-- 
+1.7.9.5
+
