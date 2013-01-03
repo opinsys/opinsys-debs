@@ -105,15 +105,6 @@ get_newest_kernel() {
     echo $NEWEST_KERNEL
 }
 
-# from /usr/share/ltsp/ltsp-client-common-functions, ltsp-client-core -package
-boolean_is_true(){
-    case $1 in
-       # match all cases of true|y|yes
-       [Tt][Rr][Uu][Ee]|[Yy]|[Yy][Ee][Ss]) return 0 ;;
-       *) return 1 ;;
-    esac
-}
-
 case "$1" in
     configure)
         # Deal with alternatives
@@ -162,59 +153,36 @@ case "$1" in
 	update-alternatives --force \
 	    --install #SYSCONFDIR#/ld.so.conf.d/#OTHER_ARCH#_GL.conf #OTHER_ARCH#_gl_conf #ALTLDSOCONF# #ALTPRIORITY#
 
-	if ! boolean_is_true "$LTSP_CLIENT_BOOT"; then
-	    # ldconfig needs to be run immediately as we're changing /etc/ld.so.conf.d/ with
-	    # alternatives.
-	    LDCONFIG_NOTRIGGER=y ldconfig
+        # ldconfig needs to be run immediately as we're changing /etc/ld.so.conf.d/ with
+        # alternatives.
+        LDCONFIG_NOTRIGGER=y ldconfig
 
-	    # Trigger gmenu so that the icons will show up in the menu
-	    dpkg-trigger --by-package=$PACKAGE_NAME gmenucache || true
+        # Trigger gmenu so that the icons will show up in the menu
+        dpkg-trigger --by-package=$PACKAGE_NAME gmenucache || true
 
-	    CURRENT_KERNEL=$(uname -r)
-	    NEWEST_KERNEL=$(get_newest_kernel "$KERNELS")
+        CURRENT_KERNEL=$(uname -r)
+        NEWEST_KERNEL=$(get_newest_kernel "$KERNELS")
 
-	    ALTERNATIVE=$(readlink /etc/alternatives/#DEB_HOST_MULTIARCH#_gl_conf)
-	    if [ "$ALTERNATIVE" = "#LDSOCONF#" ]; then
-		# Update initramfs so that the blacklist ends up in the initramfs
-		update-initramfs -u
-		
-		if [ -n "$NEWEST_KERNEL" ] && [ ${CURRENT_KERNEL} != ${NEWEST_KERNEL} ]; then
-		    # This can fail when dealing with a chroot see LP: #556653
-		    update-initramfs -u -k $CURRENT_KERNEL || true
-		fi
-	    fi
-
-	    # Update the grub gfxpayload blacklist
-	    if which update-grub-gfxpayload >/dev/null 2>&1; then
-		update-grub-gfxpayload
-	    fi
-	fi
-
-	if [ "$LTSP_HANDLE_DAEMONS" = "false" ]; then
-	    # This is an ltsp build, so save the ld.so.cache, put things
-	    # back to the sensible default, and generate ld.so.cache again.
-	    cp -p #SYSCONFDIR#/ld.so.cache \
-		  #SYSCONFDIR#/ld.so.cache-$PACKAGE_NAME
-	    update-alternatives --set #DEB_HOST_MULTIARCH#_gl_conf \
-		#LIBDIR#/#DEB_HOST_MULTIARCH#/mesa/ld.so.conf
-            update-alternatives --remove #OTHER_ARCH#_gl_conf \
-		#LIBDIR#/nvidia-current/alt_ld.so.conf
-	    LDCONFIG_NOTRIGGER=y ldconfig
-	fi
-	if boolean_is_true "$LTSP_CLIENT_BOOT"; then
-	    # This is an ltsp client boot, so setup nvidia for real, and also
-	    # setup the ld.so.cache from the file generated at ltsp image build.
-            update-alternatives --set #DEB_HOST_MULTIARCH#_gl_conf #LDSOCONF#
-	    update-alternatives --set #OTHER_ARCH#_gl_conf #ALTLDSOCONF#
-	    cp -p #SYSCONFDIR#/ld.so.cache-$PACKAGE_NAME #SYSCONFDIR#/ld.so.cache
+        ALTERNATIVE=$(readlink /etc/alternatives/#DEB_HOST_MULTIARCH#_gl_conf)
+        if [ "$ALTERNATIVE" = "#LDSOCONF#" ]; then
+            # Update initramfs so that the blacklist ends up in the initramfs
+            update-initramfs -u
+            
+            if [ -n "$NEWEST_KERNEL" ] && [ ${CURRENT_KERNEL} != ${NEWEST_KERNEL} ]; then
+                # This can fail when dealing with a chroot see LP: #556653
+                update-initramfs -u -k $CURRENT_KERNEL || true
+            fi
         fi
 
-	if [ "$LTSP_HANDLE_DAEMONS" != "false" ]; then
-	    # Only apply quirks if we are not in an ltsp image build.
-	    if [ `which quirks-handler` ]; then
-	       quirks-handler -e $PACKAGE_NAME -v
-	    fi
-	fi
+        # Update the grub gfxpayload blacklist
+        if which update-grub-gfxpayload >/dev/null 2>&1; then
+            update-grub-gfxpayload
+        fi
+
+        # Enable any quirks for the driver
+        if [ `which quirks-handler` ]; then
+           quirks-handler -e $PACKAGE_NAME -v
+        fi
 
         # If the delayed module build feature is enabled
         # i.e. if $DONT_BUILD_MODULE is set to 1
@@ -240,10 +208,8 @@ script
 end script
 EOF
         else
-            # Build the kernel module (unless this is an ltsp client boot).
-	    if ! boolean_is_true "$LTSP_CLIENT_BOOT"; then
-		/usr/lib/dkms/common.postinst $PACKAGE_NAME $CVERSION /usr/share/$PACKAGE_NAME $ARCH $2
-	    fi
+            # Build the kernel module
+            /usr/lib/dkms/common.postinst $PACKAGE_NAME $CVERSION /usr/share/$PACKAGE_NAME $ARCH $2
             exit $?
         fi
         ;;
@@ -256,3 +222,5 @@ EOF
             exit 1
     ;;
 esac
+
+#DEBHELPER#
