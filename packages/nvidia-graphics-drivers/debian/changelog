@@ -1,3 +1,10 @@
+nvidia-graphics-drivers (304.51.really.304.43-0ubuntu1+opinsys1) quantal; urgency=low
+
+  * Remove the fglrx conflicts from package control lines.
+    We intend this package to co-exist with the fglrx driver.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Thu, 03 Jan 2013 15:38:27 +0200
+
 nvidia-graphics-drivers (304.51.really.304.43-0ubuntu1) quantal; urgency=low
 
   * Revert to 304.43 (LP: #1057000).
