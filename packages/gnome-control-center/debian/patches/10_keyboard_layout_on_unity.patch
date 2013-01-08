@@ -1,0 +1,69 @@
+Index: gnome-control-center-3.3.91/panels/region/cc-region-panel.c
+===================================================================
+--- gnome-control-center-3.3.91.orig/panels/region/cc-region-panel.c	2011-09-08 18:24:08.000000000 +0200
++++ gnome-control-center-3.3.91/panels/region/cc-region-panel.c	2012-03-06 17:52:14.351082976 +0100
+@@ -130,10 +130,13 @@
+ {
+ 	CcRegionPanelPrivate *priv;
+ 	GtkWidget *prefs_widget;
++	const char *desktop;
+ 	GError *error = NULL;
+ 
+ 	priv = self->priv = REGION_PANEL_PRIVATE (self);
+ 
++	desktop = g_getenv ("XDG_CURRENT_DESKTOP");
++
+ 	priv->builder = gtk_builder_new ();
+ 
+ 	gtk_builder_add_from_file (priv->builder,
+@@ -145,16 +148,24 @@
+ 		return;
+ 	}
+ 
+-	prefs_widget = (GtkWidget *) gtk_builder_get_object (priv->builder,
+-							     "region_notebook");
++	if (!g_strcmp0 (desktop, "GNOME")) {
++		prefs_widget = (GtkWidget *) gtk_builder_get_object (priv->builder,
++								     "region_notebook");
++	} else {
++		prefs_widget = (GtkWidget *) gtk_builder_get_object (priv->builder,
++								     "vbox1");
++	}
++
+ 	gtk_widget_set_size_request (GTK_WIDGET (prefs_widget), -1, 400);
+ 
+ 	gtk_widget_reparent (prefs_widget, GTK_WIDGET (self));
+ 
+ 	setup_xkb_tabs (priv->builder);
+-	setup_language (priv->builder);
+-	setup_formats (priv->builder);
+-	setup_system (priv->builder);
++	if (!g_strcmp0 (desktop, "GNOME")) {
++		setup_language (priv->builder);
++		setup_formats (priv->builder);
++		setup_system (priv->builder);
++	}
+ }
+ 
+ void
+Index: gnome-control-center-3.3.91/panels/region/gnome-region-panel.desktop.in.in
+===================================================================
+--- gnome-control-center-3.3.91.orig/panels/region/gnome-region-panel.desktop.in.in	2012-03-05 15:04:55.000000000 +0100
++++ gnome-control-center-3.3.91/panels/region/gnome-region-panel.desktop.in.in	2012-03-06 17:52:14.355082976 +0100
+@@ -1,13 +1,13 @@
+ [Desktop Entry]
+-_Name=Region and Language
++_Name=Keyboard Layout
+ _Comment=Change your region and language settings
+ Exec=gnome-control-center region
+-Icon=preferences-desktop-locale
++Icon=key_bindings
+ Terminal=false
+ Type=Application
+ StartupNotify=true
+ Categories=GNOME;GTK;Settings;DesktopSettings;X-GNOME-Settings-Panel;X-GNOME-PersonalSettings
+-OnlyShowIn=GNOME;
++OnlyShowIn=GNOME;Unity;
+ X-GNOME-Bugzilla-Bugzilla=GNOME
+ X-GNOME-Bugzilla-Product=gnome-control-center
+ X-GNOME-Bugzilla-Component=region

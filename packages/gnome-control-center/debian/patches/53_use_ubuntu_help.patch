@@ -1,0 +1,38 @@
+Description: Use pre-installed Ubuntu Desktop Guide instead of GNOME help 
+Forwarded: not-needed
+Author: Jeremy Bicha <jbicha@ubuntu.com>
+Index: gnome-control-center-3.3.91/panels/color/color.ui
+===================================================================
+--- gnome-control-center-3.3.91.orig/panels/color/color.ui	2012-03-05 15:04:55.000000000 +0100
++++ gnome-control-center-3.3.91/panels/color/color.ui	2012-03-06 17:52:14.735082997 +0100
+@@ -174,7 +174,7 @@
+                 <property name="use_action_appearance">False</property>
+                 <property name="relief">none</property>
+                 <property name="xalign">0.50999999046325684</property>
+-                <property name="uri">help:gnome-help/color-whyimportant</property>
++                <property name="uri">help:ubuntu-help/color-whyimportant</property>
+               </object>
+               <packing>
+                 <property name="expand">False</property>
+Index: gnome-control-center-3.3.91/panels/user-accounts/um-password-dialog.c
+===================================================================
+--- gnome-control-center-3.3.91.orig/panels/user-accounts/um-password-dialog.c	2012-03-05 15:04:55.000000000 +0100
++++ gnome-control-center-3.3.91/panels/user-accounts/um-password-dialog.c	2012-03-06 17:52:31.887083824 +0100
+@@ -654,9 +654,14 @@
+ 
+         widget = (GtkWidget *) gtk_builder_get_object (builder, "password-normal-strength-hints-label");
+         old_label = gtk_label_get_label (GTK_LABEL (widget));
+-        label = g_strdup_printf ("<a href=\"%s\">%s</a>",
+-                                 "help:gnome-help/user-goodpassword",
+-                                 old_label);
++        if (g_strcmp0(getenv("XDG_CURRENT_DESKTOP"), "GNOME"))
++            label = g_strdup_printf ("<a href=\"%s\">%s</a>",
++                                 "help:ubuntu-help/user-goodpassword",
++                                  old_label);
++        else
++            label = g_strdup_printf ("<a href=\"%s\">%s</a>",
++                                  "help:gnome-help/user-goodpassword",
++                                  old_label);
+         gtk_label_set_markup (GTK_LABEL (widget), label);
+         g_free (label);
+ 
