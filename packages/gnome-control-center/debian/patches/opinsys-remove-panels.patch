@@ -1,0 +1,13 @@
+Index: gnome-control-center-3.4.2/panels/Makefile.am
+===================================================================
+--- gnome-control-center-3.4.2.orig/panels/Makefile.am	2013-01-08 08:56:37.000000000 +0200
++++ gnome-control-center-3.4.2/panels/Makefile.am	2013-01-08 09:00:39.179524978 +0200
+@@ -13,8 +13,6 @@
+ 	sound-nua \
+ 	keyboard \
+ 	universal-access \
+-	user-accounts \
+-	datetime \
+ 	wacom
+ 
+ if BUILD_PRINTERS
