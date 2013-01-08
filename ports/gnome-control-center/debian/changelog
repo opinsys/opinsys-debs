@@ -1,3 +1,9 @@
+gnome-control-center (1:3.4.2-0ubuntu19+opinsys1) quantal; urgency=low
+
+  * New patch: debian/patches/opinsys-remove-panels.patch
+
+ -- Tuomas Jorma Juhani Räsänen <tuomasjjrasanen@opinsys.fi>  Tue, 08 Jan 2013 09:25:10 +0200
+
 gnome-control-center (1:3.4.2-0ubuntu19) quantal; urgency=low
 
   * debian/patches/clutter_init.patch:
