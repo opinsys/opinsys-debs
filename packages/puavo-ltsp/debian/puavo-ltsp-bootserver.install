@@ -1,0 +1,2 @@
+usr/sbin/puavo-create-kvm-ltsp-server
+usr/share/puavo-ltsp-bootserver/templates/ltsp-server.xml
