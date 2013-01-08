@@ -1,0 +1,23 @@
+# Description: files to translate from ubuntu patches
+Index: gnome-control-center-3.3.91/po/POTFILES.in
+===================================================================
+--- gnome-control-center-3.3.91.orig/po/POTFILES.in	2012-03-05 15:04:56.000000000 +0100
++++ gnome-control-center-3.3.91/po/POTFILES.in	2012-03-06 17:52:21.539083324 +0100
+@@ -112,3 +112,17 @@
+ shell/gnomecc.directory.in
+ shell/gnome-control-center.desktop.in.in
+ [type: gettext/glade]shell/shell.ui
++panels/sound-nua/applet-main.c
++panels/sound-nua/data/gnome-sound-nua-panel.desktop.in.in
++panels/sound-nua/gvc-applet.c
++panels/sound-nua/gvc-balance-bar.c
++panels/sound-nua/gvc-channel-bar.c
++panels/sound-nua/gvc-combo-box.c
++panels/sound-nua/gvc-mixer-control.c
++panels/sound-nua/gvc-mixer-dialog.c
++panels/sound-nua/gvc-sound-theme-chooser.c
++panels/sound-nua/gvc-speaker-test.c
++panels/sound-nua/gvc-stream-status-icon.c
++panels/sound-nua/sound-theme-file-utils.c
++shell/cc-shell-nav-bar.c
++
