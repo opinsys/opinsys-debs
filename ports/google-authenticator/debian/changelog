@@ -1,3 +1,13 @@
+google-authenticator (20120722.a096a62-0+opinsys1) quantal; urgency=low
+
+  * Upstream update.
+    - upstream version scheme is now COMMIT_DATE.SHORT_REVISION
+  * Remove patch: make-multiarch-friendly.
+    - upstream does not check for libdl.so anymore
+  * Update Standards-Version.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 09 Jan 2013 10:02:24 +0200
+
 google-authenticator (20110413.68230188bdc7-1.1) unstable; urgency=low
 
   * Non-maintainer upload.
