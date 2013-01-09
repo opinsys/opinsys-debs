@@ -1,3 +1,9 @@
+google-authenticator (20120722.a096a62-0+opinsys2) precise; urgency=low
+
+  * Change target to precise.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 09 Jan 2013 12:06:26 +0200
+
 google-authenticator (20120722.a096a62-0+opinsys1) quantal; urgency=low
 
   * Upstream update.
