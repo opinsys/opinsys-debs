@@ -1,3 +1,10 @@
+wpa (1.1-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+  * debian/patches/11_wpa_gui_ftbfs_gcc_4_7.patch: removed
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 09 Jan 2013 12:47:03 +0200
+
 wpa (1.0-2ubuntu5) quantal; urgency=low
 
   * debian/patches/session-ticket.patch: disable the TLS Session Ticket
