@@ -8,7 +8,7 @@ Homepage: http://github.com/opinsys/puavo-wlanap/
 
 Package: puavo-wlanap
 Architecture: all
-Depends: ${misc:Depends}, hostapd, ruby, bridge-utils, net-tools, netcat-openbsd, vtun
+Depends: ${misc:Depends}, hostapd, bridge-utils, net-tools, netcat-openbsd, vtun
 Description: host tunneled WLAN accesspoint with registered Puavo devices
  puavo-wlanap glues together hostapd, vtun and bridge tools to make
  hosting a tunneled WLAN accespoint easy. Accesspoint can be
