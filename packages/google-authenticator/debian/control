@@ -3,7 +3,7 @@ Section: admin
 Priority: optional
 Maintainer: LENART Janos <ocsi@debian.org>
 Build-Depends: debhelper (>= 7.0.5), libpam0g-dev
-Standards-Version: 3.9.1
+Standards-Version: 3.9.3
 Homepage: http://code.google.com/p/google-authenticator/
 Vcs-hg: https://google-authenticator.googlecode.com/hg/
 Vcs-browser: http://code.google.com/p/google-authenticator/source/browse/
