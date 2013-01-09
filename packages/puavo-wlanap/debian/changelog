@@ -1,3 +1,11 @@
+puavo-wlanap (0.1.1-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+    - removed ruby dependency
+    - changed maintainer
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 09 Jan 2013 13:49:43 +0200
+
 puavo-wlanap (0.1.0-0+opinsys1) UNRELEASED; urgency=low
 
   * Initial release
