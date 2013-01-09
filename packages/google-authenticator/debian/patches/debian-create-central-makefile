@@ -1,0 +1,19 @@
+Description: The person named in the Author field signed this changelog entry.
+Author: LENART Janos <ocsi@debian.org>
+Origin: vendor
+Last-Update: 2011-02-25
+
+--- /dev/null
++++ google-authenticator-20110224.2b7e90a4d3/Makefile
+@@ -0,0 +1,11 @@
++#
++# This file makes debhelper happy
++#
++
++.PHONY: build
++.DEFAULT: build
++build:
++	$(MAKE) -C libpam all
++
++distclean:
++	$(MAKE) -C libpam clean
