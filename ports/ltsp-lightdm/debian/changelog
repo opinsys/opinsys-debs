@@ -1,3 +1,9 @@
+ltsp-lightdm (0.2.5-0+opinsys1) quantal; urgency=low
+
+  * Newupstream release
+
+ -- Opinsys Developers <dev@opinsys.fi>  Tue, 08 Jan 2013 12:50:33 +0200
+
 ltsp-lightdm (0.2.4-0+opinsys1) quantal; urgency=low
 
   * New upstream release
