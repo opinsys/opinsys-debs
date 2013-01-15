@@ -1,3 +1,10 @@
+puavo-wlanap (0.3.0-0+opinsys1) quantal; urgency=low
+
+  * New upstream release
+    - Install init script
+
+ -- Opinsys Developers <dev@opinsys.fi>  Tue, 15 Jan 2013 15:17:35 +0200
+
 puavo-wlanap (0.2.0-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
