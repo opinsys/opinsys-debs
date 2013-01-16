@@ -21,3 +21,4 @@ no-AM_INIT_AUTOMAKE
 switch-to-lt_dlopenadvise-to-get-RTLD_GLOBAL-set.diff
 no-bdb-ABI-second-guessing
 heimdal-fix
+opinsys-increase-max-number-of-ldap-keys
