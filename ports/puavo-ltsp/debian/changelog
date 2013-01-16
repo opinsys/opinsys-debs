@@ -1,3 +1,9 @@
+puavo-ltsp (0.6.7-0+opinsys2) quantal; urgency=low
+
+  * Build a new package with updated (fixed) dependencies.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 16 Jan 2013 13:44:40 +0200
+
 puavo-ltsp (0.6.7-0+opinsys1) quantal; urgency=low
 
   * New upstream release
