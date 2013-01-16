@@ -83,12 +83,14 @@ override_dh_auto_build:
 	$(MAKE) -C contrib/slapd-modules/smbk5pwd
 	$(MAKE) -C contrib/slapd-modules/nssov/ $(MAKEVARS) nssov.la
 	$(MAKE) -C contrib/slapd-modules/autogroup
+	$(MAKE) -C contrib/slapd-modules/smbkrb5pwd
 
 override_dh_auto_install:
 	dh_auto_install -- $(MAKEVARS)
 	$(MAKE) -C contrib/slapd-modules/smbk5pwd install DESTDIR=$(installdir)
 	$(MAKE) -C contrib/slapd-modules/nssov install DESTDIR=$(installdir)
 	$(MAKE) -C contrib/slapd-modules/autogroup install DESTDIR=$(installdir)
+	$(MAKE) -C contrib/slapd-modules/smbkrb5pwd install DESTDIR=$(installdir)
 
 	# Empty the dependency_libs file in the .la files.
 	for F in $(installdir)/usr/lib/ldap/*.la; do \
