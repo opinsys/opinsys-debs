@@ -1,3 +1,16 @@
+openldap (2.4.31-1ubuntu2+opinsys1) quantal; urgency=low
+
+  * Use openssl instead of gnutls
+  * Fix get-orig-source to get 2.4.31
+  * Increase the max number of ldap keys to 512
+    - debian/patches/opinsys-increase-max-number-of-ldap-keys
+  * Fix heimdal include path
+    - debian/patches/opinsys-fix-heimdal-include-path
+  * New slapd-module: smbkrb5pwd
+    - debian/patches/opinsys-smbkrb5pwd
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 16 Jan 2013 16:31:50 +0200
+
 openldap (2.4.31-1ubuntu2) quantal-proposed; urgency=low
 
   * debian/slapd.py: Add AppArmor info and logs to apport hook.
