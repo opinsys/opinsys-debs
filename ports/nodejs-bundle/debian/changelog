@@ -1,3 +1,9 @@
+nodejs-bundle (0.8.17-0+opinsys2) quantal; urgency=low
+
+  * New version of nodejs
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Thu, 17 Jan 2013 11:48:49 +0100
+
 nodejs-bundle (0.8.15-0+opinsys2) quantal; urgency=low
 
   * Remove build-depend on make
