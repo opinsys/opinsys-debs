@@ -23,5 +23,5 @@ SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):
 TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
 .PHONY: get-orig-source
 get-orig-source:
-	wget -c http://nodejs.org/dist/v0.8.15/node-v$(SRC_VERSION).tar.gz -O ../$(TARBALL)
+	wget -c http://nodejs.org/dist/v0.8.17/node-v$(SRC_VERSION).tar.gz -O ../$(TARBALL)
 	../../tools/unpack-orig-tarball ../$(TARBALL)
