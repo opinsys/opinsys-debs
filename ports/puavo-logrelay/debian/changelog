@@ -4,7 +4,7 @@ puavo-logrelay (2.0.0-0+opinsys1) lucid; urgency=low
   * Rename to puavo-logrelay
   * Add tcp transport for uptime monitoring
 
- -- Esa-Matti Suuronen <epeli@epelinew>  Thu, 17 Jan 2013 16:37:40 +0200
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Thu, 17 Jan 2013 16:37:40 +0200
 
 puavo-logrelay (1.0.1) lucid; urgency=low
 
