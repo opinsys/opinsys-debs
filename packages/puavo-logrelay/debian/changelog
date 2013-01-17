@@ -1,4 +1,4 @@
-puavo-logrelay (2.0.0opinsys1) lucid; urgency=low
+puavo-logrelay (2.0.0-0+opinsys1) lucid; urgency=low
 
   * Port to node.js
   * Rename to puavo-logrelay
