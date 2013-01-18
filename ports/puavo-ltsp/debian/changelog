@@ -1,8 +1,8 @@
-puavo-ltsp (0.7.0-0+opinsys0) quantal; urgency=low
+puavo-ltsp (0.7.0-0+opinsys1) UNRELEASED; urgency=low
 
   * New upstream release with bootserver support
 
- -- Opinsys Developers <dev@opinsys.fi>  Wed, 16 Jan 2013 16:56:12 +0200
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 18 Jan 2013 15:52:48 +0200
 
 puavo-ltsp (0.6.7-0+opinsys2) quantal; urgency=low
 
