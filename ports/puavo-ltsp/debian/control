@@ -10,7 +10,7 @@ Package: puavo-ltsp-bootserver
 Architecture: all
 Depends: ${misc:Depends}, libsasl2-modules-gssapi-mit, isc-dhcp-server, bind9, dnsmasq, ruby1.8, ruby1.9.3, nbd-server, nfs-kernel-server, ruby-uuidtools, puavo-tftpd, puavo-tftpd-hooks, bridge-utils, puavo-ds-slave, puavo-register, cups, foomatic-db, foomatic-db-engine, foomatic-filters, hplip, openprinting-ppds, pnm2ppa, printer-driver-gutenprint, pxljr, splix, shorewall, linux-image-server, nfs-kernel-server, sssd, qemu-kvm, libvirt-bin
 Recommends: tshark
-Conflicts: nscd, tftpd-hpa
+Conflicts: nscd, tftpd-hpa, ltsp-server
 Description: Puavo LTSP bootserver runs infrastructure services for thin/fat
  clients and LTSP servers. No user sessions are run on the server itself.
 
