@@ -1,2 +1,11 @@
 usr/sbin/puavo-create-kvm-ltsp-server
+usr/sbin/puavo-init-bootserver-ddns
+usr/sbin/puavo-update-ddns
 usr/share/puavo-ltsp-bootserver/templates/ltsp-server.xml
+usr/share/puavo-ltsp-bootserver/templates/etc/dnsmasq.conf
+usr/share/puavo-ltsp-bootserver/templates/etc/apparmor.d/local/usr.sbin.dhcpd
+usr/share/puavo-ltsp-bootserver/templates/etc/bind/named.conf.local
+usr/share/puavo-ltsp-bootserver/templates/etc/bind/named.conf.options
+usr/share/puavo-ltsp-bootserver/templates/etc/dhcp/dhcpd.conf
+usr/share/puavo-ltsp-bootserver/templates/var/lib/bind/puavo_domain
+usr/share/puavo-ltsp-bootserver/templates/var/lib/bind/puavo_domain_reverse
