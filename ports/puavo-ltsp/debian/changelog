@@ -1,8 +1,12 @@
-puavo-ltsp (0.7.0-0+opinsys1) UNRELEASED; urgency=low
+puavo-ltsp (0.7.0-0+opinsys1) quantal; urgency=low
 
   * New upstream release with bootserver support
+  * Depend on ruby-ipaddress
+  * Conflict with ltsp-server
+  * Fix dependency on qemu-lvm to qemu-kvm
+  * Remove debian/*.dirs
 
- -- Opinsys Developers <dev@opinsys.fi>  Fri, 18 Jan 2013 15:52:48 +0200
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 18 Jan 2013 17:32:33 +0200
 
 puavo-ltsp (0.6.7-0+opinsys2) quantal; urgency=low
 
