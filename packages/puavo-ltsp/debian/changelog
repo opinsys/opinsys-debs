@@ -1,3 +1,11 @@
+puavo-ltsp (0.7.1-0+opinsys2) quantal; urgency=low
+
+  * Add bootserver dependencies:
+    - ruby-dnsruby
+    - ruby-highline
+
+ -- Opinsys Developers <dev@opinsys.fi>  Mon, 21 Jan 2013 13:48:30 +0200
+
 puavo-ltsp (0.7.1-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
