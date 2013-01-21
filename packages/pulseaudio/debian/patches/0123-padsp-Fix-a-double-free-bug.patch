@@ -1,0 +1,24 @@
+From c2c5e044cce27a25261d2603cc0a9e72806d3972 Mon Sep 17 00:00:00 2001
+From: Tanu Kaskinen <tanu.kaskinen@digia.com>
+Date: Fri, 23 Mar 2012 10:11:21 +0200
+Subject: [PATCH 14/20] padsp: Fix a double-free bug.
+
+---
+ src/utils/padsp.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/src/utils/padsp.c b/src/utils/padsp.c
+index a8bc8d2..f6a3520 100644
+--- a/src/utils/padsp.c
++++ b/src/utils/padsp.c
+@@ -1444,6 +1444,7 @@ static int sndstat_open(int flags, int *_errno) {
+ 
+     unlink(fn);
+     pa_xfree(fn);
++    fn = NULL;
+ 
+     if (write(fd, sndstat, sizeof(sndstat) -1) != sizeof(sndstat)-1) {
+         *_errno = errno;
+-- 
+1.7.9.1
+

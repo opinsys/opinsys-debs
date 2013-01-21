@@ -1,0 +1,26 @@
+From dd17f0cb97e3bb1ee04015da3bba136920278187 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Mon, 5 Sep 2011 15:35:28 +0200
+Subject: [PATCH 614/614] Load switch-on-port-available module by default
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/daemon/default.pa.in |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/src/daemon/default.pa.in b/src/daemon/default.pa.in
+index c6ec29c..467eee3 100755
+--- a/src/daemon/default.pa.in
++++ b/src/daemon/default.pa.in
+@@ -190,6 +190,8 @@ ifelse(@HAVE_X11@, 1, [dnl
+ #.endif
+ ])dnl
+ 
++load-module module-switch-on-port-available
++
+ ### Make some devices default
+ #set-default-sink output
+ #set-default-source input
+-- 
+1.7.7.3
+

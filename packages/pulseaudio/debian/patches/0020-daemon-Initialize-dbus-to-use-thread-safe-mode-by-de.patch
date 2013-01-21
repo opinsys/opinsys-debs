@@ -1,0 +1,38 @@
+From 694951c8b922bf859159a54bbd9e9b1c912673f2 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Mon, 12 Mar 2012 23:51:42 +0100
+Subject: [PATCH] daemon: Initialize dbus to use thread-safe mode by default
+
+In most cases, we use dbuus from more than one thread, as we
+e g enable real-time scheduling from the ALSA threads.
+Therefore set dbus to thread-safe mode by default, as recommended
+in https://bugs.freedesktop.org/show_bug.cgi?id=47060#c5
+
+This fixes a bug where PulseAudio could crash in two parallel
+calls to pa_make_realtime.
+
+BugLink: https://bugs.launchpad.net/bugs/937933
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/daemon/main.c |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/src/daemon/main.c b/src/daemon/main.c
+index 19933e3..3374196 100644
+--- a/src/daemon/main.c
++++ b/src/daemon/main.c
+@@ -1066,6 +1066,11 @@ int main(int argc, char *argv[]) {
+     buf = pa_strbuf_new();
+ 
+ #ifdef HAVE_DBUS
++    if (!dbus_threads_init_default()) {
++        pa_log("dbus_threads_init_default() failed.");
++        goto finish;
++    }
++
+     if (start_server) {
+ #endif
+         if (conf->load_default_script_file) {
+-- 
+1.7.9.1
+

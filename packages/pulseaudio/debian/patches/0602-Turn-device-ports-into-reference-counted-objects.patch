@@ -1,0 +1,340 @@
+From d59a8b55f64655362eadc4d2ca5d01479a49dc7f Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Fri, 25 Nov 2011 15:17:12 +0100
+Subject: [PATCH 602/614] Turn device ports into reference counted objects
+
+Since both cards and sinks can hold references to a port, it makes
+sense to reference count them. Although no current implementation
+actually has sinks with ports but without a card, it felt wrong
+to make it harder to make such an implementation in the future.
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/Makefile.am             |    1 +
+ src/pulsecore/device-port.c |   66 +++++++++++++++++++++++++++++++++++++++++++
+ src/pulsecore/device-port.h |   61 +++++++++++++++++++++++++++++++++++++++
+ src/pulsecore/sink.c        |   41 ++------------------------
+ src/pulsecore/sink.h        |   17 +----------
+ src/pulsecore/source.c      |   20 ++----------
+ src/pulsecore/source.h      |    1 +
+ 7 files changed, 138 insertions(+), 69 deletions(-)
+ create mode 100644 src/pulsecore/device-port.c
+ create mode 100644 src/pulsecore/device-port.h
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index e3af12f..7e5506d 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -814,6 +814,7 @@ libpulsecore_@PA_MAJORMINOR@_la_SOURCES = \
+ 		pulsecore/shm.c pulsecore/shm.h \
+ 		pulsecore/sink-input.c pulsecore/sink-input.h \
+ 		pulsecore/sink.c pulsecore/sink.h \
++		pulsecore/device-port.c pulsecore/device-port.h \
+ 		pulsecore/sioman.c pulsecore/sioman.h \
+ 		pulsecore/sound-file-stream.c pulsecore/sound-file-stream.h \
+ 		pulsecore/sound-file.c pulsecore/sound-file.h \
+diff --git a/src/pulsecore/device-port.c b/src/pulsecore/device-port.c
+new file mode 100644
+index 0000000..09646ee
+--- /dev/null
++++ b/src/pulsecore/device-port.c
+@@ -0,0 +1,66 @@
++/***
++  This file is part of PulseAudio.
++
++  Copyright 2004-2006 Lennart Poettering
++  Copyright 2006 Pierre Ossman <ossman@cendio.se> for Cendio AB
++  Copyright 2011 David Henningsson, Canonical Ltd.
++
++  PulseAudio is free software; you can redistribute it and/or modify
++  it under the terms of the GNU Lesser General Public License as published
++  by the Free Software Foundation; either version 2.1 of the License,
++  or (at your option) any later version.
++
++  PulseAudio is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++  General Public License for more details.
++
++  You should have received a copy of the GNU Lesser General Public License
++  along with PulseAudio; if not, write to the Free Software
++  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
++  USA.
++***/
++
++
++#include "device-port.h"
++
++PA_DEFINE_PUBLIC_CLASS(pa_device_port, pa_object);
++
++static void device_port_free(pa_object *o) {
++    pa_device_port *p = PA_DEVICE_PORT(o);
++
++    pa_assert(p);
++    pa_assert(pa_device_port_refcnt(p) == 0);
++
++    pa_xfree(p->name);
++    pa_xfree(p->description);
++    pa_xfree(p);
++}
++
++
++pa_device_port *pa_device_port_new(const char *name, const char *description, size_t extra) {
++    pa_device_port *p;
++
++    pa_assert(name);
++
++    p = PA_DEVICE_PORT(pa_object_new_internal(PA_ALIGN(sizeof(pa_device_port)) + extra, pa_device_port_type_id, pa_device_port_check_type));
++    p->parent.free = device_port_free;
++
++    p->name = pa_xstrdup(name);
++    p->description = pa_xstrdup(description);
++    p->priority = 0;
++    p->available = PA_PORT_AVAILABLE_UNKNOWN;
++
++    return p;
++}
++
++void pa_device_port_hashmap_free(pa_hashmap *h) {
++    pa_device_port *p;
++
++    pa_assert(h);
++
++    while ((p = pa_hashmap_steal_first(h)))
++        pa_device_port_unref(p);
++
++    pa_hashmap_free(h, NULL, NULL);
++}
+diff --git a/src/pulsecore/device-port.h b/src/pulsecore/device-port.h
+new file mode 100644
+index 0000000..dfe3fc1
+--- /dev/null
++++ b/src/pulsecore/device-port.h
+@@ -0,0 +1,61 @@
++#ifndef foopulsedeviceporthfoo
++#define foopulsedeviceporthfoo
++
++/***
++  This file is part of PulseAudio.
++
++  Copyright 2004-2006 Lennart Poettering
++  Copyright 2006 Pierre Ossman <ossman@cendio.se> for Cendio AB
++  Copyright 2011 David Henningsson, Canonical Ltd.
++
++  PulseAudio is free software; you can redistribute it and/or modify
++  it under the terms of the GNU Lesser General Public License as published
++  by the Free Software Foundation; either version 2.1 of the License,
++  or (at your option) any later version.
++
++  PulseAudio is distributed in the hope that it will be useful, but
++  WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++  General Public License for more details.
++
++  You should have received a copy of the GNU Lesser General Public License
++  along with PulseAudio; if not, write to the Free Software
++  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
++  USA.
++***/
++
++
++#ifdef HAVE_CONFIG_H
++#include <config.h>
++#endif
++
++#include <inttypes.h>
++
++#include <pulse/def.h>
++#include <pulsecore/object.h>
++#include <pulsecore/hashmap.h>
++
++typedef struct pa_device_port pa_device_port;
++
++struct pa_device_port {
++    pa_object parent; /* Needed for reference counting */
++
++    char *name;
++    char *description;
++
++    unsigned priority;
++    pa_port_available_t available;         /* PA_PORT_AVAILABLE_UNKNOWN, PA_PORT_AVAILABLE_NO or PA_PORT_AVAILABLE_YES */
++
++    /* .. followed by some implementation specific data */
++};
++
++PA_DECLARE_PUBLIC_CLASS(pa_device_port);
++#define PA_DEVICE_PORT(s) (pa_device_port_cast(s))
++
++#define PA_DEVICE_PORT_DATA(d) ((void*) ((uint8_t*) d + PA_ALIGN(sizeof(pa_device_port))))
++
++pa_device_port *pa_device_port_new(const char *name, const char *description, size_t extra);
++
++void pa_device_port_hashmap_free(pa_hashmap *h);
++
++#endif
+diff --git a/src/pulsecore/sink.c b/src/pulsecore/sink.c
+index a2642b4..0fb5d51 100644
+--- a/src/pulsecore/sink.c
++++ b/src/pulsecore/sink.c
+@@ -132,40 +132,13 @@ void pa_sink_new_data_done(pa_sink_new_data *data) {
+ 
+     pa_proplist_free(data->proplist);
+ 
+-    if (data->ports) {
+-        pa_device_port *p;
+-
+-        while ((p = pa_hashmap_steal_first(data->ports)))
+-            pa_device_port_free(p);
+-
+-        pa_hashmap_free(data->ports, NULL, NULL);
+-    }
++    if (data->ports)
++        pa_device_port_hashmap_free(data->ports);
+ 
+     pa_xfree(data->name);
+     pa_xfree(data->active_port);
+ }
+ 
+-pa_device_port *pa_device_port_new(const char *name, const char *description, size_t extra) {
+-    pa_device_port *p;
+-
+-    pa_assert(name);
+-
+-    p = pa_xmalloc(PA_ALIGN(sizeof(pa_device_port)) + extra);
+-    p->name = pa_xstrdup(name);
+-    p->description = pa_xstrdup(description);
+-
+-    p->priority = 0;
+-
+-    return p;
+-}
+-
+-void pa_device_port_free(pa_device_port *p) {
+-    pa_assert(p);
+-
+-    pa_xfree(p->name);
+-    pa_xfree(p->description);
+-    pa_xfree(p);
+-}
+ 
+ /* Called from main context */
+ static void reset_callbacks(pa_sink *s) {
+@@ -742,14 +715,8 @@ static void sink_free(pa_object *o) {
+     if (s->proplist)
+         pa_proplist_free(s->proplist);
+ 
+-    if (s->ports) {
+-        pa_device_port *p;
+-
+-        while ((p = pa_hashmap_steal_first(s->ports)))
+-            pa_device_port_free(p);
+-
+-        pa_hashmap_free(s->ports, NULL, NULL);
+-    }
++    if (s->ports)
++        pa_device_port_hashmap_free(s->ports);
+ 
+     pa_xfree(s);
+ }
+diff --git a/src/pulsecore/sink.h b/src/pulsecore/sink.h
+index 669a3f5..bb4a165 100644
+--- a/src/pulsecore/sink.h
++++ b/src/pulsecore/sink.h
+@@ -24,7 +24,6 @@
+ ***/
+ 
+ typedef struct pa_sink pa_sink;
+-typedef struct pa_device_port pa_device_port;
+ typedef struct pa_sink_volume_change pa_sink_volume_change;
+ 
+ #include <inttypes.h>
+@@ -43,6 +42,7 @@ typedef struct pa_sink_volume_change pa_sink_volume_change;
+ #include <pulsecore/asyncmsgq.h>
+ #include <pulsecore/msgobject.h>
+ #include <pulsecore/rtpoll.h>
++#include <pulsecore/device-port.h>
+ #include <pulsecore/card.h>
+ #include <pulsecore/queue.h>
+ #include <pulsecore/thread-mq.h>
+@@ -55,18 +55,6 @@ static inline pa_bool_t PA_SINK_IS_LINKED(pa_sink_state_t x) {
+     return x == PA_SINK_RUNNING || x == PA_SINK_IDLE || x == PA_SINK_SUSPENDED;
+ }
+ 
+-struct pa_device_port {
+-    char *name;
+-    char *description;
+-
+-    unsigned priority;
+-    pa_port_available_t available;         /* PA_PORT_AVAILABLE_UNKNOWN, PA_PORT_AVAILABLE_NO or PA_PORT_AVAILABLE_YES */
+-
+-    /* .. followed by some implementation specific data */
+-};
+-
+-#define PA_DEVICE_PORT_DATA(d) ((void*) ((uint8_t*) d + PA_ALIGN(sizeof(pa_device_port))))
+-
+ /* A generic definition for void callback functions */
+ typedef void(*pa_sink_cb_t)(pa_sink *s);
+ 
+@@ -489,9 +477,6 @@ void pa_sink_invalidate_requested_latency(pa_sink *s, pa_bool_t dynamic);
+ 
+ pa_usec_t pa_sink_get_latency_within_thread(pa_sink *s);
+ 
+-pa_device_port *pa_device_port_new(const char *name, const char *description, size_t extra);
+-void pa_device_port_free(pa_device_port *p);
+-
+ /* Verify that we called in IO context (aka 'thread context), or that
+  * the sink is not yet set up, i.e. the thread not set up yet. See
+  * pa_assert_io_context() in thread-mq.h for more information. */
+diff --git a/src/pulsecore/source.c b/src/pulsecore/source.c
+index d47280c..d5d0fc7 100644
+--- a/src/pulsecore/source.c
++++ b/src/pulsecore/source.c
+@@ -124,14 +124,8 @@ void pa_source_new_data_done(pa_source_new_data *data) {
+ 
+     pa_proplist_free(data->proplist);
+ 
+-    if (data->ports) {
+-        pa_device_port *p;
+-
+-        while ((p = pa_hashmap_steal_first(data->ports)))
+-            pa_device_port_free(p);
+-
+-        pa_hashmap_free(data->ports, NULL, NULL);
+-    }
++    if (data->ports)
++        pa_device_port_hashmap_free(data->ports);
+ 
+     pa_xfree(data->name);
+     pa_xfree(data->active_port);
+@@ -652,14 +646,8 @@ static void source_free(pa_object *o) {
+     if (s->proplist)
+         pa_proplist_free(s->proplist);
+ 
+-    if (s->ports) {
+-        pa_device_port *p;
+-
+-        while ((p = pa_hashmap_steal_first(s->ports)))
+-            pa_device_port_free(p);
+-
+-        pa_hashmap_free(s->ports, NULL, NULL);
+-    }
++    if (s->ports)
++        pa_device_port_hashmap_free(s->ports);
+ 
+     pa_xfree(s);
+ }
+diff --git a/src/pulsecore/source.h b/src/pulsecore/source.h
+index 949ae48..5c2dd30 100644
+--- a/src/pulsecore/source.h
++++ b/src/pulsecore/source.h
+@@ -43,6 +43,7 @@ typedef struct pa_source_volume_change pa_source_volume_change;
+ #include <pulsecore/msgobject.h>
+ #include <pulsecore/rtpoll.h>
+ #include <pulsecore/card.h>
++#include <pulsecore/device-port.h>
+ #include <pulsecore/queue.h>
+ #include <pulsecore/thread-mq.h>
+ #include <pulsecore/source-output.h>
+-- 
+1.7.7.3
+

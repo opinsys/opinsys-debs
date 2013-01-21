@@ -1,0 +1,33 @@
+From 5e9e0d50863b60c329cfc8ab85164fe7f7111532 Mon Sep 17 00:00:00 2001
+From: Arun Raghavan <arun.raghavan@collabora.co.uk>
+Date: Wed, 28 Mar 2012 01:01:32 +0530
+Subject: [PATCH 06/20] stream: Fix sample spec initialisation for extended
+ API
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This fixes pa_sample_spec init to use the correct API. Not doing so
+triggers a valgrind warning as we call pa_sample_spec_valid() on this
+later on, which checks the rate and channels fields. Thanks to Rémi
+Denis-Courmont for reporting this.
+---
+ src/pulse/stream.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/pulse/stream.c b/src/pulse/stream.c
+index 6115cef..39338c1 100644
+--- a/src/pulse/stream.c
++++ b/src/pulse/stream.c
+@@ -112,7 +112,7 @@ static pa_stream *pa_stream_new_with_proplist_internal(
+     if (ss)
+         s->sample_spec = *ss;
+     else
+-        s->sample_spec.format = PA_SAMPLE_INVALID;
++        pa_sample_spec_init(&s->sample_spec);
+ 
+     if (map)
+         s->channel_map = *map;
+-- 
+1.7.9.1
+

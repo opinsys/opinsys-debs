@@ -1,0 +1,91 @@
+From 30a82a0bad0c9198060f9b2b4e65fa2b9bfb89a0 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Fri, 2 Dec 2011 10:20:23 +0100
+Subject: [PATCH 607/614] Fixup a few things in the new path probing
+
+ * If mapping_probe_paths() fails to open the mixer, all paths are now
+removed from the mapping's path sets.
+ * pa_path_set.probed isn't really used for anything (removed).
+ * If profile probing is configured to be skipped, mapping_paths_probe()
+should still be called.
+
+Thanks to Tanu for spotting.
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/modules/alsa/alsa-mixer.c |   17 ++++++++++-------
+ src/modules/alsa/alsa-mixer.h |    1 -
+ 2 files changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/src/modules/alsa/alsa-mixer.c b/src/modules/alsa/alsa-mixer.c
+index 610ab5f..eccf103 100644
+--- a/src/modules/alsa/alsa-mixer.c
++++ b/src/modules/alsa/alsa-mixer.c
+@@ -2895,10 +2895,9 @@ void pa_alsa_path_set_dump(pa_alsa_path_set *ps) {
+     void *state;
+     pa_assert(ps);
+ 
+-    pa_log_debug("Path Set %p, direction=%i, probed=%s",
++    pa_log_debug("Path Set %p, direction=%i",
+                  (void*) ps,
+-                 ps->direction,
+-                 pa_yes_no(ps->probed));
++                 ps->direction);
+ 
+     PA_HASHMAP_FOREACH(p, ps->paths, state)
+         pa_alsa_path_dump(p);
+@@ -3718,8 +3717,12 @@ static void mapping_paths_probe(pa_alsa_mapping *m, pa_alsa_profile *profile,
+     pa_assert(pcm_handle);
+ 
+     mixer_handle = pa_alsa_open_mixer_for_pcm(pcm_handle, NULL);
+-    if (!mixer_handle)
+-        return; /* Cannot open mixer :-( */
++    if (!mixer_handle) {
++         /* Cannot open mixer, remove all entries */
++        while (pa_hashmap_steal_first(ps->paths));
++        return;
++    }
++
+ 
+     PA_HASHMAP_FOREACH(p, ps->paths, state) {
+         if (pa_alsa_path_probe(p, mixer_handle, m->profile_set->ignore_dB) < 0) {
+@@ -3729,7 +3732,6 @@ static void mapping_paths_probe(pa_alsa_mapping *m, pa_alsa_profile *profile,
+ 
+     path_set_condense(ps, mixer_handle);
+     path_set_make_paths_unique(ps);
+-    ps->probed = TRUE;
+ 
+     if (mixer_handle)
+         snd_mixer_close(mixer_handle);
+@@ -4167,7 +4169,7 @@ void pa_alsa_profile_set_probe(
+ 
+         /* Is this already marked that it is supported? (i.e. from the config file) */
+         if (p->supported)
+-            continue;
++            goto probe_paths;
+ 
+         pa_log_debug("Looking at profile %s", p->name);
+ 
+@@ -4268,6 +4270,7 @@ void pa_alsa_profile_set_probe(
+         if (!p->supported)
+             continue;
+ 
++probe_paths:
+         pa_log_debug("Profile %s supported.", p->name);
+ 
+         if (p->output_mappings)
+diff --git a/src/modules/alsa/alsa-mixer.h b/src/modules/alsa/alsa-mixer.h
+index 991fbff..703d45b 100644
+--- a/src/modules/alsa/alsa-mixer.h
++++ b/src/modules/alsa/alsa-mixer.h
+@@ -191,7 +191,6 @@ struct pa_alsa_path {
+ struct pa_alsa_path_set {
+     pa_hashmap *paths;
+     pa_alsa_direction_t direction;
+-    pa_bool_t probed:1;
+ };
+ 
+ int pa_alsa_setting_select(pa_alsa_setting *s, snd_mixer_t *m);
+-- 
+1.7.7.3
+

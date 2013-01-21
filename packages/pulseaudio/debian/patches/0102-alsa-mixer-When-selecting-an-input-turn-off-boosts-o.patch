@@ -1,0 +1,214 @@
+From 59050948896a763afd32118a03ad259094bfa54e Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Tue, 20 Dec 2011 09:16:02 +0100
+Subject: [PATCH] alsa-mixer: When selecting an input, turn off boosts of
+ other inputs
+
+Just like we turn off the "Front Mic" element when we select "Rear Mic",
+we should also turn off the "Front Mic Boost" element. And the same for
+the other inputs.
+
+Reported-by: Len Owens <len@ovenwerks.net>
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ .../alsa/mixer/paths/analog-input-dock-mic.conf    |   16 +++++++
+ .../alsa/mixer/paths/analog-input-front-mic.conf   |   16 +++++++
+ .../mixer/paths/analog-input-internal-mic.conf     |   16 +++++++
+ .../alsa/mixer/paths/analog-input-linein.conf      |   47 ++++++++++++++++---
+ src/modules/alsa/mixer/paths/analog-input-mic.conf |   16 +++++++
+ .../alsa/mixer/paths/analog-input-rear-mic.conf    |   16 +++++++
+ 6 files changed, 119 insertions(+), 8 deletions(-)
+
+diff --git a/src/modules/alsa/mixer/paths/analog-input-dock-mic.conf b/src/modules/alsa/mixer/paths/analog-input-dock-mic.conf
+index 489cf90..afac273 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-dock-mic.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-dock-mic.conf
+@@ -78,4 +78,20 @@ volume = off
+ switch = off
+ volume = off
+ 
++[Element Mic Boost]
++switch = off
++volume = off
++
++[Element Internal Mic Boost]
++switch = off
++volume = off
++
++[Element Front Mic Boost]
++switch = off
++volume = off
++
++[Element Rear Mic Boost]
++switch = off
++volume = off
++
+ .include analog-input-mic.conf.common
+diff --git a/src/modules/alsa/mixer/paths/analog-input-front-mic.conf b/src/modules/alsa/mixer/paths/analog-input-front-mic.conf
+index 5ae516c..852e7e9 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-front-mic.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-front-mic.conf
+@@ -78,4 +78,20 @@ volume = off
+ switch = off
+ volume = off
+ 
++[Element Mic Boost]
++switch = off
++volume = off
++
++[Element Dock Mic Boost]
++switch = off
++volume = off
++
++[Element Internal Mic Boost]
++switch = off
++volume = off
++
++[Element Rear Mic Boost]
++switch = off
++volume = off
++
+ .include analog-input-mic.conf.common
+diff --git a/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf b/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf
+index 70a1cd1..dd40075 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf
+@@ -108,4 +108,20 @@ volume = off
+ switch = off
+ volume = off
+ 
++[Element Mic Boost]
++switch = off
++volume = off
++
++[Element Dock Mic Boost]
++switch = off
++volume = off
++
++[Element Front Mic Boost]
++switch = off
++volume = off
++
++[Element Rear Mic Boost]
++switch = off
++volume = off
++
+ .include analog-input-mic.conf.common
+diff --git a/src/modules/alsa/mixer/paths/analog-input-linein.conf b/src/modules/alsa/mixer/paths/analog-input-linein.conf
+index 038f649..a432d6e 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-linein.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-linein.conf
+@@ -27,14 +27,6 @@ volume = merge
+ override-map.1 = all
+ override-map.2 = all-left,all-right
+ 
+-[Element Mic]
+-switch = off
+-volume = off
+-
+-[Element Internal Mic]
+-switch = off
+-volume = off
+-
+ [Element Line Boost]
+ required-any = any
+ switch = mute
+@@ -63,6 +55,45 @@ enumeration = select
+ name = analog-input-linein
+ required-any = any
+ 
++[Element Mic]
++switch = off
++volume = off
++
++[Element Dock Mic]
++switch = off
++volume = off
++
++[Element Internal Mic]
++switch = off
++volume = off
++
++[Element Front Mic]
++switch = off
++volume = off
++
++[Element Rear Mic]
++switch = off
++volume = off
++
++[Element Mic Boost]
++switch = off
++volume = off
++
++[Element Dock Mic Boost]
++switch = off
++volume = off
++
++[Element Internal Mic Boost]
++switch = off
++volume = off
++
++[Element Front Mic Boost]
++switch = off
++volume = off
++
++[Element Rear Mic Boost]
++switch = off
++volume = off
+ 
+ [Element Aux]
+ switch = off
+diff --git a/src/modules/alsa/mixer/paths/analog-input-mic.conf b/src/modules/alsa/mixer/paths/analog-input-mic.conf
+index 50d4c45..4cebc4e 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-mic.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-mic.conf
+@@ -101,4 +101,20 @@ volume = off
+ switch = off
+ volume = off
+ 
++[Element Dock Mic Boost]
++switch = off
++volume = off
++
++[Element Internal Mic Boost]
++switch = off
++volume = off
++
++[Element Front Mic Boost]
++switch = off
++volume = off
++
++[Element Rear Mic Boost]
++switch = off
++volume = off
++
+ .include analog-input-mic.conf.common
+diff --git a/src/modules/alsa/mixer/paths/analog-input-rear-mic.conf b/src/modules/alsa/mixer/paths/analog-input-rear-mic.conf
+index 4046106..e2b2671 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-rear-mic.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-rear-mic.conf
+@@ -78,4 +78,20 @@ volume = off
+ switch = off
+ volume = off
+ 
++[Element Mic Boost]
++switch = off
++volume = off
++
++[Element Dock Mic Boost]
++switch = off
++volume = off
++
++[Element Internal Mic Boost]
++switch = off
++volume = off
++
++[Element Front Mic Boost]
++switch = off
++volume = off
++
+ .include analog-input-mic.conf.common
+-- 
+1.7.7.3
+

@@ -1,0 +1,255 @@
+From accc8104257ce29413ce1e9b02e9e6ff90e1d7b0 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Fri, 25 Nov 2011 15:17:14 +0100
+Subject: [PATCH 604/614] Notify port available status changes, and update
+ protocol version
+
+The recommended way of setting available status is to call
+pa_device_port_set_available, which will send a subscription event
+to the relevant card. It will also fire a hook.
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ PROTOCOL                       |    5 ++++
+ configure.ac                   |    2 +-
+ src/modules/alsa/alsa-mixer.c  |    9 ++++---
+ src/modules/alsa/alsa-mixer.h  |    2 +-
+ src/modules/alsa/alsa-sink.c   |    2 +-
+ src/modules/alsa/alsa-source.c |    2 +-
+ src/pulsecore/core.h           |    1 +
+ src/pulsecore/device-port.c    |   43 ++++++++++++++++++++++++++++++++++++++-
+ src/pulsecore/device-port.h    |   12 ++++++++++-
+ 9 files changed, 67 insertions(+), 11 deletions(-)
+
+diff --git a/PROTOCOL b/PROTOCOL
+index 8b2f81f..7468cd4 100644
+--- a/PROTOCOL
++++ b/PROTOCOL
+@@ -288,6 +288,11 @@ PA_COMMAND_GET_(SOURCE|SINK)_OUTPUT_INFO_LIST):
+ 
+ The field is added once for every port.
+ 
++## v25, implemented by >= 2.0
++
++When port availability changes, send a subscription event for the
++owning card.
++
+ #### If you just changed the protocol, read this
+ ## module-tunnel depends on the sink/source/sink-input/source-input protocol
+ ## internals, so if you changed these, you might have broken module-tunnel.
+diff --git a/configure.ac b/configure.ac
+index 48ff8ff..637cce2 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -36,7 +36,7 @@ AC_SUBST(PA_MINOR, pa_minor)
+ AC_SUBST(PA_MAJORMINOR, pa_major.pa_minor)
+ 
+ AC_SUBST(PA_API_VERSION, 12)
+-AC_SUBST(PA_PROTOCOL_VERSION, 24)
++AC_SUBST(PA_PROTOCOL_VERSION, 25)
+ 
+ # The stable ABI for client applications, for the version info x:y:z
+ # always will hold y=z
+diff --git a/src/modules/alsa/alsa-mixer.c b/src/modules/alsa/alsa-mixer.c
+index b6cf085..c70edd3 100644
+--- a/src/modules/alsa/alsa-mixer.c
++++ b/src/modules/alsa/alsa-mixer.c
+@@ -4278,9 +4278,10 @@ void pa_alsa_profile_set_dump(pa_alsa_profile_set *ps) {
+         pa_alsa_decibel_fix_dump(db_fix);
+ }
+ 
+-void pa_alsa_add_ports(pa_hashmap **p, pa_alsa_path_set *ps) {
++void pa_alsa_add_ports(pa_core *c, pa_hashmap **p, pa_alsa_path_set *ps) {
+     pa_alsa_path *path;
+ 
++    pa_assert(c);
+     pa_assert(p);
+     pa_assert(!*p);
+     pa_assert(ps);
+@@ -4305,7 +4306,7 @@ void pa_alsa_add_ports(pa_hashmap **p, pa_alsa_path_set *ps) {
+             pa_device_port *port;
+             pa_alsa_port_data *data;
+ 
+-            port = pa_device_port_new(s->name, s->description, sizeof(pa_alsa_port_data));
++            port = pa_device_port_new(c, s->name, s->description, sizeof(pa_alsa_port_data));
+             port->priority = s->priority;
+ 
+             data = PA_DEVICE_PORT_DATA(port);
+@@ -4330,7 +4331,7 @@ void pa_alsa_add_ports(pa_hashmap **p, pa_alsa_path_set *ps) {
+                 /* If there is no or just one setting we only need a
+                  * single entry */
+ 
+-                port = pa_device_port_new(path->name, path->description, sizeof(pa_alsa_port_data));
++                port = pa_device_port_new(c, path->name, path->description, sizeof(pa_alsa_port_data));
+                 port->priority = path->priority * 100;
+ 
+ 
+@@ -4354,7 +4355,7 @@ void pa_alsa_add_ports(pa_hashmap **p, pa_alsa_path_set *ps) {
+                     else
+                         d = pa_xstrdup(path->description);
+ 
+-                    port = pa_device_port_new(n, d, sizeof(pa_alsa_port_data));
++                    port = pa_device_port_new(c, n, d, sizeof(pa_alsa_port_data));
+                     port->priority = path->priority * 100 + s->priority;
+ 
+                     pa_xfree(n);
+diff --git a/src/modules/alsa/alsa-mixer.h b/src/modules/alsa/alsa-mixer.h
+index c9d968a..e871e6f 100644
+--- a/src/modules/alsa/alsa-mixer.h
++++ b/src/modules/alsa/alsa-mixer.h
+@@ -323,6 +323,6 @@ struct pa_alsa_port_data {
+     pa_alsa_setting *setting;
+ };
+ 
+-void pa_alsa_add_ports(pa_hashmap **p, pa_alsa_path_set *ps);
++void pa_alsa_add_ports(pa_core *c, pa_hashmap **p, pa_alsa_path_set *ps);
+ 
+ #endif
+diff --git a/src/modules/alsa/alsa-sink.c b/src/modules/alsa/alsa-sink.c
+index 066f2dd..ba0bf9a 100644
+--- a/src/modules/alsa/alsa-sink.c
++++ b/src/modules/alsa/alsa-sink.c
+@@ -2159,7 +2159,7 @@ pa_sink *pa_alsa_sink_new(pa_module *m, pa_modargs *ma, const char*driver, pa_ca
+     }
+ 
+     if (u->mixer_path_set)
+-        pa_alsa_add_ports(&data.ports, u->mixer_path_set);
++        pa_alsa_add_ports(u->core, &data.ports, u->mixer_path_set);
+ 
+     u->sink = pa_sink_new(m->core, &data, PA_SINK_HARDWARE | PA_SINK_LATENCY | (u->use_tsched ? PA_SINK_DYNAMIC_LATENCY : 0) |
+                           (set_formats ? PA_SINK_SET_FORMATS : 0));
+diff --git a/src/modules/alsa/alsa-source.c b/src/modules/alsa/alsa-source.c
+index f03b76e..baf8156 100644
+--- a/src/modules/alsa/alsa-source.c
++++ b/src/modules/alsa/alsa-source.c
+@@ -1848,7 +1848,7 @@ pa_source *pa_alsa_source_new(pa_module *m, pa_modargs *ma, const char*driver, p
+     }
+ 
+     if (u->mixer_path_set)
+-        pa_alsa_add_ports(&data.ports, u->mixer_path_set);
++        pa_alsa_add_ports(u->core, &data.ports, u->mixer_path_set);
+ 
+     u->source = pa_source_new(m->core, &data, PA_SOURCE_HARDWARE|PA_SOURCE_LATENCY|(u->use_tsched ? PA_SOURCE_DYNAMIC_LATENCY : 0));
+     pa_source_new_data_done(&data);
+diff --git a/src/pulsecore/core.h b/src/pulsecore/core.h
+index ef51b8c..50c2025 100644
+--- a/src/pulsecore/core.h
++++ b/src/pulsecore/core.h
+@@ -113,6 +113,7 @@ typedef enum pa_core_hook {
+     PA_CORE_HOOK_CARD_PUT,
+     PA_CORE_HOOK_CARD_UNLINK,
+     PA_CORE_HOOK_CARD_PROFILE_CHANGED,
++    PA_CORE_HOOK_PORT_AVAILABLE_CHANGED,
+     PA_CORE_HOOK_MAX
+ } pa_core_hook_t;
+ 
+diff --git a/src/pulsecore/device-port.c b/src/pulsecore/device-port.c
+index 8aeb173..7988649 100644
+--- a/src/pulsecore/device-port.c
++++ b/src/pulsecore/device-port.c
+@@ -21,11 +21,49 @@
+   USA.
+ ***/
+ 
+-
+ #include "device-port.h"
++#include <pulsecore/card.h>
+ 
+ PA_DEFINE_PUBLIC_CLASS(pa_device_port, pa_object);
+ 
++void pa_device_port_set_available(pa_device_port *p, pa_port_available_t status)
++{
++    uint32_t state;
++    pa_card *card;
++/*    pa_source *source;
++    pa_sink *sink; */
++    pa_core *core;
++
++    pa_assert(p);
++
++    if (p->available == status)
++        return;
++
++    pa_assert(status != PA_PORT_AVAILABLE_UNKNOWN);
++
++    p->available = status;
++    pa_log_debug("Setting port %s to status %s", p->name, status == PA_PORT_AVAILABLE_YES ? "yes" : "no");
++
++    /* Post subscriptions to the card which owns us */
++    pa_assert_se(core = p->core);
++    PA_IDXSET_FOREACH(card, core->cards, state)
++        if (p == pa_hashmap_get(card->ports, p->name))
++            pa_subscription_post(core, PA_SUBSCRIPTION_EVENT_CARD|PA_SUBSCRIPTION_EVENT_CHANGE, card->index);
++#if 0
++/* This stuff is temporarily commented out while figuring out whether to actually do this */
++    if (p->is_output)
++        PA_IDXSET_FOREACH(sink, core->sinks, state)
++            if (p == pa_hashmap_get(sink->ports, p->name))
++                pa_subscription_post(core, PA_SUBSCRIPTION_EVENT_SINK|PA_SUBSCRIPTION_EVENT_CHANGE, sink->index);
++    if (p->is_input)
++        PA_IDXSET_FOREACH(source, core->sources, state)
++            if (p == pa_hashmap_get(source->ports, p->name))
++                pa_subscription_post(core, PA_SUBSCRIPTION_EVENT_SOURCE|PA_SUBSCRIPTION_EVENT_CHANGE, source->index);
++#endif
++
++    pa_hook_fire(&core->hooks[PA_CORE_HOOK_PORT_AVAILABLE_CHANGED], p);
++}
++
+ static void device_port_free(pa_object *o) {
+     pa_device_port *p = PA_DEVICE_PORT(o);
+ 
+@@ -40,7 +78,7 @@ static void device_port_free(pa_object *o) {
+ }
+ 
+ 
+-pa_device_port *pa_device_port_new(const char *name, const char *description, size_t extra) {
++pa_device_port *pa_device_port_new(pa_core *c, const char *name, const char *description, size_t extra) {
+     pa_device_port *p;
+ 
+     pa_assert(name);
+@@ -50,6 +88,7 @@ pa_device_port *pa_device_port_new(const char *name, const char *description, si
+ 
+     p->name = pa_xstrdup(name);
+     p->description = pa_xstrdup(description);
++    p->core = c;
+     p->priority = 0;
+     p->available = PA_PORT_AVAILABLE_UNKNOWN;
+     p->profiles = NULL;
+diff --git a/src/pulsecore/device-port.h b/src/pulsecore/device-port.h
+index f997c77..f387021 100644
+--- a/src/pulsecore/device-port.h
++++ b/src/pulsecore/device-port.h
+@@ -35,10 +35,15 @@
+ #include <pulsecore/object.h>
+ #include <pulsecore/hashmap.h>
+ 
++/* Note: Including core.h here leads to circular references
++   (device-port.h -> core.h -> sink.h -> device-port.h), hence the line below instead */
++typedef struct pa_core pa_core;
++
+ typedef struct pa_device_port pa_device_port;
+ 
+ struct pa_device_port {
+     pa_object parent; /* Needed for reference counting */
++    pa_core *core;
+ 
+     char *name;
+     char *description;
+@@ -58,8 +63,13 @@ PA_DECLARE_PUBLIC_CLASS(pa_device_port);
+ 
+ #define PA_DEVICE_PORT_DATA(d) ((void*) ((uint8_t*) d + PA_ALIGN(sizeof(pa_device_port))))
+ 
+-pa_device_port *pa_device_port_new(const char *name, const char *description, size_t extra);
++pa_device_port *pa_device_port_new(pa_core *c, const char *name, const char *description, size_t extra);
+ 
+ void pa_device_port_hashmap_free(pa_hashmap *h);
+ 
++#include <pulsecore/core.h>
++
++/* The port's available status has changed */
++void pa_device_port_set_available(pa_device_port *p, pa_port_available_t available);
++
+ #endif
+-- 
+1.7.7.3
+

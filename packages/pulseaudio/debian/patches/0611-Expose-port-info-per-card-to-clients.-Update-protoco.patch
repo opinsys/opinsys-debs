@@ -1,0 +1,364 @@
+From 3d136da418bdbd69a400a50a1e39f2e5a0d5bdd8 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Mon, 14 Nov 2011 13:29:51 +0100
+Subject: [PATCH 611/614] Expose port info per card to clients. Update
+ protocol to 26.
+
+For volume control UIs to be able to show ports in inactive profiles,
+expose all ports together with the card info. This includes updating
+the protocol and the client API to show the connection between ports
+and for which profiles the ports are relevant.
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ PROTOCOL                        |   23 +++++++++
+ configure.ac                    |    2 +-
+ src/pulse/def.h                 |   14 +++++
+ src/pulse/introspect.c          |  105 ++++++++++++++++++++++++++++++++++-----
+ src/pulse/introspect.h          |   16 ++++++
+ src/pulsecore/protocol-native.c |   26 ++++++++++
+ src/utils/pactl.c               |   19 +++++++
+ 7 files changed, 192 insertions(+), 13 deletions(-)
+
+diff --git a/PROTOCOL b/PROTOCOL
+index 7468cd4..a26dafc 100644
+--- a/PROTOCOL
++++ b/PROTOCOL
+@@ -293,6 +293,29 @@ The field is added once for every port.
+ When port availability changes, send a subscription event for the
+ owning card.
+ 
++## v26, implemented by >= 2.0
++
++In reply from PA_COMMAND_GET_CARD_INFO (and thus
++PA_COMMAND_GET_CARD_INFO_LIST), the following is added:
++
++    uint32_t n_ports
++
++...followed by n_ports extended port entries, which look like this:
++
++    string name
++    string description
++    uint32_t priority
++    uint32_t available
++    uint8_t direction
++    proplist
++    uint32_t n_profiles
++    string profile_name_1
++    ...
++    string profile_name_n
++
++Profile names must match earlier sent profile names for the same card.
++
++
+ #### If you just changed the protocol, read this
+ ## module-tunnel depends on the sink/source/sink-input/source-input protocol
+ ## internals, so if you changed these, you might have broken module-tunnel.
+diff --git a/configure.ac b/configure.ac
+index 637cce2..7b0888c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -36,7 +36,7 @@ AC_SUBST(PA_MINOR, pa_minor)
+ AC_SUBST(PA_MAJORMINOR, pa_major.pa_minor)
+ 
+ AC_SUBST(PA_API_VERSION, 12)
+-AC_SUBST(PA_PROTOCOL_VERSION, 25)
++AC_SUBST(PA_PROTOCOL_VERSION, 26)
+ 
+ # The stable ABI for client applications, for the version info x:y:z
+ # always will hold y=z
+diff --git a/src/pulse/def.h b/src/pulse/def.h
+index 8a74fad..869007e 100644
+--- a/src/pulse/def.h
++++ b/src/pulse/def.h
+@@ -124,6 +124,20 @@ typedef enum pa_context_flags {
+ #define PA_CONTEXT_NOFAIL PA_CONTEXT_NOFAIL
+ /** \endcond */
+ 
++/** Direction bitfield - while we currently do not expose anything bidirectional,
++    one should test against the bit instead of the value (e g if (d & PA_DIRECTION_OUTPUT)),
++    because we might add bidirectional stuff in the future. \since 2.0
++*/
++typedef enum pa_direction {
++    PA_DIRECTION_OUTPUT = 0x0001U,  /**< Output direction */
++    PA_DIRECTION_INPUT = 0x0002U    /**< Input direction */
++} pa_direction_t;
++
++/** \cond fulldocs */
++#define PA_DIRECTION_OUTPUT PA_DIRECTION_OUTPUT
++#define PA_DIRECTION_INPUT PA_DIRECTION_INPUT
++/** \endcond */
++
+ /** The type of device we are dealing with */
+ typedef enum pa_device_type {
+     PA_DEVICE_TYPE_SINK,     /**< Playback device */
+diff --git a/src/pulse/introspect.c b/src/pulse/introspect.c
+index c8bf7ca..c6521c8 100644
+--- a/src/pulse/introspect.c
++++ b/src/pulse/introspect.c
+@@ -763,9 +763,87 @@ pa_operation* pa_context_get_client_info_list(pa_context *c, pa_client_info_cb_t
+ 
+ /*** Card info ***/
+ 
++static void card_info_free(pa_card_info* i)
++{
++    if (i->proplist)
++        pa_proplist_free(i->proplist);
++    pa_xfree(i->profiles);
++    if (i->ports) {
++        uint32_t j;
++        for (j = 0; j < i->n_ports; j++)
++            if (i->ports[j]) {
++                if (i->ports[j]->profiles)
++                    pa_xfree(i->ports[j]->profiles);
++                if (i->ports[j]->proplist)
++                    pa_proplist_free(i->ports[j]->proplist);
++            }
++        pa_xfree(i->ports[0]);
++        pa_xfree(i->ports);
++    }
++}
++
++static int fill_card_port_info(pa_tagstruct* t, pa_card_info* i)
++{
++    uint32_t j, k, l;
++    if (pa_tagstruct_getu32(t, &i->n_ports) < 0)
++        return -PA_ERR_PROTOCOL;
++
++    if (i->n_ports == 0) {
++        i->ports = NULL;
++        return 0;
++    }
++
++    i->ports = pa_xnew0(pa_card_port_info*, i->n_ports+1);
++    i->ports[0] = pa_xnew0(pa_card_port_info, i->n_ports);
++
++    for (j = 0; j < i->n_ports; j++) {
++        uint8_t direction;
++        uint32_t available;
++        pa_card_port_info* port = i->ports[j] = &i->ports[0][j];
++        port->proplist = pa_proplist_new();
++
++        if (pa_tagstruct_gets(t, &port->name) < 0 ||
++            pa_tagstruct_gets(t, &port->description) < 0 ||
++            pa_tagstruct_getu32(t, &port->priority) < 0 ||
++            pa_tagstruct_getu32(t, &available) < 0 ||
++            pa_tagstruct_getu8(t, &direction) < 0 ||
++            pa_tagstruct_get_proplist(t, port->proplist) < 0 ||
++            pa_tagstruct_getu32(t, &port->n_profiles) < 0) {
++
++            return -PA_ERR_PROTOCOL;
++        }
++
++        if (available > PA_PORT_AVAILABLE_YES ||
++            direction > PA_DIRECTION_OUTPUT + PA_DIRECTION_INPUT) {
++
++            return -PA_ERR_PROTOCOL;
++        }
++        port->direction = direction;
++        port->available = available;
++        if (port->n_profiles > 0) {
++            port->profiles = pa_xnew0(pa_card_profile_info*, i->n_profiles+1);
++            for (k = 0; k < port->n_profiles; k++) {
++                const char* profilename;
++                if (pa_tagstruct_gets(t, &profilename) < 0)
++                    return -PA_ERR_PROTOCOL;
++                for (l = 0; l < i->n_profiles; l++)
++                    if (pa_streq(i->profiles[l].name, profilename)) {
++                        port->profiles[k] = &i->profiles[l];
++                        break;
++                    }
++                if (l >= i->n_profiles)
++                    return -PA_ERR_PROTOCOL;
++            }
++        }
++    }
++
++    return 0;
++}
++
+ static void context_get_card_info_callback(pa_pdispatch *pd, uint32_t command, uint32_t tag, pa_tagstruct *t, void *userdata) {
+     pa_operation *o = userdata;
+     int eol = 1;
++    pa_card_info i;
+ 
+     pa_assert(pd);
+     pa_assert(o);
+@@ -782,7 +860,6 @@ static void context_get_card_info_callback(pa_pdispatch *pd, uint32_t command, u
+     } else {
+ 
+         while (!pa_tagstruct_eof(t)) {
+-            pa_card_info i;
+             uint32_t j;
+             const char*ap;
+ 
+@@ -794,8 +871,7 @@ static void context_get_card_info_callback(pa_pdispatch *pd, uint32_t command, u
+                 pa_tagstruct_gets(t, &i.driver) < 0 ||
+                 pa_tagstruct_getu32(t, &i.n_profiles) < 0) {
+ 
+-                pa_context_fail(o->context, PA_ERR_PROTOCOL);
+-                goto finish;
++                goto fail;
+             }
+ 
+             if (i.n_profiles > 0) {
+@@ -809,9 +885,7 @@ static void context_get_card_info_callback(pa_pdispatch *pd, uint32_t command, u
+                         pa_tagstruct_getu32(t, &i.profiles[j].n_sources) < 0 ||
+                         pa_tagstruct_getu32(t, &i.profiles[j].priority) < 0) {
+ 
+-                        pa_context_fail(o->context, PA_ERR_PROTOCOL);
+-                        pa_xfree(i.profiles);
+-                        goto finish;
++                        goto fail;
+                     }
+                 }
+ 
+@@ -825,10 +899,7 @@ static void context_get_card_info_callback(pa_pdispatch *pd, uint32_t command, u
+             if (pa_tagstruct_gets(t, &ap) < 0 ||
+                 pa_tagstruct_get_proplist(t, i.proplist) < 0) {
+ 
+-                pa_context_fail(o->context, PA_ERR_PROTOCOL);
+-                pa_xfree(i.profiles);
+-                pa_proplist_free(i.proplist);
+-                goto finish;
++                goto fail;
+             }
+ 
+             if (ap) {
+@@ -839,13 +910,17 @@ static void context_get_card_info_callback(pa_pdispatch *pd, uint32_t command, u
+                     }
+             }
+ 
++            if (o->context->version >= 26) {
++                if (fill_card_port_info(t, &i) < 0)
++                    goto fail;
++            }
++
+             if (o->callback) {
+                 pa_card_info_cb_t cb = (pa_card_info_cb_t) o->callback;
+                 cb(o->context, &i, 0, o->userdata);
+             }
+ 
+-            pa_proplist_free(i.proplist);
+-            pa_xfree(i.profiles);
++            card_info_free(&i);
+         }
+     }
+ 
+@@ -857,6 +932,12 @@ static void context_get_card_info_callback(pa_pdispatch *pd, uint32_t command, u
+ finish:
+     pa_operation_done(o);
+     pa_operation_unref(o);
++    return;
++
++fail:
++    card_info_free(&i);
++    pa_context_fail(o->context, PA_ERR_PROTOCOL);
++    goto finish;
+ }
+ 
+ pa_operation* pa_context_get_card_info_by_index(pa_context *c, uint32_t idx, pa_card_info_cb_t cb, void *userdata) {
+diff --git a/src/pulse/introspect.h b/src/pulse/introspect.h
+index afa4e8e..d703e97 100644
+--- a/src/pulse/introspect.h
++++ b/src/pulse/introspect.h
+@@ -454,6 +454,20 @@ typedef struct pa_card_profile_info {
+     uint32_t priority;                  /**< The higher this value is the more useful this profile is as a default */
+ } pa_card_profile_info;
+ 
++/** Stores information about a specific port of a card.  Please
++ * note that this structure can be extended as part of evolutionary
++ * API updates at any time in any new release. \since 2.0 */
++typedef struct pa_card_port_info {
++    const char *name;                   /**< Name of this port */
++    const char *description;            /**< Description of this port */
++    uint32_t priority;                  /**< The higher this value is the more useful this port is as a default */
++    int available;                      /**< A \link pa_port_available_t, indicating availability status of this port. */
++    int direction;                      /**< This is a \link pa_direction_t enum, indicating the direction of this port. */
++    uint32_t n_profiles;                /**< Number of entries in profile array */
++    pa_card_profile_info** profiles;    /**< Array of pointers available profile, or NULL. Array is terminated by an entry set to NULL. */
++    pa_proplist *proplist;              /**< Property list */
++} pa_card_port_info;
++
+ /** Stores information about cards. Please note that this structure
+  * can be extended as part of evolutionary API updates at any time in
+  * any new release.  \since 0.9.15 */
+@@ -466,6 +480,8 @@ typedef struct pa_card_info {
+     pa_card_profile_info* profiles;      /**< Array of available profile, or NULL. Array is terminated by an entry with name set to NULL. Number of entries is stored in n_profiles */
+     pa_card_profile_info* active_profile; /**< Pointer to active profile in the array, or NULL */
+     pa_proplist *proplist;               /**< Property list */
++    uint32_t n_ports;                    /**< Number of entries in port array */
++    pa_card_port_info **ports;           /**< Array of pointers to ports, or NULL. Array is terminated by an entry set to NULL. */
+ } pa_card_info;
+ 
+ /** Callback prototype for pa_context_get_card_info_...() \since 0.9.15 */
+diff --git a/src/pulsecore/protocol-native.c b/src/pulsecore/protocol-native.c
+index cf6616d..807c803 100644
+--- a/src/pulsecore/protocol-native.c
++++ b/src/pulsecore/protocol-native.c
+@@ -3228,6 +3228,32 @@ static void card_fill_tagstruct(pa_native_connection *c, pa_tagstruct *t, pa_car
+ 
+     pa_tagstruct_puts(t, card->active_profile ? card->active_profile->name : NULL);
+     pa_tagstruct_put_proplist(t, card->proplist);
++
++    if (c->version < 26)
++        return;
++    if (card->ports) {
++        pa_device_port* port;
++        pa_proplist* proplist = pa_proplist_new(); /* For now - push an empty proplist */
++        pa_tagstruct_putu32(t, pa_hashmap_size(card->ports));
++        PA_HASHMAP_FOREACH(port, card->ports, state) {
++            pa_tagstruct_puts(t, port->name);
++            pa_tagstruct_puts(t, port->description);
++            pa_tagstruct_putu32(t, port->priority);
++            pa_tagstruct_putu32(t, port->available);
++            pa_tagstruct_putu8(t, /* FIXME: port->direction */ (port->is_input ? PA_DIRECTION_INPUT : 0) | (port->is_output ? PA_DIRECTION_OUTPUT : 0));
++            pa_tagstruct_put_proplist(t, proplist);
++            if (port->profiles) {
++                void* state2;
++                pa_tagstruct_putu32(t, pa_hashmap_size(port->profiles));
++                PA_HASHMAP_FOREACH(p, port->profiles, state2)
++                    pa_tagstruct_puts(t, p->name);
++            } else
++                pa_tagstruct_putu32(t, 0);
++        }
++        pa_proplist_free(proplist);
++    } else
++        pa_tagstruct_putu32(t, 0);
++
+ }
+ 
+ static void module_fill_tagstruct(pa_native_connection *c, pa_tagstruct *t, pa_module *module) {
+diff --git a/src/utils/pactl.c b/src/utils/pactl.c
+index 53017d6..c959595 100644
+--- a/src/utils/pactl.c
++++ b/src/utils/pactl.c
+@@ -582,6 +582,25 @@ static void get_card_info_callback(pa_context *c, const pa_card_info *i, int is_
+         printf(_("\tActive Profile: %s\n"),
+                i->active_profile->name);
+ 
++    if (i->ports) {
++        pa_card_port_info **p;
++
++        printf(_("\tPorts:\n"));
++        for (p = i->ports; *p; p++) {
++            pa_card_profile_info **pr = (*p)->profiles;
++            printf(_("\t\t%s: %s (priority %u)\n"), (*p)->name, (*p)->description, (*p)->priority);
++            if (pr) {
++                printf(_("\t\t\tPart of profile(s): %s"), pa_strnull((*pr)->name));
++                pr++;
++                while (*pr) {
++                    printf(", %s", pa_strnull((*pr)->name));
++                    pr++;
++                }
++                printf("\n");
++            }
++        }
++    }
++
+     pa_xfree(pl);
+ }
+ 
+-- 
+1.7.7.3
+

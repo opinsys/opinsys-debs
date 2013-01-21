@@ -1,0 +1,23 @@
+Index: pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-input.conf
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/alsa/mixer/paths/analog-input.conf	2011-06-24 01:29:11.000000000 +0200
++++ pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-input.conf	2012-04-11 23:17:50.493243886 +0200
+@@ -23,7 +23,7 @@
+ priority = 100
+ 
+ [Element Capture]
+-required = volume
++; required = volume
+ switch = mute
+ volume = merge
+ override-map.1 = all
+@@ -32,6 +32,9 @@
+ [Element Mic]
+ required-absent = any
+ 
++[Element Mic Boost]
++required-absent = any
++
+ [Element Dock Mic]
+ required-absent = any
+ 

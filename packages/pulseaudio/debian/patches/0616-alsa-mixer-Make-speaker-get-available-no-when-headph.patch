@@ -1,0 +1,196 @@
+From b6d4a2295ec898ecf5460a4489fb8f606123c28a Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Wed, 1 Feb 2012 13:59:42 +0100
+Subject: [PATCH 1/3] alsa-mixer: Make speaker get available=no when
+ headphones are plugged in
+
+The least ugly workaround I could think of to make "speakers" disappear
+from the new UI. "Speaker" will now toggle between
+PA_PORT_AVAILABLE_NO (when Headphones are plugged in) and
+PA_PORT_AVAILABLE_UNKNOWN (when they are not).
+
+The same applies for "Mic" and "Internal Mic".
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/modules/alsa/alsa-mixer.c                      |   48 +++++++++++++++++++-
+ src/modules/alsa/alsa-mixer.h                      |    1 +
+ .../mixer/paths/analog-input-internal-mic.conf     |    5 ++
+ .../alsa/mixer/paths/analog-output-speaker.conf    |    5 ++
+ src/modules/alsa/module-alsa-card.c                |    2 +-
+ src/modules/module-switch-on-port-available.c      |    3 +
+ src/pulsecore/device-port.c                        |    5 +-
+ 7 files changed, 65 insertions(+), 4 deletions(-)
+
+diff --git a/src/modules/alsa/alsa-mixer.c b/src/modules/alsa/alsa-mixer.c
+index fe0e42a..c828dad 100644
+--- a/src/modules/alsa/alsa-mixer.c
++++ b/src/modules/alsa/alsa-mixer.c
+@@ -1738,6 +1738,8 @@ static pa_alsa_jack* jack_get(pa_alsa_path *p, const char *section) {
+             goto finish;
+ 
+     j = pa_xnew0(pa_alsa_jack, 1);
++    j->state_unplugged = PA_PORT_AVAILABLE_NO;
++    j->state_plugged = PA_PORT_AVAILABLE_YES;
+     j->path = p;
+     j->name = pa_xstrdup(section);
+     j->alsa_name = pa_sprintf_malloc("%s Jack", section);
+@@ -2201,6 +2203,45 @@ static int element_parse_override_map(
+     return 0;
+ }
+ 
++static int jack_parse_state(
++        const char *filename,
++        unsigned line,
++        const char *section,
++        const char *lvalue,
++        const char *rvalue,
++        void *data,
++        void *userdata) {
++
++    pa_alsa_path *p = userdata;
++    pa_alsa_jack *j;
++    pa_port_available_t pa;
++
++    if (!(j = jack_get(p, section))) {
++        pa_log("[%s:%u] state makes no sense in '%s'", filename, line, section);
++        return -1;
++    }
++
++    if (!strcmp(rvalue,"yes"))
++	pa = PA_PORT_AVAILABLE_YES;
++    else if (!strcmp(rvalue,"no"))
++	pa = PA_PORT_AVAILABLE_NO;
++    else if (!strcmp(rvalue,"unknown"))
++	pa = PA_PORT_AVAILABLE_UNKNOWN;
++    else {
++        pa_log("[%s:%u] state must be 'yes','no' or 'unknown' in '%s'", filename, line, section);
++        return -1;
++    }
++
++    if (!strcmp(lvalue, "state.unplugged"))
++        j->state_unplugged = pa;
++    else {
++        j->state_plugged = pa;
++        pa_assert(!strcmp(lvalue, "state.plugged"));
++    }
++
++    return 0;
++}
++
+ static int element_set_option(pa_alsa_element *e, snd_mixer_t *m, int alsa_idx) {
+     snd_mixer_selem_id_t *sid;
+     snd_mixer_elem_t *me;
+@@ -2385,6 +2426,10 @@ pa_alsa_path* pa_alsa_path_new(const char *fname, pa_alsa_direction_t direction)
+         { "priority",            option_parse_priority,             NULL, NULL },
+         { "name",                option_parse_name,                 NULL, NULL },
+ 
++        /* [Jack ...] */
++        { "state.plugged",       jack_parse_state,                  NULL, NULL },
++        { "state.unplugged",     jack_parse_state,                  NULL, NULL },
++
+         /* [Element ...] */
+         { "switch",              element_parse_switch,              NULL, NULL },
+         { "volume",              element_parse_volume,              NULL, NULL },
+@@ -3127,7 +3172,8 @@ static void path_set_condense(pa_alsa_path_set *ps, snd_mixer_t *m) {
+                 if (!ja->has_control)
+                     continue;
+                 PA_LLIST_FOREACH(jb, p2->jacks)
+-                    if (jb->has_control && !strcmp(jb->alsa_name, ja->alsa_name)) {
++                    if (jb->has_control && !strcmp(jb->alsa_name, ja->alsa_name) &&
++                        (ja->state_plugged == jb->state_plugged) && (ja->state_unplugged == jb->state_unplugged)) {
+                         exists = TRUE;
+                         break;
+                     }
+diff --git a/src/modules/alsa/alsa-mixer.h b/src/modules/alsa/alsa-mixer.h
+index f55c5c3..d7e4d2f 100644
+--- a/src/modules/alsa/alsa-mixer.h
++++ b/src/modules/alsa/alsa-mixer.h
+@@ -164,6 +164,7 @@ struct pa_alsa_jack {
+     pa_bool_t has_control; /* is the jack itself present? */
+     pa_bool_t plugged_in; /* is this jack currently plugged in? */
+     snd_hctl_elem_t *hctl_elem; /* Jack detection handle */
++    pa_port_available_t state_unplugged, state_plugged;
+ 
+     pa_alsa_required_t required;
+     pa_alsa_required_t required_any;
+diff --git a/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf b/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf
+index 70a1cd1..7b7d002 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf
+@@ -23,6 +23,11 @@
+ priority = 89
+ name = analog-input-microphone-internal
+ 
++; This is a workaround
++[Jack Mic]
++state.plugged = no
++state.unplugged = unknown
++
+ [Element Internal Mic Boost]
+ required-any = any
+ switch = select
+diff --git a/src/modules/alsa/mixer/paths/analog-output-speaker.conf b/src/modules/alsa/mixer/paths/analog-output-speaker.conf
+index c6916d6..f1a71a7 100644
+--- a/src/modules/alsa/mixer/paths/analog-output-speaker.conf
++++ b/src/modules/alsa/mixer/paths/analog-output-speaker.conf
+@@ -22,6 +22,11 @@
+ priority = 100
+ name = analog-output-speaker
+ 
++; This is a workaround (would be better to be able to disable automute everywhere)
++[Jack Headphone]
++state.plugged = no
++state.unplugged = unknown
++
+ [Element Hardware Master]
+ switch = mute
+ volume = merge
+diff --git a/src/modules/alsa/module-alsa-card.c b/src/modules/alsa/module-alsa-card.c
+index ff50e93..08b27f8 100644
+--- a/src/modules/alsa/module-alsa-card.c
++++ b/src/modules/alsa/module-alsa-card.c
+@@ -297,7 +297,7 @@ static int report_jack_state(snd_hctl_elem_t *elem, unsigned int mask)
+             jack->plugged_in = plugged_in;
+             /* TODO: Handle more than one jack per port */
+             pa_assert(jack->path && jack->path->port);
+-            pa_device_port_set_available(jack->path->port, plugged_in ? PA_PORT_AVAILABLE_YES : PA_PORT_AVAILABLE_NO);
++            pa_device_port_set_available(jack->path->port, plugged_in ? jack->state_plugged : jack->state_unplugged);
+         }
+     return 0;
+ }
+diff --git a/src/modules/module-switch-on-port-available.c b/src/modules/module-switch-on-port-available.c
+index 8ee3192..cee4543 100644
+--- a/src/modules/module-switch-on-port-available.c
++++ b/src/modules/module-switch-on-port-available.c
+@@ -111,6 +111,9 @@ static pa_hook_result_t port_available_hook_callback(pa_core *c, pa_device_port
+     pa_source *source;
+     pa_bool_t is_active_profile, is_active_port;
+ 
++    if (port->available == PA_PORT_AVAILABLE_UNKNOWN)
++        return PA_HOOK_OK;
++
+     pa_log_debug("finding port %s", port->name);
+     PA_IDXSET_FOREACH(card, c->cards, state)
+         if (card->ports && port == pa_hashmap_get(card->ports, port->name))
+diff --git a/src/pulsecore/device-port.c b/src/pulsecore/device-port.c
+index 30fb025..50c99b8 100644
+--- a/src/pulsecore/device-port.c
++++ b/src/pulsecore/device-port.c
+@@ -39,10 +39,11 @@ void pa_device_port_set_available(pa_device_port *p, pa_port_available_t status)
+     if (p->available == status)
+         return;
+ 
+-    pa_assert(status != PA_PORT_AVAILABLE_UNKNOWN);
++/*    pa_assert(status != PA_PORT_AVAILABLE_UNKNOWN); */
+ 
+     p->available = status;
+-    pa_log_debug("Setting port %s to status %s", p->name, status == PA_PORT_AVAILABLE_YES ? "yes" : "no");
++    pa_log_debug("Setting port %s to status %s", p->name, status == PA_PORT_AVAILABLE_YES ? "yes" :
++       status == PA_PORT_AVAILABLE_NO ? "no" : "unknown");
+ 
+     /* Post subscriptions to the card which owns us */
+     pa_assert_se(core = p->core);
+-- 
+1.7.9
+

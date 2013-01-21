@@ -1,0 +1,288 @@
+From fe6ff5ce3eea6db087030df397d9701ab9d2605c Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Fri, 25 Nov 2011 15:17:11 +0100
+Subject: [PATCH 601/614] Introduce "available" concept for ports, and
+ communicate that to clients. Bump protocol version
+ to 24.
+
+Note: There is still no notification when status availability changes.
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ PROTOCOL                        |   10 ++++
+ configure.ac                    |    2 +-
+ src/modules/module-tunnel.c     |   91 +++++++++++++++++----------------------
+ src/pulse/def.h                 |   15 ++++++
+ src/pulse/introspect.c          |   16 +++++++
+ src/pulse/introspect.h          |    2 +
+ src/pulsecore/protocol-native.c |    4 ++
+ src/pulsecore/sink.h            |    1 +
+ 8 files changed, 88 insertions(+), 53 deletions(-)
+
+diff --git a/PROTOCOL b/PROTOCOL
+index 8c69190..8b2f81f 100644
+--- a/PROTOCOL
++++ b/PROTOCOL
+@@ -278,6 +278,16 @@ New field in PA_COMMAND_UNDERFLOW:
+ 
+     int64_t index
+ 
++## v24, implemented by >= 2.0
++
++New field in all commands that send/receive port introspection data
++(PA_COMMAND_GET_(SOURCE|SINK)_OUTPUT_INFO,
++PA_COMMAND_GET_(SOURCE|SINK)_OUTPUT_INFO_LIST):
++
++    uint32_t available
++
++The field is added once for every port.
++
+ #### If you just changed the protocol, read this
+ ## module-tunnel depends on the sink/source/sink-input/source-input protocol
+ ## internals, so if you changed these, you might have broken module-tunnel.
+diff --git a/configure.ac b/configure.ac
+index a91daf4..48ff8ff 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -36,7 +36,7 @@ AC_SUBST(PA_MINOR, pa_minor)
+ AC_SUBST(PA_MAJORMINOR, pa_major.pa_minor)
+ 
+ AC_SUBST(PA_API_VERSION, 12)
+-AC_SUBST(PA_PROTOCOL_VERSION, 23)
++AC_SUBST(PA_PROTOCOL_VERSION, 24)
+ 
+ # The stable ABI for client applications, for the version info x:y:z
+ # always will hold y=z
+diff --git a/src/modules/module-tunnel.c b/src/modules/module-tunnel.c
+index faee995..61ec35d 100644
+--- a/src/modules/module-tunnel.c
++++ b/src/modules/module-tunnel.c
+@@ -996,6 +996,41 @@ fail:
+     pa_module_unload_request(u->module, TRUE);
+ }
+ 
++static int read_ports(struct userdata *u, pa_tagstruct *t)
++{
++    if (u->version >= 16) {
++        uint32_t n_ports;
++        const char *s;
++
++        if (pa_tagstruct_getu32(t, &n_ports)) {
++            pa_log("Parse failure");
++            return -PA_ERR_PROTOCOL;
++        }
++
++        for (uint32_t j = 0; j < n_ports; j++) {
++            uint32_t priority;
++
++            if (pa_tagstruct_gets(t, &s) < 0 || /* name */
++                pa_tagstruct_gets(t, &s) < 0 || /* description */
++                pa_tagstruct_getu32(t, &priority) < 0) {
++
++                pa_log("Parse failure");
++                return -PA_ERR_PROTOCOL;
++            }
++            if (u->version >= 24 && pa_tagstruct_getu32(t, &priority) < 0) { /* available */
++                pa_log("Parse failure");
++                return -PA_ERR_PROTOCOL;
++            }
++        }
++
++        if (pa_tagstruct_gets(t, &s) < 0) { /* active port */
++            pa_log("Parse failure");
++            return -PA_ERR_PROTOCOL;
++        }
++    }
++    return 0;
++}
++
+ #ifdef TUNNEL_SINK
+ 
+ /* Called from main context */
+@@ -1066,32 +1101,8 @@ static void sink_info_cb(pa_pdispatch *pd, uint32_t command,  uint32_t tag, pa_t
+         }
+     }
+ 
+-    if (u->version >= 16) {
+-        uint32_t n_ports;
+-        const char *s;
+-
+-        if (pa_tagstruct_getu32(t, &n_ports)) {
+-            pa_log("Parse failure");
+-            goto fail;
+-        }
+-
+-        for (uint32_t j = 0; j < n_ports; j++) {
+-            uint32_t priority;
+-
+-            if (pa_tagstruct_gets(t, &s) < 0 || /* name */
+-                pa_tagstruct_gets(t, &s) < 0 || /* description */
+-                pa_tagstruct_getu32(t, &priority) < 0) {
+-
+-                pa_log("Parse failure");
+-                goto fail;
+-            }
+-        }
+-
+-        if (pa_tagstruct_gets(t, &s) < 0) { /* active port */
+-            pa_log("Parse failure");
+-            goto fail;
+-        }
+-    }
++    if (read_ports(u, t) < 0)
++        goto fail;
+ 
+     if (u->version >= 21) {
+         uint8_t n_formats;
+@@ -1318,32 +1329,8 @@ static void source_info_cb(pa_pdispatch *pd, uint32_t command,  uint32_t tag, pa
+         }
+     }
+ 
+-    if (u->version >= 16) {
+-        uint32_t n_ports;
+-        const char *s;
+-
+-        if (pa_tagstruct_getu32(t, &n_ports)) {
+-            pa_log("Parse failure");
+-            goto fail;
+-        }
+-
+-        for (uint32_t j = 0; j < n_ports; j++) {
+-            uint32_t priority;
+-
+-            if (pa_tagstruct_gets(t, &s) < 0 || /* name */
+-                pa_tagstruct_gets(t, &s) < 0 || /* description */
+-                pa_tagstruct_getu32(t, &priority) < 0) {
+-
+-                pa_log("Parse failure");
+-                goto fail;
+-            }
+-        }
+-
+-        if (pa_tagstruct_gets(t, &s) < 0) { /* active port */
+-            pa_log("Parse failure");
+-            goto fail;
+-        }
+-    }
++    if (read_ports(u, t) < 0)
++        goto fail;
+ 
+     if (!pa_tagstruct_eof(t)) {
+         pa_log("Packet too long");
+diff --git a/src/pulse/def.h b/src/pulse/def.h
+index f43e864..8a74fad 100644
+--- a/src/pulse/def.h
++++ b/src/pulse/def.h
+@@ -967,6 +967,21 @@ typedef void (*pa_free_cb_t)(void *p);
+  * playback, \since 1.0 */
+ #define PA_STREAM_EVENT_FORMAT_LOST "format-lost"
+ 
++/** Port availability / jack detection status
++ * \since 2.0 */
++typedef enum pa_port_available {
++    PA_PORT_AVAILABLE_UNKNOWN = 0, /**< This port does not support jack detection \since 2.0 */
++    PA_PORT_AVAILABLE_NO = 1,      /**< This port is not available, likely because the jack is not plugged in. \since 2.0 */
++    PA_PORT_AVAILABLE_YES = 2,     /**< This port is available, likely because the jack is plugged in. \since 2.0 */
++} pa_port_available_t;
++
++/** \cond fulldocs */
++#define PA_PORT_AVAILABLE_UNKNOWN PA_PORT_AVAILABLE_UNKNOWN
++#define PA_PORT_AVAILABLE_NO PA_PORT_AVAILABLE_NO
++#define PA_PORT_AVAILABLE_YES PA_PORT_AVAILABLE_YES
++
++/** \endcond */
++
+ PA_C_DECL_END
+ 
+ #endif
+diff --git a/src/pulse/introspect.c b/src/pulse/introspect.c
+index 0d1d03f..c8bf7ca 100644
+--- a/src/pulse/introspect.c
++++ b/src/pulse/introspect.c
+@@ -211,6 +211,14 @@ static void context_get_sink_info_callback(pa_pdispatch *pd, uint32_t command, u
+                             goto fail;
+                         }
+ 
++                        i.ports[0][j].available = PA_PORT_AVAILABLE_UNKNOWN;
++                        if (o->context->version >= 24) {
++                            uint32_t av;
++                            if (pa_tagstruct_getu32(t, &av) < 0 || av > PA_PORT_AVAILABLE_YES)
++                                goto fail;
++                            i.ports[0][j].available = av;
++                        }
++
+                         i.ports[j] = &i.ports[0][j];
+                     }
+ 
+@@ -476,6 +484,14 @@ static void context_get_source_info_callback(pa_pdispatch *pd, uint32_t command,
+                             goto fail;
+                         }
+ 
++                        i.ports[0][j].available = PA_PORT_AVAILABLE_UNKNOWN;
++                        if (o->context->version >= 24) {
++                            uint32_t av;
++                            if (pa_tagstruct_getu32(t, &av) < 0 || av > PA_PORT_AVAILABLE_YES)
++                                goto fail;
++                            i.ports[0][j].available = av;
++                        }
++
+                         i.ports[j] = &i.ports[0][j];
+                     }
+ 
+diff --git a/src/pulse/introspect.h b/src/pulse/introspect.h
+index 1d77d45..afa4e8e 100644
+--- a/src/pulse/introspect.h
++++ b/src/pulse/introspect.h
+@@ -202,6 +202,7 @@ typedef struct pa_sink_port_info {
+     const char *name;                   /**< Name of this port */
+     const char *description;            /**< Description of this port */
+     uint32_t priority;                  /**< The higher this value is the more useful this port is as a default */
++    int available;                      /**< A \link pa_port_available_t, indicating availability status of this port. \since 2.0 */
+ } pa_sink_port_info;
+ 
+ /** Stores information about sinks. Please note that this structure
+@@ -281,6 +282,7 @@ typedef struct pa_source_port_info {
+     const char *name;                   /**< Name of this port */
+     const char *description;            /**< Description of this port */
+     uint32_t priority;                  /**< The higher this value is the more useful this port is as a default */
++    int available;                      /**< A \link pa_port_available_t, indicating availability status of this port. \since 2.0 */
+ } pa_source_port_info;
+ 
+ /** Stores information about sources. Please note that this structure
+diff --git a/src/pulsecore/protocol-native.c b/src/pulsecore/protocol-native.c
+index e871478..cf6616d 100644
+--- a/src/pulsecore/protocol-native.c
++++ b/src/pulsecore/protocol-native.c
+@@ -3094,6 +3094,8 @@ static void sink_fill_tagstruct(pa_native_connection *c, pa_tagstruct *t, pa_sin
+                 pa_tagstruct_puts(t, p->name);
+                 pa_tagstruct_puts(t, p->description);
+                 pa_tagstruct_putu32(t, p->priority);
++                if (c->version >= 24)
++                    pa_tagstruct_putu32(t, p->available);
+             }
+         }
+ 
+@@ -3165,6 +3167,8 @@ static void source_fill_tagstruct(pa_native_connection *c, pa_tagstruct *t, pa_s
+                 pa_tagstruct_puts(t, p->name);
+                 pa_tagstruct_puts(t, p->description);
+                 pa_tagstruct_putu32(t, p->priority);
++                if (c->version >= 24)
++                    pa_tagstruct_putu32(t, p->available);
+             }
+         }
+ 
+diff --git a/src/pulsecore/sink.h b/src/pulsecore/sink.h
+index 7f639e2..669a3f5 100644
+--- a/src/pulsecore/sink.h
++++ b/src/pulsecore/sink.h
+@@ -60,6 +60,7 @@ struct pa_device_port {
+     char *description;
+ 
+     unsigned priority;
++    pa_port_available_t available;         /* PA_PORT_AVAILABLE_UNKNOWN, PA_PORT_AVAILABLE_NO or PA_PORT_AVAILABLE_YES */
+ 
+     /* .. followed by some implementation specific data */
+ };
+-- 
+1.7.7.3
+

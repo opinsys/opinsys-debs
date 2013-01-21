@@ -1,0 +1,55 @@
+commit 12a53524b3bdbae2dce7c9fd507561633d3beaec
+Author: David Henningsson <david.henningsson@canonical.com>
+Date:   Mon Jul 2 12:09:06 2012 +0200
+BugLink: https://bugs.launchpad.net/ubuntu/precise/+source/pulseaudio/+bug/1020471
+
+    alsa-mixer: Add "Front Headphone" jack
+    
+    Many desktops have headphone on the front and line outs on the back.
+    Sometimes this means that the headphone is labelled "Front Headphone Jack",
+    but the volume controls are only "Headphone Playback Volume", i e,
+    without the "Front" prefix.
+    
+    Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+
+commit 47b31ce6ad744de9595eb4d5366d25b40c5d3455
+Author: David Henningsson <david.henningsson@canonical.com>
+Date:   Tue Jul 3 10:31:30 2012 +0200
+
+    alsa-mixer: Add "Front Headphone Jack" (fixup)
+    
+    I forgot half of the front headphone patch, i e, to hide the
+    speaker output when the front headphone is connected. Thanks to
+    Shih-Yuan Lee for noticing.
+    
+    Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+
+Index: pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-output-headphones.conf
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/alsa/mixer/paths/analog-output-headphones.conf	2012-08-15 12:12:13.000000000 +0200
++++ pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-output-headphones.conf	2012-08-15 12:21:25.198959056 +0200
+@@ -22,6 +22,9 @@
+ priority = 90
+ name = analog-output-headphones
+ 
++[Jack Front Headphone]
++required-any = any
++
+ [Jack Headphone]
+ required-any = any
+ 
+Index: pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-output-speaker.conf
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/alsa/mixer/paths/analog-output-speaker.conf	2012-08-15 12:12:13.000000000 +0200
++++ pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-output-speaker.conf	2012-08-15 12:21:59.782958446 +0200
+@@ -27,6 +27,10 @@
+ state.plugged = no
+ state.unplugged = unknown
+ 
++[Jack Front Headphone]
++state.plugged = no
++state.unplugged = unknown
++
+ [Element Hardware Master]
+ switch = mute
+ volume = merge

@@ -1,0 +1,13 @@
+Index: pulseaudio-0.99.2/src/daemon/default.pa.in
+===================================================================
+--- pulseaudio-0.99.2.orig/src/daemon/default.pa.in	2011-08-16 20:01:34.000000000 +1000
++++ pulseaudio-0.99.2/src/daemon/default.pa.in	2011-08-18 08:43:10.466148645 +1000
+@@ -150,7 +150,7 @@
+ load-module module-position-event-sounds
+ 
+ ### Cork music streams when a phone stream is active
+-load-module module-cork-music-on-phone
++#load-module module-cork-music-on-phone
+ 
+ ### Modules to allow autoloading of filters (such as echo cancellation)
+ ### on demand. module-filter-heuristics tries to determine what filters

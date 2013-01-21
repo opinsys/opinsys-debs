@@ -1,0 +1,63 @@
+From 2577cc81b3559b78ffeb5ee4a858e2c832c015b2 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Mon, 26 Mar 2012 10:31:47 +0200
+Subject: [PATCH 04/20] alsa-mixer: Show HDMI ports for older Nvidia cards
+
+Some older cards do not have jack detection. This patch makes the
+port still show up.
+An implementation detail: the "required = ignore" line has in itself
+no effect, but we have to write *something* there, or else the entire
+jack detection section will be ignored by the parser.
+
+BugLink: https://bugs.launchpad.net/bugs/961286
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/modules/alsa/mixer/paths/hdmi-output-0.conf |    2 +-
+ src/modules/alsa/mixer/paths/hdmi-output-1.conf |    2 +-
+ src/modules/alsa/mixer/paths/hdmi-output-2.conf |    2 +-
+ src/modules/alsa/mixer/paths/hdmi-output-3.conf |    2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/modules/alsa/mixer/paths/hdmi-output-0.conf b/src/modules/alsa/mixer/paths/hdmi-output-0.conf
+index 46ee4fd..a86cdbd 100644
+--- a/src/modules/alsa/mixer/paths/hdmi-output-0.conf
++++ b/src/modules/alsa/mixer/paths/hdmi-output-0.conf
+@@ -3,4 +3,4 @@ description = HDMI / DisplayPort
+ priority = 59
+ 
+ [Jack HDMI/DP,pcm=3]
+-required-any = any
++required = ignore
+diff --git a/src/modules/alsa/mixer/paths/hdmi-output-1.conf b/src/modules/alsa/mixer/paths/hdmi-output-1.conf
+index da8fcb4..d579e4b 100644
+--- a/src/modules/alsa/mixer/paths/hdmi-output-1.conf
++++ b/src/modules/alsa/mixer/paths/hdmi-output-1.conf
+@@ -3,4 +3,4 @@ description = HDMI / DisplayPort 2
+ priority = 58
+ 
+ [Jack HDMI/DP,pcm=7]
+-required-any = any
++required = ignore
+diff --git a/src/modules/alsa/mixer/paths/hdmi-output-2.conf b/src/modules/alsa/mixer/paths/hdmi-output-2.conf
+index 5fcddc6..fee57d7 100644
+--- a/src/modules/alsa/mixer/paths/hdmi-output-2.conf
++++ b/src/modules/alsa/mixer/paths/hdmi-output-2.conf
+@@ -3,4 +3,4 @@ description = HDMI / DisplayPort 3
+ priority = 57
+ 
+ [Jack HDMI/DP,pcm=8]
+-required-any = any
++required = ignore
+diff --git a/src/modules/alsa/mixer/paths/hdmi-output-3.conf b/src/modules/alsa/mixer/paths/hdmi-output-3.conf
+index 8200787..4e6d149 100644
+--- a/src/modules/alsa/mixer/paths/hdmi-output-3.conf
++++ b/src/modules/alsa/mixer/paths/hdmi-output-3.conf
+@@ -3,4 +3,4 @@ description = HDMI / DisplayPort 4
+ priority = 56
+ 
+ [Jack HDMI/DP,pcm=9]
+-required-any = any
++required = ignore
+-- 
+1.7.9.1
+

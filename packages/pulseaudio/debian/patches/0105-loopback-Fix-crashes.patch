@@ -1,0 +1,36 @@
+From 2c652b43f98e3f990ec3f7b7c77b7d6e87e9deb5 Mon Sep 17 00:00:00 2001
+From: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date: Sun, 22 Jan 2012 14:11:23 +0100
+Subject: [PATCH 7/8] loopback: Fix crashes
+
+Flush the message queue before tearing down, and dest==NULL is valid in case moving failed.
+
+With this my module-loopback finally no longer causes frequent crashes.
+---
+ src/modules/module-loopback.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/src/modules/module-loopback.c b/src/modules/module-loopback.c
+index 5291258..1f2ef91 100644
+--- a/src/modules/module-loopback.c
++++ b/src/modules/module-loopback.c
+@@ -136,6 +136,7 @@ static void teardown(struct userdata *u) {
+     pa_assert(u);
+     pa_assert_ctl_context();
+ 
++    pa_asyncmsgq_flush(u->asyncmsgq, 0);
+     if (u->sink_input)
+         pa_sink_input_unlink(u->sink_input);
+ 
+@@ -360,6 +361,8 @@ static void source_output_moving_cb(pa_source_output *o, pa_source *dest) {
+     pa_proplist *p;
+     const char *n;
+     struct userdata *u;
++    if (!dest)
++        return;
+ 
+     pa_source_output_assert_ref(o);
+     pa_assert_ctl_context();
+-- 
+1.7.8.3
+

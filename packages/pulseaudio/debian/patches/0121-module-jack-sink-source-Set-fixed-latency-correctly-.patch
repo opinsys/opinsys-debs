@@ -1,0 +1,97 @@
+From 311654766207b3776e2618ae63ac35115db48bbd Mon Sep 17 00:00:00 2001
+From: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date: Mon, 26 Mar 2012 23:12:24 +0200
+Subject: [PATCH 11/20] module-jack-sink/source: Set fixed latency correctly
+ on creation
+
+Changes since v1:
+Use max value of jack_port_get_latency_range to calculate the latency
+and squash compiler warnings cased by using jack_port_get_total_latency
+
+Modifying latency only works inside a callback, and for hardware the
+latency is generally fixed on jack, so just take the max value.
+
+Signed-off-by: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+---
+ src/modules/jack/module-jack-sink.c   |    9 ++++++++-
+ src/modules/jack/module-jack-source.c |    9 ++++++++-
+ 2 files changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/src/modules/jack/module-jack-sink.c b/src/modules/jack/module-jack-sink.c
+index ba4ea95..017fbf6 100644
+--- a/src/modules/jack/module-jack-sink.c
++++ b/src/modules/jack/module-jack-sink.c
+@@ -168,10 +168,12 @@ static int sink_process_msg(pa_msgobject *o, int code, void *data, int64_t offse
+ 
+         case PA_SINK_MESSAGE_GET_LATENCY: {
+             jack_nframes_t l, ft, d;
++            jack_latency_range_t r;
+             size_t n;
+ 
+             /* This is the "worst-case" latency */
+-            l = jack_port_get_total_latency(u->client, u->port[0]) + u->frames_in_buffer;
++            jack_port_get_latency_range(u->port[0], JackPlaybackLatency, &r);
++            l = r.max + u->frames_in_buffer;
+ 
+             if (u->saved_frame_time_valid) {
+                 /* Adjust the worst case latency by the time that
+@@ -296,6 +298,8 @@ int pa__init(pa_module*m) {
+     unsigned i;
+     const char **ports = NULL, **p;
+     pa_sink_new_data data;
++    jack_latency_range_t r;
++    size_t n;
+ 
+     pa_assert(m);
+ 
+@@ -443,6 +447,9 @@ int pa__init(pa_module*m) {
+         }
+     }
+ 
++    jack_port_get_latency_range(u->port[0], JackPlaybackLatency, &r);
++    n = r.max * pa_frame_size(&u->sink->sample_spec);
++    pa_sink_set_fixed_latency(u->sink, pa_bytes_to_usec(n, &u->sink->sample_spec));
+     pa_sink_put(u->sink);
+ 
+     if (ports)
+diff --git a/src/modules/jack/module-jack-source.c b/src/modules/jack/module-jack-source.c
+index 13109f3..cf62882 100644
+--- a/src/modules/jack/module-jack-source.c
++++ b/src/modules/jack/module-jack-source.c
+@@ -124,11 +124,13 @@ static int source_process_msg(pa_msgobject *o, int code, void *data, int64_t off
+             return 0;
+ 
+         case PA_SOURCE_MESSAGE_GET_LATENCY: {
++            jack_latency_range_t r;
+             jack_nframes_t l, ft, d;
+             size_t n;
+ 
+             /* This is the "worst-case" latency */
+-            l = jack_port_get_total_latency(u->client, u->port[0]);
++            jack_port_get_latency_range(u->port[0], JackCaptureLatency, &r);
++            l = r.max;
+ 
+             if (u->saved_frame_time_valid) {
+                 /* Adjust the worst case latency by the time that
+@@ -249,6 +251,8 @@ int pa__init(pa_module*m) {
+     unsigned i;
+     const char **ports = NULL, **p;
+     pa_source_new_data data;
++    jack_latency_range_t r;
++    size_t n;
+ 
+     pa_assert(m);
+ 
+@@ -388,6 +392,9 @@ int pa__init(pa_module*m) {
+ 
+     }
+ 
++    jack_port_get_latency_range(u->port[0], JackCaptureLatency, &r);
++    n = r.max * pa_frame_size(&u->source->sample_spec);
++    pa_source_set_fixed_latency(u->source, pa_bytes_to_usec(n, &u->source->sample_spec));
+     pa_source_put(u->source);
+ 
+     if (ports)
+-- 
+1.7.9.1
+

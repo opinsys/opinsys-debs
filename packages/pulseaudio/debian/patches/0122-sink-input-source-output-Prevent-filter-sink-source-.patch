@@ -1,0 +1,93 @@
+From b7fab75fdde21569ef0be4c7c52887031393d75c Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Fri, 23 Mar 2012 13:06:27 +0100
+Subject: [PATCH 12/20] sink-input/source-output: Prevent filter sink/source
+ cycles
+
+Misbehaving clients can try to set a filter sink to output to
+itself, leading to crashes later on. This patch protects us from that.
+
+Thanks to Roman Beslik for testing and finding an error in the first
+version of this patch.
+
+Tested-by: Roman Beslik <rabeslik@gmail.com>
+BugLink: https://bugs.freedesktop.org/show_bug.cgi?id=44397
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/pulsecore/sink-input.c    |   17 +++++++++++++++++
+ src/pulsecore/source-output.c |   17 +++++++++++++++++
+ 2 files changed, 34 insertions(+), 0 deletions(-)
+
+diff --git a/src/pulsecore/sink-input.c b/src/pulsecore/sink-input.c
+index b8412bd..f6f7324 100644
+--- a/src/pulsecore/sink-input.c
++++ b/src/pulsecore/sink-input.c
+@@ -1383,6 +1383,17 @@ pa_bool_t pa_sink_input_may_move(pa_sink_input *i) {
+     return TRUE;
+ }
+ 
++static pa_bool_t find_filter_sink_input(pa_sink_input *target, pa_sink *s) {
++    int i = 0;
++    while (s && s->input_to_master) {
++        if (s->input_to_master == target)
++            return TRUE;
++        s = s->input_to_master->sink;
++        pa_assert(i++ < 100);
++    }
++    return FALSE;
++}
++
+ /* Called from main context */
+ pa_bool_t pa_sink_input_may_move_to(pa_sink_input *i, pa_sink *dest) {
+     pa_sink_input_assert_ref(i);
+@@ -1396,6 +1407,12 @@ pa_bool_t pa_sink_input_may_move_to(pa_sink_input *i, pa_sink *dest) {
+     if (!pa_sink_input_may_move(i))
+         return FALSE;
+ 
++    /* Make sure we're not creating a filter sink cycle */
++    if (find_filter_sink_input(i, dest)) {
++        pa_log_debug("Can't connect input to %s, as that would create a cycle.", dest->name);
++        return FALSE;
++    }
++
+     if (pa_idxset_size(dest->inputs) >= PA_MAX_INPUTS_PER_SINK) {
+         pa_log_warn("Failed to move sink input: too many inputs per sink.");
+         return FALSE;
+diff --git a/src/pulsecore/source-output.c b/src/pulsecore/source-output.c
+index fbfea9c..cd7981c 100644
+--- a/src/pulsecore/source-output.c
++++ b/src/pulsecore/source-output.c
+@@ -1160,6 +1160,17 @@ pa_bool_t pa_source_output_may_move(pa_source_output *o) {
+     return TRUE;
+ }
+ 
++static pa_bool_t find_filter_source_output(pa_source_output *target, pa_source *s) {
++    int i = 0;
++    while (s && s->output_from_master) {
++        if (s->output_from_master == target)
++            return TRUE;
++        s = s->output_from_master->source;
++        pa_assert(i++ < 100);
++    }
++    return FALSE;
++}
++
+ /* Called from main context */
+ pa_bool_t pa_source_output_may_move_to(pa_source_output *o, pa_source *dest) {
+     pa_source_output_assert_ref(o);
+@@ -1172,6 +1183,12 @@ pa_bool_t pa_source_output_may_move_to(pa_source_output *o, pa_source *dest) {
+     if (!pa_source_output_may_move(o))
+         return FALSE;
+ 
++    /* Make sure we're not creating a filter source cycle */
++    if (find_filter_source_output(o, dest)) {
++        pa_log_debug("Can't connect output to %s, as that would create a cycle.", dest->name);
++        return FALSE;
++    }
++
+     if (pa_idxset_size(dest->outputs) >= PA_MAX_OUTPUTS_PER_SOURCE) {
+         pa_log_warn("Failed to move source output: too many outputs per source.");
+         return FALSE;
+-- 
+1.7.9.1
+

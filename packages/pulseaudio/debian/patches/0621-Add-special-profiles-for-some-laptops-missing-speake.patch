@@ -1,0 +1,636 @@
+From 54324f9ddab53df11ea752d5cd1ba66c4498c13b Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Thu, 3 May 2012 15:39:18 +0200
+Subject: [PATCH] Add special profiles for some laptops missing speaker and/or
+ internal mic
+
+Several laptops have speaker ports, and/or internal mic ports, but we have
+no way of detecting that. So we make the port(s) always show up for these
+devices.
+
+BugLink: https://bugs.launchpad.net/bugs/946232
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/Makefile.am                                    |    4 +
+ .../paths/analog-input-internal-mic-always.conf    |  135 ++++++++++++++++++++
+ .../mixer/paths/analog-output-speaker-always.conf  |  127 ++++++++++++++++++
+ .../alsa/mixer/profile-sets/90-pulseaudio.rules    |   47 +++++++
+ .../profile-sets/force-speaker-and-int-mic.conf    |  122 ++++++++++++++++++
+ .../alsa/mixer/profile-sets/force-speaker.conf     |  121 ++++++++++++++++++
+ 6 files changed, 556 insertions(+)
+ create mode 100644 src/modules/alsa/mixer/paths/analog-input-internal-mic-always.conf
+ create mode 100644 src/modules/alsa/mixer/paths/analog-output-speaker-always.conf
+ create mode 100644 src/modules/alsa/mixer/profile-sets/force-speaker-and-int-mic.conf
+ create mode 100644 src/modules/alsa/mixer/profile-sets/force-speaker.conf
+
+Index: pulseaudio-1.1/src/Makefile.am
+===================================================================
+--- pulseaudio-1.1.orig/src/Makefile.am	2012-05-28 11:09:35.000000000 +0200
++++ pulseaudio-1.1/src/Makefile.am	2012-05-28 11:11:08.537671686 +0200
+@@ -1071,6 +1071,8 @@
+ dist_alsaprofilesets_DATA = \
+ 		modules/alsa/mixer/profile-sets/default.conf \
+ 		modules/alsa/mixer/profile-sets/extra-hdmi.conf \
++		modules/alsa/mixer/profile-sets/force-speaker.conf \
++		modules/alsa/mixer/profile-sets/force-speaker-and-int-mic.conf \
+ 		modules/alsa/mixer/profile-sets/maudio-fasttrack-pro.conf \
+ 		modules/alsa/mixer/profile-sets/native-instruments-audio4dj.conf \
+ 		modules/alsa/mixer/profile-sets/native-instruments-audio8dj.conf \
+@@ -1095,6 +1097,7 @@
+ 		modules/alsa/mixer/paths/analog-input-dock-mic.conf \
+ 		modules/alsa/mixer/paths/analog-input-front-mic.conf \
+ 		modules/alsa/mixer/paths/analog-input-internal-mic.conf \
++		modules/alsa/mixer/paths/analog-input-internal-mic-always.conf \
+ 		modules/alsa/mixer/paths/analog-input-rear-mic.conf \
+ 		modules/alsa/mixer/paths/analog-input-mic.conf.common \
+ 		modules/alsa/mixer/paths/analog-input-mic-line.conf \
+@@ -1102,6 +1105,7 @@
+ 		modules/alsa/mixer/paths/analog-input-video.conf \
+ 		modules/alsa/mixer/paths/analog-output.conf \
+ 		modules/alsa/mixer/paths/analog-output-speaker.conf \
++		modules/alsa/mixer/paths/analog-output-speaker-always.conf \
+ 		modules/alsa/mixer/paths/analog-output.conf.common \
+ 		modules/alsa/mixer/paths/analog-output-desktop-speaker.conf \
+ 		modules/alsa/mixer/paths/analog-output-headphones.conf \
+Index: pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-input-internal-mic-always.conf
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-input-internal-mic-always.conf	2012-05-28 11:11:08.537671686 +0200
+@@ -0,0 +1,135 @@
++# This file is part of PulseAudio.
++#
++# PulseAudio is free software; you can redistribute it and/or modify
++# it under the terms of the GNU Lesser General Public License as
++# published by the Free Software Foundation; either version 2.1 of the
++# License, or (at your option) any later version.
++#
++# PulseAudio is distributed in the hope that it will be useful, but
++# WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++# General Public License for more details.
++#
++# You should have received a copy of the GNU Lesser General Public License
++# along with PulseAudio; if not, write to the Free Software Foundation,
++# Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
++
++; For devices where a 'Internal Mic' or 'Internal Mic Boost' element exists
++; 'Int Mic' and 'Int Mic Boost' are for compatibility with kernels < 2.6.38
++;
++; See analog-output.conf.common for an explanation on the directives
++
++[General]
++priority = 89
++name = analog-input-microphone-internal
++
++[Jack Mic]
++state.plugged = no
++state.unplugged = unknown
++
++[Jack Dock Mic]
++state.plugged = no
++state.unplugged = unknown
++
++[Jack Front Mic]
++state.plugged = no
++state.unplugged = unknown
++
++[Jack Rear Mic]
++state.plugged = no
++state.unplugged = unknown
++
++[Element Internal Mic Boost]
++switch = select
++volume = merge
++override-map.1 = all
++override-map.2 = all-left,all-right
++
++[Option Internal Mic Boost:on]
++name = input-boost-on
++
++[Option Internal Mic Boost:off]
++name = input-boost-off
++
++[Element Int Mic Boost]
++switch = select
++volume = merge
++override-map.1 = all
++override-map.2 = all-left,all-right
++
++[Option Int Mic Boost:on]
++name = input-boost-on
++
++[Option Int Mic Boost:off]
++name = input-boost-off
++
++
++[Element Internal Mic]
++switch = mute
++volume = merge
++override-map.1 = all
++override-map.2 = all-left,all-right
++
++[Element Int Mic]
++switch = mute
++volume = merge
++override-map.1 = all
++override-map.2 = all-left,all-right
++
++[Element Capture]
++switch = mute
++volume = merge
++override-map.1 = all
++override-map.2 = all-left,all-right
++
++[Element Input Source]
++enumeration = select
++
++[Option Input Source:Internal Mic]
++name = analog-input-microphone-internal
++
++[Option Input Source:Int Mic]
++name = analog-input-microphone-internal
++
++[Element Capture Source]
++enumeration = select
++
++[Option Capture Source:Internal Mic]
++name = analog-input-microphone-internal
++
++[Option Capture Source:Int Mic]
++name = analog-input-microphone-internal
++
++[Element Mic]
++switch = off
++volume = off
++
++[Element Dock Mic]
++switch = off
++volume = off
++
++[Element Front Mic]
++switch = off
++volume = off
++
++[Element Rear Mic]
++switch = off
++volume = off
++
++[Element Mic Boost]
++switch = off
++volume = off
++
++[Element Dock Mic Boost]
++switch = off
++volume = off
++
++[Element Front Mic Boost]
++switch = off
++volume = off
++
++[Element Rear Mic Boost]
++switch = off
++volume = off
++
++.include analog-input-mic.conf.common
+Index: pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-output-speaker-always.conf
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-output-speaker-always.conf	2012-05-28 11:11:08.541671686 +0200
+@@ -0,0 +1,127 @@
++# This file is part of PulseAudio.
++#
++# PulseAudio is free software; you can redistribute it and/or modify
++# it under the terms of the GNU Lesser General Public License as
++# published by the Free Software Foundation; either version 2.1 of the
++# License, or (at your option) any later version.
++#
++# PulseAudio is distributed in the hope that it will be useful, but
++# WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++# General Public License for more details.
++#
++# You should have received a copy of the GNU Lesser General Public License
++# along with PulseAudio; if not, write to the Free Software Foundation,
++# Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
++
++; Path for mixers that don't have a 'Speaker' control, but where we
++; force enable the speaker paths nonetheless.
++; Needed for some older Dell laptops.
++; See analog-output.conf.common for an explanation on the directives
++
++[General]
++priority = 100
++name = analog-output-speaker
++
++[Jack Headphone]
++state.plugged = no
++state.unplugged = unknown
++
++[Element Hardware Master]
++switch = mute
++volume = merge
++override-map.1 = all
++override-map.2 = all-left,all-right
++
++[Element Master]
++switch = mute
++volume = merge
++override-map.1 = all
++override-map.2 = all-left,all-right
++
++[Element Master Mono]
++switch = off
++volume = off
++
++; This profile path is intended to control the speaker, not the
++; headphones. But it should not hurt if we leave the headphone jack
++; enabled nonetheless.
++[Element Headphone]
++switch = mute
++volume = zero
++
++[Element Headphone2]
++switch = mute
++volume = zero
++
++[Element Speaker]
++switch = mute
++volume = merge
++override-map.1 = all
++override-map.2 = all-left,all-right
++
++[Element Desktop Speaker]
++switch = off
++volume = off
++
++[Element Front]
++switch = mute
++volume = merge
++override-map.1 = all-front
++override-map.2 = front-left,front-right
++
++[Element Front Speaker]
++switch = mute
++volume = merge
++override-map.1 = all-front
++override-map.2 = front-left,front-right
++
++[Element Rear]
++switch = mute
++volume = merge
++override-map.1 = all-rear
++override-map.2 = rear-left,rear-right
++
++[Element Surround]
++switch = mute
++volume = merge
++override-map.1 = all-rear
++override-map.2 = rear-left,rear-right
++
++[Element Surround Speaker]
++switch = mute
++volume = merge
++override-map.1 = all-rear
++override-map.2 = rear-left,rear-right
++
++[Element Side]
++switch = mute
++volume = merge
++override-map.1 = all-side
++override-map.2 = side-left,side-right
++
++[Element Center]
++switch = mute
++volume = merge
++override-map.1 = all-center
++override-map.2 = all-center,all-center
++
++[Element Center Speaker]
++switch = mute
++volume = merge
++override-map.1 = all-center
++override-map.2 = all-center,all-center
++
++[Element LFE]
++switch = mute
++volume = merge
++override-map.1 = lfe
++override-map.2 = lfe,lfe
++
++[Element LFE Speaker]
++switch = mute
++volume = merge
++override-map.1 = lfe
++override-map.2 = lfe,lfe
++
++.include analog-output.conf.common
+Index: pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/90-pulseaudio.rules
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/alsa/mixer/profile-sets/90-pulseaudio.rules	2012-05-28 11:09:35.000000000 +0200
++++ pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/90-pulseaudio.rules	2012-05-28 11:11:56.569671808 +0200
+@@ -25,6 +25,52 @@
+ ATTRS{vendor}=="0x10de", ENV{PULSE_PROFILE_SET}="extra-hdmi.conf"
+ ATTRS{vendor}=="0x8086", ENV{PULSE_PROFILE_SET}="extra-hdmi.conf"
+ 
++# Force enable speaker and internal mic for some laptops
++# Acer AOA150
++ATTRS{subsystem_vendor}=="0x1025", ATTRS{subsystem_device}=="0x015b", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Acer Aspire 1810TZ
++ATTRS{subsystem_vendor}=="0x1025", ATTRS{subsystem_device}=="0x029b", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Acer AOD260 and AO532h
++ATTRS{subsystem_vendor}=="0x1025", ATTRS{subsystem_device}=="0x0349", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Dell MXC051
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x01b5", ENV{PULSE_PROFILE_SET}="force-speaker.conf"
++# Dell Inspiron 6400 and E1505
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x01bd", ENV{PULSE_PROFILE_SET}="force-speaker.conf"
++# Dell Latitude D620
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x01c2", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Dell Latitude D820
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x01cc", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Dell Latitude D520
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x01d4", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Dell Latitude D420
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x01d6", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Dell Inspiron 1525
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x022f", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Dell Inspiron 1011
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x02f4", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Dell XPS 14 (L401X)
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x0468", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Dell XPS 15 (L501X)
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x046e", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Dell XPS 15 (L502X)
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x050e", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Asus 904HA (1000H)
++ATTRS{subsystem_vendor}=="0x1043", ATTRS{subsystem_device}=="0x831a", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Asus T101MT
++ATTRS{subsystem_vendor}=="0x1043", ATTRS{subsystem_device}=="0x83ce", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Sony Vaio VGN-SR21M
++ATTRS{subsystem_vendor}=="0x104d", ATTRS{subsystem_device}=="0x9033", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Sony Vaio VPC-W115XG
++ATTRS{subsystem_vendor}=="0x104d", ATTRS{subsystem_device}=="0x9064", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Fujitsu Lifebook A530
++ATTRS{subsystem_vendor}=="0x10cf", ATTRS{subsystem_device}=="0x1531", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Toshiba A200
++ATTRS{subsystem_vendor}=="0x1179", ATTRS{subsystem_device}=="0xff00", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# MSI X360
++ATTRS{subsystem_vendor}=="0x1462", ATTRS{subsystem_device}=="0x1053", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Lenovo 3000 Y410
++ATTRS{subsystem_vendor}=="0x17aa", ATTRS{subsystem_device}=="0x384e", ENV{PULSE_PROFILE_SET}="force-speaker.conf"
++
+ SUBSYSTEMS=="platform", DRIVERS=="thinkpad_acpi", ENV{PULSE_IGNORE}="1"
+ 
+ LABEL="pulseaudio_check_usb"
+Index: pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/force-speaker-and-int-mic.conf
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/force-speaker-and-int-mic.conf	2012-05-28 11:11:08.541671686 +0200
+@@ -0,0 +1,122 @@
++# This file is part of PulseAudio.
++#
++# PulseAudio is free software; you can redistribute it and/or modify
++# it under the terms of the GNU Lesser General Public License as
++# published by the Free Software Foundation; either version 2.1 of the
++# License, or (at your option) any later version.
++#
++# PulseAudio is distributed in the hope that it will be useful, but
++# WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++# General Public License for more details.
++#
++# You should have received a copy of the GNU Lesser General Public License
++# along with PulseAudio; if not, write to the Free Software Foundation,
++# Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
++
++; This profile forces speaker and internal mic ports even if we have no way
++; of identifying those.
++; See default.conf for explanations.
++
++[General]
++auto-profiles = yes
++
++[Mapping analog-mono]
++device-strings = hw:%f
++channel-map = mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
++paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic-always analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
++priority = 1
++
++[Mapping analog-stereo]
++device-strings = front:%f hw:%f
++channel-map = left,right
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
++paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic-always analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
++priority = 10
++
++[Mapping analog-surround-40]
++device-strings = surround40:%f
++channel-map = front-left,front-right,rear-left,rear-right
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++priority = 7
++direction = output
++
++[Mapping analog-surround-41]
++device-strings = surround41:%f
++channel-map = front-left,front-right,rear-left,rear-right,lfe
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++priority = 8
++direction = output
++
++[Mapping analog-surround-50]
++device-strings = surround50:%f
++channel-map = front-left,front-right,rear-left,rear-right,front-center
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++priority = 7
++direction = output
++
++[Mapping analog-surround-51]
++device-strings = surround51:%f
++channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++priority = 8
++direction = output
++
++[Mapping analog-surround-71]
++device-strings = surround71:%f
++channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe,side-left,side-right
++description = Analog Surround 7.1
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++priority = 7
++direction = output
++
++[Mapping analog-4-channel-input]
++# Alsa doesn't currently provide any better device name than "hw" for 4-channel
++# input. If this causes trouble at some point, then we will need to get a new
++# device name standardized in alsa.
++device-strings = hw:%f
++channel-map = aux0,aux1,aux2,aux3
++priority = 1
++direction = input
++
++[Mapping iec958-stereo]
++device-strings = iec958:%f
++channel-map = left,right
++paths-input = iec958-stereo-input
++paths-output = iec958-stereo-output
++priority = 5
++
++[Mapping iec958-ac3-surround-40]
++device-strings = a52:%f
++channel-map = front-left,front-right,rear-left,rear-right
++paths-output = iec958-stereo-output
++priority = 2
++direction = output
++
++[Mapping iec958-ac3-surround-51]
++device-strings = a52:%f
++channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe
++paths-output = iec958-stereo-output
++priority = 3
++direction = output
++
++[Mapping iec958-dts-surround-51]
++device-strings = dca:%f
++channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe
++paths-output = iec958-stereo-output
++priority = 3
++direction = output
++
++[Mapping hdmi-stereo]
++device-strings = hdmi:%f
++channel-map = left,right
++priority = 4
++direction = output
++paths-output = hdmi-output-0
++
++; An example for defining multiple-sink profiles
++#[Profile output:analog-stereo+output:iec958-stereo+input:analog-stereo]
++#description = Foobar
++#output-mappings = analog-stereo iec958-stereo
++#input-mappings = analog-stereo
+Index: pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/force-speaker.conf
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/force-speaker.conf	2012-05-28 11:11:08.541671686 +0200
+@@ -0,0 +1,121 @@
++# This file is part of PulseAudio.
++#
++# PulseAudio is free software; you can redistribute it and/or modify
++# it under the terms of the GNU Lesser General Public License as
++# published by the Free Software Foundation; either version 2.1 of the
++# License, or (at your option) any later version.
++#
++# PulseAudio is distributed in the hope that it will be useful, but
++# WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++# General Public License for more details.
++#
++# You should have received a copy of the GNU Lesser General Public License
++# along with PulseAudio; if not, write to the Free Software Foundation,
++# Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
++
++; This profile forces a speaker port even if we have no way of identifying it.
++; See default.conf for explanations.
++
++[General]
++auto-profiles = yes
++
++[Mapping analog-mono]
++device-strings = hw:%f
++channel-map = mono
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
++paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
++priority = 1
++
++[Mapping analog-stereo]
++device-strings = front:%f hw:%f
++channel-map = left,right
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
++paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
++priority = 10
++
++[Mapping analog-surround-40]
++device-strings = surround40:%f
++channel-map = front-left,front-right,rear-left,rear-right
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++priority = 7
++direction = output
++
++[Mapping analog-surround-41]
++device-strings = surround41:%f
++channel-map = front-left,front-right,rear-left,rear-right,lfe
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++priority = 8
++direction = output
++
++[Mapping analog-surround-50]
++device-strings = surround50:%f
++channel-map = front-left,front-right,rear-left,rear-right,front-center
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++priority = 7
++direction = output
++
++[Mapping analog-surround-51]
++device-strings = surround51:%f
++channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++priority = 8
++direction = output
++
++[Mapping analog-surround-71]
++device-strings = surround71:%f
++channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe,side-left,side-right
++description = Analog Surround 7.1
++paths-output = analog-output analog-output-speaker-always analog-output-desktop-speaker analog-output-lfe-on-mono
++priority = 7
++direction = output
++
++[Mapping analog-4-channel-input]
++# Alsa doesn't currently provide any better device name than "hw" for 4-channel
++# input. If this causes trouble at some point, then we will need to get a new
++# device name standardized in alsa.
++device-strings = hw:%f
++channel-map = aux0,aux1,aux2,aux3
++priority = 1
++direction = input
++
++[Mapping iec958-stereo]
++device-strings = iec958:%f
++channel-map = left,right
++paths-input = iec958-stereo-input
++paths-output = iec958-stereo-output
++priority = 5
++
++[Mapping iec958-ac3-surround-40]
++device-strings = a52:%f
++channel-map = front-left,front-right,rear-left,rear-right
++paths-output = iec958-stereo-output
++priority = 2
++direction = output
++
++[Mapping iec958-ac3-surround-51]
++device-strings = a52:%f
++channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe
++paths-output = iec958-stereo-output
++priority = 3
++direction = output
++
++[Mapping iec958-dts-surround-51]
++device-strings = dca:%f
++channel-map = front-left,front-right,rear-left,rear-right,front-center,lfe
++paths-output = iec958-stereo-output
++priority = 3
++direction = output
++
++[Mapping hdmi-stereo]
++device-strings = hdmi:%f
++channel-map = left,right
++priority = 4
++direction = output
++paths-output = hdmi-output-0
++
++; An example for defining multiple-sink profiles
++#[Profile output:analog-stereo+output:iec958-stereo+input:analog-stereo]
++#description = Foobar
++#output-mappings = analog-stereo iec958-stereo
++#input-mappings = analog-stereo

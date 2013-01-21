@@ -1,0 +1,72 @@
+From 1f97db720bd533a7b367a7d3123a493196125828 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Mon, 19 Mar 2012 16:42:10 +0100
+Subject: [PATCH 17/17] module-switch-on-port-available: Do not switch profile
+ if current port is available
+
+For switching profiles, we are a little more cautious, only switch
+from an unavailable port to an available one. Profile switching is
+mainly used for HDMI/DisplayPort, and this is to avoid switching from
+analog to HDMI/DP when it becomes available.
+
+See http://lists.freedesktop.org/archives/pulseaudio-discuss/2012-March/012991.html
+and replies for more information.
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/modules/module-switch-on-port-available.c |   24 ++++++++++++++++++++++--
+ 1 files changed, 22 insertions(+), 2 deletions(-)
+
+diff --git a/src/modules/module-switch-on-port-available.c b/src/modules/module-switch-on-port-available.c
+index 0a115d3..f198e44 100644
+--- a/src/modules/module-switch-on-port-available.c
++++ b/src/modules/module-switch-on-port-available.c
+@@ -60,8 +60,13 @@ static pa_bool_t try_to_switch_profile(pa_card *card, pa_device_port *port) {
+             if (best_profile && best_profile->priority >= profile->priority)
+                 continue;
+ 
++            if (!card->active_profile) {
++                best_profile = profile;
++                continue;
++            }
++
+             /* We make a best effort to keep other direction unchanged */
+-            if (card->active_profile && !port->is_input) {
++            if (!port->is_input) {
+                 if (card->active_profile->n_sources != profile->n_sources)
+                     continue;
+ 
+@@ -69,7 +74,7 @@ static pa_bool_t try_to_switch_profile(pa_card *card, pa_device_port *port) {
+                     continue;
+             }
+ 
+-            if (card->active_profile && !port->is_output) {
++            if (!port->is_output) {
+                 if (card->active_profile->n_sinks != profile->n_sinks)
+                     continue;
+ 
+@@ -77,6 +82,21 @@ static pa_bool_t try_to_switch_profile(pa_card *card, pa_device_port *port) {
+                     continue;
+             }
+ 
++            if (port->is_output) {
++                /* Try not to switch to HDMI sinks from analog when HDMI is becoming available */
++                uint32_t state2;
++                pa_sink *sink;
++                pa_bool_t found_active_port = FALSE;
++                PA_IDXSET_FOREACH(sink, card->sinks, state2) {
++                    if (!sink->active_port)
++                        continue;
++                    if (sink->active_port->available != PA_PORT_AVAILABLE_NO)
++                        found_active_port = TRUE;
++                }
++                if (found_active_port)
++                    continue;
++            }
++
+             best_profile = profile;
+         }
+ 
+-- 
+1.7.9.1
+

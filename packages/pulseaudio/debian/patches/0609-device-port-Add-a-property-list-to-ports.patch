@@ -1,0 +1,77 @@
+From a22c813f350dc027a96fed175ce21d5215c2662e Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Fri, 2 Dec 2011 13:34:54 +0100
+Subject: [PATCH 609/614] device-port: Add a property list to ports.
+
+They're not used for anything yet, but hopefully soon they'll be.
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/pulsecore/cli-text.c    |    6 +++++-
+ src/pulsecore/device-port.c |    3 +++
+ src/pulsecore/device-port.h |    2 ++
+ 3 files changed, 10 insertions(+), 1 deletions(-)
+
+diff --git a/src/pulsecore/cli-text.c b/src/pulsecore/cli-text.c
+index 2253635..4823924 100644
+--- a/src/pulsecore/cli-text.c
++++ b/src/pulsecore/cli-text.c
+@@ -124,9 +124,13 @@ static void append_port_list(pa_strbuf *s, pa_hashmap *ports)
+         return;
+ 
+     pa_strbuf_puts(s, "\tports:\n");
+-    PA_HASHMAP_FOREACH(p, ports, state)
++    PA_HASHMAP_FOREACH(p, ports, state) {
++        char *t = pa_proplist_to_string_sep(p->proplist, "\n\t\t\t\t");
+         pa_strbuf_printf(s, "\t\t%s: %s (priority %u, available: %s)\n",
+             p->name, p->description, p->priority, port_available_to_string(p->available));
++        pa_strbuf_printf(s, "\t\t\tproperties:\n\t\t\t\t%s\n", t);
++        pa_xfree(t);
++    }
+ }
+ 
+ char *pa_card_list_to_string(pa_core *c) {
+diff --git a/src/pulsecore/device-port.c b/src/pulsecore/device-port.c
+index 7988649..30fb025 100644
+--- a/src/pulsecore/device-port.c
++++ b/src/pulsecore/device-port.c
+@@ -70,6 +70,8 @@ static void device_port_free(pa_object *o) {
+     pa_assert(p);
+     pa_assert(pa_device_port_refcnt(p) == 0);
+ 
++    if (p->proplist)
++        pa_proplist_free(p->proplist);
+     if (p->profiles)
+         pa_hashmap_free(p->profiles, NULL, NULL);
+     pa_xfree(p->name);
+@@ -94,6 +96,7 @@ pa_device_port *pa_device_port_new(pa_core *c, const char *name, const char *des
+     p->profiles = NULL;
+     p->is_input = FALSE;
+     p->is_output = FALSE;
++    p->proplist = pa_proplist_new();
+ 
+     return p;
+ }
+diff --git a/src/pulsecore/device-port.h b/src/pulsecore/device-port.h
+index f387021..5848b5a 100644
+--- a/src/pulsecore/device-port.h
++++ b/src/pulsecore/device-port.h
+@@ -32,6 +32,7 @@
+ #include <inttypes.h>
+ 
+ #include <pulse/def.h>
++#include <pulse/proplist.h>
+ #include <pulsecore/object.h>
+ #include <pulsecore/hashmap.h>
+ 
+@@ -51,6 +52,7 @@ struct pa_device_port {
+     unsigned priority;
+     pa_port_available_t available;         /* PA_PORT_AVAILABLE_UNKNOWN, PA_PORT_AVAILABLE_NO or PA_PORT_AVAILABLE_YES */
+ 
++    pa_proplist *proplist;
+     pa_hashmap *profiles; /* Can be NULL. Does not own the profiles */
+     pa_bool_t is_input:1;
+     pa_bool_t is_output:1;
+-- 
+1.7.7.3
+

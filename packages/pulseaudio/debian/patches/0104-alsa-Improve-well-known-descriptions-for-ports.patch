@@ -1,0 +1,92 @@
+From 13e1c4bdeeda50fa2cfa3c975eeae1afd2314516 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Wed, 11 Jan 2012 15:40:08 +0100
+Subject: [PATCH 3/8] alsa: Improve "well known descriptions" for ports
+
+ * If we don't have "Digital Speakers", we should say "Speakers"
+   instead of "Analog Speakers", and similar for other ports.
+ * Change "IEC958" to "S/PDIF" (more well known name)
+ * Add new ports and mappings for HDMI
+ * Change "Internal" to "Built-in" for the card name
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/modules/alsa/alsa-mixer.c |   29 ++++++++++++++++-------------
+ src/pulsecore/sink.c          |    2 +-
+ 2 files changed, 17 insertions(+), 14 deletions(-)
+
+diff --git a/src/modules/alsa/alsa-mixer.c b/src/modules/alsa/alsa-mixer.c
+index 2802231..d18f3b3 100644
+--- a/src/modules/alsa/alsa-mixer.c
++++ b/src/modules/alsa/alsa-mixer.c
+@@ -2219,8 +2219,8 @@ static int option_verify(pa_alsa_option *o) {
+         { "input",                     N_("Input") },
+         { "input-docking",             N_("Docking Station Input") },
+         { "input-docking-microphone",  N_("Docking Station Microphone") },
+-        { "input-docking-linein",      N_("Docking Station Line-In") },
+-        { "input-linein",              N_("Line-In") },
++        { "input-docking-linein",      N_("Docking Station Line In") },
++        { "input-linein",              N_("Line In") },
+         { "input-microphone",          N_("Microphone") },
+         { "input-microphone-front",    N_("Front Microphone") },
+         { "input-microphone-rear",     N_("Rear Microphone") },
+@@ -2299,21 +2299,23 @@ static int element_verify(pa_alsa_element *e) {
+ static int path_verify(pa_alsa_path *p) {
+     static const struct description_map well_known_descriptions[] = {
+         { "analog-input",               N_("Analog Input") },
+-        { "analog-input-microphone",    N_("Analog Microphone") },
++        { "analog-input-microphone",    N_("Microphone") },
+         { "analog-input-microphone-front",    N_("Front Microphone") },
+         { "analog-input-microphone-rear",     N_("Rear Microphone") },
+-        { "analog-input-microphone-dock",     N_("Docking Station Microphone") },
++        { "analog-input-microphone-dock",     N_("Dock Microphone") },
+         { "analog-input-microphone-internal", N_("Internal Microphone") },
+-        { "analog-input-linein",        N_("Analog Line-In") },
+-        { "analog-input-radio",         N_("Analog Radio") },
+-        { "analog-input-video",         N_("Analog Video") },
++        { "analog-input-linein",        N_("Line In") },
++        { "analog-input-radio",         N_("Radio") },
++        { "analog-input-video",         N_("Video") },
+         { "analog-output",              N_("Analog Output") },
+-        { "analog-output-headphones",   N_("Analog Headphones") },
+-        { "analog-output-lfe-on-mono",  N_("Analog Output (LFE)") },
++        { "analog-output-headphones",   N_("Headphones") },
++        { "analog-output-lfe-on-mono",  N_("LFE on Separate Mono Output") },
++        { "analog-output-lineout",      N_("Line Out") },
+         { "analog-output-mono",         N_("Analog Mono Output") },
+-        { "analog-output-speaker",      N_("Analog Speakers") },
+-        { "iec958-stereo-output",       N_("Digital Output (IEC958)") },
+-        { "iec958-passthrough-output",  N_("Digital Passthrough (IEC958)") }
++        { "analog-output-speaker",      N_("Speakers") },
++        { "hdmi-output",                N_("HDMI / DisplayPort") },
++        { "iec958-stereo-output",       N_("Digital Output (S/PDIF)") },
++        { "iec958-passthrough-output",  N_("Digital Passthrough (S/PDIF)") }
+     };
+ 
+     pa_alsa_element *e;
+@@ -3768,7 +3770,8 @@ static int mapping_verify(pa_alsa_mapping *m, const pa_channel_map *bonus) {
+         { "iec958-passthrough",     N_("Digital Passthrough  (IEC958)") },
+         { "iec958-ac3-surround-40", N_("Digital Surround 4.0 (IEC958/AC3)") },
+         { "iec958-ac3-surround-51", N_("Digital Surround 5.1 (IEC958/AC3)") },
+-        { "hdmi-stereo",            N_("Digital Stereo (HDMI)") }
++        { "hdmi-stereo",            N_("Digital Stereo (HDMI)") },
++        { "hdmi-surround-51",       N_("Digital Surround 5.1 (HDMI)") }
+     };
+ 
+     pa_assert(m);
+diff --git a/src/pulsecore/sink.c b/src/pulsecore/sink.c
+index 81c6e9d..094292f 100644
+--- a/src/pulsecore/sink.c
++++ b/src/pulsecore/sink.c
+@@ -3346,7 +3346,7 @@ pa_bool_t pa_device_init_description(pa_proplist *p) {
+ 
+     if ((s = pa_proplist_gets(p, PA_PROP_DEVICE_FORM_FACTOR)))
+         if (pa_streq(s, "internal"))
+-            d = _("Internal Audio");
++            d = _("Built-in Audio");
+ 
+     if (!d)
+         if ((s = pa_proplist_gets(p, PA_PROP_DEVICE_CLASS)))
+-- 
+1.7.8.3
+

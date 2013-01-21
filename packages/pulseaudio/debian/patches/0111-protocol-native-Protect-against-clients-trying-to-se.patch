@@ -1,0 +1,60 @@
+From 54cddc6ddf075b6248b0b8521120b2bd86049978 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Fri, 16 Mar 2012 14:38:38 +0100
+Subject: [PATCH] protocol-native: Protect against clients trying to set a
+ NULL port
+
+For some reason, a badly behaving client was trying to set a NULL
+port, which caused PulseAudio to crash. Add safeguards on two levels
+just to be protected. (Also remove a redundant check.)
+
+BugLink: https://bugs.launchpad.net/bugs/951273
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/pulsecore/protocol-native.c |    2 +-
+ src/pulsecore/sink.c            |    2 +-
+ src/pulsecore/source.c          |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/pulsecore/protocol-native.c b/src/pulsecore/protocol-native.c
+index e4e1809..34fff6e 100644
+--- a/src/pulsecore/protocol-native.c
++++ b/src/pulsecore/protocol-native.c
+@@ -4699,7 +4699,7 @@ static void command_set_sink_or_source_port(pa_pdispatch *pd, uint32_t command,
+     CHECK_VALIDITY(c->pstream, !name || pa_namereg_is_valid_name_or_wildcard(name, command == PA_COMMAND_SET_SINK_PORT ? PA_NAMEREG_SINK : PA_NAMEREG_SOURCE), tag, PA_ERR_INVALID);
+     CHECK_VALIDITY(c->pstream, idx != PA_INVALID_INDEX || name, tag, PA_ERR_INVALID);
+     CHECK_VALIDITY(c->pstream, idx == PA_INVALID_INDEX || !name, tag, PA_ERR_INVALID);
+-    CHECK_VALIDITY(c->pstream, !name || idx == PA_INVALID_INDEX, tag, PA_ERR_INVALID);
++    CHECK_VALIDITY(c->pstream, port, tag, PA_ERR_INVALID);
+ 
+     if (command == PA_COMMAND_SET_SINK_PORT) {
+         pa_sink *sink;
+diff --git a/src/pulsecore/sink.c b/src/pulsecore/sink.c
+index aed1f38..2d214cf 100644
+--- a/src/pulsecore/sink.c
++++ b/src/pulsecore/sink.c
+@@ -3236,7 +3236,7 @@ int pa_sink_set_port(pa_sink *s, const char *name, pa_bool_t save) {
+         return -PA_ERR_NOTIMPLEMENTED;
+     }
+ 
+-    if (!s->ports)
++    if (!s->ports || !name)
+         return -PA_ERR_NOENTITY;
+ 
+     if (!(port = pa_hashmap_get(s->ports, name)))
+diff --git a/src/pulsecore/source.c b/src/pulsecore/source.c
+index ab75b21..a5d5af0 100644
+--- a/src/pulsecore/source.c
++++ b/src/pulsecore/source.c
+@@ -2506,7 +2506,7 @@ int pa_source_set_port(pa_source *s, const char *name, pa_bool_t save) {
+         return -PA_ERR_NOTIMPLEMENTED;
+     }
+ 
+-    if (!s->ports)
++    if (!s->ports || !name)
+         return -PA_ERR_NOENTITY;
+ 
+     if (!(port = pa_hashmap_get(s->ports, name)))
+-- 
+1.7.9.1
+

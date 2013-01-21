@@ -1,0 +1,117 @@
+From 811235d14c511cea1884fb967a81cfb395afbf08 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Mon, 30 Jan 2012 16:47:54 +0100
+Subject: [PATCH] tunnel: fixup create_record_stream
+
+The tunnel source has been broken since protocol v22 (PA 1.0),
+and connecting fails with a protocol error. Fix.
+
+BugLink: https://bugs.launchpad.net/bugs/923661
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/modules/module-tunnel.c |   60 ++++++++++++++++++++++++++++---------------
+ 1 files changed, 39 insertions(+), 21 deletions(-)
+
+diff --git a/src/modules/module-tunnel.c b/src/modules/module-tunnel.c
+index a667e21..0916717 100644
+--- a/src/modules/module-tunnel.c
++++ b/src/modules/module-tunnel.c
+@@ -1031,6 +1031,28 @@ static int read_ports(struct userdata *u, pa_tagstruct *t)
+     return 0;
+ }
+ 
++
++static int read_formats(struct userdata *u, pa_tagstruct *t) {
++    uint8_t n_formats;
++    pa_format_info *format;
++
++    if (pa_tagstruct_getu8(t, &n_formats) < 0) { /* no. of formats */
++        pa_log("Parse failure");
++        return -PA_ERR_PROTOCOL;
++    }
++
++    for (uint8_t j = 0; j < n_formats; j++) {
++        format = pa_format_info_new();
++        if (pa_tagstruct_get_format_info(t, format)) { /* format info */
++            pa_format_info_free(format);
++            pa_log("Parse failure");
++            return -PA_ERR_PROTOCOL;
++        }
++        pa_format_info_free(format);
++    }
++    return 0;
++}
++
+ #ifdef TUNNEL_SINK
+ 
+ /* Called from main context */
+@@ -1104,25 +1126,8 @@ static void sink_info_cb(pa_pdispatch *pd, uint32_t command,  uint32_t tag, pa_t
+     if (read_ports(u, t) < 0)
+         goto fail;
+ 
+-    if (u->version >= 21) {
+-        uint8_t n_formats;
+-        pa_format_info *format;
+-
+-        if (pa_tagstruct_getu8(t, &n_formats) < 0) { /* no. of formats */
+-            pa_log("Parse failure");
+-            goto fail;
+-        }
+-
+-        for (uint8_t j = 0; j < n_formats; j++) {
+-            format = pa_format_info_new();
+-            if (pa_tagstruct_get_format_info(t, format)) { /* format info */
+-                pa_format_info_free(format);
+-                pa_log("Parse failure");
+-                goto fail;
+-            }
+-            pa_format_info_free(format);
+-        }
+-    }
++    if (u->version >= 21 && read_formats(u, t) < 0)
++        goto fail;
+ 
+     if (!pa_tagstruct_eof(t)) {
+         pa_log("Packet too long");
+@@ -1332,6 +1337,9 @@ static void source_info_cb(pa_pdispatch *pd, uint32_t command,  uint32_t tag, pa
+     if (read_ports(u, t) < 0)
+         goto fail;
+ 
++    if (u->version >= 22 && read_formats(u, t) < 0)
++        goto fail;
++
+     if (!pa_tagstruct_eof(t)) {
+         pa_log("Packet too long");
+         goto fail;
+@@ -1568,9 +1576,7 @@ static void setup_complete_callback(pa_pdispatch *pd, uint32_t command, uint32_t
+     struct userdata *u = userdata;
+     pa_tagstruct *reply;
+     char name[256], un[128], hn[128];
+-#ifdef TUNNEL_SINK
+     pa_cvolume volume;
+-#endif
+ 
+     pa_assert(pd);
+     pa_assert(u);
+@@ -1743,6 +1749,18 @@ static void setup_complete_callback(pa_pdispatch *pd, uint32_t command, uint32_t
+         /* We're not using the extended API, so n_formats = 0 and that's that */
+         pa_tagstruct_putu8(reply, 0);
+     }
++#else
++    if (u->version >= 22) {
++        /* We're not using the extended API, so n_formats = 0 and that's that */
++        pa_tagstruct_putu8(reply, 0);
++        pa_cvolume_reset(&volume, u->source->sample_spec.channels);
++        pa_tagstruct_put_cvolume(reply, &volume);
++        pa_tagstruct_put_boolean(reply, FALSE); /* muted */
++        pa_tagstruct_put_boolean(reply, FALSE); /* volume_set */
++        pa_tagstruct_put_boolean(reply, FALSE); /* muted_set */
++        pa_tagstruct_put_boolean(reply, FALSE); /* relative volume */
++        pa_tagstruct_put_boolean(reply, FALSE); /* passthrough stream */
++    }
+ #endif
+ 
+     pa_pstream_send_tagstruct(u->pstream, reply);
+-- 
+1.7.9
+

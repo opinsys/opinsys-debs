@@ -1,0 +1,60 @@
+From 87edc1ccb0846066424f9158acd8fb9e089db0e5 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Tue, 3 Apr 2012 21:35:07 +0200
+Subject: [PATCH] alsa-sink/source: Really set volumes on port change
+
+If deferred volumes were activated, set_volume does not really set
+the volume, and is probably only meant to be called from the main
+thread.
+As we're currently really setting the port and the mute here (i e
+modifying ALSA), we should really modify the volume as well.
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/modules/alsa/alsa-sink.c   |    9 +++++++--
+ src/modules/alsa/alsa-source.c |    9 +++++++--
+ 2 files changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/src/modules/alsa/alsa-sink.c b/src/modules/alsa/alsa-sink.c
+index ea5188c..65f12c2 100644
+--- a/src/modules/alsa/alsa-sink.c
++++ b/src/modules/alsa/alsa-sink.c
+@@ -1465,8 +1465,13 @@ static int sink_set_port_cb(pa_sink *s, pa_device_port *p) {
+ 
+     if (s->set_mute)
+         s->set_mute(s);
+-    if (s->set_volume)
+-        s->set_volume(s);
++    if (s->flags & PA_SINK_DEFERRED_VOLUME) {
++        if (s->write_volume)
++            s->write_volume(s);
++    } else {
++        if (s->set_volume)
++            s->set_volume(s);
++    }
+ 
+     return 0;
+ }
+diff --git a/src/modules/alsa/alsa-source.c b/src/modules/alsa/alsa-source.c
+index 2680302..ab7335d 100644
+--- a/src/modules/alsa/alsa-source.c
++++ b/src/modules/alsa/alsa-source.c
+@@ -1368,8 +1368,13 @@ static int source_set_port_cb(pa_source *s, pa_device_port *p) {
+ 
+     if (s->set_mute)
+         s->set_mute(s);
+-    if (s->set_volume)
+-        s->set_volume(s);
++    if (s->flags & PA_SOURCE_DEFERRED_VOLUME) {
++        if (s->write_volume)
++            s->write_volume(s);
++    } else {
++        if (s->set_volume)
++            s->set_volume(s);
++    }
+ 
+     return 0;
+ }
+-- 
+1.7.9.1
+
