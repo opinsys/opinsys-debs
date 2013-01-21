@@ -1,0 +1,14 @@
+diff -ruN pulseaudio-1.1.orig/src/pulsecore/cpu-x86.c pulseaudio-1.1/src/pulsecore/cpu-x86.c
+--- pulseaudio-1.1.orig/src/pulsecore/cpu-x86.c	2011-10-20 15:54:16.000000000 +0300
++++ pulseaudio-1.1/src/pulsecore/cpu-x86.c	2013-01-21 12:04:32.687150032 +0200
+@@ -49,6 +49,10 @@
+     uint32_t eax, ebx, ecx, edx;
+     uint32_t level;
+ 
++    return FALSE;	/* just turn off all x86-specific optimizations,
++			   they are broken on some machines, such as the epaTec
++			   ETC-3800 (or those machines are broken */
++
+     *flags = 0;
+ 
+     /* get standard level */

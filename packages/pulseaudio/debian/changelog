@@ -1,3 +1,10 @@
+pulseaudio (1:1.1-0ubuntu15.2+opinsys1) precise; urgency=low
+
+  * Turn off x86-specific optimizations (on some machines pulseaudio
+    is completely broken because of those).
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Mon, 21 Jan 2013 12:09:30 +0200
+
 pulseaudio (1:1.1-0ubuntu15.2) precise-proposed; urgency=low
 
   * 0622-Front-headphone.patch:
