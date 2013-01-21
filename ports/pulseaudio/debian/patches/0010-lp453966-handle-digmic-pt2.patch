@@ -1,0 +1,20 @@
+Index: pulseaudio-0.9.22~0.9.21+stable-queue-32-g8478/src/modules/alsa/mixer/paths/analog-input.conf.common
+===================================================================
+--- pulseaudio-0.9.22~0.9.21+stable-queue-32-g8478.orig/src/modules/alsa/mixer/paths/analog-input.conf.common	2010-03-18 19:31:29.000000000 -0400
++++ pulseaudio-0.9.22~0.9.21+stable-queue-32-g8478/src/modules/alsa/mixer/paths/analog-input.conf.common	2010-03-18 19:33:32.000000000 -0400
+@@ -272,12 +272,12 @@
+ [Element Digital Input Source]
+ enumeration = select
+ 
+-[Option Digital Input Source:Analog Inputs]
+-name = input
+-
+ [Option Digital Input Source:Digital Mic 1]
+ name = input-microphone
+ 
++[Option Digital Input Source:Analog Inputs]
++name = input
++
+ [Option Digital Input Source:Digital Mic 2]
+ name = input-microphone
+ 

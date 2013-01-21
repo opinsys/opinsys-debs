@@ -1,0 +1,129 @@
+From 4794a88361fb99b325a25c22a29cf2383b44e3d2 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Fri, 25 Nov 2011 15:17:13 +0100
+Subject: [PATCH 603/614] Cards now has ports directly, and device port has
+ list of profiles
+
+This forms the base for being able to expose all ports of all
+profiles (even inactive ones) to clients.
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/pulsecore/card.c        |   10 +++++++++-
+ src/pulsecore/card.h        |    4 ++++
+ src/pulsecore/device-port.c |    5 +++++
+ src/pulsecore/device-port.h |    4 ++++
+ 4 files changed, 22 insertions(+), 1 deletions(-)
+
+diff --git a/src/pulsecore/card.c b/src/pulsecore/card.c
+index feaa444..1f12aef 100644
+--- a/src/pulsecore/card.c
++++ b/src/pulsecore/card.c
+@@ -34,6 +34,7 @@
+ #include <pulsecore/macro.h>
+ #include <pulsecore/core-util.h>
+ #include <pulsecore/namereg.h>
++#include <pulsecore/device-port.h>
+ 
+ #include "card.h"
+ 
+@@ -66,7 +67,7 @@ pa_card_new_data* pa_card_new_data_init(pa_card_new_data *data) {
+ 
+     memset(data, 0, sizeof(*data));
+     data->proplist = pa_proplist_new();
+-
++    data->ports = pa_hashmap_new(pa_idxset_string_hash_func, pa_idxset_string_compare_func);
+     return data;
+ }
+ 
+@@ -99,6 +100,9 @@ void pa_card_new_data_done(pa_card_new_data *data) {
+         pa_hashmap_free(data->profiles, NULL, NULL);
+     }
+ 
++    if (data->ports)
++        pa_device_port_hashmap_free(data->ports);
++
+     pa_xfree(data->name);
+     pa_xfree(data->active_profile);
+ }
+@@ -139,6 +143,8 @@ pa_card *pa_card_new(pa_core *core, pa_card_new_data *data) {
+      * copying it here */
+     c->profiles = data->profiles;
+     data->profiles = NULL;
++    c->ports = data->ports;
++    data->ports = NULL;
+ 
+     c->active_profile = NULL;
+     c->save_profile = FALSE;
+@@ -195,6 +201,8 @@ void pa_card_free(pa_card *c) {
+     pa_assert(pa_idxset_isempty(c->sources));
+     pa_idxset_free(c->sources, NULL, NULL);
+ 
++    pa_device_port_hashmap_free(c->ports);
++
+     if (c->profiles) {
+         pa_card_profile *p;
+ 
+diff --git a/src/pulsecore/card.h b/src/pulsecore/card.h
+index 2d691b6..6f942e8 100644
+--- a/src/pulsecore/card.h
++++ b/src/pulsecore/card.h
+@@ -63,6 +63,8 @@ struct pa_card {
+     pa_hashmap *profiles;
+     pa_card_profile *active_profile;
+ 
++    pa_hashmap *ports;
++
+     pa_bool_t save_profile:1;
+ 
+     void *userdata;
+@@ -80,6 +82,8 @@ typedef struct pa_card_new_data {
+     pa_hashmap *profiles;
+     char *active_profile;
+ 
++    pa_hashmap *ports;
++
+     pa_bool_t namereg_fail:1;
+ 
+     pa_bool_t save_profile:1;
+diff --git a/src/pulsecore/device-port.c b/src/pulsecore/device-port.c
+index 09646ee..8aeb173 100644
+--- a/src/pulsecore/device-port.c
++++ b/src/pulsecore/device-port.c
+@@ -32,6 +32,8 @@ static void device_port_free(pa_object *o) {
+     pa_assert(p);
+     pa_assert(pa_device_port_refcnt(p) == 0);
+ 
++    if (p->profiles)
++        pa_hashmap_free(p->profiles, NULL, NULL);
+     pa_xfree(p->name);
+     pa_xfree(p->description);
+     pa_xfree(p);
+@@ -50,6 +52,9 @@ pa_device_port *pa_device_port_new(const char *name, const char *description, si
+     p->description = pa_xstrdup(description);
+     p->priority = 0;
+     p->available = PA_PORT_AVAILABLE_UNKNOWN;
++    p->profiles = NULL;
++    p->is_input = FALSE;
++    p->is_output = FALSE;
+ 
+     return p;
+ }
+diff --git a/src/pulsecore/device-port.h b/src/pulsecore/device-port.h
+index dfe3fc1..f997c77 100644
+--- a/src/pulsecore/device-port.h
++++ b/src/pulsecore/device-port.h
+@@ -46,6 +46,10 @@ struct pa_device_port {
+     unsigned priority;
+     pa_port_available_t available;         /* PA_PORT_AVAILABLE_UNKNOWN, PA_PORT_AVAILABLE_NO or PA_PORT_AVAILABLE_YES */
+ 
++    pa_hashmap *profiles; /* Can be NULL. Does not own the profiles */
++    pa_bool_t is_input:1;
++    pa_bool_t is_output:1;
++
+     /* .. followed by some implementation specific data */
+ };
+ 
+-- 
+1.7.7.3
+

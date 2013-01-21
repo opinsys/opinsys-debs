@@ -1,0 +1,85 @@
+From 0b3535fa09de798420888944b041eb2fef3ad5f7 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Thu, 2 Feb 2012 16:23:33 +0100
+Subject: [PATCH 7/7] Handle multiple jacks in a port
+
+If more than one jack is part of the same path, handle this properly.
+Enable this feature for internal mic.
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ .../mixer/paths/analog-input-internal-mic.conf     |    9 ++++++
+ src/modules/alsa/module-alsa-card.c                |   29 ++++++++++++++++++-
+ 2 files changed, 36 insertions(+), 2 deletions(-)
+
+diff --git a/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf b/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf
+index 7b7d002..f2cc58f 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf
+@@ -27,6 +27,15 @@ name = analog-input-microphone-internal
+ [Jack Mic]
+ state.plugged = no
+ state.unplugged = unknown
++[Jack Dock Mic]
++state.plugged = no
++state.unplugged = unknown
++[Jack Front Mic]
++state.plugged = no
++state.unplugged = unknown
++[Jack Rear Mic]
++state.plugged = no
++state.unplugged = unknown
+ 
+ [Element Internal Mic Boost]
+ required-any = any
+diff --git a/src/modules/alsa/module-alsa-card.c b/src/modules/alsa/module-alsa-card.c
+index 08b27f8..19c22ee 100644
+--- a/src/modules/alsa/module-alsa-card.c
++++ b/src/modules/alsa/module-alsa-card.c
+@@ -269,6 +269,32 @@ static void init_profile(struct userdata *u) {
+ }
+ 
+ 
++static void report_port_state(pa_device_port *p, struct userdata *u)
++{
++    void *state;
++    pa_alsa_jack *jack;
++    pa_port_available_t pa = PA_PORT_AVAILABLE_UNKNOWN;
++
++    PA_HASHMAP_FOREACH(jack, u->jacks, state) {
++        pa_port_available_t cpa;
++        if (!jack->path)
++            continue;
++        if (p != jack->path->port)
++            continue;
++        cpa = jack->plugged_in ? jack->state_plugged : jack->state_unplugged;
++        /* "Yes" and "no" trumphs "unknown" if we have more than one jack */
++        if (cpa == PA_PORT_AVAILABLE_UNKNOWN)
++            continue;
++        if ((cpa == PA_PORT_AVAILABLE_NO && pa == PA_PORT_AVAILABLE_YES) ||
++            (pa == PA_PORT_AVAILABLE_NO && cpa == PA_PORT_AVAILABLE_YES))
++            pa_log_warn("Availability of port '%s' is inconsistent!", p->name);
++        else
++            pa = cpa;
++    }
++
++    pa_device_port_set_available(p, pa);
++}
++
+ static int report_jack_state(snd_hctl_elem_t *elem, unsigned int mask)
+ {
+     struct userdata *u = snd_hctl_elem_get_callback_private(elem);
+@@ -295,9 +321,8 @@ static int report_jack_state(snd_hctl_elem_t *elem, unsigned int mask)
+     PA_HASHMAP_FOREACH(jack, u->jacks, state)
+         if (jack->hctl_elem == elem) {
+             jack->plugged_in = plugged_in;
+-            /* TODO: Handle more than one jack per port */
+             pa_assert(jack->path && jack->path->port);
+-            pa_device_port_set_available(jack->path->port, plugged_in ? jack->state_plugged : jack->state_unplugged);
++            report_port_state(jack->path->port, u);
+         }
+     return 0;
+ }
+-- 
+1.7.8.3
+

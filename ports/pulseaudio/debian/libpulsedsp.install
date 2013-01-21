@@ -1,0 +1,2 @@
+usr/lib/*/libpulsedsp.so
+usr/share/lintian/overrides/libpulsedsp

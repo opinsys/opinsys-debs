@@ -1,0 +1,52 @@
+From 43a705ae1894267258318404c497e5cbcea9fe78 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Thu, 19 Jan 2012 10:30:31 +0100
+Subject: [PATCH 8/8] alsa-mixer: Make sure unsupported paths are removed
+ after probing
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/modules/alsa/alsa-mixer.c |   20 ++++++++++++++++++++
+ 1 files changed, 20 insertions(+), 0 deletions(-)
+
+diff --git a/src/modules/alsa/alsa-mixer.c b/src/modules/alsa/alsa-mixer.c
+index 703aaf8..2aa708d 100644
+--- a/src/modules/alsa/alsa-mixer.c
++++ b/src/modules/alsa/alsa-mixer.c
+@@ -4224,6 +4224,23 @@ static snd_pcm_t* mapping_open_pcm(pa_alsa_mapping *m,
+                               &try_buffer_size, 0, NULL, NULL, TRUE);
+ }
+ 
++static void paths_drop_unsupported(pa_hashmap* h) {
++
++    void* state = NULL;
++    const void* key;
++    pa_alsa_path* p;
++
++    pa_assert(h);
++    p = pa_hashmap_iterate(h, &state, &key);
++    while (p) {
++        if (p->supported <= 0) {
++            pa_hashmap_remove(h, key);
++            pa_alsa_path_free(p);
++        }
++        p = pa_hashmap_iterate(h, &state, &key);
++    }
++}
++
+ void pa_alsa_profile_set_probe(
+         pa_alsa_profile_set *ps,
+         const char *dev_id,
+@@ -4319,6 +4336,9 @@ void pa_alsa_profile_set_probe(
+             mapping_free(m);
+         }
+ 
++    paths_drop_unsupported(ps->input_paths);
++    paths_drop_unsupported(ps->output_paths);
++
+     ps->probed = TRUE;
+ }
+ 
+-- 
+1.7.8.3
+

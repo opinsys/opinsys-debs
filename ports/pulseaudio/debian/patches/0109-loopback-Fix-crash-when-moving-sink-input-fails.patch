@@ -1,0 +1,26 @@
+From d0f1a3a770806145a2ae15d0de34d279be6bb1a3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Dalleau?=
+ <frederic.dalleau@linux.intel.com>
+Date: Mon, 6 Feb 2012 18:15:36 +0100
+Subject: [PATCH] loopback: Fix crash when moving sink-input fails
+
+---
+ src/modules/module-loopback.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/src/modules/module-loopback.c b/src/modules/module-loopback.c
+index 1f2ef91..74231a3 100644
+--- a/src/modules/module-loopback.c
++++ b/src/modules/module-loopback.c
+@@ -601,6 +601,8 @@ static void sink_input_moving_cb(pa_sink_input *i, pa_sink *dest) {
+     struct userdata *u;
+     pa_proplist *p;
+     const char *n;
++    if (!dest)
++        return;
+ 
+     pa_sink_input_assert_ref(i);
+     pa_assert_ctl_context();
+-- 
+1.7.9
+

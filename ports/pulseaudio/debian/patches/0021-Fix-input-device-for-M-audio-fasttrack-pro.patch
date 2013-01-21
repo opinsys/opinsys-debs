@@ -1,0 +1,31 @@
+From 2c1b3ec9655be8c6556bfd8136459955596eff6d Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Mon, 19 Mar 2012 11:54:12 +0100
+Subject: [PATCH] Fix input device for M-audio fasttrack pro
+
+For an unknown reason, on some M-audio fasttrack pro devices,
+the input device is at index 1 instead of index 0.
+We don't know why, but trying both seems to be a reasonable workaround.
+
+BugLink: https://bugs.launchpad.net/bugs/569932
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ .../mixer/profile-sets/maudio-fasttrack-pro.conf   |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/modules/alsa/mixer/profile-sets/maudio-fasttrack-pro.conf b/src/modules/alsa/mixer/profile-sets/maudio-fasttrack-pro.conf
+index 75f5112..a75faef 100644
+--- a/src/modules/alsa/mixer/profile-sets/maudio-fasttrack-pro.conf
++++ b/src/modules/alsa/mixer/profile-sets/maudio-fasttrack-pro.conf
+@@ -35,7 +35,7 @@ direction = output
+ 
+ [Mapping analog-stereo-a-input]
+ description = Analog Stereo Channel A
+-device-strings = hw:%f,0,0
++device-strings = hw:%f,0,0 hw:%f,1,0
+ channel-map = left,right
+ direction = input
+ 
+-- 
+1.7.9.1
+

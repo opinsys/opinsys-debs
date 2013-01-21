@@ -1,0 +1,33 @@
+Index: pulseaudio-0.9.22~0.9.21+stable-queue-32-g8478/src/daemon/start-pulseaudio-x11.in
+===================================================================
+--- pulseaudio-0.9.22~0.9.21+stable-queue-32-g8478.orig/src/daemon/start-pulseaudio-x11.in	2010-01-17 18:54:19.000000000 -0500
++++ pulseaudio-0.9.22~0.9.21+stable-queue-32-g8478/src/daemon/start-pulseaudio-x11.in	2010-06-07 23:56:08.123227001 -0400
+@@ -21,11 +21,10 @@
+ 
+ [ -z "$PULSE_SERVER" ]
+ 
+-@PA_BINARY@ --start "$@"
+-
+ if [ x"$DISPLAY" != x ] ; then
+ 
+     @PACTL_BINARY@ load-module module-x11-publish "display=$DISPLAY" > /dev/null
++    @PACTL_BINARY@ load-module module-x11-bell "display=$DISPLAY" "sample=bell.ogg" > /dev/null
+     @PACTL_BINARY@ load-module module-x11-cork-request "display=$DISPLAY" > /dev/null
+ 
+     if [ x"$SESSION_MANAGER" != x ] ; then
+Index: pulseaudio-0.9.22~0.9.21+stable-queue-32-g8478/src/daemon/start-pulseaudio-kde.in
+===================================================================
+--- pulseaudio-0.9.22~0.9.21+stable-queue-32-g8478.orig/src/daemon/start-pulseaudio-kde.in	2010-06-07 23:56:56.123227001 -0400
++++ pulseaudio-0.9.22~0.9.21+stable-queue-32-g8478/src/daemon/start-pulseaudio-kde.in	2010-06-07 23:57:21.503227002 -0400
+@@ -21,10 +21,9 @@
+ 
+ [ -z "$PULSE_SERVER" ]
+ 
+-@PA_BINARY@ --start "$@"
+-
+ if [ x"$DISPLAY" != x ] ; then
+ 
+     @PACTL_BINARY@ load-module module-device-manager "do_routing=1" > /dev/null
++    @PACTL_BINARY@ load-module module-x11-bell "display=$DISPLAY" "sample=bell.ogg" > /dev/null
+ 
+ fi

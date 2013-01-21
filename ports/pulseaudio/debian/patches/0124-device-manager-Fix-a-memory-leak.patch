@@ -1,0 +1,25 @@
+From 191d60688d18591acb3b0ddeafb870a2b1007429 Mon Sep 17 00:00:00 2001
+From: Tanu Kaskinen <tanu.kaskinen@digia.com>
+Date: Fri, 23 Mar 2012 11:36:39 +0200
+Subject: [PATCH 16/20] device-manager: Fix a memory leak.
+
+---
+ src/modules/module-device-manager.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/src/modules/module-device-manager.c b/src/modules/module-device-manager.c
+index d7f30c6..2ce4c78 100644
+--- a/src/modules/module-device-manager.c
++++ b/src/modules/module-device-manager.c
+@@ -1443,6 +1443,8 @@ static int extension_cb(pa_native_protocol *p, pa_module *m, pa_native_connectio
+             pa_xfree(devices[i]);
+         }
+ 
++        pa_xfree(devices);
++
+         if (!first) {
+             trigger_save(u);
+ 
+-- 
+1.7.9.1
+

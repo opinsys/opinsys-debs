@@ -1,0 +1,51 @@
+From 0621b1f99c0b5ddc7a01d261dab8e4cc5aec63c3 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Thu, 28 Jun 2012 15:35:38 +0200
+Subject: [PATCH] alsa-mixer: Add Phantom Jack support
+
+For kernel 3.6, "phantom jack" kctls have been added. They serve as
+a marker that a particular port exist. They were made so we can detect
+that there actually are speakers and internal mic on a laptop, even if
+there are no other indications (volume controls etc).
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ .../mixer/paths/analog-input-internal-mic.conf     |    5 +++++
+ .../alsa/mixer/paths/analog-output-speaker.conf    |    5 +++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf b/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf
+index ba15f1c..5cda6a6 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf
+@@ -39,6 +39,11 @@ state.unplugged = unknown
+ state.plugged = no
+ state.unplugged = unknown
+ 
++[Jack Internal Mic Phantom]
++state.plugged = unknown
++state.unplugged = unknown
++required-any = any
++
+ [Element Internal Mic Boost]
+ required-any = any
+ switch = select
+diff --git a/src/modules/alsa/mixer/paths/analog-output-speaker.conf b/src/modules/alsa/mixer/paths/analog-output-speaker.conf
+index 9c58ed9..cea02c2 100644
+--- a/src/modules/alsa/mixer/paths/analog-output-speaker.conf
++++ b/src/modules/alsa/mixer/paths/analog-output-speaker.conf
+@@ -26,6 +26,11 @@ name = analog-output-speaker
+ state.plugged = no
+ state.unplugged = unknown
+ 
++[Jack Speaker Phantom]
++required-any = any
++state.plugged = unknown
++state.unplugged = unknown
++
+ [Element Hardware Master]
+ switch = mute
+ volume = merge
+-- 
+1.7.9.5
+

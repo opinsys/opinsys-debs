@@ -1,0 +1,47 @@
+From 00c3a4958e543a98ae05988b104129d02b596194 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Tue, 20 Mar 2012 11:44:15 +0100
+Subject: [PATCH] module-loopback: Never call adjust_rates after teardown
+
+Calling adjust_rates after teardown results in segfault, and
+judging from the Ubuntu bug report, this can happen.
+Actively prevent this by destroying the time event, and by
+setting adjust_time to 0, we also prevent this routine being
+called on max request update.
+
+BugLink: https://bugs.launchpad.net/bugs/946400
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/modules/module-loopback.c |   10 +++++++---
+ 1 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/src/modules/module-loopback.c b/src/modules/module-loopback.c
+index 5c87c6c..ba62453 100644
+--- a/src/modules/module-loopback.c
++++ b/src/modules/module-loopback.c
+@@ -137,6 +137,13 @@ static void teardown(struct userdata *u) {
+     pa_assert_ctl_context();
+ 
+     pa_asyncmsgq_flush(u->asyncmsgq, 0);
++
++    u->adjust_time = 0;
++    if (u->time_event) {
++        u->core->mainloop->time_free(u->time_event);
++        u->time_event = NULL;
++    }
++
+     if (u->sink_input)
+         pa_sink_input_unlink(u->sink_input);
+ 
+@@ -860,8 +867,5 @@ void pa__done(pa_module*m) {
+     if (u->asyncmsgq)
+         pa_asyncmsgq_unref(u->asyncmsgq);
+ 
+-    if (u->time_event)
+-        u->core->mainloop->time_free(u->time_event);
+-
+     pa_xfree(u);
+ }
+-- 
+1.7.9.1
+

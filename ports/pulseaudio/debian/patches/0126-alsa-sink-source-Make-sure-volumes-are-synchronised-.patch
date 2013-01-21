@@ -1,0 +1,226 @@
+From 6961d3e1c71610504e5acf8bfd8c0ad042aa2af6 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Wed, 4 Apr 2012 17:07:13 +0200
+Subject: [PATCH] alsa-sink/source: Make sure volumes are synchronised after
+ fast user switching
+
+Log in as user A, fast user switch to user B, let user B change
+port, volume or mute status, then switch back to user A.
+
+At this point we must make sure that the ALSA and PA volumes are
+synchronised by writing to the ALSA mixer when the ALSA device
+becomes available.
+
+BugLink: https://bugs.launchpad.net/bugs/915035
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/modules/alsa/alsa-sink.c   |    8 ++++++--
+ src/modules/alsa/alsa-source.c |    8 ++++++--
+ src/pulsecore/sink.c           |   28 ++++++++++++++++++++++++++++
+ src/pulsecore/sink.h           |    2 ++
+ src/pulsecore/source.c         |   28 ++++++++++++++++++++++++++++
+ src/pulsecore/source.h         |    3 +++
+ 6 files changed, 73 insertions(+), 4 deletions(-)
+
+Index: pulseaudio-1.1/src/modules/alsa/alsa-sink.c
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/alsa/alsa-sink.c	2012-04-12 00:20:50.000000000 +0200
++++ pulseaudio-1.1/src/modules/alsa/alsa-sink.c	2012-04-12 00:21:04.341331694 +0200
+@@ -1215,8 +1215,10 @@
+     if (!PA_SINK_IS_LINKED(u->sink->state))
+         return 0;
+ 
+-    if (u->sink->suspend_cause & PA_SUSPEND_SESSION)
++    if (u->sink->suspend_cause & PA_SUSPEND_SESSION) {
++        pa_sink_set_mixer_dirty(u->sink, TRUE);
+         return 0;
++    }
+ 
+     if (mask & SND_CTL_EVENT_MASK_VALUE) {
+         pa_sink_get_volume(u->sink, TRUE);
+@@ -1235,8 +1237,10 @@
+     if (mask == SND_CTL_EVENT_MASK_REMOVE)
+         return 0;
+ 
+-    if (u->sink->suspend_cause & PA_SUSPEND_SESSION)
++    if (u->sink->suspend_cause & PA_SUSPEND_SESSION) {
++        pa_sink_set_mixer_dirty(u->sink, TRUE);
+         return 0;
++    }
+ 
+     if (mask & SND_CTL_EVENT_MASK_VALUE)
+         pa_sink_update_volume_and_mute(u->sink);
+Index: pulseaudio-1.1/src/modules/alsa/alsa-source.c
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/alsa/alsa-source.c	2012-04-12 00:20:50.000000000 +0200
++++ pulseaudio-1.1/src/modules/alsa/alsa-source.c	2012-04-12 00:21:04.345331693 +0200
+@@ -1066,8 +1066,10 @@
+     if (!PA_SOURCE_IS_LINKED(u->source->state))
+         return 0;
+ 
+-    if (u->source->suspend_cause & PA_SUSPEND_SESSION)
++    if (u->source->suspend_cause & PA_SUSPEND_SESSION) {
++        pa_source_set_mixer_dirty(u->source, TRUE);
+         return 0;
++    }
+ 
+     if (mask & SND_CTL_EVENT_MASK_VALUE) {
+         pa_source_get_volume(u->source, TRUE);
+@@ -1086,8 +1088,10 @@
+     if (mask == SND_CTL_EVENT_MASK_REMOVE)
+         return 0;
+ 
+-    if (u->source->suspend_cause & PA_SUSPEND_SESSION)
++    if (u->source->suspend_cause & PA_SUSPEND_SESSION) {
++        pa_source_set_mixer_dirty(u->source, TRUE);
+         return 0;
++    }
+ 
+     if (mask & SND_CTL_EVENT_MASK_VALUE)
+         pa_source_update_volume_and_mute(u->source);
+Index: pulseaudio-1.1/src/pulsecore/sink.c
+===================================================================
+--- pulseaudio-1.1.orig/src/pulsecore/sink.c	2012-04-12 00:20:50.000000000 +0200
++++ pulseaudio-1.1/src/pulsecore/sink.c	2012-04-12 00:21:04.345331693 +0200
+@@ -267,6 +267,7 @@
+     s->flags = flags;
+     s->priority = 0;
+     s->suspend_cause = 0;
++    pa_sink_set_mixer_dirty(s, FALSE);
+     s->name = pa_xstrdup(name);
+     s->proplist = pa_proplist_copy(data->proplist);
+     s->driver = pa_xstrdup(pa_path_get_filename(data->driver));
+@@ -808,6 +809,12 @@
+     return sink_set_state(s, pa_sink_used_by(s) ? PA_SINK_RUNNING : PA_SINK_IDLE);
+ }
+ 
++/* Called from any context - must be threadsafe */
++void pa_sink_set_mixer_dirty(pa_sink *s, pa_bool_t is_dirty)
++{
++    pa_atomic_store(&s->mixer_dirty, is_dirty ? 1 : 0);
++}
++
+ /* Called from main context */
+ int pa_sink_suspend(pa_sink *s, pa_bool_t suspend, pa_suspend_cause_t cause) {
+     pa_sink_assert_ref(s);
+@@ -823,6 +830,27 @@
+         s->monitor_source->suspend_cause &= ~cause;
+     }
+ 
++    if (!(s->suspend_cause & PA_SUSPEND_SESSION) && (pa_atomic_load(&s->mixer_dirty) != 0)) {
++        /* This might look racy but isn't: If somebody sets mixer_dirty exactly here,
++           it'll be handled just fine. */
++        pa_sink_set_mixer_dirty(s, FALSE);
++        pa_log_debug("Mixer is now accessible. Updating alsa mixer settings.");
++        if (s->active_port && s->set_port) {
++            if (s->flags & PA_SINK_DEFERRED_VOLUME) {
++                struct sink_message_set_port msg = { .port = s->active_port, .ret = 0 };
++                pa_assert_se(pa_asyncmsgq_send(s->asyncmsgq, PA_MSGOBJECT(s), PA_SINK_MESSAGE_SET_PORT, &msg, 0, NULL) == 0);
++            }
++            else
++                s->set_port(s, s->active_port);
++        }
++        else {
++            if (s->set_mute)
++                s->set_mute(s);
++            if (s->set_volume)
++                s->set_volume(s);
++        }
++    }
++
+     if ((pa_sink_get_state(s) == PA_SINK_SUSPENDED) == !!s->suspend_cause)
+         return 0;
+ 
+Index: pulseaudio-1.1/src/pulsecore/sink.h
+===================================================================
+--- pulseaudio-1.1.orig/src/pulsecore/sink.h	2011-10-20 14:54:17.000000000 +0200
++++ pulseaudio-1.1/src/pulsecore/sink.h	2012-04-12 00:21:04.345331693 +0200
+@@ -120,6 +120,7 @@
+ 
+     pa_hashmap *ports;
+     pa_device_port *active_port;
++    pa_atomic_t mixer_dirty;
+ 
+     unsigned priority;
+ 
+@@ -438,6 +439,7 @@
+ pa_bool_t pa_sink_update_proplist(pa_sink *s, pa_update_mode_t mode, pa_proplist *p);
+ 
+ int pa_sink_set_port(pa_sink *s, const char *name, pa_bool_t save);
++void pa_sink_set_mixer_dirty(pa_sink *s, pa_bool_t is_dirty);
+ 
+ unsigned pa_sink_linked_by(pa_sink *s); /* Number of connected streams */
+ unsigned pa_sink_used_by(pa_sink *s); /* Number of connected streams which are not corked */
+Index: pulseaudio-1.1/src/pulsecore/source.c
+===================================================================
+--- pulseaudio-1.1.orig/src/pulsecore/source.c	2012-04-12 00:20:50.000000000 +0200
++++ pulseaudio-1.1/src/pulsecore/source.c	2012-04-12 00:21:04.345331693 +0200
+@@ -233,6 +233,7 @@
+     s->flags = flags;
+     s->priority = 0;
+     s->suspend_cause = 0;
++    pa_source_set_mixer_dirty(s, FALSE);
+     s->name = pa_xstrdup(name);
+     s->proplist = pa_proplist_copy(data->proplist);
+     s->driver = pa_xstrdup(pa_path_get_filename(data->driver));
+@@ -706,6 +707,12 @@
+     return source_set_state(s, pa_source_used_by(s) ? PA_SOURCE_RUNNING : PA_SOURCE_IDLE);
+ }
+ 
++/* Called from any context - must be threadsafe */
++void pa_source_set_mixer_dirty(pa_source *s, pa_bool_t is_dirty)
++{
++    pa_atomic_store(&s->mixer_dirty, is_dirty ? 1 : 0);
++}
++
+ /* Called from main context */
+ int pa_source_suspend(pa_source *s, pa_bool_t suspend, pa_suspend_cause_t cause) {
+     pa_source_assert_ref(s);
+@@ -721,6 +728,27 @@
+     else
+         s->suspend_cause &= ~cause;
+ 
++    if (!(s->suspend_cause & PA_SUSPEND_SESSION) && (pa_atomic_load(&s->mixer_dirty) != 0)) {
++        /* This might look racy but isn't: If somebody sets mixer_dirty exactly here,
++           it'll be handled just fine. */
++        pa_source_set_mixer_dirty(s, FALSE);
++        pa_log_debug("Mixer is now accessible. Updating alsa mixer settings.");
++        if (s->active_port && s->set_port) {
++            if (s->flags & PA_SOURCE_DEFERRED_VOLUME) {
++                struct source_message_set_port msg = { .port = s->active_port, .ret = 0 };
++                pa_assert_se(pa_asyncmsgq_send(s->asyncmsgq, PA_MSGOBJECT(s), PA_SOURCE_MESSAGE_SET_PORT, &msg, 0, NULL) == 0);
++            }
++            else
++                s->set_port(s, s->active_port);
++        }
++        else {
++            if (s->set_mute)
++                s->set_mute(s);
++            if (s->set_volume)
++                s->set_volume(s);
++        }
++    }
++
+     if ((pa_source_get_state(s) == PA_SOURCE_SUSPENDED) == !!s->suspend_cause)
+         return 0;
+ 
+Index: pulseaudio-1.1/src/pulsecore/source.h
+===================================================================
+--- pulseaudio-1.1.orig/src/pulsecore/source.h	2011-10-20 14:54:17.000000000 +0200
++++ pulseaudio-1.1/src/pulsecore/source.h	2012-04-12 00:21:39.329332503 +0200
+@@ -108,6 +108,7 @@
+ 
+     pa_hashmap *ports;
+     pa_device_port *active_port;
++    pa_atomic_t mixer_dirty;
+ 
+     unsigned priority;
+ 
+@@ -358,6 +359,7 @@
+ pa_bool_t pa_source_update_proplist(pa_source *s, pa_update_mode_t mode, pa_proplist *p);
+ 
+ int pa_source_set_port(pa_source *s, const char *name, pa_bool_t save);
++void pa_source_set_mixer_dirty(pa_source *s, pa_bool_t is_dirty);
+ 
+ unsigned pa_source_linked_by(pa_source *s); /* Number of connected streams */
+ unsigned pa_source_used_by(pa_source *s); /* Number of connected streams that are not corked */

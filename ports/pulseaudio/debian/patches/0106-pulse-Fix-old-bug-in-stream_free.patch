@@ -1,0 +1,29 @@
+From e91e78bb54456eda7f815afdb25857fe0887de22 Mon Sep 17 00:00:00 2001
+From: Maarten Lankhorst <m.b.lankhorst@gmail.com>
+Date: Wed, 15 Feb 2012 02:09:02 +0100
+Subject: [PATCH] pulse: Fix old bug in stream_free
+
+Signed-off-by: Maarten Lankhorst<m.b.lankhorst@gmail.com>
+---
+ src/pulse/stream.c |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/pulse/stream.c b/src/pulse/stream.c
+index 0a96ced..6115cef 100644
+--- a/src/pulse/stream.c
++++ b/src/pulse/stream.c
+@@ -284,8 +284,9 @@ static void stream_free(pa_stream *s) {
+     stream_unlink(s);
+ 
+     if (s->write_memblock) {
+-        pa_memblock_release(s->write_memblock);
+-        pa_memblock_unref(s->write_data);
++        if (s->write_data)
++            pa_memblock_release(s->write_memblock);
++        pa_memblock_unref(s->write_memblock);
+     }
+ 
+     if (s->peek_memchunk.memblock) {
+-- 
+1.7.9
+

@@ -1,0 +1,25 @@
+Index: pulseaudio-0.99.1/src/daemon/default.pa.in
+===================================================================
+--- pulseaudio-0.99.1.orig/src/daemon/default.pa.in	2011-08-03 12:10:49.000000000 +0200
++++ pulseaudio-0.99.1/src/daemon/default.pa.in	2011-08-03 12:14:37.471235263 +0200
+@@ -112,6 +112,20 @@
+ #load-module module-zeroconf-publish
+ ])dnl
+ 
++### If the zeroconf/RAOP package is installed, load the module automatically.
++### TODO: Upstream thinks this should be done using gconf/paprefs instead.
++.ifexists module-zeroconf-discover@PA_SOEXT@
++.nofail
++load-module module-zeroconf-discover
++.fail
++.endif
++.ifexists module-raop-discover@PA_SOEXT@
++.nofail
++load-module module-raop-discover
++.fail
++.endif
++
++
+ ifelse(@OS_IS_WIN32@, 0, [dnl
+ ### Load the RTP receiver module (also configured via paprefs, see above)
+ #load-module module-rtp-recv

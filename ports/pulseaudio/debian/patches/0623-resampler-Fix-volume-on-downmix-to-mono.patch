@@ -1,0 +1,55 @@
+From ff4af902cf4ac07c5f1da3b6dacbb3195c7c222d Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Wed, 8 Aug 2012 16:01:38 +0200
+Subject: [PATCH] resampler: Fix volume on downmix to mono
+
+Patch credit: kwanghui
+
+When downmixing to mono, we should average the signal instead of
+summing it to avoid clipping.
+
+BugLink: http://pulseaudio.org/ticket/934
+BugLink: https://bugs.launchpad.net/bugs/416190
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/pulsecore/resampler.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/src/pulsecore/resampler.c b/src/pulsecore/resampler.c
+index 9f19559..7ac5f19 100644
+--- a/src/pulsecore/resampler.c
++++ b/src/pulsecore/resampler.c
+@@ -716,7 +716,7 @@ static void calc_map_table(pa_resampler *r) {
+              *
+              * 2) Mono Handling:
+              *    S:Mono: Copy into all D:channels
+-             *    D:Mono: Copy in all S:channels
++             *    D:Mono: Avg all S:channels
+              *
+              * 3) Mix D:Left, D:Right:
+              *    D:Left: If not connected, avg all S:Left
+@@ -759,12 +759,19 @@ static void calc_map_table(pa_resampler *r) {
+              * best to pass it to L+R.
+              */
+ 
+-            if (a == b || a == PA_CHANNEL_POSITION_MONO || b == PA_CHANNEL_POSITION_MONO) {
++            if (a == b || a == PA_CHANNEL_POSITION_MONO) {
+                 m->map_table_f[oc][ic] = 1.0;
+ 
+                 oc_connected = TRUE;
+                 ic_connected[ic] = TRUE;
+             }
++            else if (b == PA_CHANNEL_POSITION_MONO) {
++                if (n_ic)
++                    m->map_table_f[oc][ic] = 1.0f / (float) n_ic;
++
++                oc_connected = TRUE;
++                ic_connected[ic] = TRUE;
++            }
+         }
+ 
+         if (!oc_connected && remix) {
+-- 
+1.7.9.5
+

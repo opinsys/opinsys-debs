@@ -1,0 +1,1018 @@
+From 905a8f405cd86e2ddd39e1ec827373048e4fa3ed Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Tue, 15 Nov 2011 15:04:46 +0100
+Subject: [PATCH 1/9] Jack detection kcontrol implementation
+
+Allows to bind a path to one or more jacks as exposed as kernel
+controls. The name of the section should match the alsa jack name,
+so e g 'Rear Mic Jack' should be in section [Jack Rear Mic].
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/modules/alsa/alsa-mixer.c                      |  245 +++++++++++++-------
+ src/modules/alsa/alsa-mixer.h                      |   25 ++-
+ src/modules/alsa/alsa-sink.c                       |    5 +-
+ src/modules/alsa/alsa-source.c                     |    5 +-
+ src/modules/alsa/alsa-util.c                       |  129 ++++++++++
+ src/modules/alsa/alsa-util.h                       |    4 +
+ .../alsa/mixer/paths/analog-input-dock-mic.conf    |    3 +
+ .../alsa/mixer/paths/analog-input-front-mic.conf   |    3 +
+ .../alsa/mixer/paths/analog-input-linein.conf      |    3 +
+ src/modules/alsa/mixer/paths/analog-input-mic.conf |    3 +
+ .../alsa/mixer/paths/analog-input-rear-mic.conf    |    3 +
+ .../alsa/mixer/paths/analog-output-headphones.conf |    5 +-
+ src/modules/alsa/module-alsa-card.c                |  101 ++++++++-
+ 13 files changed, 436 insertions(+), 98 deletions(-)
+
+diff --git a/src/modules/alsa/alsa-mixer.c b/src/modules/alsa/alsa-mixer.c
+index eccf103..681a601 100644
+--- a/src/modules/alsa/alsa-mixer.c
++++ b/src/modules/alsa/alsa-mixer.c
+@@ -72,6 +72,7 @@ struct pa_alsa_fdlist {
+     struct pollfd *work_fds;
+ 
+     snd_mixer_t *mixer;
++    snd_hctl_t *hctl;
+ 
+     pa_mainloop_api *m;
+     pa_defer_event *defer;
+@@ -92,7 +93,7 @@ static void io_cb(pa_mainloop_api *a, pa_io_event *e, int fd, pa_io_event_flags_
+ 
+     pa_assert(a);
+     pa_assert(fdl);
+-    pa_assert(fdl->mixer);
++    pa_assert(fdl->mixer || fdl->hctl);
+     pa_assert(fdl->fds);
+     pa_assert(fdl->work_fds);
+ 
+@@ -119,15 +120,24 @@ static void io_cb(pa_mainloop_api *a, pa_io_event *e, int fd, pa_io_event_flags_
+ 
+     pa_assert(i != fdl->num_fds);
+ 
+-    if ((err = snd_mixer_poll_descriptors_revents(fdl->mixer, fdl->work_fds, fdl->num_fds, &revents)) < 0) {
++    if (fdl->hctl)
++        err = snd_hctl_poll_descriptors_revents(fdl->hctl, fdl->work_fds, fdl->num_fds, &revents);
++    else
++        err = snd_mixer_poll_descriptors_revents(fdl->mixer, fdl->work_fds, fdl->num_fds, &revents);
++
++    if (err < 0) {
+         pa_log_error("Unable to get poll revent: %s", pa_alsa_strerror(err));
+         return;
+     }
+ 
+     a->defer_enable(fdl->defer, 1);
+ 
+-    if (revents)
+-        snd_mixer_handle_events(fdl->mixer);
++    if (revents) {
++        if (fdl->hctl)
++            snd_hctl_handle_events(fdl->hctl);
++        else
++            snd_mixer_handle_events(fdl->mixer);
++    }
+ }
+ 
+ static void defer_cb(pa_mainloop_api *a, pa_defer_event *e, void *userdata) {
+@@ -138,11 +148,16 @@ static void defer_cb(pa_mainloop_api *a, pa_defer_event *e, void *userdata) {
+ 
+     pa_assert(a);
+     pa_assert(fdl);
+-    pa_assert(fdl->mixer);
++    pa_assert(fdl->mixer || fdl->hctl);
+ 
+     a->defer_enable(fdl->defer, 0);
+ 
+-    if ((n = snd_mixer_poll_descriptors_count(fdl->mixer)) < 0) {
++    if (fdl->hctl)
++        n = snd_hctl_poll_descriptors_count(fdl->hctl);
++    else
++        n = snd_mixer_poll_descriptors_count(fdl->mixer);
++
++    if (n < 0) {
+         pa_log("snd_mixer_poll_descriptors_count() failed: %s", pa_alsa_strerror(n));
+         return;
+     }
+@@ -159,7 +174,12 @@ static void defer_cb(pa_mainloop_api *a, pa_defer_event *e, void *userdata) {
+ 
+     memset(fdl->work_fds, 0, sizeof(struct pollfd) * num_fds);
+ 
+-    if ((err = snd_mixer_poll_descriptors(fdl->mixer, fdl->work_fds, num_fds)) < 0) {
++    if (fdl->hctl)
++        err = snd_hctl_poll_descriptors(fdl->hctl, fdl->work_fds, num_fds);
++    else
++        err = snd_mixer_poll_descriptors(fdl->mixer, fdl->work_fds, num_fds);
++
++    if (err < 0) {
+         pa_log_error("Unable to get poll descriptors: %s", pa_alsa_strerror(err));
+         return;
+     }
+@@ -228,6 +248,19 @@ void pa_alsa_fdlist_free(struct pa_alsa_fdlist *fdl) {
+     pa_xfree(fdl);
+ }
+ 
++int pa_alsa_fdlist_set_hctl(struct pa_alsa_fdlist *fdl, snd_hctl_t *hctl_handle, pa_mainloop_api *m) {
++    pa_assert(fdl);
++    pa_assert(hctl_handle);
++    pa_assert(m);
++    pa_assert(!fdl->m);
++
++    fdl->hctl = hctl_handle;
++    fdl->m = m;
++    fdl->defer = m->defer_new(m, defer_cb, fdl);
++
++    return 0;
++}
++
+ int pa_alsa_fdlist_set_mixer(struct pa_alsa_fdlist *fdl, snd_mixer_t *mixer_handle, pa_mainloop_api *m) {
+     pa_assert(fdl);
+     pa_assert(mixer_handle);
+@@ -355,81 +388,7 @@ int pa_alsa_set_mixer_rtpoll(struct pa_alsa_mixer_pdata *pd, snd_mixer_t *mixer,
+     return 0;
+ }
+ 
+-static int prepare_mixer(snd_mixer_t *mixer, const char *dev) {
+-    int err;
+-
+-    pa_assert(mixer);
+-    pa_assert(dev);
+-
+-    if ((err = snd_mixer_attach(mixer, dev)) < 0) {
+-        pa_log_info("Unable to attach to mixer %s: %s", dev, pa_alsa_strerror(err));
+-        return -1;
+-    }
+-
+-    if ((err = snd_mixer_selem_register(mixer, NULL, NULL)) < 0) {
+-        pa_log_warn("Unable to register mixer: %s", pa_alsa_strerror(err));
+-        return -1;
+-    }
+-
+-    if ((err = snd_mixer_load(mixer)) < 0) {
+-        pa_log_warn("Unable to load mixer: %s", pa_alsa_strerror(err));
+-        return -1;
+-    }
+-
+-    pa_log_info("Successfully attached to mixer '%s'", dev);
+-    return 0;
+-}
+-
+-snd_mixer_t *pa_alsa_open_mixer_for_pcm(snd_pcm_t *pcm, char **ctl_device) {
+-    int err;
+-    snd_mixer_t *m;
+-    const char *dev;
+-    snd_pcm_info_t* info;
+-    snd_pcm_info_alloca(&info);
+-
+-    pa_assert(pcm);
+-
+-    if ((err = snd_mixer_open(&m, 0)) < 0) {
+-        pa_log("Error opening mixer: %s", pa_alsa_strerror(err));
+-        return NULL;
+-    }
+-
+-    /* First, try by name */
+-    if ((dev = snd_pcm_name(pcm)))
+-        if (prepare_mixer(m, dev) >= 0) {
+-            if (ctl_device)
+-                *ctl_device = pa_xstrdup(dev);
+-
+-            return m;
+-        }
+-
+-    /* Then, try by card index */
+-    if (snd_pcm_info(pcm, info) >= 0) {
+-        char *md;
+-        int card_idx;
+-
+-        if ((card_idx = snd_pcm_info_get_card(info)) >= 0) {
+-
+-            md = pa_sprintf_malloc("hw:%i", card_idx);
+-
+-            if (!dev || !pa_streq(dev, md))
+-                if (prepare_mixer(m, md) >= 0) {
+-
+-                    if (ctl_device)
+-                        *ctl_device = md;
+-                    else
+-                        pa_xfree(md);
+-
+-                    return m;
+-                }
+-
+-            pa_xfree(md);
+-        }
+-    }
+ 
+-    snd_mixer_close(m);
+-    return NULL;
+-}
+ 
+ static const snd_mixer_selem_channel_id_t alsa_channel_ids[PA_CHANNEL_POSITION_MAX] = {
+     [PA_CHANNEL_POSITION_MONO] = SND_MIXER_SCHN_MONO, /* The ALSA name is just an alias! */
+@@ -523,6 +482,14 @@ static void decibel_fix_free(pa_alsa_decibel_fix *db_fix) {
+     pa_xfree(db_fix);
+ }
+ 
++static void jack_free(pa_alsa_jack *j) {
++    pa_assert(j);
++
++    pa_xfree(j->alsa_name);
++    pa_xfree(j->name);
++    pa_xfree(j);
++}
++
+ static void element_free(pa_alsa_element *e) {
+     pa_alsa_option *o;
+     pa_assert(e);
+@@ -540,11 +507,17 @@ static void element_free(pa_alsa_element *e) {
+ }
+ 
+ void pa_alsa_path_free(pa_alsa_path *p) {
++    pa_alsa_jack *j;
+     pa_alsa_element *e;
+     pa_alsa_setting *s;
+ 
+     pa_assert(p);
+ 
++    while ((j = p->jacks)) {
++        PA_LLIST_REMOVE(pa_alsa_jack, p->jacks, j);
++        jack_free(j);
++    }
++
+     while ((e = p->elements)) {
+         PA_LLIST_REMOVE(pa_alsa_element, p->elements, e);
+         element_free(e);
+@@ -1689,6 +1662,26 @@ static int element_probe(pa_alsa_element *e, snd_mixer_t *m) {
+     return 0;
+ }
+ 
++static int jack_probe(pa_alsa_jack *j, snd_hctl_t *h) {
++    pa_assert(h);
++    pa_assert(j);
++    pa_assert(j->path);
++
++    j->has_control = pa_alsa_find_jack(h, j->alsa_name) != NULL;
++
++    if (j->has_control) {
++        if (j->required_absent != PA_ALSA_REQUIRED_IGNORE)
++            return -1;
++        if (j->required_any != PA_ALSA_REQUIRED_IGNORE)
++            j->path->req_any_present = TRUE;
++    } else {
++        if (j->required != PA_ALSA_REQUIRED_IGNORE)
++            return -1;
++    }
++
++    return 0;
++}
++
+ static pa_alsa_element* element_get(pa_alsa_path *p, const char *section, pa_bool_t prefixed) {
+     pa_alsa_element *e;
+ 
+@@ -1726,6 +1719,36 @@ finish:
+     return e;
+ }
+ 
++static pa_alsa_jack* jack_get(pa_alsa_path *p, const char *section) {
++    pa_alsa_jack *j;
++
++    if (!pa_startswith(section, "Jack "))
++        return NULL;
++    section += 5;
++
++    /* This is not an element section, but an enum section? */
++    if (strchr(section, ':'))
++        return NULL;
++
++    if (p->last_jack && pa_streq(p->last_jack->name, section))
++        return p->last_jack;
++
++    PA_LLIST_FOREACH(j, p->jacks)
++        if (pa_streq(j->name, section))
++            goto finish;
++
++    j = pa_xnew0(pa_alsa_jack, 1);
++    j->path = p;
++    j->name = pa_xstrdup(section);
++    j->alsa_name = pa_sprintf_malloc("%s Jack", section);
++    PA_LLIST_INSERT_AFTER(pa_alsa_jack, p->jacks, p->last_jack, j);
++
++finish:
++    p->last_jack = j;
++    return j;
++}
++
++
+ static pa_alsa_option* option_get(pa_alsa_path *p, const char *section) {
+     char *en;
+     const char *on;
+@@ -1949,13 +1972,15 @@ static int element_parse_required(
+     pa_alsa_path *p = userdata;
+     pa_alsa_element *e;
+     pa_alsa_option *o;
++    pa_alsa_jack *j;
+     pa_alsa_required_t req;
+ 
+     pa_assert(p);
+ 
+     e = element_get(p, section, TRUE);
+     o = option_get(p, section);
+-    if (!e && !o) {
++    j = jack_get(p, section);
++    if (!e && !o && !j) {
+         pa_log("[%s:%u] Required makes no sense in '%s'", filename, line, section);
+         return -1;
+     }
+@@ -1980,6 +2005,8 @@ static int element_parse_required(
+             e->required_absent = req;
+         if (o)
+             o->required_absent = req;
++        if (j)
++            j->required_absent = req;
+     }
+     else if (pa_streq(lvalue, "required-any")) {
+         if (e) {
+@@ -1990,12 +2017,19 @@ static int element_parse_required(
+             o->required_any = req;
+             o->element->path->has_req_any = TRUE;
+         }
++        if (j) {
++            j->required_any = req;
++            j->path->has_req_any = TRUE;
++        }
++
+     }
+     else {
+         if (e)
+             e->required = req;
+         if (o)
+             o->required = req;
++        if (j)
++            j->required = req;
+     }
+ 
+     return 0;
+@@ -2554,8 +2588,9 @@ static void path_create_settings(pa_alsa_path *p) {
+     element_create_settings(p->elements, NULL);
+ }
+ 
+-int pa_alsa_path_probe(pa_alsa_path *p, snd_mixer_t *m, pa_bool_t ignore_dB) {
++int pa_alsa_path_probe(pa_alsa_path *p, snd_mixer_t *m, snd_hctl_t *hctl, pa_bool_t ignore_dB) {
+     pa_alsa_element *e;
++    pa_alsa_jack *j;
+     double min_dB[PA_CHANNEL_POSITION_MAX], max_dB[PA_CHANNEL_POSITION_MAX];
+     pa_channel_position_t t;
+     pa_channel_position_mask_t path_volume_channels = 0;
+@@ -2572,6 +2607,15 @@ int pa_alsa_path_probe(pa_alsa_path *p, snd_mixer_t *m, pa_bool_t ignore_dB) {
+ 
+     pa_log_debug("Probing path '%s'", p->name);
+ 
++    PA_LLIST_FOREACH(j, p->jacks) {
++        if (jack_probe(j, hctl) < 0) {
++            p->supported = FALSE;
++            pa_log_debug("Probe of jack '%s' failed.", j->alsa_name);
++            return -1;
++        }
++        pa_log_debug("Probe of jack '%s' succeeded (%s)", j->alsa_name, j->has_control ? "found!" : "not found");
++    }
++
+     PA_LLIST_FOREACH(e, p->elements) {
+         if (element_probe(e, m) < 0) {
+             p->supported = FALSE;
+@@ -2666,6 +2710,12 @@ void pa_alsa_setting_dump(pa_alsa_setting *s) {
+                  s->priority);
+ }
+ 
++void pa_alsa_jack_dump(pa_alsa_jack *j) {
++    pa_assert(j);
++
++    pa_log_debug("Jack %s, alsa_name='%s', detection %s", j->name, j->alsa_name, j->has_control ? "possible" : "unavailable");
++}
++
+ void pa_alsa_option_dump(pa_alsa_option *o) {
+     pa_assert(o);
+ 
+@@ -2701,6 +2751,7 @@ void pa_alsa_element_dump(pa_alsa_element *e) {
+ 
+ void pa_alsa_path_dump(pa_alsa_path *p) {
+     pa_alsa_element *e;
++    pa_alsa_jack *j;
+     pa_alsa_setting *s;
+     pa_assert(p);
+ 
+@@ -2721,6 +2772,9 @@ void pa_alsa_path_dump(pa_alsa_path *p) {
+     PA_LLIST_FOREACH(e, p->elements)
+         pa_alsa_element_dump(e);
+ 
++    PA_LLIST_FOREACH(j, p->jacks)
++        pa_alsa_jack_dump(j);
++
+     PA_LLIST_FOREACH(s, p->settings)
+         pa_alsa_setting_dump(s);
+ }
+@@ -3061,11 +3115,28 @@ static void path_set_condense(pa_alsa_path_set *ps, snd_mixer_t *m) {
+ 
+         PA_HASHMAP_FOREACH(p2, ps->paths, state2) {
+             pa_alsa_element *ea, *eb;
++            pa_alsa_jack *ja, *jb;
+             pa_bool_t is_subset = TRUE;
+ 
+             if (p == p2)
+                 continue;
+ 
++            /* If a has a jack that b does not have, a is not a subset */
++            PA_LLIST_FOREACH(ja, p->jacks) {
++                pa_bool_t exists = FALSE;
++                if (!ja->has_control)
++                    continue;
++                PA_LLIST_FOREACH(jb, p2->jacks)
++                    if (jb->has_control && !strcmp(jb->alsa_name, ja->alsa_name)) {
++                        exists = TRUE;
++                        break;
++                    }
++                if (!exists) {
++                    is_subset = FALSE;
++                    break;
++                }
++            }
++
+             /* Compare the elements of each set... */
+             pa_assert_se(ea = p->elements);
+             pa_assert_se(eb = p2->elements);
+@@ -3698,6 +3769,7 @@ static void mapping_paths_probe(pa_alsa_mapping *m, pa_alsa_profile *profile,
+     snd_pcm_t *pcm_handle;
+     pa_alsa_path_set *ps;
+     snd_mixer_t *mixer_handle;
++    snd_hctl_t *hctl_handle;
+ 
+     if (direction == PA_ALSA_DIRECTION_OUTPUT) {
+         if (m->output_path_set)
+@@ -3716,8 +3788,8 @@ static void mapping_paths_probe(pa_alsa_mapping *m, pa_alsa_profile *profile,
+ 
+     pa_assert(pcm_handle);
+ 
+-    mixer_handle = pa_alsa_open_mixer_for_pcm(pcm_handle, NULL);
+-    if (!mixer_handle) {
++    mixer_handle = pa_alsa_open_mixer_for_pcm(pcm_handle, NULL, &hctl_handle);
++    if (!mixer_handle || !hctl_handle) {
+          /* Cannot open mixer, remove all entries */
+         while (pa_hashmap_steal_first(ps->paths));
+         return;
+@@ -3725,7 +3797,7 @@ static void mapping_paths_probe(pa_alsa_mapping *m, pa_alsa_profile *profile,
+ 
+ 
+     PA_HASHMAP_FOREACH(p, ps->paths, state) {
+-        if (pa_alsa_path_probe(p, mixer_handle, m->profile_set->ignore_dB) < 0) {
++        if (pa_alsa_path_probe(p, mixer_handle, hctl_handle, m->profile_set->ignore_dB) < 0) {
+             pa_hashmap_remove(ps->paths, p);
+         }
+     }
+@@ -4375,6 +4447,7 @@ static pa_device_port* device_port_alsa_init(pa_hashmap *ports,
+         data = PA_DEVICE_PORT_DATA(p);
+         data->path = path;
+         data->setting = setting;
++        path->port = p;
+     }
+ 
+     p->is_input |= path->direction == PA_ALSA_DIRECTION_ANY || path->direction == PA_ALSA_DIRECTION_INPUT;
+diff --git a/src/modules/alsa/alsa-mixer.h b/src/modules/alsa/alsa-mixer.h
+index 703d45b..f55c5c3 100644
+--- a/src/modules/alsa/alsa-mixer.h
++++ b/src/modules/alsa/alsa-mixer.h
+@@ -38,6 +38,7 @@ typedef struct pa_alsa_mixer_pdata pa_alsa_mixer_pdata;
+ typedef struct pa_alsa_setting pa_alsa_setting;
+ typedef struct pa_alsa_option pa_alsa_option;
+ typedef struct pa_alsa_element pa_alsa_element;
++typedef struct pa_alsa_jack pa_alsa_jack;
+ typedef struct pa_alsa_path pa_alsa_path;
+ typedef struct pa_alsa_path_set pa_alsa_path_set;
+ typedef struct pa_alsa_mapping pa_alsa_mapping;
+@@ -154,11 +155,27 @@ struct pa_alsa_element {
+     pa_alsa_decibel_fix *db_fix;
+ };
+ 
++struct pa_alsa_jack {
++    pa_alsa_path *path;
++    PA_LLIST_FIELDS(pa_alsa_jack);
++
++    char *name; /* E g "Headphone" */
++    char *alsa_name; /* E g "Headphone Jack" */
++    pa_bool_t has_control; /* is the jack itself present? */
++    pa_bool_t plugged_in; /* is this jack currently plugged in? */
++    snd_hctl_elem_t *hctl_elem; /* Jack detection handle */
++
++    pa_alsa_required_t required;
++    pa_alsa_required_t required_any;
++    pa_alsa_required_t required_absent;
++};
++
+ /* A path wraps a series of elements into a single entity which can be
+  * used to control it as if it had a single volume slider, a single
+  * mute switch and a single list of selectable options. */
+ struct pa_alsa_path {
+     pa_alsa_direction_t direction;
++    pa_device_port* port;
+ 
+     char *name;
+     char *description;
+@@ -181,9 +198,11 @@ struct pa_alsa_path {
+     pa_alsa_element *last_element;
+     pa_alsa_option *last_option;
+     pa_alsa_setting *last_setting;
++    pa_alsa_jack *last_jack;
+ 
+     PA_LLIST_HEAD(pa_alsa_element, elements);
+     PA_LLIST_HEAD(pa_alsa_setting, settings);
++    PA_LLIST_HEAD(pa_alsa_jack, jacks);
+ };
+ 
+ /* A path set is simply a set of paths that are applicable to a
+@@ -197,12 +216,13 @@ int pa_alsa_setting_select(pa_alsa_setting *s, snd_mixer_t *m);
+ void pa_alsa_setting_dump(pa_alsa_setting *s);
+ 
+ void pa_alsa_option_dump(pa_alsa_option *o);
++void pa_alsa_jack_dump(pa_alsa_jack *j);
+ 
+ void pa_alsa_element_dump(pa_alsa_element *e);
+ 
+ pa_alsa_path *pa_alsa_path_new(const char *fname, pa_alsa_direction_t direction);
+ pa_alsa_path *pa_alsa_path_synthesize(const char *element, pa_alsa_direction_t direction);
+-int pa_alsa_path_probe(pa_alsa_path *p, snd_mixer_t *m, pa_bool_t ignore_dB);
++int pa_alsa_path_probe(pa_alsa_path *p, snd_mixer_t *m, snd_hctl_t *hctl, pa_bool_t ignore_dB);
+ void pa_alsa_path_dump(pa_alsa_path *p);
+ int pa_alsa_path_get_volume(pa_alsa_path *p, snd_mixer_t *m, const pa_channel_map *cm, pa_cvolume *v);
+ int pa_alsa_path_get_mute(pa_alsa_path *path, snd_mixer_t *m, pa_bool_t *muted);
+@@ -300,11 +320,12 @@ void pa_alsa_profile_set_probe(pa_alsa_profile_set *ps, const char *dev_id, cons
+ void pa_alsa_profile_set_free(pa_alsa_profile_set *s);
+ void pa_alsa_profile_set_dump(pa_alsa_profile_set *s);
+ 
+-snd_mixer_t *pa_alsa_open_mixer_for_pcm(snd_pcm_t *pcm, char **ctl_device);
++snd_mixer_t *pa_alsa_open_mixer_for_pcm(snd_pcm_t *pcm, char **ctl_device, snd_hctl_t **hctl);
+ 
+ pa_alsa_fdlist *pa_alsa_fdlist_new(void);
+ void pa_alsa_fdlist_free(pa_alsa_fdlist *fdl);
+ int pa_alsa_fdlist_set_mixer(pa_alsa_fdlist *fdl, snd_mixer_t *mixer_handle, pa_mainloop_api* m);
++int pa_alsa_fdlist_set_hctl(pa_alsa_fdlist *fdl, snd_hctl_t *mixer_handle, pa_mainloop_api* m);
+ 
+ /* Alternative for handling alsa mixer events in io-thread. */
+ 
+diff --git a/src/modules/alsa/alsa-sink.c b/src/modules/alsa/alsa-sink.c
+index 1254dc3..afa751c 100644
+--- a/src/modules/alsa/alsa-sink.c
++++ b/src/modules/alsa/alsa-sink.c
+@@ -1801,11 +1801,12 @@ static void set_sink_name(pa_sink_new_data *data, pa_modargs *ma, const char *de
+ }
+ 
+ static void find_mixer(struct userdata *u, pa_alsa_mapping *mapping, const char *element, pa_bool_t ignore_dB) {
++    snd_hctl_t *hctl;
+ 
+     if (!mapping && !element)
+         return;
+ 
+-    if (!(u->mixer_handle = pa_alsa_open_mixer_for_pcm(u->pcm_handle, &u->control_device))) {
++    if (!(u->mixer_handle = pa_alsa_open_mixer_for_pcm(u->pcm_handle, &u->control_device, &hctl))) {
+         pa_log_info("Failed to find a working mixer device.");
+         return;
+     }
+@@ -1815,7 +1816,7 @@ static void find_mixer(struct userdata *u, pa_alsa_mapping *mapping, const char
+         if (!(u->mixer_path = pa_alsa_path_synthesize(element, PA_ALSA_DIRECTION_OUTPUT)))
+             goto fail;
+ 
+-        if (pa_alsa_path_probe(u->mixer_path, u->mixer_handle, ignore_dB) < 0)
++        if (pa_alsa_path_probe(u->mixer_path, u->mixer_handle, hctl, ignore_dB) < 0)
+             goto fail;
+ 
+         pa_log_debug("Probed mixer path %s:", u->mixer_path->name);
+diff --git a/src/modules/alsa/alsa-source.c b/src/modules/alsa/alsa-source.c
+index 4e69dd7..c21d0ce 100644
+--- a/src/modules/alsa/alsa-source.c
++++ b/src/modules/alsa/alsa-source.c
+@@ -1501,11 +1501,12 @@ static void set_source_name(pa_source_new_data *data, pa_modargs *ma, const char
+ }
+ 
+ static void find_mixer(struct userdata *u, pa_alsa_mapping *mapping, const char *element, pa_bool_t ignore_dB) {
++    snd_hctl_t *hctl;
+ 
+     if (!mapping && !element)
+         return;
+ 
+-    if (!(u->mixer_handle = pa_alsa_open_mixer_for_pcm(u->pcm_handle, &u->control_device))) {
++    if (!(u->mixer_handle = pa_alsa_open_mixer_for_pcm(u->pcm_handle, &u->control_device, &hctl))) {
+         pa_log_info("Failed to find a working mixer device.");
+         return;
+     }
+@@ -1515,7 +1516,7 @@ static void find_mixer(struct userdata *u, pa_alsa_mapping *mapping, const char
+         if (!(u->mixer_path = pa_alsa_path_synthesize(element, PA_ALSA_DIRECTION_INPUT)))
+             goto fail;
+ 
+-        if (pa_alsa_path_probe(u->mixer_path, u->mixer_handle, ignore_dB) < 0)
++        if (pa_alsa_path_probe(u->mixer_path, u->mixer_handle, hctl, ignore_dB) < 0)
+             goto fail;
+ 
+         pa_log_debug("Probed mixer path %s:", u->mixer_path->name);
+diff --git a/src/modules/alsa/alsa-util.c b/src/modules/alsa/alsa-util.c
+index 602e9a3..02ebb96 100644
+--- a/src/modules/alsa/alsa-util.c
++++ b/src/modules/alsa/alsa-util.c
+@@ -1399,3 +1399,132 @@ pa_bool_t pa_alsa_may_tsched(pa_bool_t want) {
+ 
+     return TRUE;
+ }
++
++snd_hctl_elem_t* pa_alsa_find_jack(snd_hctl_t *hctl, const char* jack_name)
++{
++    snd_ctl_elem_id_t *id;
++
++    snd_ctl_elem_id_alloca(&id);
++    snd_ctl_elem_id_clear(id);
++    snd_ctl_elem_id_set_interface(id, SND_CTL_ELEM_IFACE_CARD);
++    snd_ctl_elem_id_set_name(id, jack_name);
++
++    return snd_hctl_find_elem(hctl, id);
++}
++
++static int prepare_mixer(snd_mixer_t *mixer, const char *dev, snd_hctl_t **hctl) {
++    int err;
++    snd_hctl_t* h;
++
++    pa_assert(mixer);
++    pa_assert(dev);
++
++    if (!hctl)
++        hctl = &h;
++
++    if ((err = snd_mixer_attach(mixer, dev)) < 0) {
++        pa_log_info("Unable to attach to mixer %s: %s", dev, pa_alsa_strerror(err));
++        return -1;
++    }
++
++    if ((err = snd_mixer_get_hctl(mixer, dev, hctl)) < 0) {
++        pa_log_info("Unable to get hctl of mixer %s: %s", dev, pa_alsa_strerror(err));
++        return -1;
++    }
++
++    if ((err = snd_mixer_selem_register(mixer, NULL, NULL)) < 0) {
++        pa_log_warn("Unable to register mixer: %s", pa_alsa_strerror(err));
++        return -1;
++    }
++
++    if ((err = snd_mixer_load(mixer)) < 0) {
++        pa_log_warn("Unable to load mixer: %s", pa_alsa_strerror(err));
++        return -1;
++    }
++
++    pa_log_info("Successfully attached to mixer '%s'", dev);
++    return 0;
++}
++
++
++/* TODO: Don't just copy-paste similar functions */
++snd_mixer_t *pa_alsa_open_mixer(int alsa_card_index, char **ctl_device, snd_hctl_t **hctl) {
++    int err;
++    snd_mixer_t *m;
++    char *md;
++    snd_pcm_info_t* info;
++    snd_pcm_info_alloca(&info);
++
++    if ((err = snd_mixer_open(&m, 0)) < 0) {
++        pa_log("Error opening mixer: %s", pa_alsa_strerror(err));
++        return NULL;
++    }
++
++    /* Then, try by card index */
++    md = pa_sprintf_malloc("hw:%i", alsa_card_index);
++    if (prepare_mixer(m, md, hctl) >= 0) {
++
++        if (ctl_device)
++            *ctl_device = md;
++        else
++            pa_xfree(md);
++
++        return m;
++    }
++
++    pa_xfree(md);
++
++    snd_mixer_close(m);
++    return NULL;
++}
++
++snd_mixer_t *pa_alsa_open_mixer_for_pcm(snd_pcm_t *pcm, char **ctl_device, snd_hctl_t **hctl) {
++    int err;
++    snd_mixer_t *m;
++    const char *dev;
++    snd_pcm_info_t* info;
++    snd_pcm_info_alloca(&info);
++
++    pa_assert(pcm);
++
++    if ((err = snd_mixer_open(&m, 0)) < 0) {
++        pa_log("Error opening mixer: %s", pa_alsa_strerror(err));
++        return NULL;
++    }
++
++    /* First, try by name */
++    if ((dev = snd_pcm_name(pcm)))
++        if (prepare_mixer(m, dev, hctl) >= 0) {
++            if (ctl_device)
++                *ctl_device = pa_xstrdup(dev);
++
++            return m;
++        }
++
++    /* Then, try by card index */
++    if (snd_pcm_info(pcm, info) >= 0) {
++        char *md;
++        int card_idx;
++
++        if ((card_idx = snd_pcm_info_get_card(info)) >= 0) {
++
++            md = pa_sprintf_malloc("hw:%i", card_idx);
++
++            if (!dev || !pa_streq(dev, md))
++                if (prepare_mixer(m, md, hctl) >= 0) {
++
++                    if (ctl_device)
++                        *ctl_device = md;
++                    else
++                        pa_xfree(md);
++
++                    return m;
++                }
++
++            pa_xfree(md);
++        }
++    }
++
++    snd_mixer_close(m);
++    return NULL;
++}
+diff --git a/src/modules/alsa/alsa-util.h b/src/modules/alsa/alsa-util.h
+index ee5e781..9192db0 100644
+--- a/src/modules/alsa/alsa-util.h
++++ b/src/modules/alsa/alsa-util.h
+@@ -140,4 +140,8 @@ const char* pa_alsa_strerror(int errnum);
+ 
+ pa_bool_t pa_alsa_may_tsched(pa_bool_t want);
+ 
++snd_hctl_elem_t* pa_alsa_find_jack(snd_hctl_t *hctl, const char* jack_name);
++
++snd_mixer_t *pa_alsa_open_mixer(int alsa_card_index, char **ctl_device, snd_hctl_t **hctl);
++
+ #endif
+diff --git a/src/modules/alsa/mixer/paths/analog-input-dock-mic.conf b/src/modules/alsa/mixer/paths/analog-input-dock-mic.conf
+index 489cf90..7d87408 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-dock-mic.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-dock-mic.conf
+@@ -22,6 +22,9 @@
+ priority = 78
+ name = analog-input-microphone-dock
+ 
++[Jack Dock Mic]
++required-any = any
++
+ [Element Dock Mic Boost]
+ required-any = any
+ switch = select
+diff --git a/src/modules/alsa/mixer/paths/analog-input-front-mic.conf b/src/modules/alsa/mixer/paths/analog-input-front-mic.conf
+index 5ae516c..3246f18 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-front-mic.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-front-mic.conf
+@@ -22,6 +22,9 @@
+ priority = 85
+ name = analog-input-microphone-front
+ 
++[Jack Front Mic]
++required-any = any
++
+ [Element Front Mic Boost]
+ required-any = any
+ switch = select
+diff --git a/src/modules/alsa/mixer/paths/analog-input-linein.conf b/src/modules/alsa/mixer/paths/analog-input-linein.conf
+index 038f649..8929eb7 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-linein.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-linein.conf
+@@ -21,6 +21,9 @@
+ [General]
+ priority = 81
+ 
++[Jack Line]
++required-any = any
++
+ [Element Capture]
+ switch = mute
+ volume = merge
+diff --git a/src/modules/alsa/mixer/paths/analog-input-mic.conf b/src/modules/alsa/mixer/paths/analog-input-mic.conf
+index 50d4c45..6bdd3bd 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-mic.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-mic.conf
+@@ -22,6 +22,9 @@
+ priority = 87
+ name = analog-input-microphone
+ 
++[Jack Mic]
++required-any = any
++
+ [Element Mic Boost]
+ required-any = any
+ switch = select
+diff --git a/src/modules/alsa/mixer/paths/analog-input-rear-mic.conf b/src/modules/alsa/mixer/paths/analog-input-rear-mic.conf
+index 4046106..1d9c473 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-rear-mic.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-rear-mic.conf
+@@ -22,6 +22,9 @@
+ priority = 82
+ name = analog-input-microphone-rear
+ 
++[Jack Rear Mic]
++required-any = any
++
+ [Element Rear Mic Boost]
+ required-any = any
+ switch = select
+diff --git a/src/modules/alsa/mixer/paths/analog-output-headphones.conf b/src/modules/alsa/mixer/paths/analog-output-headphones.conf
+index 7f95f0a..2860f28 100644
+--- a/src/modules/alsa/mixer/paths/analog-output-headphones.conf
++++ b/src/modules/alsa/mixer/paths/analog-output-headphones.conf
+@@ -22,6 +22,9 @@
+ priority = 90
+ name = analog-output-headphones
+ 
++[Jack Headphone]
++required-any = any
++
+ [Element Hardware Master]
+ switch = mute
+ volume = merge
+@@ -39,7 +42,7 @@ switch = off
+ volume = off
+ 
+ [Element Headphone]
+-required = any
++required-any = any
+ switch = mute
+ volume = merge
+ override-map.1 = all
+diff --git a/src/modules/alsa/module-alsa-card.c b/src/modules/alsa/module-alsa-card.c
+index 6e3aeda..ff50e93 100644
+--- a/src/modules/alsa/module-alsa-card.c
++++ b/src/modules/alsa/module-alsa-card.c
+@@ -100,6 +100,12 @@ struct userdata {
+     pa_module *module;
+ 
+     char *device_id;
++    int alsa_card_index;
++
++    snd_mixer_t *mixer_handle;
++    snd_hctl_t *hctl_handle;
++    pa_hashmap *jacks;
++    pa_alsa_fdlist *mixer_fdl;
+ 
+     pa_card *card;
+ 
+@@ -262,6 +268,83 @@ static void init_profile(struct userdata *u) {
+             am->source = pa_alsa_source_new(u->module, u->modargs, __FILE__, u->card, am);
+ }
+ 
++
++static int report_jack_state(snd_hctl_elem_t *elem, unsigned int mask)
++{
++    struct userdata *u = snd_hctl_elem_get_callback_private(elem);
++    snd_ctl_elem_value_t *elem_value;
++    pa_bool_t plugged_in;
++    void *state;
++    pa_alsa_jack *jack;
++
++    pa_assert(u);
++
++    if (mask == SND_CTL_EVENT_MASK_REMOVE)
++        return 0;
++
++    snd_ctl_elem_value_alloca(&elem_value);
++    if (snd_hctl_elem_read(elem, elem_value) < 0) {
++        pa_log_warn("Failed to read jack detection from '%s'", pa_strnull(snd_hctl_elem_get_name(elem)));
++        return 0;
++    }
++
++    plugged_in = !!snd_ctl_elem_value_get_boolean(elem_value, 0);
++
++    pa_log_debug("Jack '%s' is now %s", pa_strnull(snd_hctl_elem_get_name(elem)), plugged_in ? "plugged in" : "unplugged");
++
++    PA_HASHMAP_FOREACH(jack, u->jacks, state)
++        if (jack->hctl_elem == elem) {
++            jack->plugged_in = plugged_in;
++            /* TODO: Handle more than one jack per port */
++            pa_assert(jack->path && jack->path->port);
++            pa_device_port_set_available(jack->path->port, plugged_in ? PA_PORT_AVAILABLE_YES : PA_PORT_AVAILABLE_NO);
++        }
++    return 0;
++}
++
++static void init_jacks(struct userdata *u) {
++    void *state;
++    pa_alsa_path* path;
++    pa_alsa_jack* jack;
++    u->jacks = pa_hashmap_new(pa_idxset_trivial_hash_func, pa_idxset_trivial_compare_func);
++    /* See if we have any jacks */
++    if (u->profile_set->output_paths)
++        PA_HASHMAP_FOREACH(path, u->profile_set->output_paths, state)
++            PA_LLIST_FOREACH(jack, path->jacks)
++                if (jack->has_control)
++                    pa_hashmap_put(u->jacks, jack, jack);
++    if (u->profile_set->input_paths)
++        PA_HASHMAP_FOREACH(path, u->profile_set->input_paths, state)
++            PA_LLIST_FOREACH(jack, path->jacks)
++                if (jack->has_control)
++                    pa_hashmap_put(u->jacks, jack, jack);
++
++    /* pa_log("pa_hashmap_size(u->jacks) == %d", pa_hashmap_size(u->jacks)); */
++
++    if (pa_hashmap_size(u->jacks) == 0)
++        return;
++
++    u->mixer_fdl = pa_alsa_fdlist_new();
++
++    u->mixer_handle = pa_alsa_open_mixer(u->alsa_card_index, NULL, &u->hctl_handle);
++    if (u->mixer_handle && pa_alsa_fdlist_set_hctl(u->mixer_fdl, u->hctl_handle, u->core->mainloop) >= 0) {
++        PA_HASHMAP_FOREACH(jack, u->jacks, state) {
++            jack->hctl_elem = pa_alsa_find_jack(u->hctl_handle, jack->alsa_name);
++            if (!jack->hctl_elem) {
++                pa_log_warn("Jack '%s' seems to have disappeared.", jack->alsa_name);
++                jack->has_control = FALSE;
++                continue;
++            }
++            snd_hctl_elem_set_callback_private(jack->hctl_elem, u);
++            snd_hctl_elem_set_callback(jack->hctl_elem, report_jack_state);
++            report_jack_state(jack->hctl_elem, 0);
++        }
++
++    } else
++        pa_log("Failed to open hctl/mixer for jack detection");
++
++}
++
+ static void set_card_name(pa_card_new_data *data, pa_modargs *ma, const char *device_id) {
+     char *t;
+     const char *n;
+@@ -291,7 +374,6 @@ static void set_card_name(pa_card_new_data *data, pa_modargs *ma, const char *de
+ int pa__init(pa_module *m) {
+     pa_card_new_data data;
+     pa_modargs *ma;
+-    int alsa_card_index;
+     pa_bool_t ignore_dB = FALSE;
+     struct userdata *u;
+     pa_reserve_wrapper *reserve = NULL;
+@@ -319,8 +401,8 @@ int pa__init(pa_module *m) {
+     u->device_id = pa_xstrdup(pa_modargs_get_value(ma, "device_id", DEFAULT_DEVICE_ID));
+     u->modargs = ma;
+ 
+-    if ((alsa_card_index = snd_card_get_index(u->device_id)) < 0) {
+-        pa_log("Card '%s' doesn't exist: %s", u->device_id, pa_alsa_strerror(alsa_card_index));
++    if ((u->alsa_card_index = snd_card_get_index(u->device_id)) < 0) {
++        pa_log("Card '%s' doesn't exist: %s", u->device_id, pa_alsa_strerror(u->alsa_card_index));
+         goto fail;
+     }
+ 
+@@ -337,7 +419,7 @@ int pa__init(pa_module *m) {
+     }
+ 
+ #ifdef HAVE_UDEV
+-    fn = pa_udev_get_property(alsa_card_index, "PULSE_PROFILE_SET");
++    fn = pa_udev_get_property(u->alsa_card_index, "PULSE_PROFILE_SET");
+ #endif
+ 
+     if (pa_modargs_get_value(ma, "profile_set", NULL)) {
+@@ -360,7 +442,7 @@ int pa__init(pa_module *m) {
+     data.driver = __FILE__;
+     data.module = m;
+ 
+-    pa_alsa_init_proplist_card(m->core, data.proplist, alsa_card_index);
++    pa_alsa_init_proplist_card(m->core, data.proplist, u->alsa_card_index);
+ 
+     pa_proplist_sets(data.proplist, PA_PROP_DEVICE_STRING, u->device_id);
+     pa_alsa_init_description(data.proplist);
+@@ -409,6 +491,7 @@ int pa__init(pa_module *m) {
+     u->card->set_profile = card_set_profile;
+ 
+     init_profile(u);
++    init_jacks(u);
+ 
+     if (reserve)
+         pa_reserve_wrapper_unref(reserve);
+@@ -460,6 +543,14 @@ void pa__done(pa_module*m) {
+     if (!(u = m->userdata))
+         goto finish;
+ 
++    if (u->mixer_fdl)
++        pa_alsa_fdlist_free(u->mixer_fdl);
++    if (u->mixer_handle)
++        snd_mixer_close(u->mixer_handle);
++    if (u->jacks)
++        pa_hashmap_free(u->jacks, NULL, NULL);
++
++
+     if (u->card && u->card->sinks) {
+         pa_sink *s;
+ 
+-- 
+1.7.9
+

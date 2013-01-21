@@ -1,0 +1,57 @@
+From 2b26793f0fd6634b8a4f09b8cd4e1104b454d5f0 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Fri, 9 Nov 2012 12:14:18 +0100
+Subject: [PATCH] alsa-mixer: Add a few more machines to whitelist
+
+Based on feedback in bug 946232 (comments 128, 129, 131), bug 1076840
+and bug 1073420.
+
+BugLink: https://bugs.launchpad.net/bugs/946232
+BugLink: https://bugs.launchpad.net/bugs/1073420
+BugLink: https://bugs.launchpad.net/bugs/1076840
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ .../alsa/mixer/profile-sets/90-pulseaudio.rules    |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+Index: pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/90-pulseaudio.rules
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/alsa/mixer/profile-sets/90-pulseaudio.rules	2012-12-05 14:37:01.234069090 +0100
++++ pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/90-pulseaudio.rules	2012-12-05 14:37:22.246068293 +0100
+@@ -28,6 +28,10 @@
+ # Force enable speaker and internal mic for some laptops
+ # Acer AOA150
+ ATTRS{subsystem_vendor}=="0x1025", ATTRS{subsystem_device}=="0x015b", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Acer Aspire 4810TZ
++ATTRS{subsystem_vendor}=="0x1025", ATTRS{subsystem_device}=="0x022a", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Packard bell dot m/a
++ATTRS{subsystem_vendor}=="0x1025", ATTRS{subsystem_device}=="0x028c", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
+ # Acer Aspire 1810TZ
+ ATTRS{subsystem_vendor}=="0x1025", ATTRS{subsystem_device}=="0x029b", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
+ # Acer AOD260 and AO532h
+@@ -54,6 +58,16 @@
+ ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x046e", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
+ # Dell XPS 15 (L502X)
+ ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x050e", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Dell Inspiron 3420
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x0553", ENV{PULSE_PROFILE_SET}="force-speaker.conf"
++# Dell Inspiron 3520
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x0555", ENV{PULSE_PROFILE_SET}="force-speaker.conf"
++# Dell Vostro 2420
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x0556", ENV{PULSE_PROFILE_SET}="force-speaker.conf"
++# Dell Vostro 2520
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x0558", ENV{PULSE_PROFILE_SET}="force-speaker.conf"
++# Dell Inspiron One 2020
++ATTRS{subsystem_vendor}=="0x1028", ATTRS{subsystem_device}=="0x0579", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
+ # Asus 904HA (1000H)
+ ATTRS{subsystem_vendor}=="0x1043", ATTRS{subsystem_device}=="0x831a", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
+ # Asus T101MT
+@@ -62,6 +76,8 @@
+ ATTRS{subsystem_vendor}=="0x104d", ATTRS{subsystem_device}=="0x9033", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
+ # Sony Vaio VPC-W115XG
+ ATTRS{subsystem_vendor}=="0x104d", ATTRS{subsystem_device}=="0x9064", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
++# Fujitsu Lifebook S7110
++ATTRS{subsystem_vendor}=="0x10cf", ATTRS{subsystem_device}=="0x1397", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
+ # Fujitsu Lifebook A530
+ ATTRS{subsystem_vendor}=="0x10cf", ATTRS{subsystem_device}=="0x1531", ENV{PULSE_PROFILE_SET}="force-speaker-and-int-mic.conf"
+ # Toshiba A200

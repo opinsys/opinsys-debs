@@ -1,0 +1,20 @@
+From b4389a752385afd6e65e412a8488828ee3648fbd Mon Sep 17 00:00:00 2001
+From: Zsolt Rizsanyi <rizsanyi@users.sourceforge.net>
+Date: Sun, 27 Jun 2010 15:16:13 +0100
+Subject: [PATCH 2/2] In KDE only start pulseaudio from the KDE specific desktop file
+
+---
+ src/daemon/pulseaudio.desktop.in |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/src/daemon/pulseaudio.desktop.in b/src/daemon/pulseaudio.desktop.in
+index 99bdbd0..47b2eb4 100644
+--- a/src/daemon/pulseaudio.desktop.in
++++ b/src/daemon/pulseaudio.desktop.in
+@@ -6,5 +6,6 @@ _Comment=Start the PulseAudio Sound System
+ Exec=start-pulseaudio-x11
+ Terminal=false
+ Type=Application
++NotShowIn=KDE;
+ Categories=
+ GenericName=
