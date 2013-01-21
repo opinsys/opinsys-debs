@@ -62,3 +62,6 @@
 0623-resampler-Fix-volume-on-downmix-to-mono.patch
 0624-alsa-mixer-Add-Phantom-Jack-support.patch
 0625-alsa-mixer-Add-a-few-more-machines-to-internal-mic-w.patch
+
+# Opinsys-patches
+0699-turn-off-x86-optimizations.patch
