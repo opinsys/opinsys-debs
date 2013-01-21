@@ -1,3 +1,10 @@
+puavo-ltsp (0.7.1-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+  * Add syslinux to bootserver's dependencies.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Mon, 21 Jan 2013 12:52:21 +0200
+
 puavo-ltsp (0.7.0-0+opinsys1) quantal; urgency=low
 
   * New upstream release with bootserver support
