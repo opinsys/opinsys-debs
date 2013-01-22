@@ -1,3 +1,9 @@
+puavo-ds (0.1.10-0+opinsys1) precise; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Tue, 22 Jan 2013 15:30:06 +0200
+
 puavo-ds (0.1.9-0+opinsys1) precise; urgency=low
 
   * New upstream release.
