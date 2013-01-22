@@ -1,5 +1,8 @@
 usr/sbin/ltsp-update-kernels
 usr/sbin/puavo-bootserver-fix-partitions
+usr/sbin/puavo-bootserver-generate-nbd-exports
+usr/sbin/puavo-bootserver-make-homedir
+usr/sbin/puavo-bootserver-setup-pxe
 usr/sbin/puavo-create-kvm-ltsp-server
 usr/sbin/puavo-init-bootserver-ddns
 usr/sbin/puavo-openvpn-up
