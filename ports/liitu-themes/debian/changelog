@@ -1,3 +1,9 @@
+liitu-themes (0.2.3-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Wed, 23 Jan 2013 10:32:28 +0200
+
 liitu-themes (0.2.2-0+opinsys1) quantal; urgency=low
 
   * Add a background image and an icon for webmenu.
