@@ -1,3 +1,9 @@
+puavo-wlanap (0.3.1-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 23 Jan 2013 13:46:39 +0200
+
 puavo-wlanap (0.3.0-0+opinsys1) quantal; urgency=low
 
   * New upstream release
