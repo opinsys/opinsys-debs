@@ -20,7 +20,7 @@ set -e
 
 case "$1" in
     configure)
-	update-inetd --add '907             stream  tcp     nowait  root    /usr/sbin/tcpd  /usr/sbin/puavo-ltsp-bootserver-make-homedir'
+	update-inetd --add '907             stream  tcp     nowait  root    /usr/sbin/tcpd  /usr/sbin/puavo-bootserver-make-homedir'
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
