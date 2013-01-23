@@ -1,3 +1,9 @@
+puavo-ltsp (0.7.5-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 23 Jan 2013 13:45:46 +0200
+
 puavo-ltsp (0.7.4-0+opinsys2) quantal; urgency=low
 
   * Add debian/puavo-ltsp-bootserver.prerm
