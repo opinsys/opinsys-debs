@@ -1,3 +1,12 @@
+puavo-ltsp (0.7.4-0+opinsys2) quantal; urgency=low
+
+  * Add debian/puavo-ltsp-bootserver.prerm
+    - remove the inetd service added in postinst
+  * Fix debian/puavo-ltsp-bootserver.postinst
+    - fix service path
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 23 Jan 2013 12:39:02 +0200
+
 puavo-ltsp (0.7.4-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
