@@ -7,7 +7,7 @@ Standards-Version: 3.8.3
 Homepage: https://github.com/opinsys/puavo-monitor
 
 Package: puavo-monitor
-Architecture: all
+Architecture: any
 Depends: ${misc:Depends}, nodejs-bundle
 Description: Uptime socket keeping track of client usage 
  Monitor daemon for fat- and thinclients. Keeps active tcp connection open to
