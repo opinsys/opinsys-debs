@@ -13,7 +13,6 @@ Section: admin
 Priority: extra
 Architecture: all
 Depends: python, gksu
-Maintainer: Opinsys Developers <dev@opinsys.fi>
 Description: Automatically power off a computer if not used.
  Autopoweroff is a python script that is started at boot time, and which
  function is to shutdown the computer at a specific time, but only if
