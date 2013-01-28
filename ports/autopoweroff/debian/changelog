@@ -1,0 +1,5 @@
+autopoweroff (2.9.1+opinsys1) quantal; urgency=low
+
+  * Initial Release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Mon, 28 Jan 2013 13:26:39 +0200

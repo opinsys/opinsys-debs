@@ -1,10 +1,19 @@
-Package: autopoweroff
-Version: 2.9.1-1
+Source: autopoweroff
 Section: admin
-Priority: optional
+Priority: extra
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev
+Standards-Version: 3.9.2
+Homepage: http://autopoweroff.sourceforge.net
+#Vcs-Git: git://git.debian.org/collab-maint/autopoweroff.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/autopoweroff.git;a=summary
+
+Package: autopoweroff
+Section: admin
+Priority: extra
 Architecture: all
-Depends: python,gksu
-Maintainer: Hans Deragon <hans@deragon.biz>
+Depends: python, gksu
+Maintainer: Opinsys Developers <dev@opinsys.fi>
 Description: Automatically power off a computer if not used.
  Autopoweroff is a python script that is started at boot time, and which
  function is to shutdown the computer at a specific time, but only if
