@@ -1,4 +1,4 @@
-autopoweroff (2.9.1+opinsys1) quantal; urgency=low
+autopoweroff (2.9.1-0+opinsys1) quantal; urgency=low
 
   * Initial Release.
 

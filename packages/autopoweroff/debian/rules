@@ -11,3 +11,11 @@
 
 %:
 	dh $@ 
+
+PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+.PHONY: get-orig-source
+get-orig-source:
+	wget http://sourceforge.net/projects/$(PACKAGE)/files/$(PACKAGE)/$(SRC_VERSION)/$(PACKAGE)-$(SRC_VERSION).tar.gz/download -O../$(TARBALL)
+	../../tools/unpack-orig-tarball ../$(TARBALL)
