@@ -52,6 +52,7 @@ usr/share/puavo-ltsp/init-puavo.d/50-cron
 usr/share/puavo-ltsp/init-puavo.d/05-getltsconffile
 usr/share/puavo-ltsp/init-puavo.d/50-keyboard
 usr/share/puavo-ltsp/init-puavo.d/50-saned
+usr/share/puavo-ltsp/init-puavo.d/60-autopoweroff
 usr/share/puavo-ltsp/init-puavo.d/60-puavo-wlan
 usr/share/puavo-ltsp/init-puavo.d/60-setup-xserver
 sbin/init-puavo

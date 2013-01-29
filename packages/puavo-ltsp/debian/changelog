@@ -1,3 +1,10 @@
+puavo-ltsp (0.7.7-0+opinsys2) quantal; urgency=low
+
+  * Install the /usr/share/puavo-ltsp/init-puavo.d/60-autopoweroff
+    script as well.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Tue, 29 Jan 2013 09:11:13 +0200
+
 puavo-ltsp (0.7.7-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
