@@ -1,3 +1,9 @@
+puavo-ltsp (0.7.7-0+opinsys3) quantal; urgency=low
+
+  * Do not install avahi-daemon on bootservers.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Tue, 29 Jan 2013 12:04:00 +0200
+
 puavo-ltsp (0.7.7-0+opinsys2) quantal; urgency=low
 
   * Install the /usr/share/puavo-ltsp/init-puavo.d/60-autopoweroff
