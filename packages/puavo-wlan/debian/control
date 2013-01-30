@@ -1,0 +1,24 @@
+Source: puavo-wlan
+Section: utils
+Priority: extra
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+Homepage: http://github.com/opinsys/puavo-wlan/
+
+Package: puavo-wlanap
+Architecture: all
+Depends: ${misc:Depends}, hostapd, bridge-utils, net-tools, netcat-openbsd, vtun
+Description: host tunneled WLAN accesspoint
+ puavo-wlanap glues together hostapd, vtun and bridge tools to make
+ hosting a tunneled WLAN accespoint easy. Optionally, accesspoint can be
+ configured from Puavo.
+ .
+
+Package: puavo-wlangw
+Architecture: all
+Depends: ${misc:Depends}, bridge-utils, net-tools, vtun
+Description: host tunneled WLAN accesspoint
+ puavo-wlangw glues together vtun and bridge tools to make
+ hosting a tunneled WLAN gateway easy.
+ .
