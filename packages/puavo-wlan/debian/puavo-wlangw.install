@@ -1,4 +1,3 @@
 etc/puavo-wlangw/vtund.conf
-usr/sbin/puavo-wlangw
 usr/sbin/puavo-wlangw-vtun-down
 usr/sbin/puavo-wlangw-vtun-up
