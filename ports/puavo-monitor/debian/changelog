@@ -1,3 +1,9 @@
+puavo-monitor (1.0.1-0+opinsys1) lucid; urgency=low
+
+  * New upstream release
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Wed, 30 Jan 2013 12:35:36 +0200
+
 puavo-monitor (1.0.0-0+opinsys1) lucid; urgency=low
 
   * Initial
