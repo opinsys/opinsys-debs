@@ -1,3 +1,9 @@
+puavo-wlan (0.4.1-0+opinsys2) quantal; urgency=low
+
+  * New patch: debian/patches/opinsys-wait-longer-before-launching-hostapd
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 31 Jan 2013 16:07:46 +0200
+
 puavo-wlan (0.4.1-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
