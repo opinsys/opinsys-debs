@@ -1,3 +1,11 @@
+puavo-wlan (0.4.1-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+  * Init script for puavo-wlangw.
+  * Add missing dependency for puavo-wlanap: daemon
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 30 Jan 2013 17:01:34 +0200
+
 puavo-wlan (0.4.0-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
