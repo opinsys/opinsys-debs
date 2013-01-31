@@ -1,0 +1,14 @@
+Description: wait longer before launching hostapd after vtun is up
+Author: Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>
+
+--- puavo-wlan-0.4.1.orig/ap/sbin/puavo-wlanap-vtun-up
++++ puavo-wlan-0.4.1/ap/sbin/puavo-wlanap-vtun-up
+@@ -5,7 +5,7 @@ brctl addbr $2
+ brctl setfd $2 0
+ ifconfig $2 up
+ brctl addif $2 $1
+-sleep 2
++sleep 8
+ hostapd -B -P /var/tmp/puavo-wlanap/hostapd.pid /var/tmp/puavo-wlanap/hostapd.conf
+ sleep 2
+ dhclient -pf /var/tmp/puavo-wlanap/dhclient.pid $2
