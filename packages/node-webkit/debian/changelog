@@ -1,3 +1,12 @@
+node-webkit (0.4.1-0+opinsys1) quantal; urgency=low
+
+  * Release 0.4.1
+  * https://groups.google.com/forum/#!msg/node-webkit/1JgTNLOEpIs/e2e0FwH9TE4J
+  * https://groups.google.com/forum/#!msg/node-webkit/bTqRSmcfJ_E/9njVffk-k4cJ
+  * https://groups.google.com/forum/#!msg/node-webkit/Ia0HHY8BWLA/kJWM6Hw6CwcJ
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 04 Feb 2013 15:36:38 +0200
+
 node-webkit (0.3.6-0+opinsys1) quantal; urgency=low
 
   * Release 0.3.6
