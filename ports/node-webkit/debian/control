@@ -2,7 +2,7 @@ Source: node-webkit
 Section: utils
 Priority: extra
 Maintainer: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
-Build-Depends: debhelper (>= 8.0.0)
+Build-Depends: debhelper (>= 7.4.15)
 Standards-Version: 3.9.3
 Homepage: https://github.com/rogerwang/node-webkit
 
