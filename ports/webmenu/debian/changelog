@@ -1,3 +1,9 @@
+webmenu (0.3.8-0+opinsys) quantal; urgency=low
+
+  * Fix package dependencies
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Wed, 06 Feb 2013 08:00:04 +0200
+
 webmenu (0.3.7-0+opinsys) quantal; urgency=low
 
   * New upstream release
