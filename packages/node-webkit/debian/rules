@@ -15,6 +15,8 @@
 override_dh_auto_install:
 	dh_auto_install -- prefix=/usr sysconfdir=/etc
 
+override_dh_shlibdeps:
+
 PACKAGE = node-webkit
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
