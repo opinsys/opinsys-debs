@@ -12,6 +12,7 @@ usr/share/puavo-ltsp-client/templates/etc/ssh/ltspsshd_config
 usr/share/puavo-ltsp-client/templates/etc/init/gssd.conf-userprincipal
 usr/share/puavo-ltsp-client/templates/etc/pam.d/ltspsshd
 usr/share/puavo-ltsp-client/templates/etc/pam.d/lightdm-fatclient
+usr/share/puavo-ltsp-client/templates/etc/pam.d/lightdm-laptop
 usr/share/puavo-ltsp-client/templates/etc/pam.d/lightdm-thinclient
 usr/share/puavo-ltsp-client/templates/etc/nsswitch.conf-extrausers
 usr/share/puavo-ltsp-client/templates/etc/ldap/ldap.conf
