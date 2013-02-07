@@ -1,3 +1,15 @@
+webmenu (0.3.11-0+opinsys) quantal; urgency=low
+
+  * New upstream release
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Thu, 07 Feb 2013 14:32:14 +0200
+
+webmenu (0.3.10-0+opinsys) quantal; urgency=low
+
+  * New upstream release
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Thu, 07 Feb 2013 09:29:20 +0200
+
 webmenu (0.3.9-0+opinsys) quantal; urgency=low
 
   * New upstream release
