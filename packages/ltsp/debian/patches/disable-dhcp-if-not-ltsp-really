@@ -1,0 +1,12 @@
+diff -ruN ltsp-5.4.3.orig/client/Debian/share/initramfs-tools/scripts/init-premount/udhcp ltsp-5.4.3/client/Debian/share/initramfs-tools/scripts/init-premount/udhcp
+--- ltsp-5.4.3.orig/client/Debian/share/initramfs-tools/scripts/init-premount/udhcp	2013-02-07 14:52:53.000000000 +0200
++++ ltsp-5.4.3/client/Debian/share/initramfs-tools/scripts/init-premount/udhcp	2013-02-07 14:53:25.635149997 +0200
+@@ -42,7 +42,7 @@
+ esac
+ 
+ # Exit if an LTSP boot was not requested
+-grep -Eqsw "init=/sbin/init-ltsp|ltsp" /proc/cmdline || exit 0
++grep -Eqsw "init=/sbin/init-ltsp" /proc/cmdline || exit 0
+ 
+ bring_up_interfaces()
+ {

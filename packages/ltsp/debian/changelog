@@ -1,3 +1,10 @@
+ltsp (5.4.3-0ubuntu4+opinsys1) quantal; urgency=low
+
+  * Do not trigger udhcp only because the kernel command line contains
+    the word "ltsp".
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Thu, 07 Feb 2013 14:57:00 +0200
+
 ltsp (5.4.3-0ubuntu4) quantal; urgency=low
 
   * Upstream recently dropped the -a (architecture) flag of ltsp-update-image.
