@@ -1,0 +1,79 @@
+# These templates have been reviewed by the debian-l10n-english
+# team
+#
+# If modifications/additions/rewording are needed, please ask
+# debian-l10n-english@lists.debian.org for advice.
+#
+# Even minor modifications require translation updates and such
+# changes should be coordinated with translators and reviewers.
+
+Template: ltsp-client-builder/run
+Type: boolean
+Default: false
+_Description: Set up an LTSP chroot environment?
+ Please choose whether you want to set up an LTSP chroot environment
+ on this machine, to act as a thin client server.
+
+Template: debian-installer/ltsp-client-builder/title
+Type: text
+# Item in the main menu to select this package
+_Description: Build LTSP chroot
+
+Template: ltsp-client-builder/progress
+Type: text
+_Description: Building thin client system...
+
+Template: ltsp-client-builder/compress
+Type: text
+_Description: Compressing thin client image...
+
+Template: ltsp-client-builder/build-client-opts
+Type: string
+Default: --mirror file:///media/cdrom --security-mirror none --updates-mirror none --accept-unsigned-packages
+# Only used for preseeding arguments to ltsp-client-builder.
+Description: arguments for ltsp-build-client:
+ this option is meant to be used with debconf preseeding.
+
+Template: ltsp-client-builder/dhcp-manual
+Type: note
+_Description: No interface for LTSP dhcpd configuration
+ There are no free interfaces for usage with the LTSP server. Please
+ manually configure the /etc/ltsp/dhcpd.conf file to point to a valid
+ static interface after the installation has completed.
+
+Template: ltsp-client-builder/dhcp-interface
+Type: select
+Choices: ${choices}
+_Description: Interface for the thin client network:
+ Please choose which of this system's multiple spare interfaces should be
+ used for the thin client.
+
+Template: ltsp-client-builder/server_packages
+Type: string
+Default: ltsp-server-standalone
+Description: Packages for thin client server:
+ this option is meant to be used with debconf preseeding.
+
+Template: ltsp-client-builder/ltsp_update_image
+Type: boolean
+Default: true
+Description: Create ltsp image?
+ this option is meant to be used with debconf preseeding.
+
+Template: ltsp-client-builder/configure_network_interface
+Type: boolean
+Default: true
+Description: Configure spare interface?
+ this option is meant to be used with debconf preseeding.
+
+Template: ltsp-client-builder/use_cdrom
+Type: boolean
+Default: true
+Description: Require use of CD-ROM for install?
+ this option is meant to be used with debconf preseeding.
+
+Template: ltsp-client-builder/fat-client
+Type: boolean
+Default: false
+Description: Build a fat client?
+ this option is meant to be used with debconf preseeding.

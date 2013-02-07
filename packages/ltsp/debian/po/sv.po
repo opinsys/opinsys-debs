@@ -1,0 +1,109 @@
+# Swedish translation for ltsp debconf.
+# Copyright (C) 2007 Free Software Foundation, Inc.
+# This file is distributed under the same license as the ltsp package.
+# Daniel Nylander <po@danielnylander.se>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ltsp\n"
+"Report-Msgid-Bugs-To: ltsp@packages.debian.org\n"
+"POT-Creation-Date: 2012-08-01 18:56-0400\n"
+"PO-Revision-Date: 2007-10-18 10:10+0100\n"
+"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
+"Language-Team: Swedish <debian-l10n-swedish@lists.debian.org>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid "Set up an LTSP chroot environment?"
+msgstr "Konfigurera en chroot-miljö för LTSP?"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid ""
+"Please choose whether you want to set up an LTSP chroot environment on this "
+"machine, to act as a thin client server."
+msgstr ""
+"Välj huruvida du vill konfigurera en chroot-miljö för LTSP på den här "
+"maskinen som fungerar som en server för tunna klienter."
+
+#. Type: text
+#. Description
+#. Item in the main menu to select this package
+#: ../ltsp-client-builder.templates:3001
+msgid "Build LTSP chroot"
+msgstr "Bygg chroot för LTSP"
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:4001
+msgid "Building thin client system..."
+msgstr "Bygger system för tunna klienter..."
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:5001
+msgid "Compressing thin client image..."
+msgstr "Komprimerar avbild för tunna klienter..."
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid "No interface for LTSP dhcpd configuration"
+msgstr "Inget nätverksgränssnitt för LTSP:s dhcpd-konfiguration"
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid ""
+"There are no free interfaces for usage with the LTSP server. Please manually "
+"configure the /etc/ltsp/dhcpd.conf file to point to a valid static interface "
+"after the installation has completed."
+msgstr ""
+"Det finns inga lediga nätverksgränssnitt att använda för LTSP-servern. "
+"Konfigurera filen /etc/ltsp/dhcpd.conf manuellt till att peka på ett giltigt "
+"statiskt nätverksgränssnitt efter att installationen är färdig."
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid "Interface for the thin client network:"
+msgstr "Nätverksgränssnitt för tunna klient-nätverket:"
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid ""
+"Please choose which of this system's multiple spare interfaces should be "
+"used for the thin client."
+msgstr ""
+"Välj vilka av systemets flera olika reservgränssnitt som ska användas för "
+"den tunna klienten."
+
+#~ msgid "Installation aborted"
+#~ msgstr "Installationen avbröts "
+
+#~ msgid ""
+#~ "The ltsp-client package provides the basic structure for an LTSP "
+#~ "terminal. It cannot be installed on a regular machine."
+#~ msgstr ""
+#~ "Paketet ltsp-client tillhandahåller den grundläggande strukturen för en "
+#~ "LTSP-terminal. Det kan inte installeras på en vanlig maskin."
+
+#~ msgid "Building LTSP chroot..."
+#~ msgstr "Bygger chroot för LTSP..."
+
+#~ msgid ""
+#~ "The ltsp-client package cannot be installed in a regular machine. This "
+#~ "package provides the basic structure for a LTSP terminal."
+#~ msgstr ""
+#~ "Paketet ltsp-client kan inte installeras på en vanlig maskin. Det här "
+#~ "paketet tillhandahåller grundläggande struktur för en LTSP-terminal."
+
+#~ msgid "Please read the package description to understand what it means."
+#~ msgstr "Läs paketbeskrivningen för att förstå vad det betyder."

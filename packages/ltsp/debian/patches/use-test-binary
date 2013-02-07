@@ -1,0 +1,30 @@
+## use-test-binary.dpatch by Vagrant Cascadian <vagrant@freegeek.org>
+##
+## DP: use /usr/bin/test instead of relying on the shell test builtin, as bash
+## DP: and dash behave inconsistantly. works around
+## DP: http://bugs.debian.org/539909
+
+Index: ltsp-trunk/client/localapps/ldm-rc.d/X01-localapps
+===================================================================
+--- ltsp-trunk.orig/client/localapps/ldm-rc.d/X01-localapps	2012-05-14 13:56:00.417535605 -0700
++++ ltsp-trunk/client/localapps/ldm-rc.d/X01-localapps	2012-05-14 13:57:44.218050317 -0700
+@@ -122,7 +122,7 @@
+ 
+ 
+     if [ -n "$myGroups" ]; then
+-        if [ -w /etc ]; then
++        if /usr/bin/test -w /etc ; then
+             oldifs="${IFS-not set}"
+             IFS=,
+             for ngroup in $tocreate; do
+Index: ltsp-trunk/client/share/ltsp/init-ltsp.d/50-cron
+===================================================================
+--- ltsp-trunk.orig/client/share/ltsp/init-ltsp.d/50-cron	2012-05-14 13:56:00.417535605 -0700
++++ ltsp-trunk/client/share/ltsp/init-ltsp.d/50-cron	2012-05-14 13:57:44.218050317 -0700
+@@ -1,5 +1,5 @@
+ CRON_FILE=/etc/cron.d/ltsp
+-if [ ! -w "/etc/cron.d" ]; then
++if ! /usr/bin/test -w "/etc/cron.d" ; then
+     echo "Warning: /etc/cron.d is not writeable."
+     return 1
+ fi

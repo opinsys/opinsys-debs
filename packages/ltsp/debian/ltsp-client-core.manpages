@@ -1,0 +1,8 @@
+client/getltscfg/getltscfg.1
+client/getltscfg-cluster/getltscfg-cluster.1
+client/jetpipe/jetpipe.8
+client/localapps/doc/ltsp-localappsd.1
+client/localapps/doc/xatomwait.1
+client/localapps/doc/ltsp-genmenu.1
+client/localapps/doc/ltsp-remoteapps.1
+client/nbd-proxy/man/nbd-proxy.1

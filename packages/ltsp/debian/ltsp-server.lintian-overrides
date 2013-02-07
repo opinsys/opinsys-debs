@@ -1,0 +1,2 @@
+# debconf question is only used in preseeding, not asked.
+ltsp-server: no-debconf-config

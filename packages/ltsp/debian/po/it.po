@@ -1,0 +1,96 @@
+# ltsp debconf templates for italian.
+# COPYRIGHT (C) 2009 THE LTSP'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the ltsp package.
+#
+# Vincenzo Campanella <vinz65@gmail.com>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: ltsp 5.1.83-1\n"
+"Report-Msgid-Bugs-To: ltsp@packages.debian.org\n"
+"POT-Creation-Date: 2012-08-01 18:56-0400\n"
+"PO-Revision-Date: 2009-11-13 13:36+0100\n"
+"Last-Translator: Vincenzo Campanella <vinz65@gmail.com>\n"
+"Language-Team: Italian <tp@lists.linux.it>\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid "Set up an LTSP chroot environment?"
+msgstr "Impostare un ambiente chroot LTSP?"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid ""
+"Please choose whether you want to set up an LTSP chroot environment on this "
+"machine, to act as a thin client server."
+msgstr ""
+"Scegliere se si desidera impostare un ambiente root LTSP su questa macchina, "
+"in modo da agire come server di thin client."
+
+#. Type: text
+#. Description
+#. Item in the main menu to select this package
+#: ../ltsp-client-builder.templates:3001
+msgid "Build LTSP chroot"
+msgstr "Creazione di chroot LTSP in corso..."
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:4001
+msgid "Building thin client system..."
+msgstr "Creazione del sistema thin client in corso..."
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:5001
+msgid "Compressing thin client image..."
+msgstr "Compressione dell'immagine thin client in corso..."
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid "No interface for LTSP dhcpd configuration"
+msgstr "Nessuna interfaccia per la configurazione LTSP di dhcpd"
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid ""
+"There are no free interfaces for usage with the LTSP server. Please manually "
+"configure the /etc/ltsp/dhcpd.conf file to point to a valid static interface "
+"after the installation has completed."
+msgstr ""
+"Non vi è alcuna interfaccia per l'uso con il server LTSP. Configurare "
+"manualmente il file «/etc/ltsp/dhcpd.conf» per puntare ad un'interfaccia "
+"statica valida dopo che l'installazione sarà stata completata."
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid "Interface for the thin client network:"
+msgstr "Interfaccia per la rete thin client:"
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid ""
+"Please choose which of this system's multiple spare interfaces should be "
+"used for the thin client."
+msgstr ""
+"Scegliere quale delle interfacce multiple spare di questo sistema dovrà "
+"essere utilizzata per il thin client."
+
+#~ msgid "Installation aborted"
+#~ msgstr "Installazione interrotta"
+
+#~ msgid ""
+#~ "The ltsp-client package provides the basic structure for an LTSP "
+#~ "terminal. It cannot be installed on a regular machine."
+#~ msgstr ""
+#~ "Il pacchetto ltsp-client fornisce la struttura di base per un terminale "
+#~ "LTSP. Non può essere installato su una macchina ordinaria."

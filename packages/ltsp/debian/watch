@@ -1,0 +1,10 @@
+# ltsp currently doesn't release tarballs. the latest version can be found by
+# checking the following URL:
+# http://bazaar.launchpad.net/~ltsp-upstream/ltsp/ltsp-trunk/annotate/head:/release.conf
+
+version=3
+
+# check versions uploaded to other distros:
+
+# debian
+http://ftp.debian.org/debian/pool/main/l/ltsp/ltsp_(.*)\.orig\.tar\.gz

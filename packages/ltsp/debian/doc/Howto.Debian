@@ -1,0 +1,121 @@
+this is a raw dump of http://wiki.debian.org/LTSP/Howto as of 20090511, please
+refer to that for current information.
+
+= Upstream Documentation =
+
+for additional documentation about installing LTSP: 
+
+http://wiki.ltsp.org/twiki/bin/view/Ltsp/LtspDocumentationUpstream
+
+= Installing LTSP on Lenny =
+
+1. if you want a complete LTSP server with all the bells and whistles:
+
+{{{  
+apt-get install ltsp-server-standalone
+}}}
+
+if you want more fine-grained control, splitting some services off to separate servers, you can install "ltsp-server" instead, and manually install each of the other services.
+
+(you can also get backported packages for lenny: [[LTSP/Howto/Lenny-With-Backports]] )
+
+2. Build the LTSP client environment:
+
+{{{
+ltsp-build-client
+}}}
+
+If you're installing a different debian distribution than what's on the server, you will need to specify the --dist xxx commandline option. where xxx is your Debian distribution (e.g. lenny, etch). See /usr/share/debootstrap/scripts/.
+
+ltsp-build-client will download a complete Debian filesystem into /opt/ltsp/i386 (or specify an alternate location with '--base') and install the ltsp-client and ldm packages (the LTSP Display Manager). Typically, you will need a desktop environment like gnome or xfce, or a window manager such as icewm installed on the server (NOT in the chroot).
+
+
+If you change the IP data after you have done the initial setup and run `ltsp-update-sshkeys` on the server.
+
+The files the client will boot are installed on the server into /var/lib/tftpboot. 
+
+3. Configure /etc/dhcp3/dhcpd.conf and /etc/ltsp/dhcpd.conf:
+
+Edit /etc/ltsp/dhcpd.conf to adapt to your network. See examples in /usr/share/doc/ltsp-server/examples/dhcpd.conf as a reference.
+
+Include the LTSP dhcpd.conf at the bottom of /etc/dhcp3/dhcpd.conf
+
+{{{
+include "/etc/ltsp/dhcpd.conf";
+}}}
+
+Restart dhcp3-server:
+
+{{{
+invoke-rc.d dhcp3-server restart
+}}}
+
+Alternately, configure /etc/dnsmasq.conf:
+
+See example in /usr/share/doc/ltsp-server/examples/dhcpd-dnsmasq and adapt to your network.
+ 
+Restart dnsmasq:
+
+{{{
+invoke-rc.d dnsmasq restart
+}}}
+
+4. Configure /etc/exports:
+
+{{{
+/opt/ltsp *(ro,no_root_squash,async,no_subtree_check)
+}}}
+
+Restart nfs-kernel-server:
+
+{{{
+invoke-rc.d nfs-kernel-server restart
+}}}
+
+5. Start tftpd. By default, tftpd-hpa is started from inetd. you may need to restart inetd after installing tftpd-hpa.
+
+{{{
+invoke-rc.d openbsd-inetd restart
+}}}
+
+Alternately, edit /etc/default/tftpd-hpa to have tftpd-hpa start on it's own.
+
+{{{
+RUN_DAEMON="yes"
+}}}
+
+Then, comment the tftpd entry in /etc/inetd.conf.
+
+{{{
+#tftp           dgram   udp     wait    root  /usr/sbin/in.tftpd /usr/sbin/in.tftpd -s /var/lib/tftpboot
+}}}
+
+restart inetd.
+
+{{{
+invoke-rc.d openbsd-inetd restart
+}}}
+
+and restart tftpd-hpa
+
+{{{
+invoke-rc.d tftpd-hpa restart
+}}}
+
+6. Boot a PXE or Etherboot capable machine and enjoy. note that some older versions of etherboot do not support ELF images, and may not work without additional configuration.
+
+= Installing LTSP on Etch =
+
+[[LTSP/Howto/Etch]]
+
+using newer LTSP packages with Etch:
+
+[[LTSP/Howto/Etch-With-Backports]]
+
+== Customizations in the chroot ==
+
+The 2 ltsp configuration files inside the client are /opt/ltsp/i386/etc/lts.conf and /opt/ltsp/i386/etc/default/ltsp-client-setup.  See the examples in /opt/ltsp/i386/usr/share/doc/ltsp-client*.   Also see the Edubuntu wiki http://doc.ubuntu.com/edubuntu/edubuntu/handbook/C/customizing-thin-client.html (note: Debian LTSP still uses NFS by default).
+
+== Translations ==
+
+Portuguese Brazil [[http://wiki.debian.org/pt_BR/LTSP/Howto]]

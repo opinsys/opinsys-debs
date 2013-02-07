@@ -1,0 +1,92 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## kfreebsd-tmpfs-mounts.dpatch by Vagrant Cascadian <vagrant@freegeek.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: use alternate method on GNU/kFreeBSD to mount writeable filesystems.
+
+@DPATCH@
+diff -urNad ltsp-5.1.96~/client/initscripts/ltsp-init-common ltsp-5.1.96/client/initscripts/ltsp-init-common
+--- ltsp-5.1.96~/client/initscripts/ltsp-init-common	2009-12-11 22:21:51.000000000 -0800
++++ ltsp-5.1.96/client/initscripts/ltsp-init-common	2009-12-11 22:24:09.000000000 -0800
+@@ -331,3 +331,65 @@
+     done
+ }
+ 
++tmpfs_copy () {
++    # re-implement functionality of bind_mounts, as the FreeBSD kernel doesn't
++    # support bind mounting, has no correlary to NBD, and the in-kernel unionfs
++    # is unstable over NFS. so instead, copy all files to a temporary location,
++    # and mount tmpfs over the existing location, and then copy them back.
++
++    # set defaults
++    test -z "$tmpfs_dir" && tmpfs_dir=/var/lib/ltsp-client-setup
++    mount -t tmpfs -o mode=0755 tmpfs $tmpfs_dir
++
++    # mount all of /etc in a tmpfs, ignoring other mount requests for /etc
++    for d in /etc/ $copy_dirs ; do
++        case $d in
++            /etc/?*) : no-op: all of /etc is mounted read-write ;; 
++            *) 
++                if [ -d "$d" ]; then
++                    if ! /usr/bin/test -w "$d" ; then
++                        cd $tmpfs_dir
++                        tar -cpf - $d 2> /dev/null | tar xpf -
++                        mount -t tmpfs -o mode=0755 tmpfs $d
++                        cp -a $tmpfs_dir/$d/. $d/.
++                    fi
++                else
++                    echo "WARNING: $d does not exist"
++                fi
++                ;;
++         esac
++    done
++    # preserve directory structure
++    for d in /var/lock /var/run $rw_dirs ; do
++        if [ -d "$d" ]; then
++            if ! /usr/bin/test -w "$d" ; then
++                case $d in
++                    /etc/?*) : no-op: all of /etc is mounted read-write ;; 
++                    /tmp|/var/tmp|/var/lock) 
++                        # use default permissions, no content
++                        mount -t tmpfs tmpfs $d ;;
++                    *) cd $tmpfs_dir
++                        tar --no-recursion -cpf - $(find $d -type d 2> /dev/null) 2> /dev/null | tar xpf -
++                        mount -t tmpfs -o mode=0755 tmpfs $d
++                        cp -a $tmpfs_dir/$d/. $d/.
++                        ;;
++                esac
++            fi
++        else
++            echo "WARNING: $d does not exist"
++        fi
++    done
++
++    # note: should be no need to handle bindfiles, as all bindfiles are in
++    # /etc/
++    for f in $bindfiles ; do
++        case $f in
++            /etc/?*) : no-op: all of /etc is mounted read-write ;; 
++            *) echo WARNING: $f is not mountable ;;
++        esac
++    done
++
++    # unmount the temporary directory for copying.
++    cd /
++    umount $tmpfs_dir
++}
+diff -urNad ltsp-5.1.96~/client/initscripts/ltsp-setup ltsp-5.1.96/client/initscripts/ltsp-setup
+--- ltsp-5.1.96~/client/initscripts/ltsp-setup	2009-12-11 22:21:51.000000000 -0800
++++ ltsp-5.1.96/client/initscripts/ltsp-setup	2009-12-11 22:21:52.000000000 -0800
+@@ -36,6 +36,12 @@
+         if [ -z "$root_write_method" ] && ! /usr/bin/test -w "/" ; then
+             root_write_method="bind_mounts"
+         fi
++        if [ "$root_write_method" = "bind_mounts" ]; then
++            case $(uname -o) in
++                GNU*FreeBSD*) root_write_method="tmpfs_copy" ;;
++            esac
++        fi
++        [ "$root_write_method" = "tmpfs_copy" ] && tmpfs_copy
+         [ "$root_write_method" = "bind_mounts" ] && bind_mounts
+         if [ -f "/etc/ltsp/getltscfg-cluster.conf" ]; then
+             # Tell the control center that we are booting and get lts.conf

@@ -1,0 +1,117 @@
+# ltsp Brazilian Portuguese translation
+# Copyright (C) 2007 THE ltsp'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the ltsp package.
+# Tiago Bortoletto Vaz <tiago@debian-ba.org>, 2007."
+# Felipe Augusto van de Wiel (faw) <faw@debian.org>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ltsp\n"
+"Report-Msgid-Bugs-To: ltsp@packages.debian.org\n"
+"POT-Creation-Date: 2012-08-01 18:56-0400\n"
+"PO-Revision-Date: 2007-10-24 02:02-0200\n"
+"Last-Translator: Felipe Augusto van de Wiel (faw) <faw@debian.org>\n"
+"Language-Team: l10n portuguese <debian-l10n-portuguese@lists.debian.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"pt_BR utf-8\n"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid "Set up an LTSP chroot environment?"
+msgstr "Configurar um ambiente chroot LTSP?"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid ""
+"Please choose whether you want to set up an LTSP chroot environment on this "
+"machine, to act as a thin client server."
+msgstr ""
+"Por favor, escolha se você quer configurar um ambiente chroot LTSP nesta "
+"máquina, para atuar como um servidor para \"thin clients\"."
+
+#. Type: text
+#. Description
+#. Item in the main menu to select this package
+#: ../ltsp-client-builder.templates:3001
+msgid "Build LTSP chroot"
+msgstr "Construir chroot LTSP"
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:4001
+msgid "Building thin client system..."
+msgstr "Construindo o sistema para os \"thin clients\"..."
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:5001
+msgid "Compressing thin client image..."
+msgstr "Compactando imagem para os \"thin clients\"..."
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid "No interface for LTSP dhcpd configuration"
+msgstr "Nenhuma interface para a configuração dhcpd LTSP"
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid ""
+"There are no free interfaces for usage with the LTSP server. Please manually "
+"configure the /etc/ltsp/dhcpd.conf file to point to a valid static interface "
+"after the installation has completed."
+msgstr ""
+"Não há interfaces livres para usar com o servidor LTSP. Por favor, "
+"manualmente configure o arquivo /etc/ltsp/dhcpd.conf para apontar para uma "
+"interface estática válida após a instalação ter sido completada."
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid "Interface for the thin client network:"
+msgstr "Interface para a rede dos \"thin clients\":"
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid ""
+"Please choose which of this system's multiple spare interfaces should be "
+"used for the thin client."
+msgstr ""
+"Por favor, escolha qual das múltiplas interfaces sobressalentes do sistema "
+"deveria ser usada para os \"thin clients\"."
+
+#~ msgid "Installation aborted"
+#~ msgstr "Instalação abortada"
+
+#~ msgid ""
+#~ "The ltsp-client package provides the basic structure for an LTSP "
+#~ "terminal. It cannot be installed on a regular machine."
+#~ msgstr ""
+#~ "O pacote ltsp-client fornece a estrutura básica para um terminal LTSP. "
+#~ "Ele não pode ser instalado em uma máquina regular."
+
+#~ msgid "Building LTSP chroot..."
+#~ msgstr "Construindo chroot LTSP..."
+
+#, fuzzy
+#~| msgid ""
+#~| "ltsp-client cannot be installed in a regular machine. This package "
+#~| "provides  the basic structure for a LTSP terminal."
+#~ msgid ""
+#~ "The ltsp-client package cannot be installed in a regular machine. This "
+#~ "package provides the basic structure for a LTSP terminal."
+#~ msgstr ""
+#~ "ltsp-client não pode ser instalado numa máquina regular. Este pacote "
+#~ "provê  a estrutura básica para um terminal LTSP."
+
+#~ msgid "Please read the package description to understand what it means."
+#~ msgstr ""
+#~ "Por favor leia a descrição do pacote para entendermelhor o que isso "
+#~ "significa."

@@ -1,0 +1,215 @@
+Source: ltsp
+Section: misc
+Priority: extra
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: LTSP Debian Maintainers <pkg-ltsp-devel@lists.alioth.debian.org>
+Uploaders: Vagrant Cascadian <vagrant@debian.org>
+Build-Depends: automake | automaken,
+  bison,
+  debhelper (>= 7.0.50~),
+  dh-autoreconf,
+  flex,
+  dctrl-tools,
+  libpopt-dev,
+  libx11-dev,
+  lsb-release,
+  pkg-config,
+  po-debconf
+Standards-Version: 3.9.3
+Vcs-Bzr: nosmart+http://anonscm.debian.org/bzr/pkg-ltsp/ltsp-debian-packaging/
+Vcs-Browser: http://anonscm.debian.org/loggerhead/pkg-ltsp/ltsp-debian-packaging/files
+DM-Upload-Allowed: yes
+Homepage: http://ltsp.org
+
+Package: ltsp-server
+Depends: ${misc:Depends},
+  debconf-utils,
+  debootstrap (>= 1.0.30),
+  gettext-base,
+  iproute | freebsd-net-tools,
+  lsb-release,
+  openssh-client,
+  python (>= 2.4),
+  tcpd,
+  update-inetd
+X-Debian-Recommends: nfs-kernel-server
+Recommends: ${vendor:Recommends},
+  nbd-server (>= 1:2.9.25-2),
+  openbsd-inetd | inet-superserver,
+  openssh-server,
+  squashfs-tools,
+  tftpd-hpa | atftpd | dnsmasq (>= 2.41)
+Suggests: audiooss,
+  gnome-session | x-session-manager | x-window-manager,
+  isc-dhcp-server | dnsmasq,
+  ldm-server,
+  libasound2-plugins,
+  ltsp-docs,
+  ltspfs,
+  pulseaudio,
+  qemu-user-static,
+  sdm,
+  x11-utils,
+  xauth
+Conflicts: ltsp-utils
+Replaces: ltsp-utils
+Architecture: all
+Description: basic LTSP server environment
+ This is the basic environment including the minimal features necessary to
+ build an LTSP environment.
+ .
+ It also recommends services needed for thin-clients to boot and mount
+ filesystems over the network.
+ .
+ LTSP stands for 'Linux Terminal Server Project'.
+
+Package: ltsp-server-standalone
+X-Debian-Depends: nfs-kernel-server
+Depends: ${misc:Depends},
+  ${vendor:Depends},
+  gnome-session | x-session-manager | x-window-manager,
+  isc-dhcp-server | dnsmasq,
+  ldm-server,
+  libasound2-plugins,
+  ltspfs,
+  ltsp-server,
+  nbd-server (>= 1:2.9.25-2),
+  openbsd-inetd | inet-superserver,
+  openssh-server,
+  squashfs-tools,
+  tftpd-hpa | atftpd | dnsmasq (>= 2.41),
+  x11-utils,
+  xauth
+Recommends: ltsp-docs
+Architecture: all
+Description: complete LTSP server environment
+ This is a complete LTSP server environment with all LTSP server features
+ including a DHCP server, remote device access using ltspfs, remote sound using
+ pulseaudio, network swap using NBD and more.
+ .
+ LTSP stands for 'Linux Terminal Server Project'.
+
+Package: ltsp-client-core
+X-Ubuntu-Depends: busybox-static,
+  pciutils,
+  udhcpc,
+  usbutils
+Depends: ${misc:Depends},
+  ${shlibs:Depends},
+  ${vendor:Depends},
+  console-setup,
+  initramfs-tools (>= 0.11) [linux-any],
+  iproute,
+  kbd [linux-any] | console-tools [linux-any],
+  lsb-base,
+  lsb-release,
+  mkelfimage[i386] | mknbi[i386],
+  nbd-client (>= 1:2.9.25-2) [linux-any],
+  python,
+  syslinux [i386 amd64],
+  tftp-hpa | tftp,
+  yaboot[powerpc]
+Suggests: alsa-utils,
+  cron,
+  cryptsetup,
+  cups-bsd,
+  freerdp-x11 | rdesktop,
+  inputattach [!s390 !s390x] | joystick (<< 20051019-6) [!s390 !s390x],
+  ldm,
+  libasound2-plugins,
+  ltspfsd (>= 1.1),
+  mdetect,
+  netcat-traditional | netcat,
+  ntpdate,
+  numlockx,
+  pulseaudio, 
+  python-serial,
+  rsyslog | system-log-daemon,
+  sane-utils,
+  sdm-terminal | x-display-manager,
+  sshfs,
+  x11-xserver-utils
+Recommends: procps
+Breaks: ltsp-server (<< 5.3.7)
+Replaces: ltsp-server (<< 5.3.7)
+Architecture: any
+Description: basic LTSP client environment
+ This package provides the scripts needed to configure and boot a basic LTSP
+ client.
+ .
+ DO NOT install this package on a regular machine, it is intended only
+ for installation inside a LTSP client file system.
+ .
+ LTSP stands for 'Linux Terminal Server Project'.
+
+Package: ltsp-client
+X-Ubuntu-Depends: dbus,
+  dmz-cursor-theme,
+  fonts-kacst-one,
+  fonts-khmeros-core,
+  fonts-lao,
+  fonts-liberation,
+  fonts-nanum,
+  fonts-takao-pgothic,
+  language-pack-en,
+  libgl1-mesa-dri,
+  plymouth-theme-ubuntu-logo,
+  plymouth-theme-ubuntu-text,
+  ttf-dejavu-core,
+  ttf-freefont,
+  ttf-indic-fonts-core,
+  ttf-punjabi-fonts,
+  ttf-thai-tlwg,
+  ttf-ubuntu-font-family,
+  ttf-wqy-microhei,
+  wget
+Depends: ${misc:Depends},
+  ${vendor:Depends},
+  alsa-utils,
+  cron,
+  cryptsetup,
+  cups-bsd,
+  freerdp-x11 | rdesktop,
+  inputattach [!s390 !s390x] | joystick (<< 20051019-6) [!s390 !s390x],
+  ldm,
+  libasound2-plugins,
+  ltsp-client-core,
+  ltspfsd (>= 1.1),
+  mdetect,
+  netcat-traditional | netcat,
+  ntpdate,
+  numlockx,
+  pulseaudio,
+  python-daemon,
+  python-serial,
+  rsyslog | system-log-daemon,
+  sane-utils,
+  sshfs,
+  x11-xserver-utils,
+  xorg
+X-Ubuntu-Recommends: zram-config
+Recommends: ${vendor:Recommends}
+Architecture: any
+Description: complete LTSP client environment
+ This package ensures that a complete LTSP client with a graphical user
+ environment, remote audio and local device support is installed.
+ .
+ DO NOT install this package on a regular machine, it is intended only
+ for installation inside a LTSP client file system.
+ .
+ LTSP stands for 'Linux Terminal Server Project'.
+
+Package: ltsp-client-builder
+Section: debian-installer
+Package-Type: udeb
+Architecture: all
+Depends: ${misc:Depends},
+  ${shlibs:Depends},
+  kbd-chooser,
+  pkgsel
+XB-Installer-Menu-Item: 7000
+Description: build an LTSP environment in the installer target
+ This udeb bootstraps the LTSP client chroot in the installer target 
+ while the CD-ROM is still mounted.
+ .
+ LTSP stands for 'Linux Terminal Server Project'.

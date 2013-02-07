@@ -1,0 +1,3 @@
+server/doc/*.8
+server/doc/*.1
+client/localapps/doc/ltsp-localapps.1

@@ -1,0 +1,6 @@
+Template: ltsp-server/build_client
+Type: boolean
+Default: false
+Description: Build LTSP client environment during package installation?
+ Internal template used to set the configuration value at install time.
+ Do not translate this.

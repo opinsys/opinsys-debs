@@ -1,0 +1,18 @@
+Description: Change default X config to use 24bit
+ Upstream LTSP uses 16bit by default for the user session.
+ However, this doesn't quite work with unity using llvmpipe.
+
+ As a temporary workaround, change the default color depth to 24bit.
+Author: Stéphane Graber <stgraber@ubuntu.com>
+
+--- ltsp-5.4.3.orig/client/share/ltsp/screen-session.d/XS95-colordepth
++++ ltsp-5.4.3/client/share/ltsp/screen-session.d/XS95-colordepth
+@@ -2,7 +2,7 @@
+ 
+ # Default to 16 bpp for thin clients
+ if [ -z "$X_COLOR_DEPTH" ] && boolean_is_true "${X_SMART_COLOR_DEPTH:-True}" && ! boolean_is_true "${LTSP_FATCLIENT}"; then
+-    X_COLOR_DEPTH=16
++    X_COLOR_DEPTH=24
+ fi
+ 
+ if [ -n "$X_COLOR_DEPTH" ]; then

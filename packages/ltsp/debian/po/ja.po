@@ -1,0 +1,95 @@
+# Copyright (C) 2009 LTSP Debian/Ubuntu Maintainers <pkg-ltsp-devel@lists.alioth.debian.org>
+# This file is distributed under the same license as ltsp package.
+# Hideki Yamane (Debian-JP) <henrich@debian.or.jp>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ltsp 5.1.69-1\n"
+"Report-Msgid-Bugs-To: ltsp@packages.debian.org\n"
+"POT-Creation-Date: 2012-08-01 18:56-0400\n"
+"PO-Revision-Date: 2009-04-07 08:26+0900\n"
+"Last-Translator: Hideki Yamane (Debian-JP) <henrich@debian.or.jp>\n"
+"Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid "Set up an LTSP chroot environment?"
+msgstr "LTSP chroot 環境を設定しますか?"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid ""
+"Please choose whether you want to set up an LTSP chroot environment on this "
+"machine, to act as a thin client server."
+msgstr ""
+"シンクライアントサーバとして動作させるために、このマシンで LTSP chroot 環境を"
+"セットアップするかどうかを選んでください。"
+
+#. Type: text
+#. Description
+#. Item in the main menu to select this package
+#: ../ltsp-client-builder.templates:3001
+msgid "Build LTSP chroot"
+msgstr "LTSP chroot を構築する"
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:4001
+msgid "Building thin client system..."
+msgstr "シンクライアントシステムを作成しています…"
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:5001
+msgid "Compressing thin client image..."
+msgstr "シンクライアントのイメージを圧縮しています…"
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid "No interface for LTSP dhcpd configuration"
+msgstr "LTSP dhcpd 設定用のインターフェイスがありません"
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid ""
+"There are no free interfaces for usage with the LTSP server. Please manually "
+"configure the /etc/ltsp/dhcpd.conf file to point to a valid static interface "
+"after the installation has completed."
+msgstr ""
+"LTSP サーバに利用できるインターフェイスが見つかりません。インストール完了後に"
+"利用可能な静的なインターフェイスを指定するために /etc/ltsp/dhcpd.conf ファイ"
+"ルを手動で設定してください。"
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid "Interface for the thin client network:"
+msgstr "シンクライアントネットワーク用のインターフェイス:"
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid ""
+"Please choose which of this system's multiple spare interfaces should be "
+"used for the thin client."
+msgstr ""
+"このシステムにある複数の予備インターフェイスのうちどれをシンクライアント用に"
+"使うかを選んでください。"
+
+#~ msgid "Installation aborted"
+#~ msgstr "インストールが中断されました"
+
+#~ msgid ""
+#~ "The ltsp-client package provides the basic structure for an LTSP "
+#~ "terminal. It cannot be installed on a regular machine."
+#~ msgstr ""
+#~ "ltsp-cllient パッケージは LTSP ターミナルのうち基本機能を提供しています。"
+#~ "通常のマシンにはインストールはできません。"

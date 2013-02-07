@@ -1,0 +1,128 @@
+# translation of es.po to spanish
+#
+# ltsp po-debconf translation to spanish
+# Copyright (C) 2008 Software in the Public Interest, SPI Inc.
+# This file is distributed under the same license as the ltsp package.
+#
+# Changes:
+# - Initial translation
+# - Revision
+#
+#
+#  Traductores, si no conoce el formato PO, merece la pena leer la
+#  documentación de gettext, especialmente las secciones dedicadas a este
+#  formato, por ejemplo ejecutando:
+#         info -n '(gettext)PO Files'
+#         info -n '(gettext)Header Entry'
+#
+# Equipo de traducción al español, por favor lean antes de traducir
+# los siguientes documentos:
+#
+# - El proyecto de traducción de Debian al español
+#   http://www.debian.org/intl/spanish/
+#   especialmente las notas y normas de traducción en
+#   http://www.debian.org/intl/spanish/notas
+#
+# - La guía de traducción de po's de debconf:
+#   /usr/share/doc/po-debconf/README-trans
+#   o http://www.debian.org/intl/l10n/po-debconf/README-trans
+#
+# Si tiene dudas o consultas sobre esta traducción consulte con el último
+# traductor (campo Last-Translator) y ponga en copia a la lista de
+# traducción de Debian al español (<debian-l10n-spanish@lists.debian.org>)
+#
+#       Felipe Caminos Echeverría , 2007-2008.
+# 		Fernando Cerezal, 2008.
+# José L. Redrejo Rodríguez <jredrejo@debian.org>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: es\n"
+"Report-Msgid-Bugs-To: ltsp@packages.debian.org\n"
+"POT-Creation-Date: 2012-08-01 18:56-0400\n"
+"PO-Revision-Date: 2009-03-28 19:43+0100\n"
+"Last-Translator: José L. Redrejo Rodríguez <jredrejo@debian.org>\n"
+"Language-Team: spanish <debian-l10n-spanish@lists.debian.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid "Set up an LTSP chroot environment?"
+msgstr "¿Desea establecer un entorno restringido para LTSP?"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid ""
+"Please choose whether you want to set up an LTSP chroot environment on this "
+"machine, to act as a thin client server."
+msgstr ""
+"Por favor, seleccione si desea establecer un entorno restringido (chroot) "
+"para LTSP en el equipo, para utilizarse como servidor de clientes ligeros."
+
+#. Type: text
+#. Description
+#. Item in the main menu to select this package
+#: ../ltsp-client-builder.templates:3001
+msgid "Build LTSP chroot"
+msgstr "Construir el entorno restringido para LTSP"
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:4001
+msgid "Building thin client system..."
+msgstr "Construyendo el sistema del cliente..."
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:5001
+msgid "Compressing thin client image..."
+msgstr "Comprimiendo la imagen del cliente ligero..."
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid "No interface for LTSP dhcpd configuration"
+msgstr "No hay interfaz para la configuración del dhcpd de LTSP"
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid ""
+"There are no free interfaces for usage with the LTSP server. Please manually "
+"configure the /etc/ltsp/dhcpd.conf file to point to a valid static interface "
+"after the installation has completed."
+msgstr ""
+"No hay interfaces libres para utilizar con el servidor de LTSP. Después de "
+"que la instalación termine, configure manualmente el archivo /etc/ltsp/dhcpd."
+"conf para que apunte a una interfaz fija de red válida."
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid "Interface for the thin client network:"
+msgstr "Interfaz para la red de cliente ligero:"
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid ""
+"Please choose which of this system's multiple spare interfaces should be "
+"used for the thin client."
+msgstr ""
+"Seleccione entre las diversas interfaces del sistema la que debería usar el "
+"cliente ligero."
+
+#~ msgid "Installation aborted"
+#~ msgstr "Instalación cancelada"
+
+#~ msgid ""
+#~ "The ltsp-client package provides the basic structure for an LTSP "
+#~ "terminal. It cannot be installed on a regular machine."
+#~ msgstr ""
+#~ "El paquete ltsp-client proporciona la estructura básica para un terminal "
+#~ "LTSP. No se debe instalar en una máquina normal."

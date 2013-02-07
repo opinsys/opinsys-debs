@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# local autologin using "nodm"
+# set NODM_USER in lts.conf to configure the default user
+# requires nodm 0.10
+
+. /usr/share/ltsp/screen-x-common
+
+export NODM_XSESSION="/usr/share/ltsp/xinitrc /etc/X11/Xsession"
+export NODM_X_OPTIONS="${DISPLAY} vt${TTY} ${X_ARGS} -br"
+ 
+exec /usr/sbin/nodm > /dev/null < /dev/null

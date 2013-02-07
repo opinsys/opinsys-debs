@@ -1,0 +1,6 @@
+# the whole LTSP filesystem is a remote filesystem.
+ltsp-client-core: init.d-script-missing-dependency-on-remote_fs etc/init.d/ltsp-client-core: required-stop
+
+# It really doesn't make sense to run in ltsp-client-core in single-user mode, 
+# as it would disable the root filesystem with NBD root, and that's not good.
+ltsp-client-core: init.d-script-possible-missing-stop etc/init.d/ltsp-client-core 1

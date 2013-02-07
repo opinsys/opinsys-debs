@@ -1,0 +1,262 @@
+#! /bin/sh
+set -e
+
+. /usr/share/debconf/confmodule
+
+log () {
+    logger -t ltsp-client-builder "$@"
+}
+
+# default to cdrom
+USE_CDROM=true
+if db_get ltsp-client-builder/use_cdrom ; then
+    case $RET in
+        true|false) USE_CDROM="$RET" ;;
+        *) log "unknown value for ltsp-client-builder/use_cdrom: $RET" ;;
+    esac
+fi
+
+# check if we have a valid CD-ROM mounted
+if [ "$USE_CDROM" != "false" ] && [ ! -f /cdrom/.disk/info ]; then
+    log "no CD-ROM found ! Not installing ltsp chroot"
+    exit 0
+fi
+
+# get the ok from the user to build the ltsp chroot
+db_input medium ltsp-client-builder/run || [ $? -eq 30 ]
+if ! db_go; then
+    exit 10 # back up to menu
+fi
+
+db_get ltsp-client-builder/run
+if [ "$RET" = false ]; then
+    log "user requested no ltsp chroot"
+    exit 0
+fi
+
+#load and use generic arguments
+if db_get ltsp-client-builder/build-client-opts && [ -n "$RET" ] ; then
+    BUILD_CLIENT_OPTS="$RET"
+    log "ltsp-build-client options: $BUILD_CLIENT_OPTS"
+fi
+
+# configure network interface
+if db_get ltsp-client-builder/configure_network_interface && [ "$RET" != "false" ]; then
+    CONFIGURE_NETWORK_INTERFACE=true
+fi
+
+# handle NBD images
+if db_get ltsp-client-builder/ltsp_update_image && [ "$RET" != "false" ]; then
+    UPDATE_IMAGE=true
+fi
+
+if db_get ltsp-client-builder/fat-client && [ -n "$RET" != "false" ] ; then
+    BUILD_CLIENT_OPTS="$BUILD_CLIENT_OPTS --fat-client"
+    log "fat client selected, ltsp-build-client options: $BUILD_CLIENT_OPTS"
+fi
+
+# build the chroot
+db_progress START 0 7 ltsp-client-builder/progress
+
+if db_get ltsp-client-builder/server_packages && [ -n "$RET" ]; then
+    SERVER_PACKAGES="$RET"
+fi
+for package in $SERVER_PACKAGES ; do
+    log "Installing package $package in target"
+    apt-install $package
+done
+
+db_progress STEP 1
+
+# workaround for: http://bugs.debian.org/390647
+# Must be done in chroot in case /etc/resolv.conf is a absolute
+# symlink (resolvconf)
+in-target /bin/touch /etc/resolv.conf
+
+running_stamp=/var/run/ltsp-build-client.running
+failed_stamp=/var/run/ltsp-build-client.failed
+if [ -f "$running_stamp" ]; then
+    log "ERROR: ltsp-build-client already running... $running_stamp"
+    exit 1
+fi
+if [ -f "$failed_stamp" ]; then
+    log "note: removing failed stamp from previous run"
+    rm -f "$failed_stamp"
+fi
+touch $running_stamp
+
+if ! ls -1 /cdrom/dists/*/universe >/dev/null 2>&1; then
+    BUILD_CLIENT_OPTS="$BUILD_CLIENT_OPTS --components main,restricted"
+fi
+
+progress_log=/target/var/log/ltsp-build-client.progress.log
+# remove progress.log from previous attempt
+test -f "$progress_log"  && rm -f "$progress_log"
+
+(
+    if in-target ltsp-build-client $BUILD_CLIENT_OPTS ; then
+	rm -f "$running_stamp" 
+    else
+	touch "$failed_stamp" 
+    fi
+) < /dev/null > /tmp/ltsperror.txt 2>&1 \
+    3> /dev/null 4>&3 5>&3 6>&3 7>&3 8>&3 9>&3 &
+pid=$!
+
+# some progress handling...
+old=0
+while [ -f "$running_stamp" ]; do
+    if [ -f "$failed_stamp" ]; then
+        log "ERROR: ltsp-build-client failed to run"
+        rm -f "$failed_stamp"
+        rm -f "$running_stamp"
+        db_progress STOP
+        exit 1
+    fi
+    i=1
+    if [ -f "$progress_log" ]; then
+        while read line ; do
+            i=$(($i+1))
+        done < "$progress_log"
+    fi
+    if [ "$i" -gt "$old" ] && [ "$i" -gt "1" ]; then
+        db_progress SET "$i"
+    fi
+    sleep 1
+    old="$i"
+done
+
+# Wait for the ltsp-build-client process to stop, to make sure we
+# avoid race conditions when talking to debconf.
+wait $pid
+
+db_progress STOP
+
+# make sure universe is in the clients sources.list and
+# ${DIST}-upgrades is enabled there as well
+for dir in $(ls -d /target/opt/ltsp/*/etc/apt);do
+    if [ -f /target/etc/apt/sources.list ];then
+        cp /target/etc/apt/sources.list $dir
+    fi
+done
+
+ltsp_update_image(){
+
+# ensure squashfs-tools is available in the chroot
+apt-install squashfs-tools
+
+# make sure the keys are up to date with the new interface
+chroot /target ltsp-update-sshkeys
+
+# compress the image
+# (we need the percentage of mksquashfs' output
+# need to pipe through a file ...)
+
+COMPRESS_LOG=/var/log/ltsp-image-build.log
+
+db_progress START 0 100 ltsp-client-builder/compress
+
+chroot /target ltsp-update-image >$COMPRESS_LOG 2>&1 &
+PID=$!
+
+OLDVAL=0
+while [ -z ${LOOP} ]; do
+    rawval=$(tail -1 $COMPRESS_LOG |sed -e 's/^.* //')
+    if [ "$(echo $rawval|grep '[0-9]\%$')" ];then
+        val=$(echo $rawval|tr -d %)
+        if [ "$val" -gt 95 ]; then
+            db_progress SET 100
+            sleep 3
+            LOOP="False"
+        else
+            if [ "$val" -gt "${OLDVAL}" ];then
+                db_progress SET $val
+                OLDVAL=$val
+            fi
+        fi
+    fi
+done
+wait $PID
+
+# save compression log
+if [ -e $COMPRESS_LOG ]; then
+    mv $COMPRESS_LOG /target/var/log/
+fi
+
+db_progress STOP
+}
+
+# make sure /etc/ltsp/dhcpd.conf is for the right architecture
+LTSP_ARCH=$(ls -1 /target/opt/ltsp/images | sed "s/.img//g")
+chroot /target sed "s/i386/$LTSP_ARCH/g" -i /etc/ltsp/dhcpd.conf
+
+
+# configure a default interface for usage with LTSP
+NET=192.168.0
+DEFAULTROUTE_IFACE="$(route -n|grep ^0|sed -e 's/.* //')"
+IFACE_LIST="$(cat /proc/net/dev|sed -e 's/^ *//' -e 's/:.*//'|grep -Ev '(\||lo|sit)')"
+
+interfaces_entry() {
+	cat <<EOF >>/target/etc/network/interfaces
+
+auto $IFACE_LIST
+iface $IFACE_LIST inet static
+    address $NET.1
+    netmask 255.255.255.0
+    network $NET.0
+    broadcast $NET.255
+
+EOF
+
+chroot /target ifconfig $IFACE_LIST $NET.1
+}
+
+configure_network_interface() {
+# if we already have a matching interface, there is no need to go on
+if [ -n "$(ifconfig|grep $NET)" ];then
+	exit 0
+fi
+
+# exclude the interface with the default route, we only want unconfigured ones
+IFACE_TMP=""
+for iface in $IFACE_LIST;do
+	if [ $iface != $DEFAULTROUTE_IFACE ]; then
+		IFACE_TMP="${IFACE_TMP:+$IFACE_TMP}$iface"
+	fi
+done
+IFACE_LIST=$IFACE_TMP
+
+# check if we still have more than one possible interface.
+# if thats the case, show a selector with the detected ones
+if [ "$(echo ${IFACE_LIST}|wc -w)" -gt 1 ]; then
+	db_subst ltsp-client-builder/dhcp-interface choices "$(echo "$IFACE_LIST" | sed 's/ /, /g')"
+
+	db_fset ltsp-client-builder/dhcp-interface seen false
+	db_input high ltsp-client-builder/dhcp-interface || true
+    db_go || true
+
+	db_get ltsp-client-builder/dhcp-interface || true
+	IFACE_LIST="$RET"
+
+	interfaces_entry
+elif [  -z "$IFACE_LIST" ];then
+	# we didnt get a proper interface, tell the user about it
+	db_fset ltsp-client-builder/dhcp-manual seen false
+	db_input high ltsp-client-builder/dhcp-manual || true
+	db_go || true
+else
+	interfaces_entry
+fi
+}
+
+if [ "$UPDATE_IMAGE" = "true" ]; then
+    ltsp_update_image
+fi
+
+if [ "true" = "$CONFIGURE_NETWORK_INTERFACE" ]; then
+    configure_network_interface
+fi
+
+#DEBHELPER#
+
+exit 0

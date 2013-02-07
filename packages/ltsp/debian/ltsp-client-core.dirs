@@ -1,0 +1,5 @@
+/var/lib/ltsp-client-setup
+/var/cache/ltsp-localapps
+/var/cache/ltsp
+/etc/cups
+/etc/cron.d

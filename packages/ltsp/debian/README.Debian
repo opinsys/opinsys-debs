@@ -1,0 +1,62 @@
+LTSP on your hardware
+=====================
+
+LTSP can support several hardware architectures.  Some hardware may require
+special configuration that is partially documented here. Exact needs vary by
+architecture.
+
+
+i386, amd64, powerpc, alpha, sparc
+==============================
+
+to create the chroot:
+
+  ltsp-build-client
+
+you may need to configure your dhcp server to hand out a different filename
+argument, like:
+
+  filename "/ltsp/ARCH/nbi.img";
+
+LTSP is best tested on i386, and least tested on alpha and sparc.
+
+
+other architectures
+===================
+
+When building the client chroot, manually select the kernel:
+
+  ltsp-build-client --kernel-packages KERNEL
+
+where KERNEL is the name of the kernel package for your architecture.
+
+It may be necessary to manually generate an nbi.img, or configure the
+bootloader to load the kernel and initrd manually. this will vary greatly
+depending on the hardware architecture.
+
+
+multiple architectures on a single server
+=========================================
+
+It is possible to host multiple architectures on a single server.
+
+With some architecutres, it is possible to build a client chroot for a
+different architecture, such as using an amd64 server to build an i386 client
+chroot:
+
+  ltsp-build-client --arch i386
+
+
+Some architectures, such as armel, can be emulated by installing the
+qemu-user-static package and selecting a different architecture (and possibly
+kernel) at build time:
+
+  ltsp-build-client --arch armel --kernel-packages linux-image-versatile
+
+
+If all else fails, you may need to build the client chroot on the native
+architecture, and then copy the /opt/ltsp/ARCH directory onto the NFS server.
+Install ltsp-server on a machine of the appropriate architecture and run
+ltsp-build-client as usual. Then install ltsp-server on the NFS server, copy
+the contents of /opt/ltsp/ARCH over to it, and run ltsp-update-kernels
+on it.

@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# copyright 2005-2009 Vagrant Cascadian <vagrant@freegeek.org>, distributed
+# under the terms of the GNU General Public License version 2 or any later
+# version.
+
+# Requires that the "sdm-terminal" and "daemon" packages be installed.
+
+# install this script into /etc/ltsp/screen.d/ or /usr/share/ltsp/screen.d/,
+# and add SCREEN_07=sdm to /etc/lts.conf to run sdm on LTSP
+
+. /usr/share/ltsp/screen-x-common
+
+command="/usr/sbin/sdm-login"
+name="ltsp${TTY}-sdm"
+logfile="/var/log/$name"
+daemon=/usr/bin/daemon
+
+if [ -x /usr/share/ltsp/xinitrc ]; then
+    xinitrc=/usr/share/ltsp/xinitrc
+fi
+
+# run as a daemon, so that stdin is redirected to /dev/null.
+# simply calling "xinit < /dev/null" didn't work.
+$daemon --name="$name" -O $logfile -E $logfile -l $logfile -- \
+    xinit $xinitrc $command -- ${DISPLAY} vt${TTY} ${X_ARGS} -br
+
+# poll to see if it's still running...
+while sleep 5 ; do
+    if ! "$daemon" --name="$name" --running ; then
+        exit 0
+    fi
+done
