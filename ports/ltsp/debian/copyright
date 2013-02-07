@@ -1,0 +1,59 @@
+This package was created by Matt Zimmerman <mdz@ubuntu.com> in May of
+2005.
+
+Modifications for use with debian by Vagrant Cascadian <vagrant@freegeek.org>
+in August of 2005.
+
+The upstream source tree can be found on launchpad:
+
+ bzr get http://bazaar.launchpad.net/~ltsp-upstream/ltsp/ltsp-trunk
+
+The debian dir for ltsp packages in Debian is maintained in bzr:
+
+ bzr get http://bzr.debian.org/bzr/pkg-ltsp/ltsp-debian-packaging
+
+The original LTSP sources can be downloaded from: http://ltsp.org
+
+
+The following components have been copied from the LTSP project's build environment
+(LBE) tree:
+
+client/screen.d/shell
+client/screen.d/startx
+client/screen.d/telnet
+client/screen_session
+
+with the following copyright:
+
+Copyright (c) 1999-2006 by James A. McQuillan (McQuillan Systems, LLC)
+This software is licensed under the Gnu General Public License version 2
+
+
+server/nbdswapd and client/screen.d/sdm carry the following copyright:
+
+copyright 2005-2006 Vagrant Cascadian <vagrant@freegeek.org>, distributed under
+the terms of the GNU General Public License version 2 or any later version.
+
+
+Other code has been written from scratch for this package, and carries
+the following copyright:
+
+Copyright (C) 2005 Canonical Ltd.
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+    02110-1301 USA
+
+On Debian and Ubuntu systems, a copy of the GNU General Public License version
+2 may be found in the file /usr/share/common-licenses/GPL-2.

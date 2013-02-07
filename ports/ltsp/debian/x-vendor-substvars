@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# Copyright (c) 2012 Vagrant Cascadian <vagrant@debian.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+# 02110-1301 USA
+
+# Placing X-Debian-Depends in a package control stanza will add 
+# ${vendor:Depends} to PACKAGE.substvars if built on Debian.
+# Adding Depends: ${vendor:Depends} will be sustituted into the packages
+# control file at build time. Arbitrary fields or distributions may be used.
+# so: X-Ubuntu-Recommends, X-Debian-Suggests, X-Debian-Description, etc. are
+# all valid.
+# Thanks go to Alkis Georgopoulous for the idea!
+
+vendor=$1
+test -z "$vendor" && exit 1
+packages=$(grep-dctrl --show-field Package . debian/control --no-field-names)
+for package in $packages ; do
+    fields=$(grep-dctrl -F Package -X ${package} debian/control | awk -F : "/^X-${vendor}-.*:/"'{print $1}')
+    for field in $fields ; do
+	x=$(grep-dctrl -F Package -X ${package} --show-field ${field} --no-field-names debian/control)
+        if [ -n "$x" ]; then
+		real_field=$(echo $field | sed -e "s,^X-${vendor}-,,g")
+		echo "vendor:${real_field}=$(echo "$x" | tr '\n' ' ')" >> debian/$package.substvars
+	fi
+    done
+done

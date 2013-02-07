@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# use ltsp-info to get information about ltsp chroots, lts.conf, nbd images,
+# etc.
+ltsp-info --verbose --no-server-info >&3

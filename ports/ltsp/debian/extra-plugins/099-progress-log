@@ -1,0 +1,4 @@
+# FIXME: this plugin is a hack to make some sort of progress on the major
+# points of the install, used by ltsp-client-builder udeb in debian-installer.
+
+echo $(date) MODE:$MODE >> /var/log/ltsp-build-client.progress.log || true

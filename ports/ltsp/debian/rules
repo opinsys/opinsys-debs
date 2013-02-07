@@ -1,0 +1,93 @@
+#!/usr/bin/make -f
+
+DEB_HOST_ARCH_OS = $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
+
+LSB_RELEASE_ID ?= $(shell lsb_release --short --id)
+ifeq (Ubuntu,$(LSB_RELEASE_ID))
+	INSTALLUDEV_OPTS="--priority=80"
+endif
+
+CPPFLAGS:=$(shell dpkg-buildflags --get CPPFLAGS)
+CFLAGS:=$(shell dpkg-buildflags --get CFLAGS)
+CXXFLAGS:=$(shell dpkg-buildflags --get CXXFLAGS)
+LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
+
+%:
+	dh $@ --with autoreconf
+
+override_dh_auto_configure:
+	cd client/localapps; CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)" ./configure --prefix=/usr --libexecdir=/usr/lib; cd -
+ifeq ($(DEB_HOST_ARCH_OS),linux)
+	cd client/nbd-proxy; CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)" ./configure --prefix=/usr --libexecdir=/usr/lib; cd -
+endif
+
+	CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)" $(MAKE) -C client/getltscfg
+	$(MAKE) -C client/localapps
+ifeq ($(DEB_HOST_ARCH_OS),linux)
+	$(MAKE) -C client/nbd-proxy 
+endif
+
+override_dh_autoreconf_clean:
+	# some Makefiles need to run before dh_autoreconf_clean removes files they 
+	# would use.
+	[ ! -f client/localapps/Makefile ] || $(MAKE) -C client/localapps clean
+
+ifeq ($(DEB_HOST_ARCH_OS),linux)
+	[ ! -f client/nbd-proxy/Makefile ] || $(MAKE) -C client/nbd-proxy clean
+endif
+	dh_autoreconf_clean
+
+override_dh_clean:
+	[ ! -f client/getltscfg/Makefile ] || $(MAKE) -C client/getltscfg clean
+
+	# Using po specific Makefile to clean message catalogs
+	$(MAKE) -C po clean
+
+	# Debconf translation update
+	debconf-updatepo
+
+	chmod +x debian/bugs/ltsp-server/script
+
+	dh_clean
+
+override_dh_installinit:
+	# Copy default and init scripts from upstream code
+	cp $(CURDIR)/client/initscripts/ltsp-core $(CURDIR)/debian/ltsp-client-core.init
+	cp $(CURDIR)/client/Ubuntu/initscripts/ltsp-core.upstart $(CURDIR)/debian/ltsp-client-core.upstart
+	dh_installinit -a --no-start
+
+override_dh_install:
+	dh_install
+ifeq ($(DEB_HOST_ARCH_OS),linux)
+	mkdir -p $(CURDIR)/debian/ltsp-client-core/usr/sbin/
+	install -m 755 client/nbd-proxy/src/nbd-proxy $(CURDIR)/debian/ltsp-client-core/usr/sbin/nbd-proxy
+	install -m 755 client/nbd-proxy/src/nbd-client-proxy $(CURDIR)/debian/ltsp-client-core/usr/sbin/nbd-client-proxy
+endif
+	# manually install some cruft
+	mkdir -p $(CURDIR)/debian/ltsp-client-core/usr/share/ltsp/
+	mkdir -p $(CURDIR)/debian/ltsp-server/usr/share/ltsp/
+	install -m 644 common/ltsp-common-functions $(CURDIR)/debian/ltsp-client-core/usr/share/ltsp/ltsp-client-common-functions
+	install -m 644 common/ltsp-common-functions $(CURDIR)/debian/ltsp-server/usr/share/ltsp/ltsp-server-common-functions
+	# ship a copy of ltsp-server-vendor-functions as 
+	# ltsp-client-vendor-functions... no, really!
+	install -m 644 server/Debian/share/ltsp/ltsp-server-vendor-functions $(CURDIR)/debian/ltsp-client-core/usr/share/ltsp/ltsp-client-vendor-functions
+
+	# install 40-ltsp in both ltsp-client-core and ltsp-server
+	mkdir -p $(CURDIR)/debian/ltsp-client-core/etc/X11/Xsession.d/
+	install -m 644 $(CURDIR)/debian/40-ltsp $(CURDIR)/debian/ltsp-client-core/etc/X11/Xsession.d/40-ltsp-client
+	mkdir -p $(CURDIR)/debian/ltsp-server/etc/X11/Xsession.d/
+	install -m 644 $(CURDIR)/debian/40-ltsp $(CURDIR)/debian/ltsp-server/etc/X11/Xsession.d/40-ltsp-server
+
+	# install appropriate update-kernels.conf
+	mkdir -p $(CURDIR)/debian/ltsp-client-core/etc/ltsp/
+	install -m 644 client/$(LSB_RELEASE_ID)/etc/ltsp/update-kernels.conf $(CURDIR)/debian/ltsp-client-core/etc/ltsp/update-kernels.conf
+
+	# Using po specific Makefile to install message catalogs
+	$(MAKE) -C po install DESTDIR=$(CURDIR)/debian/ltsp-server/
+
+override_dh_autoreconf:
+	dh_autoreconf ./debian/autogen.sh
+
+override_dh_gencontrol:
+	./debian/x-vendor-substvars $(LSB_RELEASE_ID)
+	dh_gencontrol

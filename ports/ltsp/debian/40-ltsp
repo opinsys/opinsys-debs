@@ -1,0 +1,8 @@
+if [ -n "$LTSP_CLIENT" ] && [ -z "$DESKTOP_SESSION" ]; then
+    if ([ "$1" = "default" ] || [ -z "$1" ]) && [ "$(readlink /etc/alternatives/x-session-manager)" = "/usr/bin/gnome-session" ]; then
+        DESKTOP_SESSION=ubuntu
+    elif [ -n "$1" ]; then
+        DESKTOP_SESSION=$(echo $1 | sed "s/gnome-session --session=//g")
+    fi
+    export DESKTOP_SESSION
+fi

@@ -1,0 +1,4 @@
+/usr/share/ltsp/update-kernels /etc/kernel/postinst.d/ltsp-update-kernels
+/usr/share/ltsp/update-kernels /etc/kernel/postrm.d/ltsp-update-kernels
+/usr/share/ltsp/ltsp_config /usr/lib/ltsp/ltsp_config
+/usr/share/ltsp/ltsp-client-functions /usr/share/ltsp/ltsp-common-functions

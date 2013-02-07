@@ -1,0 +1,38 @@
+ltsp (5.3.4-1) unstable; urgency=low
+
+    ltsp-build-client plugins now create an appropriate entry in 
+    /etc/ltsp/ltsp-update-image.conf to disable ltsp-update-image from 
+    switching to an NBD configuration simply by running ltsp-update-image. If 
+    you would like to switch to NBD after creating the image, you'll need to 
+    edit ltsp-update-image.conf appropriately.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Fri, 23 Mar 2012 14:09:18 -0700
+
+ltsp (5.3.1-1) unstable; urgency=low
+
+    With the 5.3.x series, Debian LTSP now defaults to making the thin 
+    client's root filesystem writeable with an aufs overlay with tmpfs, rather
+    than the old method of bind mounts from a tmpfs filesystem. This obviates
+    the need or usefulness of the old LTSP_RW_DIRS, LTSP_COPY_DIRS, and 
+    LTSP_BINDFILES lts.conf variables.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Fri, 23 Mar 2012 13:57:43 -0700
+
+ltsp (0.99debian8) unstable; urgency=low
+
+    architecture handling code has been simplified. now all architectures
+    default to installing the same architecture running on the server. you
+    change change this by passing --arch ARCH to ltsp-build-client, but will
+    only work for certain server and ltsp client combinations. see
+    /usr/share/doc/ltsp-server/README.Debian for more information.
+
+ -- Vagrant Cascadian <vagrant@freegeek.org>  Tue, 14 Nov 2006 18:20:37 -0700
+
+ltsp (0.99debian6) unstable; urgency=low
+
+    It is now required to set NBD_SWAP=Y instead of setting NBD_PORT in
+    /opt/ltsp/ARCH/etc/lts.conf.  Only set NBD_PORT if a non-default value is
+    needed. see /usr/share/doc/ltsp-server/swap for more complete
+    documentation.
+
+ -- Vagrant Cascadian <vagrant@freegeek.org>  Fri, 27 Oct 2006 23:20:51 -0500

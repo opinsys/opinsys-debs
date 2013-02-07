@@ -1,0 +1,114 @@
+# Basque translations for PACKAGE package.
+# Copyright (C) 2007 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Piarres Beobide <pi@beobide.net>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: LTSP-debconf\n"
+"Report-Msgid-Bugs-To: ltsp@packages.debian.org\n"
+"POT-Creation-Date: 2012-08-01 18:56-0400\n"
+"PO-Revision-Date: 2007-07-04 10:11+0200\n"
+"Last-Translator: Piarres Beobide <pi@beobide.net>\n"
+"Language-Team: Euskara <librezale@librezale.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Pootle 1.0.1\n"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid "Set up an LTSP chroot environment?"
+msgstr "LTSP chroot ingurunera konfiguratu?"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid ""
+"Please choose whether you want to set up an LTSP chroot environment on this "
+"machine, to act as a thin client server."
+msgstr ""
+"Mesedez hautatu makina hau bezero arin bezala funtzionatzeko LTSP chroot "
+"ingurunea konfiguratzea nahi duzun ala ez."
+
+#. Type: text
+#. Description
+#. Item in the main menu to select this package
+#: ../ltsp-client-builder.templates:3001
+msgid "Build LTSP chroot"
+msgstr "LTSP chroot-a eraiki"
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:4001
+msgid "Building thin client system..."
+msgstr "Bezero ari sistema eraikitzen..."
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:5001
+msgid "Compressing thin client image..."
+msgstr "Bezero arin irudia konprimitzen..."
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid "No interface for LTSP dhcpd configuration"
+msgstr "Ez dago interfazerik LTSP dhcpd konfiguraziorako"
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid ""
+"There are no free interfaces for usage with the LTSP server. Please manually "
+"configure the /etc/ltsp/dhcpd.conf file to point to a valid static interface "
+"after the installation has completed."
+msgstr ""
+"Ez dago LTSP Zerbitzariak erabiltzeko interfaze librerik. Mesedez "
+"konfigurazioa amaitu ondoren /etc/ltsp/dhcpd.conf fitxategia eskuz "
+"konfiguratu baliozko interfaze estatiko batetara lotzeko."
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid "Interface for the thin client network:"
+msgstr "Bezero arin sarearen interfazea:"
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid ""
+"Please choose which of this system's multiple spare interfaces should be "
+"used for the thin client."
+msgstr ""
+"Mesedez hautatu, sistema honek dituen erabili gabeko interfaze anitzen "
+"artean, zein erabili behar den bezero arinarentzat."
+
+#~ msgid "Installation aborted"
+#~ msgstr "Instalazioa utzi egin da"
+
+#~ msgid ""
+#~ "The ltsp-client package provides the basic structure for an LTSP "
+#~ "terminal. It cannot be installed on a regular machine."
+#~ msgstr ""
+#~ "ltsp-client paketeak LTSP teminal batentzat oinarrizko egitura du. Berau "
+#~ "ezin da makina arrunt batetan instalatu."
+
+#~ msgid "Building LTSP chroot..."
+#~ msgstr "LTSP chroot-a eraikitzen..."
+
+#~ msgid ""
+#~ "The ltsp-client package cannot be installed in a regular machine. This "
+#~ "package provides the basic structure for a LTSP terminal."
+#~ msgstr ""
+#~ "ltsp-client paketea ezin da makina arrunt batetan instalatu. Pakete honek "
+#~ "LTSP terminalaren oinarrizko egitura du."
+
+#~ msgid "Please read the package description to understand what it means."
+#~ msgstr ""
+#~ "Mesedez pakete deskribapena irakurri horrek zer esan nahi duen ulertzeko."
+
+#~ msgid "There were multiple spare interfaces found in this system."
+#~ msgstr "Erabili gabeko interfaze anitz aurkitu dira sistema honetan."

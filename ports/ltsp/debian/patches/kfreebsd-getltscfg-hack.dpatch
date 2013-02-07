@@ -1,0 +1,33 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## kfreebsd-getltscfg-hack3.dpatch by  <bsd@dgkfbsd.lan>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: patch to remove support for mac address matching on Debian GNU/kFreeBSD.
+## DP: matching by hostname or ip still works, though it would be better to 
+## DP: support mac address matching properly.
+
+@DPATCH@
+diff -urNad ltsp-5.1.90~/client/getltscfg/getltscfg.c ltsp-5.1.90/client/getltscfg/getltscfg.c
+--- ltsp-5.1.90~/client/getltscfg/getltscfg.c	2009-10-03 12:34:26.000000000 -0700
++++ ltsp-5.1.90/client/getltscfg/getltscfg.c	2009-10-09 06:01:42.000000000 -0700
+@@ -347,14 +347,19 @@
+ 	goto out;
+     }
+ 
++// FIXME: SIOCGIFHWADDR not present on Debian GNU/kFreeBSD
++#ifdef SIOCGIFHWADDR
+     if(ioctl(skfd, SIOCGIFHWADDR, &info) < 0){
+ 	perror("SIOCGIFHWADDR");
+ 	goto out;
+     }
+-
++#endif
++// FIXME: IFHWADDRLEN not present on Debian GNU/kFreeBSD
++#ifdef IFHWADDRLEN
+     for(n = 0; n < IFHWADDRLEN; n++)
+ 	pMACAddr += sprintf(pMACAddr, "%02x%s",
+ 	    info.ifr_hwaddr.sa_data[n] & 0xff, n < IFHWADDRLEN-1 ? ":" : "");
++#endif
+ 
+ out:
+     free(ifc.ifc_buf);

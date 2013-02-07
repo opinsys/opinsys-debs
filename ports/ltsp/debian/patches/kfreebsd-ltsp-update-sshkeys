@@ -1,0 +1,23 @@
+## kfreebsd-ltsp-update-sshkeys.dpatch by  <Vagrant Cascadian <vagrant@freegeek.org>>
+##
+## DP: patch to support ifconfig in Debian GNU/kFreeBSD as an alternative ip
+## DP: command from iproute.
+
+Index: ltsp-5.2.2/server/ltsp-update-sshkeys
+===================================================================
+--- ltsp-5.2.2.orig/server/ltsp-update-sshkeys	2010-07-05 12:46:38.000000000 -0700
++++ ltsp-5.2.2/server/ltsp-update-sshkeys	2010-07-05 12:46:48.000000000 -0700
+@@ -84,7 +84,12 @@
+ 
+ if [ -z "$*" ]; then
+     HOSTNAME=$(hostname)
+-    IPS=$(/sbin/ip -o -f inet addr show | sed -e 's,.* \(.*\)/.*,\1,' | grep -v '^127')
++    if [ -x /sbin/ip ]; then
++        IPS=$(/sbin/ip -o -f inet addr show | sed -e 's,.* \(.*\)/.*,\1,' | grep -v '^127')
++    elif [ -x /sbin/ifconfig ]; then
++        # this assumes freebsd-net-tools on a Debian GNU/kFreeBSD system
++        IPS=$(/sbin/ifconfig  | awk '/inet [1-9]/{print $2}' | egrep -v ^127)
++    fi
+     NAMES="${HOSTNAME} ${IPS}"
+     THIS_SERVER=1
+ else

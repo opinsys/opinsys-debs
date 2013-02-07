@@ -1,0 +1,16 @@
+client/localapps/ltsp-localapps /usr/bin/
+server/ltsp-build-client usr/sbin
+server/ltsp-update-sshkeys usr/sbin
+server/ltsp-update-kernels usr/sbin
+server/ltsp-update-image usr/sbin
+server/Debian/scripts/* /usr/share/ltsp/scripts/
+server/share/ltsp/* /usr/share/ltsp/
+server/Debian/share/ltsp/* /usr/share/ltsp/
+debian/extra-plugins/* usr/share/ltsp/plugins/ltsp-build-client/Debian/
+debian/bugs/ltsp-server/* usr/share/bug/ltsp-server/
+server/nbdswapd usr/sbin
+server/nbdrootd usr/sbin
+server/ltsp-chroot  usr/sbin/
+server/ltsp-info usr/bin/
+server/ltsp-config /usr/sbin/
+server/configs/ltsp-update-image.excludes /etc/ltsp/

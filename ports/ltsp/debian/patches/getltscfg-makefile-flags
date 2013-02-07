@@ -1,0 +1,17 @@
+Ensure LDFLAGS and CPPFLAGS are respected when building getltscfg, otherwise 
+some hardened build flags are ignored.
+
+Index: ltsp-trunk/client/getltscfg/Makefile
+===================================================================
+--- ltsp-trunk.orig/client/getltscfg/Makefile	2012-05-26 18:27:21.089483000 -0700
++++ ltsp-trunk/client/getltscfg/Makefile	2012-05-26 18:27:53.321234525 -0700
+@@ -6,8 +6,7 @@
+ LIBS=-lfl -lpopt
+ ##LIBS=-lfl -ll -lpopt
+ YFLAGS=-v -d
+-LDFLAGS=
+-CCFLAGS=-W -Wall $(CFLAGS)
++CCFLAGS=-W -Wall $(CFLAGS) $(CPPFLAGS)
+ 
+ getltscfg:	getltscfg.o		\
+ 		parser.tab.o		\

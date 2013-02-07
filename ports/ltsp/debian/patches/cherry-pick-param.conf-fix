@@ -1,0 +1,15 @@
+Description: Cherry pick trivial fix from upstream fixing update-initramfs
+ update-initramfs was crashing when param.conf didn't exist, fix it by
+ adding a check.
+Author: Stéphane Graber <stgraber@ubuntu.com>
+
+--- ltsp-5.4.3.orig/client/Debian/share/initramfs-tools/hooks/ltsp
++++ ltsp-5.4.3/client/Debian/share/initramfs-tools/hooks/ltsp
+@@ -33,4 +33,6 @@ copy_exec /usr/sbin/nbd-proxy /sbin/nbd-
+ copy_exec /usr/sbin/nbd-client-proxy /sbin/nbd-client-proxy
+ 
+ # Cleanup empty ROOT= string if written in conf/param.conf
+-sed "/^ROOT=\"\"$/d" -i $DESTDIR/conf/param.conf
++if [ -e "$DESTDIR/conf/param.conf" ]; then
++    sed "/^ROOT=\"\"$/d" -i $DESTDIR/conf/param.conf
++fi

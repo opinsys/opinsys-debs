@@ -1,0 +1,28 @@
+   * Use sleep 1 instead of sleep 0.1 to work with busybox
+     (Closes: 589820).
+
+Author: Petter Reinholdtsen <pere@debian.org>
+Bug-Debian: http://bugs.debian.org/589820
+
+Index: ltsp-trunk/client/Debian/share/initramfs-tools/scripts/init-premount/udhcp
+===================================================================
+--- ltsp-trunk.orig/client/Debian/share/initramfs-tools/scripts/init-premount/udhcp	2012-05-14 10:30:17.490495000 -0700
++++ ltsp-trunk/client/Debian/share/initramfs-tools/scripts/init-premount/udhcp	2012-05-14 13:57:44.262050540 -0700
+@@ -50,7 +50,7 @@
+ # TODO: Find a better way. Setting PREREQs="udev", accessing /proc/net/dev,
+ # calling ifconfig or ipconfig... something better than calling sleep
+ while ! ip link show > /dev/null 2>&1; do
+-    sleep 0.1
++    sleep 1
+ done
+ sleep 1
+ 
+@@ -64,7 +64,7 @@
+ for i in $interfaces; do
+     ip link set $i up
+ done
+-sleep 0.1
++sleep 1
+ }
+ 
+ # Analyze whatever information was provided in the kernel command line

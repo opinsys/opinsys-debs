@@ -1,0 +1,96 @@
+# Danish translation ltsp.
+# Copyright (C) 2010 ltsp & Joe Hansen.
+# This file is distributed under the same license as the ltsp package.
+# Joe Hansen <joedalton2@yahoo.dk>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ltsp\n"
+"Report-Msgid-Bugs-To: ltsp@packages.debian.org\n"
+"POT-Creation-Date: 2012-08-01 18:56-0400\n"
+"PO-Revision-Date: 2010-10-07 17:30+01:00\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Language-Team: Danish <debian-l10n-danish@lists.debian.org> \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid "Set up an LTSP chroot environment?"
+msgstr "Ops??t et LTSP-chrootmilj???"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid ""
+"Please choose whether you want to set up an LTSP chroot environment on this "
+"machine, to act as a thin client server."
+msgstr ""
+"V??lg venligst hvorvidt du ??nsker at ops??tte et LTSP-chrootmilj?? p?? "
+"denne maskine, der skal fungere som en tynd klient-server."
+
+#. Type: text
+#. Description
+#. Item in the main menu to select this package
+#: ../ltsp-client-builder.templates:3001
+msgid "Build LTSP chroot"
+msgstr "Kompiler LTSP-chroot"
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:4001
+msgid "Building thin client system..."
+msgstr "Kompilerer tynd klient-system..."
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:5001
+msgid "Compressing thin client image..."
+msgstr "Pakker tynd klient-aftryk..."
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid "No interface for LTSP dhcpd configuration"
+msgstr "Ingen gr??nseflade for LTSP-dhcpd-konfiguration"
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid ""
+"There are no free interfaces for usage with the LTSP server. Please manually "
+"configure the /etc/ltsp/dhcpd.conf file to point to a valid static interface "
+"after the installation has completed."
+msgstr ""
+"Der er ingen ledige gr??nseflader til brug for LTSP-serveren. Konfigurer "
+"venligst manuelt filen /etc/ltsp/dhcpd.conf til at pege p?? en gyldig "
+"statisk gr??nseflade efter installationen er f??rdig."
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid "Interface for the thin client network:"
+msgstr "Gr??nseflade for den tynde klients netv??rk:"
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid ""
+"Please choose which of this system's multiple spare interfaces should be "
+"used for the thin client."
+msgstr ""
+"V??lg venligst hvilken af systemets ledige gr??nseflader der skal bruges for "
+"den tynde klient."
+
+#~ msgid "Installation aborted"
+#~ msgstr "Installation afbrudt"
+
+#~ msgid ""
+#~ "The ltsp-client package provides the basic structure for an LTSP "
+#~ "terminal. It cannot be installed on a regular machine."
+#~ msgstr ""
+#~ "Pakken ltsp-client tilbyder den grundl??ggende struktur for en LTSP-"
+#~ "terminal. Den kan ikke installeres p?? en regul??r maskine."

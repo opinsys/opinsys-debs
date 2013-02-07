@@ -1,0 +1,4 @@
+server/configs/dhcpd.conf
+server/configs/lts.conf
+server/doc/examples/*
+client/localapps/doc/examples/*

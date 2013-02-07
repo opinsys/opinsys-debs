@@ -1,0 +1,115 @@
+#
+# Catalan translation for ltsp package.
+# Copyright (C) 2007 LTSP Debian/Ubuntu Maintainers.
+# This file is distributed under the same license as the ltsp package.
+#
+# Jordà Polo <jorda@ettin.org>, 2006, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 5.0.31debian2\n"
+"Report-Msgid-Bugs-To: ltsp@packages.debian.org\n"
+"POT-Creation-Date: 2012-08-01 18:56-0400\n"
+"PO-Revision-Date: 2007-10-18 13:34+0200\n"
+"Last-Translator: Jordà Polo <jorda@ettin.org>\n"
+"Language-Team: Catalan <debian-l10n-catalan@lists.debian.org>\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid "Set up an LTSP chroot environment?"
+msgstr "Voleu configurar un entorn chroot per a LTSP?"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid ""
+"Please choose whether you want to set up an LTSP chroot environment on this "
+"machine, to act as a thin client server."
+msgstr ""
+"Indiqueu si voleu configurar en aquesta màquina un entorn chroot per a LTSP, "
+"que actuarà com a servidor de clients lleugers."
+
+#. Type: text
+#. Description
+#. Item in the main menu to select this package
+#: ../ltsp-client-builder.templates:3001
+msgid "Build LTSP chroot"
+msgstr "Construeix el chroot LTSP"
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:4001
+msgid "Building thin client system..."
+msgstr "S'està construint el sistema de clients lleugers..."
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:5001
+msgid "Compressing thin client image..."
+msgstr "S'està comprimint la imatge del client lleuger..."
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid "No interface for LTSP dhcpd configuration"
+msgstr "No hi ha cap interfície per a la configuració del dhcpd de l'LTSP"
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid ""
+"There are no free interfaces for usage with the LTSP server. Please manually "
+"configure the /etc/ltsp/dhcpd.conf file to point to a valid static interface "
+"after the installation has completed."
+msgstr ""
+"No hi ha cap interfície disponible per al servidor LTSP. Si us plau, quan "
+"acabi la instal·lació, configureu el fitxer /etc/ltsp/dhcpd.conf manualment "
+"per a que apunti a una interfície estàtica vàlida."
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid "Interface for the thin client network:"
+msgstr "Interfície per a la xarxa de clients lleugers:"
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid ""
+"Please choose which of this system's multiple spare interfaces should be "
+"used for the thin client."
+msgstr ""
+"Trieu quina de les múltiples interfícies que hi ha disponibles en aquest "
+"sistema s'hauria d'utilitzar per als clients lleugers."
+
+#~ msgid "Installation aborted"
+#~ msgstr "S'ha avortat la instal·lació "
+
+#~ msgid ""
+#~ "The ltsp-client package provides the basic structure for an LTSP "
+#~ "terminal. It cannot be installed on a regular machine."
+#~ msgstr ""
+#~ "El paquet ltsp-client proveeix l'estructura bàsica d'un terminal LTSP. No "
+#~ "és possible instal·lar-lo en una màquina normal."
+
+#~ msgid ""
+#~ "The ltsp-client package cannot be installed in a regular machine. This "
+#~ "package provides the basic structure for a LTSP terminal."
+#~ msgstr ""
+#~ "No és possible instal·lar el paquet ltsp-client en una màquina normal. "
+#~ "Aquest paquet proveeix l'estructura bàsica d'un terminal LTSP."
+
+#~ msgid "Please read the package description to understand what it means."
+#~ msgstr ""
+#~ "Si us plau, llegiu la descripció del paquet per entendre el que vol dir."
+
+#~ msgid "Building LTSP chroot..."
+#~ msgstr "S'està construint el chroot per a LTSP..."
+
+#~ msgid "There were multiple spare interfaces found in this system."
+#~ msgstr "S'han trobat diverses interfícies disponibles en aquest sistema."

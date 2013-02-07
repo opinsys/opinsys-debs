@@ -1,0 +1,110 @@
+#
+#    Translators, if you are not familiar with the PO format, gettext
+#    documentation is worth reading, especially sections dedicated to
+#    this format, e.g. by running:
+#         info -n '(gettext)PO Files'
+#         info -n '(gettext)Header Entry'
+#
+#    Some information specific to po-debconf are available at
+#            /usr/share/doc/po-debconf/README-trans
+#         or http://www.debian.org/intl/l10n/po-debconf/README-trans
+#
+#    Developers do not need to manually edit POT or PO files.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ltsp\n"
+"Report-Msgid-Bugs-To: ltsp@packages.debian.org\n"
+"POT-Creation-Date: 2012-08-01 18:56-0400\n"
+"PO-Revision-Date: 2007-10-20 10:38+0200\n"
+"Last-Translator: Miroslav Kure <kurem@debian.cz>\n"
+"Language-Team: Czech <debian-l10n-czech@lists.debian.org>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid "Set up an LTSP chroot environment?"
+msgstr "Nastavit chroot prostředí pro LTSP?"
+
+#. Type: boolean
+#. Description
+#: ../ltsp-client-builder.templates:2001
+msgid ""
+"Please choose whether you want to set up an LTSP chroot environment on this "
+"machine, to act as a thin client server."
+msgstr ""
+"Rozhodněte se, zda chcete na tomto počítači vytvořit chrootované prostředí "
+"pro LTSP, které bude sloužit jako server pro tenké klienty."
+
+#. Type: text
+#. Description
+#. Item in the main menu to select this package
+#: ../ltsp-client-builder.templates:3001
+msgid "Build LTSP chroot"
+msgstr "Vytvořit chroot pro LTSP"
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:4001
+msgid "Building thin client system..."
+msgstr "Vytváří se systém pro tenkého klienta..."
+
+#. Type: text
+#. Description
+#: ../ltsp-client-builder.templates:5001
+msgid "Compressing thin client image..."
+msgstr "Komprimuje se obraz tenkého klienta..."
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid "No interface for LTSP dhcpd configuration"
+msgstr "Žádné rozhraní pro konfiguraci LTSP dhcpd"
+
+#. Type: note
+#. Description
+#: ../ltsp-client-builder.templates:7001
+msgid ""
+"There are no free interfaces for usage with the LTSP server. Please manually "
+"configure the /etc/ltsp/dhcpd.conf file to point to a valid static interface "
+"after the installation has completed."
+msgstr ""
+"Neexistují žádná volná rozhraní, která by mohl LTSP server použít. Po "
+"instalaci prosím ručně upravte soubor /etc/ltsp/dhcpd.conf tak, aby ukazoval "
+"na platné statické rozhraní."
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid "Interface for the thin client network:"
+msgstr "Rozhraní pro síť tenkého klienta:"
+
+#. Type: select
+#. Description
+#: ../ltsp-client-builder.templates:8001
+msgid ""
+"Please choose which of this system's multiple spare interfaces should be "
+"used for the thin client."
+msgstr ""
+"Z volných rozhraní tohoto systému vyberte prosím to, které se má použít pro "
+"tenkého klienta."
+
+#~ msgid "Installation aborted"
+#~ msgstr "Instalace přerušena"
+
+#~ msgid ""
+#~ "The ltsp-client package provides the basic structure for an LTSP "
+#~ "terminal. It cannot be installed on a regular machine."
+#~ msgstr ""
+#~ "Balík ltsp-client poskytuje základní infrastrukturu pro LTSP terminál a "
+#~ "není možné jej nainstalovat na běžný počítač."
+
+#~ msgid "Building LTSP chroot..."
+#~ msgstr "Vytváří se chroot pro LTSP..."
+
+#~ msgid "Please read the package description to understand what it means."
+#~ msgstr "Přečtěte si prosím popis balíku, abyste porozuměli, co to znamená."
