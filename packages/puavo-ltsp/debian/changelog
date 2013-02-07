@@ -1,5 +1,12 @@
-puavo-ltsp (0.8.2-0+opinsys1) quantal; urgency=low
+puavo-ltsp (0.8.2-0+opinsys2) quantal; urgency=low
 
+  * Include /usr/share/puavo-ltsp-client/templates/etc/pam.d/lightdm-laptop
+    into the puavo-ltsp-client package so that laptops might work as well.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 07 Feb 2013 10:26:51 +0200
+
+puavo-ltsp (0.8.2-0+opinsys1) quantal; urgency=low
+ 
   * New upstream release.
 
  -- Opinsys Developers <dev@opinsys.fi>  Wed, 06 Feb 2013 09:28:39 +0200
