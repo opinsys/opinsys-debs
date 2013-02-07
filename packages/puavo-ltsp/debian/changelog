@@ -1,3 +1,9 @@
+puavo-ltsp (0.8.3-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 07 Feb 2013 11:45:25 +0200
+
 puavo-ltsp (0.8.2-0+opinsys2) quantal; urgency=low
 
   * Include /usr/share/puavo-ltsp-client/templates/etc/pam.d/lightdm-laptop
