@@ -1,3 +1,9 @@
+krb5 (1.10+dfsg~beta1-2ubuntu0.3+opinsys1) precise; urgency=low
+
+  * Do not start krb5-kdc at boot.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Mon, 11 Feb 2013 15:39:14 +0200
+
 krb5 (1.10+dfsg~beta1-2ubuntu0.3) precise-security; urgency=low
 
   * SECURITY UPDATE: KDC heap corruption and crash vulnerabilities
