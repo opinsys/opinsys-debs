@@ -1,0 +1,16 @@
+debian-local/0001-debian-install-ldap-library-in-subdirectory.patch
+debian-local/0002-Debian-manpage-patch.patch
+ksu_environment_fix
+0004-Debian-HURD-compatibility.patch
+pkinit_libs
+install_po
+time_locale
+0008-Debian-set-AI_ADDRCONFIG-for-kprop-slave.patch
+0009-debian-suppress-usr-lib-in-krb5-config.patch
+debian-local/0010-debian-osconf.hin-path-changes.patch
+0011-Debian-.gbp.conf.patch
+0012-autoreconf.patch
+preauth-context.patch
+krb5-CVE-2012-1012.patch
+krb5-CVE-2012-1013.patch
+MITKRB5-SA-2012-001.patch

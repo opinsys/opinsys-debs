@@ -1,0 +1,32 @@
+From: ghudson@mit.edu
+Subject: Preauth fails for second AS request in a krb5 context
+
+The client preauth subsystem tries to avoid invoking the same loadable
+preauth module twice during an AS request.  The use_count field used for
+this purpose is initialized in krb5_init_preauth_context, which is
+invoked only once per library context.  The use_count field is reset if
+we receive a final AS reply, but not if we fail before that point.
+
+This problem has existed since 1.6, but became much more visible in 1.10
+when encrypted timestamp was moved to the modules table.  For example,
+when krb5_get_init_context_password tries to change an expired password,
+it will fail if the principal requires preauth.
+
+Bug: http://krbdev.mit.edu/rt/Ticket/Display.html?id=7119
+Bug-Ubuntu: https://launchpad.net/bugs/988520
+Origin: upstream, http://src.mit.edu/fisheye/changelog/krb5/?cs=25822
+Last-Update: 2012-05-14
+
+Index: trunk/src/lib/krb5/krb/preauth2.c
+===================================================================
+diff -u -N -r25808 -r25822
+--- trunk/src/lib/krb5/krb/preauth2.c	(.../preauth2.c)	(revision 25808)
++++ trunk/src/lib/krb5/krb/preauth2.c	(.../preauth2.c)	(revision 25822)
+@@ -281,6 +281,7 @@
+     if (context->preauth_context == NULL)
+         return;
+     for (i = 0; i < context->preauth_context->n_modules; i++) {
++        context->preauth_context->modules[i].use_count = 0;
+         mod = &context->preauth_context->modules[i];
+         if (mod->client_req_init != NULL)
+             mod->client_req_init(context, mod->moddata, mod->modreq_p);
