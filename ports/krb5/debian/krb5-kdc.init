@@ -32,6 +32,8 @@ SCRIPTNAME=/etc/init.d/krb5-kdc
 # Read configuration if it is present.
 [ -r /etc/default/krb5-kdc ] && . /etc/default/krb5-kdc
 
+[ "$KRB5_KDC_START" = 1 ] || exit 0
+
 # Get the setting of VERBOSE and other rcS variables.
 [ -f /etc/default/rcS ] && . /etc/default/rcS
 
