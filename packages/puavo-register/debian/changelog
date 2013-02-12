@@ -1,3 +1,9 @@
+puavo-register (0.1.6-0+opinsys1) precise; urgency=low
+
+  * New upstream release
+
+ -- Opinsys Developers <dev@opinsys.fi>  Tue, 12 Feb 2013 14:32:18 +0200
+
 puavo-register (0.1.5-0+opinsys1) precise; urgency=low
 
   * New upstream release
