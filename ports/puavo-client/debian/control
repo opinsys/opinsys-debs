@@ -1,0 +1,13 @@
+Source: puavo-client
+Section: misc
+Priority: extra
+Maintainer: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
+Build-Depends: debhelper (>= 7), bundler
+Standards-Version: 3.8.3
+Homepage: https://github.com/opinsys/puavo-client
+
+Package: puavo-client
+Architecture: any
+Depends: ${misc:Depends}, ruby
+Description: Ruby lib for Puavo
+ Simple ruby wrapper for the Puavo HTTP API
