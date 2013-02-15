@@ -1,3 +1,9 @@
+puavo-ltsp (0.8.8-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 14 Feb 2013 16:53:02 +0200
+
 puavo-ltsp (0.8.7.1-0+opinsys2) quantal; urgency=low
 
   * Run update-initramfs at post-install stage for puavo-ltsp-client.
