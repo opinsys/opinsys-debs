@@ -16,6 +16,7 @@ usr/share/puavo-ltsp-client/templates/etc/pam.d/lightdm-laptop
 usr/share/puavo-ltsp-client/templates/etc/pam.d/lightdm-thinclient
 usr/share/puavo-ltsp-client/templates/etc/nsswitch.conf-extrausers
 usr/share/puavo-ltsp-client/templates/etc/ldap/ldap.conf
+usr/share/puavo-ltsp-client/templates/etc/ldap/ldap.conf-laptop
 usr/share/puavo-ltsp-client/templates/etc/nsswitch.conf-sss
 usr/share/puavo-ltsp-client/templates/etc/sssd/sssd.conf
 usr/share/puavo-ltsp-client/templates/etc/default/nfs-common

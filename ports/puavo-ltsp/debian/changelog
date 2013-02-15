@@ -1,3 +1,9 @@
+puavo-ltsp (0.8.9-0+opinsys2) quantal; urgency=low
+
+  * Add ldap.conf-laptop template for laptops.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 15 Feb 2013 16:59:54 +0200
+
 puavo-ltsp (0.8.9-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
