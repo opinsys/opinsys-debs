@@ -1,3 +1,10 @@
+puavo-client (1.0.1-0+opinsys1) precise; urgency=low
+
+  * Fix Makefile
+  * https://github.com/opinsys/puavo-client/compare/1.0.0...1.0.1
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Fri, 15 Feb 2013 15:02:16 +0200
+
 puavo-client (1.0.0-0+opinsys1) quantal; urgency=low
 
   * Merge with puavo-register
