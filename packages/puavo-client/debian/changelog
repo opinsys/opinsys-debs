@@ -1,3 +1,9 @@
+puavo-client (1.0.1-0+opinsys2) precise; urgency=low
+
+  * Skip dh_usrlocal
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Fri, 15 Feb 2013 15:40:03 +0200
+
 puavo-client (1.0.1-0+opinsys1) precise; urgency=low
 
   * Fix Makefile

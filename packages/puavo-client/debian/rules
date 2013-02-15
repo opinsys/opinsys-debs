@@ -13,6 +13,9 @@ export prefix=/usr
 %:
 	dh  $@
 
+# dh_usrlocal fails to remove some puavo-client-vendor directories. We probably
+# have no actual need for it. So skip.
+override_dh_usrlocal:
 
 PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
