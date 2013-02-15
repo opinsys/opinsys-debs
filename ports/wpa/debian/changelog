@@ -1,3 +1,9 @@
+wpa (2.0-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 15 Feb 2013 15:19:43 +0200
+
 wpa (1.1-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
