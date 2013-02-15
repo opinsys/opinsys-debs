@@ -3,7 +3,7 @@ Section: misc
 Priority: extra
 Maintainer: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
 Build-Depends: debhelper (>= 7), bundler
-Standards-Version: 3.8.3
+Standards-Version: 3.9.3
 Homepage: https://github.com/opinsys/puavo-client
 
 Package: puavo-client
