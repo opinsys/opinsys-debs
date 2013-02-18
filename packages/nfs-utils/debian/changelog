@@ -1,3 +1,9 @@
+nfs-utils (9:1.2.5-3ubuntu3.2+opinsys2) quantal; urgency=low
+
+  * New patch: debian/patches/20-opinsys-allow-null-service.patch
+
+ -- Opinsys Developers <dev@opinsys.fi>  Mon, 18 Feb 2013 13:21:57 +0200
+
 nfs-utils (9:1.2.5-3ubuntu3.2+opinsys1) quantal; urgency=low
 
   * Repackage the Precise version to replace the broken Quantal package
