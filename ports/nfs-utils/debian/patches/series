@@ -6,3 +6,4 @@
 17-multiarch-kerberos-paths.patch
 18-dont-use-PAGE_SIZE.patch
 19-ticket-expired-error.patch
+20-opinsys-allow-null-service.patch
