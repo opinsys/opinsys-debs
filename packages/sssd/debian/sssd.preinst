@@ -1,0 +1,61 @@
+#!/bin/sh
+
+set -e
+
+# Remove a no-longer used conffile
+# Copied from http://wiki.debian.org/DpkgConffileHandling
+rm_conffile() {
+    local PKGNAME="$1"
+    local CONFFILE="$2"
+
+    [ -e "$CONFFILE" ] || return 0
+
+    local md5sum="$(md5sum $CONFFILE | sed -e 's/ .*//')"
+    local old_md5sum="$(dpkg-query -W -f='${Conffiles}' $PKGNAME | \
+            sed -n -e "\' $CONFFILE ' { s/ obsolete$//; s/.* //; p }")"
+    if [ "$md5sum" != "$old_md5sum" ]; then
+        echo "Obsolete conffile $CONFFILE has been modified by you."
+        echo "Saving as $CONFFILE.dpkg-bak ..."
+        mv -f "$CONFFILE" "$CONFFILE".dpkg-bak
+    else
+        echo "Removing obsolete conffile $CONFFILE ..."
+        mv -f "$CONFFILE" "$CONFFILE".dpkg-del
+    fi
+}
+
+APP_PROFILE="usr.sbin.sssd"
+APP_CONFFILE="/etc/apparmor.d/$APP_PROFILE"
+APP_COMPLAIN="/etc/apparmor.d/force-complain/$APP_PROFILE"
+APP_DISABLE="/etc/apparmor.d/disable/$APP_PROFILE"
+
+inst_complain_profile() {
+    # Create a symlink to the yet-to-be-unpacked profile
+    mkdir -p `dirname $APP_COMPLAIN` 2>/dev/null || true
+    ln -sf $APP_CONFFILE $APP_COMPLAIN
+}
+
+case "$1" in
+install)
+    # Force the AppArmor profile to complain mode on install
+    inst_complain_profile
+    ;;
+upgrade)
+    if dpkg --compare-versions "$2" le "1.0.5-1"; then
+        rm_conffile sssd "/etc/sssd/sssd.api.conf"
+        rm_conffile sssd "/etc/sssd/sssd.api.d/sssd-proxy.conf"
+        rm_conffile sssd "/etc/sssd/sssd.api.d/sssd-simple.conf"
+        rm_conffile sssd "/etc/sssd/sssd.api.d/sssd-ipa.conf"
+        rm_conffile sssd "/etc/sssd/sssd.api.d/sssd-local.conf"
+        rm_conffile sssd "/etc/sssd/sssd.api.d/sssd-krb5.conf"
+        rm_conffile sssd "/etc/sssd/sssd.api.d/sssd-ldap.conf"
+    fi
+    if dpkg --compare-versions "$2" lt "1.8.4-2"; then
+	    inst_complain_profile
+        if [ -e "$APP_DISABLE" ]; then
+            rm -f "$APP_DISABLE"
+        fi
+    fi
+    ;;
+esac
+
+#DEBHELPER#

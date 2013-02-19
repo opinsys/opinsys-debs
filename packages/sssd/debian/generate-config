@@ -1,0 +1,136 @@
+#!/bin/sh
+
+# Generate sssd.conf setup dynamically based on autodetectet LDAP
+# and Kerberos server.
+
+set -e
+
+# See if we can find an LDAP server.  Prefer ldap.domain, but also
+# accept SRV records if no ldap.domain server is found.
+lookup_ldap_uri() {
+    domain="$1"
+    if ping -c2 ldap.$domain > /dev/null 2>&1; then
+	echo ldap://ldap.$domain
+    else
+	host=$(host -N 2 -t SRV _ldap._tcp.$domain | grep -v NXDOMAIN | awk '{print $NF}' | head -1)
+	if [ "$host" ] ; then
+	    echo ldap://$host | sed 's/\.$//'
+	fi
+    fi
+}
+
+lookup_ldap_base() {
+    ldapuri="$1"
+    defaultcontext="$(ldapsearch -LLL -H "$ldapuri" -x -b '' -s base defaultNamingContext  2>/dev/null | awk '/^defaultNamingContext: / { print $2}')"
+    if [ -z "$defaultcontext" ] ; then
+	# If there are several contexts, pick the first one with
+	# posixAccount or posixGroup objects in it.
+	for context in $(ldapsearch -LLL -H "$ldapuri" -x -b '' \
+	    -s base namingContexts 2>/dev/null | \
+	    awk '/^namingContexts: / { print $2}') ; do
+	    if ldapsearch -LLL -H $ldapuri -x -b "$context" -s sub -z 1 \
+		'(|(objectClass=posixAccount)(objectclass=posixGroup))' 2>&1 | \
+		egrep -q '^dn:|^Administrative limit exceeded' ; then
+		echo $context
+		return
+	    fi
+	done
+    fi
+    echo $defaultcontext
+}
+
+lookup_kerberos_server() {
+    domain="$1"
+    if ping -c2 kerberos.$domain > /dev/null 2>&1; then
+	echo kerberos.$domain
+    else
+	host=$(host -t SRV _kerberos._tcp.$domain | grep -v NXDOMAIN | awk '{print $NF}'|head -1)
+	if [ "$host" ] ; then
+	    echo $host | sed 's/\.$//'
+	fi
+    fi
+}
+
+lookup_kerberos_realm() {
+    domain="$1"
+    realm=$(host -t txt _kerberos.$domain | grep -v NXDOMAIN | awk '{print $NF}'|head -1|tr -d '"')
+    if [ -z "$realm" ] ; then
+	realm=$(echo $domain | tr a-z A-Z)
+    fi
+    echo $realm
+}
+
+
+generate_config() {
+    if [ "$1" ] ; then
+	domain=$1
+    else
+	domain="$(hostname -d)"
+    fi
+    kerberosrealm=$(lookup_kerberos_realm $domain)
+    ldapuri=$(lookup_ldap_uri "$domain")
+    if [ -z "$ldapuri" ];  then
+	# autodetection failed
+	return
+    fi
+
+    ldapbase="$(lookup_ldap_base "$ldapuri")"
+    if [ -z "$ldapbase" ];  then
+	# autodetection failed
+	return
+    fi
+    kerberosserver=$(lookup_kerberos_server "$domain")
+
+cat <<EOF
+# SSSD configuration generated using $0
+[sssd]
+config_file_version = 2
+reconnection_retries = 3
+sbus_timeout = 30
+services = nss, pam
+domains = $domain
+
+[nss]
+filter_groups = root
+filter_users = root
+reconnection_retries = 3
+
+[pam]
+reconnection_retries = 3
+EOF
+if [ "$kerberosserver" ] ; then
+    auth="krb5"
+    chpass="krb5"
+else
+    auth="ldap"
+    chpass="ldap";
+fi
+
+cat <<EOF
+
+[domain/$domain]
+; Using enumerate = true leads to high load and slow response
+enumerate = false
+cache_credentials = true
+
+id_provider = ldap
+auth_provider = $auth
+chpass_provider = $chpass
+
+ldap_uri = $ldapuri
+ldap_search_base = $ldapbase
+ldap_tls_reqcert = demand
+ldap_tls_cacert = /etc/ssl/certs/ca-certificates.crt
+EOF
+
+if [ "$kerberosserver" ] ; then
+    cat <<EOF
+
+krb5_kdcip = $kerberosserver
+krb5_realm = $kerberosrealm
+krb5_changepw_principle = kadmin/changepw
+krb5_auth_timeout = 15
+EOF
+fi
+}
+generate_config "$@"

@@ -1,0 +1,31 @@
+#!/bin/sh
+set -e
+
+#DEBHELPER#
+
+# This code was taken from libnss-myhostname, which got it from nss-mdns:
+
+log() {
+    echo "$*"
+}
+
+remove_nss_entry() {
+    log "Checking NSS setup..."
+    # abort if /etc/nsswitch.conf does not exist
+    if ! [ -e /etc/nsswitch.conf ]; then
+        log "Could not find /etc/nsswitch.conf."
+        return
+    fi
+    sed -i --regexp-extended '
+      /^(sudoers):/ {
+        s/\bsss\b//g
+        s/[[:space:]]+$//
+      }
+    ' /etc/nsswitch.conf
+}
+
+action="$1"
+
+if [ "$action" = remove ]; then
+    remove_nss_entry
+fi

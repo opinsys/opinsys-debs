@@ -1,0 +1,212 @@
+Source: sssd
+Section: utils
+Priority: extra
+Maintainer: Ubuntu Core Developers <ubuntu-devel@lists.ubuntu.com>
+XSBC-Original-Maintainer: Debian SSSD Team <pkg-sssd-devel@lists.alioth.debian.org>
+Uploaders: Timo Aaltonen <tjaalton@ubuntu.com>
+Build-Depends: debhelper (>= 9), quilt, dh-autoreconf, autopoint, lsb-release,
+ dpkg-dev (>= 1.16.1~),
+ dnsutils,
+ libpopt-dev,
+ libdbus-1-dev,
+ libkeyutils-dev,
+ libldap2-dev,
+ libpam-dev,
+ libnl-dev,
+ libnss3-dev,
+ libnspr4-dev,
+ libpcre3-dev,
+ libselinux1-dev,
+ libsasl2-dev,
+ libtevent-dev,
+ libldb-dev,
+ libtalloc-dev,
+ libtdb-dev,
+ xml-core,
+ docbook-xsl,
+ docbook-xml,
+ libxml2-utils,
+ xsltproc,
+ krb5-config,
+ libkrb5-dev,
+ libc-ares-dev,
+ python-dev (>= 2.6.6-3~),
+ libdhash-dev,
+ libcollection-dev,
+ libini-config-dev,
+ check,
+ dh-apparmor,
+ libglib2.0-dev,
+ libndr-dev,
+ libndr-standard-dev,
+ libsamba-util-dev,
+ samba4-dev,
+ libdcerpc-dev,
+Standards-Version: 3.9.3
+Vcs-Git: git://git.debian.org/git/pkg-sssd/sssd
+Vcs-Browser: http://git.debian.org/?p=pkg-sssd/sssd.git
+Homepage: https://fedorahosted.org/sssd/
+
+Package: sssd
+Architecture: any
+Multi-Arch: foreign
+Depends: ${shlibs:Depends}, ${misc:Depends}, python,
+ python-sss,
+ libipa-hbac0 (= ${binary:Version}),
+ libsss-idmap0 (= ${binary:Version}),
+Pre-Depends: ${misc:Pre-Depends}
+Recommends: ldap-utils,
+ bind9-host,
+ libnss-sss,
+ libpam-sss,
+ libsasl2-modules-gssapi-mit | libsasl2-modules-gssapi-heimdal,
+ libsasl2-modules-ldap,
+Suggests:
+ apparmor,
+ sssd-tools,
+Description: System Security Services Daemon 
+ Provides a set of daemons to manage access to remote directories and
+ authentication mechanisms. It provides an NSS and PAM interface toward
+ the system and a pluggable backend system to connect to multiple different
+ account sources. It is also the basis to provide client auditing and policy
+ services for projects like FreeIPA.
+ .
+ This package provides the daemon.
+
+Package: sssd-tools
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ sssd (= ${binary:Version}),
+ python,
+Breaks: sssd (<< 1.8.0~beta3-1)
+Replaces: sssd (<< 1.8.0~beta3-1)
+Description: System Security Services Daemon -- tools
+ Provides a set of daemons to manage access to remote directories and
+ authentication mechanisms. It provides an NSS and PAM interface toward
+ the system and a pluggable backend system to connect to multiple different
+ account sources. It is also the basis to provide client auditing and policy
+ services for projects like FreeIPA.
+ .
+ This package provides tools to manage users, groups and nested groups when
+ using the local id provider.
+
+Package: libnss-sss
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Pre-Depends: multiarch-support
+Recommends: sssd
+Multi-Arch: same
+Description: Nss library for the System Security Services Daemon 
+ Provides a set of daemons to manage access to remote directories and
+ authentication mechanisms. It provides an NSS and PAM interface toward
+ the system and a pluggable backend system to connect to multiple different
+ account sources. It is also the basis to provide client auditing and policy
+ services for projects like FreeIPA.
+ .
+ This package provide the nss library to connect to the sssd daemon.
+
+Package: libpam-sss
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libpam-runtime (>= 1.0.1-6)
+Recommends: sssd
+Multi-Arch: same
+Breaks: sssd (<< 1.8.0~beta3-1)
+Replaces: sssd (<< 1.8.0~beta3-1)
+Description: Pam module for the System Security Services Daemon 
+ Provides a set of daemons to manage access to remote directories and
+ authentication mechanisms. It provides an NSS and PAM interface toward
+ the system and a pluggable backend system to connect to multiple different
+ account sources. It is also the basis to provide client auditing and policy
+ services for projects like FreeIPA.
+ .
+ This package provide the pam module to connect to the sssd daemon.
+
+Package: libipa-hbac0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+Pre-Depends: multiarch-support
+Conflicts: sssd (<< 1.5.15)
+Replaces: sssd (<< 1.5.15)
+Multi-Arch: same
+Description: FreeIPA HBAC Evaluator library
+ Utility library to validate FreeIPA HBAC rules for authorization requests.
+
+Package: libipa-hbac-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends}, libipa-hbac0 (= ${binary:Version})
+Conflicts: sssd (<< 1.5.15)
+Replaces: sssd (<< 1.5.15)
+Description: FreeIPA HBAC Evaluator library
+ Utility library to validate FreeIPA HBAC rules for authorization requests.
+ .
+ This package contains header files and symlinks to develop programs which will
+ use the libipa-hbac library.
+
+Package: libsss-idmap0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+Pre-Depends: multiarch-support
+Multi-Arch: same
+Description: ID mapping library for SSSD
+ Utility library to convert SIDs to Unix uids and gids.
+
+Package: libsss-idmap-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends}, libsss-idmap0 (= ${binary:Version})
+Description: ID mapping library for SSSD -- development files
+ Utility library to convert SIDs to Unix uids and gids.
+ .
+ This package contains header files and symlinks to develop programs which will
+ use the libsss-idmap library.
+
+Package: libsss-sudo
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+Pre-Depends: multiarch-support
+Replaces: libsss-sudo-dev (<= 1.9.3)
+Multi-Arch: same
+Description: Communicator library for sudo
+ Utility library to allow communication between sudo and SSSD for caching
+ sudo rules by SSSD.
+
+Package: libsss-sudo-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends}, libsss-sudo (= ${binary:Version})
+Description: Communicator library for sudo -- development files
+ Utility library to allow communication between sudo and SSSD for caching
+ sudo rules by SSSD.
+ .
+ This package contains the header file to develop programs which will use the
+ libsss-sudo library.
+
+Package: python-libipa-hbac
+Section: python
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends},
+ libipa-hbac0 (= ${binary:Version})
+Conflicts: python-sss (<< 1.5.15)
+Replaces: python-sss (<< 1.5.15)
+Description: Python bindings for the FreeIPA HBAC Evaluator library
+ The libipa_hbac-python contains the bindings so that libipa_hbac can be
+ used by Python applications.
+
+Package: python-sss
+Section: python
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}
+Provides: ${python:Provides}
+Recommends: sssd
+Description: Python module for the System Security Services Daemon
+ Provides a set of daemons to manage access to remote directories and
+ authentication mechanisms. It provides an NSS and PAM interface toward
+ the system and a pluggable backend system to connect to multiple different
+ account sources. It is also the basis to provide client auditing and policy
+ services for projects like FreeIPA.
+ .
+ This package provide a module to access the configuration of the sssd daemon.
