@@ -1,0 +1,77 @@
+#!/usr/bin/make -f
+%:
+	dh $@ --with quilt,autoreconf,python2 --builddirectory=build
+
+DPKG_EXPORT_BUILDFLAGS = 1
+include /usr/share/dpkg/buildflags.mk
+
+CFLAGS = $(shell dpkg-buildflags --get CFLAGS)
+CFLAGS += -I/usr/include/samba-4.0
+
+export CK_DEFAULT_TIMEOUT=30
+
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+
+APIDOCDIR = /usr/share/sssd
+DISTRIBUTION = $(shell lsb_release -i | sed 's/.*:\t//')
+INIT = init
+PKGDATE = $(shell dpkg-parsechangelog | \
+	awk -F" " '/^Date/ { print $$4 "/" $$3 "/" $$5 }' | \
+	sed 's/Jan/01/;s/Feb/02/;s/Mar/03/;s/Apr/04/;s/May/05/;s/Jun/06/;s/Jul/07/;s/Aug/08/;s/Sep/09/;s/Oct/10/;s/Nov/11/;s/Dec/12/;s/\//\\\//g')
+CURDATE = $(shell date +%m/%d/%Y | sed 's/\//\\\//g')
+
+ifeq ($(DISTRIBUTION), Ubuntu)
+	INIT = upstart
+endif
+
+override_dh_auto_configure:
+	dh_auto_configure -- --enable-krb5-locator-plugin \
+	--datadir=/usr/share/ \
+	--with-ldb-lib-dir=/usr/lib/$(DEB_HOST_MULTIARCH)/ldb/modules/ldb \
+	--with-krb5-plugin-path=/usr/lib/$(DEB_HOST_MULTIARCH)/krb5/plugins/krb5 \
+	--enable-nsslibdir=/lib/$(DEB_HOST_MULTIARCH) \
+	--enable-pammoddir=/lib/$(DEB_HOST_MULTIARCH)/security \
+	--disable-static \
+	--disable-rpath \
+	--with-semanage=no \
+	--with-autofs \
+	--with-ssh \
+	--with-sudo
+
+override_dh_install:
+	install -D -m755 $(CURDIR)/debian/generate-config \
+		$(CURDIR)/debian/tmp/usr/share/sssd/generate-config
+
+	mkdir -p $(CURDIR)/debian/libpam-sss/usr/share/pam-configs
+	install -m644 debian/libpam-sss.pam-auth-update \
+		$(CURDIR)/debian/libpam-sss/usr/share/pam-configs/sss
+	install -m644 debian/libpam-sss.pam-auth-update-password \
+		$(CURDIR)/debian/libpam-sss/usr/share/pam-configs/sss-password
+	install -m644 -D $(CURDIR)/debian/apparmor-profile \
+		$(CURDIR)/debian/sssd/etc/apparmor.d/usr.sbin.sssd
+
+	cat $(CURDIR)/debian/sssd.$(INIT).in > $(CURDIR)/debian/sssd.$(INIT)
+
+	# remove files we don't want to install
+	find $(CURDIR)/debian/tmp/ -name '*.la' -exec rm '{}' ';'
+	find $(CURDIR)/debian/tmp/ -name '*.pyc' -exec rm '{}' ';'
+	find $(CURDIR)/debian/tmp/ -name '*.egg-info' -exec rm '{}' ';'
+	rm -f $(CURDIR)/debian/tmp/etc/rc.d/init.d/sssd
+
+	sed -i 's/${CURDATE}/${PKGDATE}/g' $(CURDIR)/debian/tmp/usr/share/man/man8/pam_sss.8
+
+	dh_install --fail-missing
+
+override_dh_python2:
+	dh_python2 --no-guessing-versions
+
+override_dh_installinit:
+	dh_apparmor -psssd --profile-name=usr.sbin.sssd
+	dh_installinit --error-handler=invoke_failure
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -f $(CURDIR)/debian/sssd.$(INIT)
+	rm -f $(CURDIR)/po/*.gmo
+	rm -f $(CURDIR)/src/config/*.pyc
+	rm -f $(CURDIR)/po/stamp-po

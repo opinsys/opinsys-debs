@@ -1,0 +1,28 @@
+# sssd - System Security Services Daemon
+#
+# Provides a set of daemons to manage access to remote directories and
+# authentication mechanisms. It provides an NSS and PAM interface toward
+# the system and a pluggable backend system to connect to multiple different
+# account sources.
+
+description	"System Security Services Daemon"
+
+start on (filesystem and net-device-up)
+stop on runlevel [06]
+
+expect fork
+respawn
+
+env DEFAULTFILE=/etc/default/sssd
+
+pre-start script
+	test -f /etc/sssd/sssd.conf || { stop; exit 0; }
+	/lib/init/apparmor-profile-load usr.sbin.sssd
+end script
+
+script
+	if [ -f "$DEFAULTFILE" ]; then
+	. "$DEFAULTFILE"
+	fi
+	exec sssd $DAEMON_OPTS
+end script

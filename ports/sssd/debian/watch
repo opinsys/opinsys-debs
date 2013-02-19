@@ -1,0 +1,4 @@
+#git=git://git.fedorahosted.org/sssd.git
+version=3
+
+https://fedorahosted.org/released/sssd/sssd-(.*)\.tar\.gz

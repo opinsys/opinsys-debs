@@ -1,0 +1,16 @@
+#! /bin/sh -e
+
+invoke_failure() {
+    # invoke-rc.d failed
+    return
+}
+
+if [ "$1" = "purge" ]; then
+    APP_PROFILE="usr.sbin.sssd"
+    rm -f /etc/apparmor.d/force-complain/$APP_PROFILE >/dev/null 2>&1 || true
+    rm -f /etc/apparmor.d/disable/$APP_PROFILE >/dev/null 2>&1 || true
+    rmdir /etc/apparmor.d/disable >/dev/null 2>&1 || true
+fi
+
+#DEBHELPER#
+

@@ -1,0 +1,3 @@
+usr/include/sss_idmap.h
+usr/lib/*/libsss_idmap.so
+usr/lib/*/pkgconfig/sss_idmap.pc

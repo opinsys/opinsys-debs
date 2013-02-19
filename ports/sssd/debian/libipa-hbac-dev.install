@@ -1,0 +1,3 @@
+usr/include/ipa_hbac.h
+usr/lib/*/libipa_hbac.so
+usr/lib/*/pkgconfig/ipa_hbac.pc
