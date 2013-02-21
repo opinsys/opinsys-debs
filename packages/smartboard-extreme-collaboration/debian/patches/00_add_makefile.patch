@@ -1,9 +1,0 @@
-diff -ruN smartboard-extreme-collaboration.orig/Makefile smartboard-extreme-collaboration/Makefile
---- smartboard-extreme-collaboration.orig/Makefile	1970-01-01 02:00:00.000000000 +0200
-+++ smartboard-extreme-collaboration/Makefile	2013-02-21 15:27:37.595150089 +0200
-@@ -0,0 +1,5 @@
-+all:
-+
-+install:
-+	install -D -m 644 xc.addon \
-+	  "$(DESTDIR)/opt/SMART Technologies/Notebook Software/bin/Notebook/Addons/xc.addon"
