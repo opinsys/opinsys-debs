@@ -1,0 +1,12 @@
+Source: smartboard-extreme-collaboration
+Section: misc
+Priority: extra
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.3
+
+Package: smartboard-extreme-collaboration
+Architecture: all
+Depends: ${misc:Depends}
+Description: Extreme collaboration extension for Smart Notebook
+ Extreme collaboration extension for Smart Notebook
