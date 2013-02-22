@@ -1,5 +1,8 @@
-etc/init/puavo-ltsp-client.conf
+etc/default/ltspssh
+etc/init.d/ltspssh
 etc/init/ltspssh.conf
+etc/init/puavo-ltsp-client.conf
+etc/ssh/ltspsshd_config
 usr/sbin/ltspsshd
 usr/sbin/puavo-dns-client
 usr/sbin/puavo-ltsp-login
@@ -8,7 +11,6 @@ usr/sbin/puavo-configure-client
 usr/share/ltsp/screen.d/register
 usr/share/puavo-ltsp-client/templates/etc/krb5.conf
 usr/share/puavo-ltsp-client/templates/etc/ssh/sshd_config
-usr/share/puavo-ltsp-client/templates/etc/ssh/ltspsshd_config
 usr/share/puavo-ltsp-client/templates/etc/init/gssd.conf-userprincipal
 usr/share/puavo-ltsp-client/templates/etc/pam.d/ltspsshd
 usr/share/puavo-ltsp-client/templates/etc/pam.d/lightdm-fatclient
