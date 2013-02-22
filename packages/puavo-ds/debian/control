@@ -2,9 +2,15 @@ Source: puavo-ds
 Section: admin
 Priority: extra
 Maintainer: Juha Erkkilä <Juha.Erkkila@opinsys.fi>
-Build-Depends: debhelper (>= 8)
+Build-Depends: debhelper (>= 8), rubygems
 Standards-Version: 3.9.3
 Homepage: https://github.com/opinsys/puavo-ds/
+
+Package: puavo-ds-master
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, ruby
+Description: Puavo LDAP setup tool
+ Builds LDAP for Puavo
 
 Package: puavo-ds-slave
 Architecture: all
