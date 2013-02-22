@@ -1,0 +1,5 @@
+usr/sbin/puavo-init-kdc-slave
+usr/sbin/puavo-init-ldap-slave
+usr/share/puavo-ds-slave/krb5.conf.erb
+usr/share/puavo-ds-slave/kdc.conf.erb
+usr/share/puavo-ds-slave/init_ldap_slave.ldif.erb
