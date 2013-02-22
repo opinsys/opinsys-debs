@@ -96,7 +96,7 @@ override_dh_auto_install:
 	for F in $(installdir)/usr/lib/ldap/*.la; do \
 		sed -i "s/^dependency_libs=.*/dependency_libs=''/" $$F; \
 	done
-	
+
 	# Check all built libraries for unresolved symbols except for the
 	# libslapi library.  It is a special case since the SLAPI interface
 	# depends on symbols defined in slapd itself.  Those symbols will
@@ -188,3 +188,6 @@ override_dh_auto_clean:
 		contrib/slapd-modules/autogroup/autogroup.lo \
 		contrib/slapd-modules/autogroup/autogroup.la \
 		contrib/slapd-modules/autogroup/autogroup.o
+
+override_dh_auto_test:
+	@echo "No tests today."
