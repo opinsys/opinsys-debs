@@ -1,3 +1,9 @@
+puavo-tftp (0.5.0-0+opinsys1) precise; urgency=low
+
+  * New upstream release
+
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 22 Feb 2013 15:28:03 +0200
+
 puavo-tftp (0.4.10-0+opinsys1) precise; urgency=low
 
   * New upstream release
