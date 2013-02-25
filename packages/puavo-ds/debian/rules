@@ -15,6 +15,15 @@
 override_dh_auto_install:
 	dh_auto_install -- prefix=/usr sysconfdir=/etc
 
+# We vendor in every ruby dependency required by this package. Unfortunately
+# Ubuntu Precise Pangolin does not have recent enough version of Bundler to do
+# this (It's missing --standalone). So we have rubygems as build dependency
+# and use it install more recent version of Bundler before actually building
+# the package with bundler.
+override_dh_auto_build:
+	gem install bundler --version '1.2.4'
+	dh_auto_build --
+
 PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
