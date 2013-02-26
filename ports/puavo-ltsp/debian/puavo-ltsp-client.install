@@ -60,5 +60,7 @@ usr/share/puavo-ltsp/init-puavo.d/50-swap
 usr/share/puavo-ltsp/init-puavo.d/50-syslog
 usr/share/puavo-ltsp/init-puavo.d/60-autopoweroff
 usr/share/puavo-ltsp/init-puavo.d/60-puavo-wlan
+usr/share/puavo-ltsp/init-puavo.d/60-setup-autofs
 usr/share/puavo-ltsp/init-puavo.d/60-setup-xserver
+usr/share/puavo-ltsp/init-puavo.d/60-sync-clock
 usr/share/puavo-ltsp/init-puavo.d/90-puavo-configure-client
