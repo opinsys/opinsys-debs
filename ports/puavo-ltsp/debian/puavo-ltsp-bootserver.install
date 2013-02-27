@@ -9,6 +9,7 @@ usr/sbin/puavo-dhcpd-event
 usr/sbin/puavo-init-bootserver-ddns
 usr/sbin/puavo-openvpn-up
 usr/sbin/puavo-share-manager
+usr/sbin/puavo-update-airprint-ddns
 usr/sbin/puavo-update-ddns
 usr/sbin/send_printers_to_puavo
 usr/sbin/term_rootpw

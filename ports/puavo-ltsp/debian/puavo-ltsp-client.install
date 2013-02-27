@@ -12,6 +12,8 @@ usr/sbin/puavo-ltsp-mount-nfs-home
 usr/share/initramfs-tools/scripts/init-bottom/puavo_ltsp
 usr/share/initramfs-tools/scripts/init-premount/puavo_udhcp
 usr/share/ltsp/screen.d/register
+usr/share/puavo-ltsp-client/templates/etc/cups/client.conf
+usr/share/puavo-ltsp-client/templates/etc/cups/cupsd.conf
 usr/share/puavo-ltsp-client/templates/etc/default/nfs-common
 usr/share/puavo-ltsp-client/templates/etc/idmapd.conf
 usr/share/puavo-ltsp-client/templates/etc/init/gssd.conf-userprincipal
