@@ -1,3 +1,9 @@
+puavo-wlan (0.4.1-0+opinsys3) quantal; urgency=low
+
+  * Simplify multipackage installation.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 28 Feb 2013 08:37:49 +0200
+
 puavo-wlan (0.4.1-0+opinsys2) quantal; urgency=low
 
   * New patch: debian/patches/opinsys-wait-longer-before-launching-hostapd
