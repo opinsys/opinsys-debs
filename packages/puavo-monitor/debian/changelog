@@ -1,3 +1,9 @@
+puavo-monitor (1.0.2-0+opinsys1) lucid; urgency=low
+
+  * https://github.com/opinsys/puavo-monitor/compare/1.0.1...1.0.2
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Thu, 28 Feb 2013 12:35:36 +0200
+
 puavo-monitor (1.0.1-0+opinsys1) lucid; urgency=low
 
   * New upstream release
