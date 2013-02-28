@@ -13,7 +13,11 @@
 	dh $@
 
 override_dh_auto_install:
-	dh_auto_install -- prefix=/usr sysconfdir=/etc
+	$(MAKE) -C client install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-ltsp-client
+	$(MAKE) -C bootserver install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-ltsp-bootserver
+	$(MAKE) -C puavo-install install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-ltsp-install
+
+override_dh_install:
 
 PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
