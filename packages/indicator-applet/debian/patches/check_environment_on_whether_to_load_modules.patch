@@ -1,7 +1,7 @@
 diff -ruN indicator-applet-12.10.1.orig/src/applet-main.c indicator-applet-12.10.1/src/applet-main.c
 --- indicator-applet-12.10.1.orig/src/applet-main.c	2012-09-19 19:17:44.000000000 +0300
-+++ indicator-applet-12.10.1/src/applet-main.c	2013-03-04 15:54:56.842623128 +0200
-@@ -607,6 +607,29 @@
++++ indicator-applet-12.10.1/src/applet-main.c	2013-03-04 16:43:15.915148786 +0200
+@@ -607,6 +607,30 @@
  
  
  static gboolean
@@ -15,7 +15,8 @@ diff -ruN indicator-applet-12.10.1.orig/src/applet-main.c indicator-applet-12.10
 +    if (ia_substr) {
 +      while ((test_module_name = strsep(&ia_substr, ":")) != NULL) {
 +        if (strcmp(test_module_name, name) == 0) {
-+	  /* this module should not be shown */
++          /* this module should not be shown */
++          free(indicator_applets);
 +          return FALSE;
 +        }
 +      }
@@ -31,7 +32,7 @@ diff -ruN indicator-applet-12.10.1.orig/src/applet-main.c indicator-applet-12.10
  load_module (const gchar * name, GtkWidget * menubar)
  {
    GObject * o;
-@@ -618,6 +641,10 @@
+@@ -618,6 +642,10 @@
      return FALSE;
    }
  
