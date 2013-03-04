@@ -1,3 +1,10 @@
+indicator-applet (12.10.1-0ubuntu1+opinsys1) quantal; urgency=low
+
+  * Add a patch to support "HIDE_INDICATOR_APPLETS" environment variable,
+    should allow hiding some indicator modules.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Mon, 04 Mar 2013 16:05:35 +0200
+
 indicator-applet (12.10.1-0ubuntu1) quantal; urgency=low
 
   * New upstream release.
