@@ -1,3 +1,9 @@
+indicator-applet (12.10.1-0ubuntu1+opinsys2) quantal; urgency=low
+
+  * Plug a memory leak in previous patch.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Mon, 04 Mar 2013 16:47:23 +0200
+
 indicator-applet (12.10.1-0ubuntu1+opinsys1) quantal; urgency=low
 
   * Add a patch to support "HIDE_INDICATOR_APPLETS" environment variable,
