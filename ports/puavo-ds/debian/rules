@@ -13,7 +13,10 @@
 	dh  $@
 
 override_dh_auto_install:
-	dh_auto_install -- prefix=/usr sysconfdir=/etc
+	$(MAKE) -C slave install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-ds-slave
+	$(MAKE) -C master install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-ds-master
+
+override_dh_install:
 
 # We vendor in every ruby dependency required by this package. Unfortunately
 # Ubuntu Precise Pangolin does not have recent enough version of Bundler to do
