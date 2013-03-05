@@ -1,3 +1,9 @@
+liitu-themes (0.2.5-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Tue, 05 Mar 2013 15:40:42 +0200
+
 liitu-themes (0.2.4-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
