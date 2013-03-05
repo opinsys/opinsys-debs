@@ -9,6 +9,7 @@ webmenu (0.4.2-0+opinsys) precise; urgency=low
 
   * SMART Notebook startup fix
   * Removed shutdown&reboot on thin clients
+  * Update menu size on resolution changes
   * https://github.com/opinsys/webmenu/compare/0.4.1...0.4.2
 
  -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 05 Mar 2013 09:19:49 +0200
