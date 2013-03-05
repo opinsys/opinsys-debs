@@ -1,3 +1,10 @@
+nvidia-graphics-drivers (304.51.really.304.43-0ubuntu1+opinsys3) quantal; urgency=low
+
+  * Add support for Linux 3.7 and 3.8
+    - Backported from nvidia-graphics-drivers-304 (304.84-0ubuntu1)
+
+ -- Opinsys Developers <dev@opinsys.fi>  Tue, 05 Mar 2013 15:30:29 +0200
+
 nvidia-graphics-drivers (304.51.really.304.43-0ubuntu1+opinsys2) quantal; urgency=low
 
   * Do not enable quirks for the driver.
