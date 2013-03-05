@@ -1,3 +1,9 @@
+openldap (2.4.31-1ubuntu2+opinsys4) quantal; urgency=low
+
+  * Fix slapd-smbkrb5pwd installation again.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Mon, 04 Mar 2013 20:05:09 +0200
+
 openldap (2.4.31-1ubuntu2+opinsys3) quantal; urgency=low
 
   * Fix slapd-smbkrb5pwd installation.
