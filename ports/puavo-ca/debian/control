@@ -1,0 +1,14 @@
+Source: puavo-ca
+Section: admin
+Priority: extra
+Maintainer: Esa-Matti Suuronen <esa-matti.suuronen@opisys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+Homepage: https://github.com/opinsys/puavo-ca/
+
+Package: puavo-ca-setup
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, openssl
+Description: Setup Puavo-CA
+ Setup certificates and shit for Puavo-CA
+

@@ -1,0 +1,22 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+%:
+	dh  $@
+
+override_dh_auto_install:
+	$(MAKE) -C puavo-ca-setup install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-ca-setup
+
+PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+.PHONY: get-orig-source
+get-orig-source:
+	wget https://github.com/opinsys/$(PACKAGE)/archive/$(SRC_VERSION).tar.gz -O../$(TARBALL)
+	../../tools/unpack-orig-tarball ../$(TARBALL)
+get-ref-source:
+	wget https://github.com/opinsys/$(PACKAGE)/archive/$(REF).tar.gz -O../$(TARBALL)
+	../../tools/unpack-orig-tarball ../$(TARBALL)
