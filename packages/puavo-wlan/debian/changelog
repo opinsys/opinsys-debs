@@ -1,3 +1,9 @@
+puavo-wlan (0.4.2-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 07 Mar 2013 15:27:31 +0200
+
 puavo-wlan (0.4.1-0+opinsys3) quantal; urgency=low
 
   * Simplify multipackage installation.
