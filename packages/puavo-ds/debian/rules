@@ -18,7 +18,7 @@ override_dh_auto_install:
 
 # dh_usrlocal fails to remove some vendored gem directories and because we
 # probably have no actual need for it. So skip.
-override_dh_install:
+override_dh_usrlocal:
 
 # We vendor in every ruby dependency required by this package. Unfortunately
 # Ubuntu Precise Pangolin does not have recent enough version of Bundler to do
