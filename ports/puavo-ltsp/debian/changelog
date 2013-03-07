@@ -1,3 +1,9 @@
+puavo-ltsp (0.8.22-0+opinsys2) quantal; urgency=low
+
+  * Add a missing dependency to cups-client.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 07 Mar 2013 10:27:10 +0200
+
 puavo-ltsp (0.8.22-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
