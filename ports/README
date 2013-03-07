@@ -10,8 +10,6 @@ packages/ ......... Contains one directory per package, each containing
                     stored elsewhere and fetched when making a new
                     package. Directory names must match package names.
 
-tools/ ............ Miscellaneous helper scripts.
-
 FAQ
 ===
 
