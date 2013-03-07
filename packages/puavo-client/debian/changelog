@@ -1,3 +1,9 @@
+puavo-client (1.0.1-0+opinsys3) precise; urgency=low
+
+  * Install Bundler from gem during  build
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Thu, 07 Mar 2013 09:31:10 +0200
+
 puavo-client (1.0.1-0+opinsys2) precise; urgency=low
 
   * Skip dh_usrlocal
