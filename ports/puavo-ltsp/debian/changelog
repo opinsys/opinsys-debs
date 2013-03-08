@@ -1,3 +1,9 @@
+puavo-ltsp (0.8.24-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 08 Mar 2013 12:42:50 +0200
+
 puavo-ltsp (0.8.23-0+opinsys1) quantal; urgency=low
 
   * New upstream release.  Remove the cups-client dependency, because
