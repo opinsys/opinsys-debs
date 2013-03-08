@@ -21,4 +21,4 @@ TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
 .PHONY: get-orig-source
 get-orig-source:
 	wget https://github.com/opinsys/$(PACKAGE)/archive/$(SRC_VERSION).tar.gz -O../$(TARBALL)
-        $(shell tar -z -x -f ../$(TARBALL) --strip-components=1 -C .)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
