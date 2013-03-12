@@ -24,3 +24,4 @@ hide_policy_items_env_var.patch
 applet_adhoc_use_wpa_rsn_part1.patch
 lp1048516_dont_req_keyring_in_greeter.patch
 lp1048520_delay_pin_dialog_in_greeter.patch
+opinsys-allow-user-to-modify-connection-settings.patch
