@@ -1,0 +1,140 @@
+#!/usr/bin/make -f
+
+DEB_SOURCE := $(shell dpkg-parsechangelog | grep Source: | sed -e 's/Source: //')
+DEB_VERSION := $(shell dpkg-parsechangelog | grep Version: | sed -e 's/Version: //')
+DEB_UPSTREAM_VERSION := $(shell echo $(DEB_VERSION) | sed -e 's/-[^-]*$$//')
+DEB_MAJOR_VERSION := $(shell echo $(DEB_UPSTREAM_VERSION) | sed -e 's/git.*//')
+
+GIT_URL := git://git.gnome.org/network-manager-applet
+GIT_BRANCH := "master"
+GIT_BRANCH_NAME := network-manager-applet
+
+ifneq (,$(LOCAL_BRANCH))
+LOCAL_REAL_BRANCH = $(realpath $(LOCAL_BRANCH))
+endif
+
+%:
+	dh $@ --with autoreconf,translations
+
+export LDFLAGS := $(shell dpkg-buildflags --get LDFLAGS) -Wl,-z,defs -Wl,--as-needed
+
+override_dh_autoreconf:
+	intltoolize -f -c
+	dh_autoreconf
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+		--libexecdir=/usr/lib/NetworkManager \
+		--enable-more-warnings=no \
+		--enable-indicator
+
+override_dh_autoreconf_clean:
+	dh_autoreconf_clean
+	rm -f po/*.gmo
+	rm -f intltool-*.in
+	rm -f m4/intltool.m4
+	rm -f po/Makefile.in.in
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -f icons/22/*-secure.png icons/22/nm-active-device.png
+	rm -f debian/*.1
+
+override_dh_auto_build:
+	dh_auto_build
+	cp -rf $(CURDIR)/debian/icons/22 icons/
+	docbook-to-man debian/nm-applet.sgml > debian/nm-applet.1
+
+override_dh_strip:
+	dh_strip --dbg-package=network-manager-gnome-dbg
+
+override_dh_install:
+	dh_install
+	find debian/network-manager-gnome/ -name \*.la -o -name \*.a | xargs rm -f
+	rm -rf debian/network-manager-gnome/usr/include/
+	# workaround for icon-changes
+	# natty fallback icons
+	cp -f debian/icons/22/nm-device-wired-secure.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/
+	cp -f debian/icons/22/nm-signal-00-secure.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/
+	ln -snf nm-signal-00.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/gsm-3g-none.png
+	ln -snf nm-signal-00-secure.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/gsm-3g-none-secure.png
+	cp -f debian/icons/22/nm-signal-25-secure.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/
+	ln -snf nm-signal-25.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/gsm-3g-low.png
+	ln -snf nm-signal-25-secure.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/gsm-3g-low-secure.png
+	cp -f debian/icons/22/nm-signal-50-secure.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/
+	ln -snf nm-signal-50.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/gsm-3g-medium.png
+	ln -snf nm-signal-50-secure.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/gsm-3g-medium-secure.png
+	cp -f debian/icons/22/nm-signal-75-secure.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/
+	ln -snf nm-signal-75.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/gsm-3g-high.png
+	ln -snf nm-signal-75-secure.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/gsm-3g-high-secure.png
+	cp -f debian/icons/22/nm-signal-100-secure.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/
+	ln -snf nm-signal-100.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/gsm-3g-full.png
+	ln -snf nm-signal-100-secure.png \
+		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/gsm-3g-full-secure.png
+
+override_dh_auto_test:
+
+
+GET_SOURCE = \
+	set -e; \
+	tmpdir=`mktemp -d -t`; \
+	cd $$tmpdir; \
+		echo "cloning upstream repository ..."; \
+		git clone -b $(GIT_BRANCH) $(if $(LOCAL_BRANCH),$(call LOCAL_REAL_BRANCH)/$(GIT_BRANCH_NAME),$(GIT_URL)) $(GIT_BRANCH_NAME); \
+		echo "getting specific upstream revision/tag: $(1)"; \
+		cd `ls | head -n 1`; git checkout -b orig $(1); \
+		commit_id=`git log -n1 --abbrev-commit | grep '^commit ' | sed -e 's/commit //' | sed -e 's/\.\.\.$$//'`; \
+		raw=`date --utc --date="$$(git log --pretty=fuller -n1 --date=rfc | grep CommitDate: | sed -e 's/CommitDate:[^0-9]*//')" "+%Y%m%d%H%M"`; \
+		if echo $(1) | grep -q -c "orig" || echo $(DEB_VERSION) | grep -q -c "git"; \
+		then \
+			upstream_version=$(DEB_MAJOR_VERSION)git$$raw.$$commit_id; \
+		else \
+			upstream_version=$(DEB_UPSTREAM_VERSION); \
+		fi; \
+		cd ..; tar --exclude=.git -czf $(CURDIR)/$(DEB_SOURCE)_$$upstream_version.orig.tar.gz `ls | head -n 1`; \
+		cd $(CURDIR); rm -rf $$tmpdir; 
+
+get-current-source:: $(if $(LOCAL_BRANCH),update-local-branch)
+	set -e; if echo $(DEB_VERSION) | grep -q -c "git"; \
+	then \
+		git_version=`echo $(DEB_VERSION) | sed -e 's/^.*git\.*\([0-9t]*\)\.\(.*\)-.*$$/\2/g'`; \
+	elif echo $(DEB_VERSION) | grep -q -c "~rc"; \
+	then \
+		git_version=`echo $(DEB_VERSION) | sed -e 's/^\([0-9\.]*\)\(~rc\)\([0-9]\)-.*$$/\1-rc\3/'`; \
+	else \
+		git_version=$(DEB_UPSTREAM_VERSION); \
+	fi; \
+	$(call GET_SOURCE, $$git_version, "current")
+
+get-orig-source:: $(if $(LOCAL_BRANCH),update-local-branch)
+	$(call GET_SOURCE, "HEAD", "orig")
+
+update-local-branch::
+	@echo "updating local branch ($(LOCAL_BRANCH))"
+	@set -e; if ! test -d $(LOCAL_BRANCH); then mkdir -p $(LOCAL_BRANCH); fi
+	@set -e; if ! test -d $(LOCAL_BRANCH)/$(GIT_BRANCH_NAME); then git clone $(GIT_URL) $(LOCAL_BRANCH)/$(GIT_BRANCH_NAME); fi
+	@set -e; cd $(LOCAL_BRANCH)/$(GIT_BRANCH_NAME); if ! `git branch | grep -q -c "$(GIT_BRANCH)"`; then git branch $(GIT_BRANCH) remotes/origin/$(GIT_BRANCH); fi
+	@set -e; cd $(LOCAL_BRANCH)/$(GIT_BRANCH_NAME); git checkout $(GIT_BRANCH); git pull -f
+	@echo "updated local branch ($(LOCAL_BRANCH))"
+
+get-snapshot-info:: $(if $(LOCAL_BRANCH),update-local-branch)
+	@set -e; \
+	git_version=`echo $(DEB_VERSION) | sed -e 's/^.*git\.*\([0-9t]*\)\.\(.*\)-.*$$/\2/g'`; \
+	cd $(LOCAL_BRANCH)/$(GIT_BRANCH_NAME); \
+	raw=`date --utc --date="$$(git log --pretty=fuller -n1 --date=rfc $$git_version | grep CommitDate: | sed -e 's/CommitDate:[^0-9]*//')" "+%Y-%m-%d %H:%M:%S (GMT)"`; \
+	git log -n1 $$git_version --format="%n%s%n%n  * upstream snapshot $$raw%n    + %H%n";

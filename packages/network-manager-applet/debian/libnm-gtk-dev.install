@@ -1,0 +1,3 @@
+/usr/include
+/usr/lib/libnm-gtk*.so
+/usr/lib/pkgconfig/*.pc

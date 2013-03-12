@@ -1,0 +1,26 @@
+From: Mathieu Trudel-Lapierre <mathieu.trudel-lapierre@canonical.com>
+Subject: set IPv6 to Ignore by default for creating new ad-hoc wifi networks.
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/830178
+
+Index: network-manager-applet-0.9.1.90/src/libnm-gtk/nm-wireless-dialog.c
+===================================================================
+--- network-manager-applet-0.9.1.90.orig/src/libnm-gtk/nm-wireless-dialog.c	2011-08-26 16:38:33.000000000 -0400
++++ network-manager-applet-0.9.1.90/src/libnm-gtk/nm-wireless-dialog.c	2011-10-03 14:47:24.050143959 -0400
+@@ -1227,12 +1227,17 @@
+ 
+ 		if (priv->adhoc_create) {
+ 			NMSettingIP4Config *s_ip4;
++			NMSettingIP6Config *s_ip6;
+ 
+ 			g_object_set (s_wireless, NM_SETTING_WIRELESS_MODE, "adhoc", NULL);
+ 
+ 			s_ip4 = (NMSettingIP4Config *) nm_setting_ip4_config_new ();
+ 			g_object_set (s_ip4, NM_SETTING_IP4_CONFIG_METHOD, NM_SETTING_IP4_CONFIG_METHOD_SHARED, NULL);
+ 			nm_connection_add_setting (connection, (NMSetting *) s_ip4);
++
++			s_ip6 = (NMSettingIP6Config *) nm_setting_ip6_config_new ();
++			g_object_set (s_ip6, NM_SETTING_IP6_CONFIG_METHOD, NM_SETTING_IP6_CONFIG_METHOD_IGNORE, NULL);
++			nm_connection_add_setting (connection, (NMSetting *) s_ip6);
+ 		}
+ 
+ 		nm_connection_add_setting (connection, (NMSetting *) s_wireless);

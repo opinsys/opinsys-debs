@@ -1,0 +1,98 @@
+---
+ nm-applet.convert                  |    1 +
+ org.gnome.nm-applet.gschema.xml.in |    5 +++++
+ src/applet.c                       |   20 ++++++++++++++++++++
+ src/applet.h                       |    3 +++
+ 4 files changed, 29 insertions(+)
+
+Index: b/src/applet.c
+===================================================================
+--- a/src/applet.c
++++ b/src/applet.c
+@@ -2750,6 +2750,8 @@ applet_update_icon (gpointer user_data)
+ 	if (!nm_running)
+ 		state = NM_STATE_UNKNOWN;
+ 
++	gtk_status_icon_set_visible (applet->status_icon, applet->visible);
++
+ 	switch (state) {
+ 	case NM_STATE_UNKNOWN:
+ 	case NM_STATE_ASLEEP:
+@@ -3439,6 +3441,21 @@ dbus_setup (NMApplet *applet, GError **e
+ 	return success;
+ }
+ 
++static void
++applet_gsettings_show_changed (GSettings *settings,
++                               gchar *key,
++                               gpointer user_data)
++{
++	NMApplet *applet = NM_APPLET (user_data);
++
++	g_return_if_fail (NM_IS_APPLET(applet));
++	g_return_if_fail (key != NULL);
++
++	applet->visible = g_settings_get_boolean (settings, key);
++
++	gtk_status_icon_set_visible (applet->status_icon, applet->visible);
++}
++
+ static GObject *
+ constructor (GType type,
+              guint n_props,
+@@ -3461,6 +3478,9 @@ constructor (GType type,
+ 	}
+ 
+ 	applet->gsettings = g_settings_new (APPLET_PREFS_SCHEMA);
++	applet->visible = g_settings_get_boolean (applet->gsettings, PREF_SHOW_APPLET);
++	g_signal_connect (applet->gsettings, "changed::show-applet",
++	                  G_CALLBACK (applet_gsettings_show_changed), applet);
+ 
+ 	/* Load pixmaps and create applet widgets */
+ 	if (!setup_widgets (applet))
+Index: b/src/applet.h
+===================================================================
+--- a/src/applet.h
++++ b/src/applet.h
+@@ -65,6 +65,7 @@ typedef struct
+ #define PREF_DISABLE_VPN_NOTIFICATIONS            "disable-vpn-notifications"
+ #define PREF_DISABLE_WIFI_CREATE                  "disable-wifi-create"
+ #define PREF_SUPPRESS_WIRELESS_NETWORKS_AVAILABLE "suppress-wireless-networks-available"
++#define PREF_SHOW_APPLET                          "show-applet"
+ 
+ #define ICON_LAYER_LINK 0
+ #define ICON_LAYER_VPN 1
+@@ -95,6 +96,8 @@ typedef struct
+ 
+ 	GSettings *gsettings;
+ 
++	gboolean visible;
++
+ 	/* Permissions */
+ 	NMClientPermissionResult permissions[NM_CLIENT_PERMISSION_LAST + 1];
+ 
+Index: b/nm-applet.convert
+===================================================================
+--- a/nm-applet.convert
++++ b/nm-applet.convert
+@@ -5,3 +5,4 @@ disable-vpn-notifications = /apps/nm-app
+ suppress-wireless-networks-available = /apps/nm-applet/suppress-wireless-networks-available
+ stamp = /apps/nm-applet/stamp
+ disable-wifi-create = /apps/nm-applet/disable-wifi-create
++show-applet = /apps/nm-applet/show-applet
+Index: b/org.gnome.nm-applet.gschema.xml.in
+===================================================================
+--- a/org.gnome.nm-applet.gschema.xml.in
++++ b/org.gnome.nm-applet.gschema.xml.in
+@@ -31,6 +31,11 @@
+       <_summary>Disable WiFi Create</_summary>
+       <_description>Set to true to disable creation of adhoc networks when using the applet.</_description>
+     </key>
++    <key name="show-applet" type="b">
++      <default>true</default>
++      <_summary>Show the applet in notification area</_summary>
++      <_description>Set to FALSE to disable displaying the applet in the notification area.</_description>
++    </key>
+   </schema>
+   <schema id="org.gnome.nm-applet.eap">
+     <key name="ignore-ca-cert" type="b">
