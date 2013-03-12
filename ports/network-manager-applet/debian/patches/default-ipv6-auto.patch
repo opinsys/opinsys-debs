@@ -1,0 +1,13 @@
+Index: network-manager-applet-0.9.0/src/applet-dialogs.c
+===================================================================
+--- network-manager-applet-0.9.0.orig/src/applet-dialogs.c	2011-07-27 12:10:41.000000000 -0400
++++ network-manager-applet-0.9.0/src/applet-dialogs.c	2011-08-30 14:21:05.450535323 -0400
+@@ -620,7 +620,7 @@
+ 	if (s_ip6)
+ 		 method = nm_setting_ip6_config_get_method (s_ip6);
+ 
+-	if (!method || !strcmp (method, NM_SETTING_IP6_CONFIG_METHOD_IGNORE)) {
++	if (method && !strcmp (method, NM_SETTING_IP6_CONFIG_METHOD_IGNORE)) {
+ 		gtk_table_attach (table, create_info_label (_("Ignored"), FALSE),
+ 		                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 		row++;

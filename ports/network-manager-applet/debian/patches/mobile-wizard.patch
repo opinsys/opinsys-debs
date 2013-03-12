@@ -1,0 +1,110 @@
+From: Mathieu Trudel-Lapierre <mathieu.trudel-lapierre@canonical.com>
+Subject: Clean up the duplicate titles and buttons from the mobile wizard intro
+Bug-Ubuntu: http://bugs.launchpad.net/bugs/856785
+
+The mobile wizard intro page would show all titles duplicated on the left pane,
+as well as a bunch of extra, unnecessary buttons (like Go Back...). Clear this
+up by using gtk_widget_show() while building the page so the title shows up
+when the wizard is started, and call gtk_widget_show_all() in the callback
+for the "prepare" signal so that all the contained widgets are displayed when
+the user actually gets to that page.
+
+Index: network-manager-applet-0.9.1.90/src/libnm-gtk/nm-mobile-wizard.c
+===================================================================
+--- network-manager-applet-0.9.1.90.orig/src/libnm-gtk/nm-mobile-wizard.c	2011-08-26 16:38:33.000000000 -0400
++++ network-manager-applet-0.9.1.90/src/libnm-gtk/nm-mobile-wizard.c	2011-09-22 16:19:04.188449031 -0400
+@@ -258,13 +258,13 @@
+ 		gtk_box_pack_start (GTK_BOX (vbox), alignment, FALSE, FALSE, 6);
+ 	}
+ 
+-	gtk_widget_show_all (vbox);
++	gtk_widget_show (vbox);
+ 	self->confirm_idx = gtk_assistant_append_page (GTK_ASSISTANT (self->assistant), vbox);
+ 	gtk_assistant_set_page_title (GTK_ASSISTANT (self->assistant),
+ 	                              vbox, _("Confirm Mobile Broadband Settings"));
+ 
+-	gtk_assistant_set_page_complete (GTK_ASSISTANT (self->assistant), vbox, TRUE);
+ 	gtk_assistant_set_page_type (GTK_ASSISTANT (self->assistant), vbox, GTK_ASSISTANT_PAGE_CONFIRM);
++	gtk_assistant_set_page_complete (GTK_ASSISTANT (self->assistant), vbox, TRUE);
+ 
+ 	self->confirm_page = vbox;
+ }
+@@ -531,10 +531,10 @@
+ 	gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, TRUE, 0);
+ 	gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+ 
++	gtk_widget_show (vbox);
+ 	self->plan_idx = gtk_assistant_append_page (GTK_ASSISTANT (self->assistant), vbox);
+ 	gtk_assistant_set_page_title (GTK_ASSISTANT (self->assistant), vbox, _("Choose your Billing Plan"));
+ 	gtk_assistant_set_page_type (GTK_ASSISTANT (self->assistant), vbox, GTK_ASSISTANT_PAGE_CONTENT);
+-	gtk_widget_show_all (vbox);
+ 
+ 	self->plan_page = vbox;
+ }
+@@ -826,10 +826,10 @@
+ 	if (self->method_type != NMN_MOBILE_ACCESS_METHOD_TYPE_UNKNOWN)
+ 		gtk_widget_hide (self->provider_unlisted_type_combo);
+ 
++	gtk_widget_show (vbox);
+ 	self->providers_idx = gtk_assistant_append_page (GTK_ASSISTANT (self->assistant), vbox);
+ 	gtk_assistant_set_page_title (GTK_ASSISTANT (self->assistant), vbox, _("Choose your Provider"));
+ 	gtk_assistant_set_page_type (GTK_ASSISTANT (self->assistant), vbox, GTK_ASSISTANT_PAGE_CONTENT);
+-	gtk_widget_show_all (vbox);
+ 
+ 	self->providers_page = vbox;
+ }
+@@ -1141,11 +1141,11 @@
+ 	gtk_container_add (GTK_CONTAINER (alignment), scroll);
+ 	gtk_box_pack_start (GTK_BOX (vbox), alignment, TRUE, TRUE, 6);
+ 
++	gtk_widget_show (vbox);
+ 	self->country_idx = gtk_assistant_append_page (GTK_ASSISTANT (self->assistant), vbox);
+ 	gtk_assistant_set_page_title (GTK_ASSISTANT (self->assistant), vbox, _("Choose your Provider's Country or Region"));
+ 	gtk_assistant_set_page_type (GTK_ASSISTANT (self->assistant), vbox, GTK_ASSISTANT_PAGE_CONTENT);
+ 	gtk_assistant_set_page_complete (GTK_ASSISTANT (self->assistant), vbox, TRUE);
+-	gtk_widget_show_all (vbox);
+ 
+ 	self->country_page = vbox;
+ 
+@@ -1455,13 +1455,13 @@
+ 		intro_add_initial_devices (self);
+ 	}
+ 
+-	gtk_widget_show_all (vbox);
++	gtk_widget_show (vbox);
+ 	gtk_assistant_append_page (GTK_ASSISTANT (self->assistant), vbox);
+ 	gtk_assistant_set_page_title (GTK_ASSISTANT (self->assistant),
+ 	                              vbox, _("Set up a Mobile Broadband Connection"));
+ 
+-	gtk_assistant_set_page_complete (GTK_ASSISTANT (self->assistant), vbox, TRUE);
+ 	gtk_assistant_set_page_type (GTK_ASSISTANT (self->assistant), vbox, GTK_ASSISTANT_PAGE_INTRO);
++	gtk_assistant_set_page_complete (GTK_ASSISTANT (self->assistant), vbox, TRUE);
+ }
+ 
+ /**********************************************************/
+@@ -1491,6 +1491,8 @@
+ {
+ 	NMAMobileWizard *self = user_data;
+ 
++	gtk_widget_show_all (page);
++
+ 	if (page != self->providers_page)
+ 		remove_provider_focus_idle (self);
+ 	if (page != self->country_page)
+@@ -1635,6 +1637,8 @@
+ 	g_signal_connect (self->assistant, "cancel", G_CALLBACK (assistant_cancel), self);
+ 	g_signal_connect (self->assistant, "prepare", G_CALLBACK (assistant_prepare), self);
+ 
++	gtk_assistant_update_buttons_state (GTK_ASSISTANT (self->assistant));
++
+ 	/* Run the wizard */
+ 	if (parent)
+ 		gtk_window_set_transient_for (GTK_WINDOW (self->assistant), parent);
+@@ -1654,7 +1658,6 @@
+ 	g_return_if_fail (self != NULL);
+ 
+ 	gtk_window_present (GTK_WINDOW (self->assistant));
+-	gtk_widget_show_all (self->assistant);
+ }
+ 
+ void

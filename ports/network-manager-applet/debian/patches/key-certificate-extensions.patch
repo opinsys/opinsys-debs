@@ -1,0 +1,26 @@
+From: Mathieu Trudel-Lapierre <mathieu.trudel-lapierre@canonical.com>
+Subject: allow .key files as private key certificates
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/839864
+
+Index: network-manager-applet-0.9.0/src/wireless-security/eap-method.c
+===================================================================
+--- network-manager-applet-0.9.0.orig/src/wireless-security/eap-method.c	2011-09-13 11:53:27.368280855 -0400
++++ network-manager-applet-0.9.0/src/wireless-security/eap-method.c	2011-09-13 11:54:10.288280937 -0400
+@@ -604,7 +604,7 @@
+ static gboolean
+ default_filter_privkey (const GtkFileFilterInfo *filter_info, gpointer user_data)
+ {
+-	const char *extensions[] = { ".der", ".pem", ".p12", NULL };
++	const char *extensions[] = { ".der", ".pem", ".p12", ".key", NULL };
+ 	gboolean require_encrypted = !!user_data;
+ 	gboolean is_encrypted = TRUE;
+ 
+@@ -645,7 +645,7 @@
+ 	filter = gtk_file_filter_new ();
+ 	if (privkey) {
+ 		gtk_file_filter_add_custom (filter, GTK_FILE_FILTER_FILENAME, default_filter_privkey, NULL, NULL);
+-		gtk_file_filter_set_name (filter, _("DER, PEM, or PKCS#12 private keys (*.der, *.pem, *.p12)"));
++		gtk_file_filter_set_name (filter, _("DER, PEM, or PKCS#12 private keys (*.der, *.pem, *.p12, *.key)"));
+ 	} else {
+ 		gtk_file_filter_add_custom (filter, GTK_FILE_FILTER_FILENAME, default_filter_cert, NULL, NULL);
+ 		gtk_file_filter_set_name (filter, _("DER or PEM certificates (*.der, *.pem, *.crt, *.cer)"));

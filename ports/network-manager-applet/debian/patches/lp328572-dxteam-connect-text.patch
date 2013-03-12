@@ -1,0 +1,33 @@
+=== modified file 'src/applet-device-wifi.c'
+---
+ src/applet-device-wifi.c |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+Index: network-manager-applet-0.8.999+git.20110523t134536.bb7ef97/src/applet-device-wifi.c
+===================================================================
+--- network-manager-applet-0.8.999+git.20110523t134536.bb7ef97.orig/src/applet-device-wifi.c	2011-05-25 22:36:13.949099715 -0400
++++ network-manager-applet-0.8.999+git.20110523t134536.bb7ef97/src/applet-device-wifi.c	2011-05-25 22:36:50.639099711 -0400
+@@ -1264,7 +1264,6 @@
+                                NMApplet *applet)
+ {
+ 	NMAccessPoint *new = NULL;
+-	char *msg;
+ 	char *esc_ssid = NULL;
+ 
+ 	new = update_active_ap (device, new_state, applet);
+@@ -1276,11 +1275,11 @@
+ 		return;
+ 
+ 	esc_ssid = get_ssid_utf8 (new);
+-	msg = g_strdup_printf (_("You are now connected to the wireless network '%s'."), esc_ssid);
+-	applet_do_notify_with_pref (applet, _("Connection Established"),
+-	                            msg, "nm-device-wireless",
++	applet_do_notify_with_pref (applet,
++                                    esc_ssid ? esc_ssid : _("(none)"),
++                                    _("Connection Established"),
++                                    "nm-device-wireless",
+ 	                            PREF_DISABLE_CONNECTED_NOTIFICATIONS);
+-	g_free (msg);
+ 	g_free (esc_ssid);
+ }
+ 
