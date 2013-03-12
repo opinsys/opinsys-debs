@@ -1,3 +1,9 @@
+network-manager-applet (0.9.6.2-0ubuntu6+opinsys1) quantal; urgency=low
+
+  * debian/patches/opinsys-allow-user-to-modify-connection-settings.patch
+
+ -- Opinsys Developers <dev@opinsys.fi>  Tue, 12 Mar 2013 16:23:01 +0200
+
 network-manager-applet (0.9.6.2-0ubuntu6) quantal; urgency=low
 
   * debian/patches/git_indicate_hspa+_lte_tech_dbe3b12.patch: add indications
