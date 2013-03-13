@@ -1,3 +1,10 @@
+webmenu (0.4.4-0+opinsys1) quantal; urgency=low
+
+  * Revert to fixed width
+  * https://github.com/opinsys/webmenu/compare/0.4.3...0.4.4
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 13 Mar 2013 11:44:37 +0200
+
 webmenu (0.4.3-0+opinsys1) quantal; urgency=low
 
   * Use 3 rows
