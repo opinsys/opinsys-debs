@@ -9,7 +9,6 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-export prefix=/usr
 %:
 	dh  $@
 
@@ -27,6 +26,9 @@ override_dh_usrlocal:
 # command like it would have been installed by the system.
 export GEM_HOME := $(CURDIR)/debian/tmp
 export PATH := $(GEM_HOME)/bin:$(PATH)
+
+override_dh_auto_install:
+	dh_auto_install -- prefix=/usr
 
 override_dh_auto_build:
 	# Install bundler to a tmp dir
