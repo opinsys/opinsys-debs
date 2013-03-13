@@ -1,3 +1,21 @@
+puavo-ds (0.2.3-0+opinsys1) precise; urgency=low
+
+  * New upstream release
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Wed, 13 Mar 2013 10:51:19 +0200
+
+puavo-ds (0.2.2-0+opinsys1) precise; urgency=low
+
+  * New upstream release
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Wed, 13 Mar 2013 10:51:19 +0200
+
+puavo-ds (0.2.1-0+opinsys1) precise; urgency=low
+
+  * New upstream release
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Wed, 13 Mar 2013 10:51:19 +0200
+
 puavo-ds (0.2.0-0+opinsys1) precise; urgency=low
 
   * TEST RELEASE
