@@ -1,3 +1,21 @@
+puavo-tftp (0.5.5-0+opinsys1) precise; urgency=low
+
+  * New upstream release
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Tue, 12 Mar 2013 15:06:54 +0200
+
+puavo-tftp (0.5.4-0+opinsys1) precise; urgency=low
+
+  * New upstream release
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Tue, 12 Mar 2013 15:06:54 +0200
+
+puavo-tftp (0.5.3-0+opinsys1) precise; urgency=low
+
+  * New upstream release.
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Tue, 12 Mar 2013 10:52:57 +0200
+
 puavo-tftp (0.5.2-0+opinsys1) precise; urgency=low
 
   * New upstream release.
