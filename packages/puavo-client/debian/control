@@ -10,6 +10,7 @@ Package: puavo-client
 Architecture: any
 Depends: ${misc:Depends}, ruby
 Replaces: puavo-register
-Breaks: puavo-register
+Conflicts: puavo-register
+Provides: puavo-register
 Description: Ruby lib for Puavo
  Simple ruby wrapper for the Puavo HTTP API
