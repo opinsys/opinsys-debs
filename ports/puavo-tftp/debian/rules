@@ -13,7 +13,8 @@
 	dh $@
 
 override_dh_auto_install:
-	dh_auto_install -- prefix=/usr sysconfdir=/etc INSTALL_HOOKS=yes
+	$(MAKE) install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-tftpd
+	$(MAKE) -C hooks install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-tftpd-hooks
 
 PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
