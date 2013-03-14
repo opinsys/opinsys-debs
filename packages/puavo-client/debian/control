@@ -7,7 +7,7 @@ Standards-Version: 3.9.3
 Homepage: https://github.com/opinsys/puavo-client
 
 Package: puavo-client
-Architecture: any
+Architecture: all
 Depends: ${misc:Depends}, ruby
 Replaces: puavo-register
 Conflicts: puavo-register
