@@ -1,3 +1,9 @@
+puavo-client (1.0.3-0+opinsys2) precise; urgency=low
+
+  * Build a single package for all architectures.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 14 Mar 2013 15:06:16 +0200
+
 puavo-client (1.0.3-0+opinsys1) precise; urgency=low
 
   * New upstream release.
