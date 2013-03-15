@@ -1,3 +1,9 @@
+puavo-ltsp (0.8.36-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 14 Mar 2013 16:00:36 +0200
+
 puavo-ltsp (0.8.35-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
