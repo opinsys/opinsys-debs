@@ -11,6 +11,9 @@
 # probably have no actual need for it. So skip.
 override_dh_usrlocal:
 
+override_dh_auto_install:
+	dh_auto_install -- prefix=/usr
+
 PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz

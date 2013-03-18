@@ -1,3 +1,9 @@
+puavo-standalone (0.1.0-0+opinsys2) precise; urgency=low
+
+  * Fix prefix to /usr
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Wed, 13 Mar 2013 17:09:30 +0200
+
 puavo-standalone (0.1.0-0+opinsys1) precise; urgency=low
 
   * Initial
