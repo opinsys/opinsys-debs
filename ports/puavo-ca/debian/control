@@ -8,7 +8,7 @@ Homepage: https://github.com/opinsys/puavo-ca/
 
 Package: puavo-ca-setup
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, openssl
+Depends: ${shlibs:Depends}, ${misc:Depends}, openssl, make
 Description: Setup Puavo-CA
  Setup certificates and shit for Puavo-CA
 
