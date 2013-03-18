@@ -1,3 +1,10 @@
+ltsp (5.4.3-0ubuntu4+opinsys2) quantal; urgency=low
+
+  * Run "update-initramfs -u -k all" with ltsp-client-core package.
+    This is needed to ensure unbroken state of ltsp image.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Mon, 18 Mar 2013 15:00:26 +0200
+
 ltsp (5.4.3-0ubuntu4+opinsys1) quantal; urgency=low
 
   * Do not trigger udhcp only because the kernel command line contains
