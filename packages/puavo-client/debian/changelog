@@ -1,3 +1,9 @@
+puavo-client (1.0.4-0+opinsys1) precise; urgency=low
+
+  * New upstream release
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Mon, 18 Mar 2013 14:50:23 +0200
+
 puavo-client (1.0.3-0+opinsys2) precise; urgency=low
 
   * Build a single package for all architectures.
