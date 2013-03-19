@@ -1,3 +1,9 @@
+puavo-standalone (0.1.1-0+opinsys1) precise; urgency=low
+
+  * New upstream release
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Tue, 19 Mar 2013 10:04:42 +0200
+
 puavo-standalone (0.1.0-0+opinsys2) precise; urgency=low
 
   * Fix prefix to /usr
