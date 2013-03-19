@@ -1,3 +1,9 @@
+puavo-vpn (0.1.2-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Tue, 19 Mar 2013 11:48:46 +0200
+
 puavo-vpn (0.1.0-0+opinsys1) quantal; urgency=low
 
   * Initial release
