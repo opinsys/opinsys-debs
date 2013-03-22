@@ -8,5 +8,5 @@ Homepage: https://github.com/opinsys/puavo-sharedir
 
 Package: puavo-sharedir-manager
 Architecture: all
-Depends: ${misc:Depends}, acl, libinotify-ruby
+Depends: ${misc:Depends}, ruby, acl, libinotify-ruby
 Description: Puavo shared directory manager
