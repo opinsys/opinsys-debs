@@ -1,3 +1,15 @@
+puavo-sharedir (0.1.1-0+opinsys3) precise; urgency=low
+
+  * Put in the upstart-script.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 22 Mar 2013 12:36:39 +0200
+
+puavo-sharedir (0.1.1-0+opinsys2) precise; urgency=low
+
+  * Fix installation paths.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 22 Mar 2013 11:54:03 +0200
+
 puavo-sharedir (0.1.1-0+opinsys1) precise; urgency=low
 
   * New upstream release.
