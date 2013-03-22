@@ -1,0 +1,12 @@
+Source: puavo-sharedir
+Section: admin
+Priority: extra
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+Homepage: https://github.com/opinsys/puavo-sharedir
+
+Package: puavo-sharedir-manager
+Architecture: all
+Depends: ${misc:Depends}, acl, libinotify-ruby
+Description: Puavo shared directory manager
