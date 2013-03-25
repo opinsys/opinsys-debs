@@ -1,3 +1,9 @@
+puavo-logrelay (2.0.3-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-logrelay/compare/2.0.2...2.0.3
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 25 Mar 2013 12:48:19 +0200
+
 puavo-logrelay (2.0.2-0+opinsys1) quantal; urgency=low
 
   * New upstream release
