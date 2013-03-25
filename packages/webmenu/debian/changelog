@@ -1,3 +1,10 @@
+webmenu (0.4.7-0+opinsys1) quantal; urgency=low
+
+  * Fix search from translated content
+  * https://github.com/opinsys/webmenu/compare/0.4.6...0.4.7
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 20 Mar 2013 17:34:35 +0200
+
 webmenu (0.4.6-0+opinsys1) quantal; urgency=low
 
   * Fix i18n installation
