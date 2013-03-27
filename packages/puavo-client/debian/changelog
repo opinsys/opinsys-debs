@@ -1,3 +1,10 @@
+puavo-client (1.0.5-0+opinsys1) precise; urgency=low
+
+  * Fix for ruby 1.8
+  * https://github.com/opinsys/puavo-client/compare/1.0.4...1.0.5
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 27 Mar 2013 11:55:25 +0200
+
 puavo-client (1.0.4-0+opinsys1) precise; urgency=low
 
   * New upstream release
