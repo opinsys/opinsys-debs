@@ -32,7 +32,7 @@ override_dh_auto_install:
 
 override_dh_auto_build:
 	# Install bundler to a tmp dir
-	gem1.9.3 install -i $(GEM_HOME) bundler --version '1.2.4'
+	gem1.9.1 install -i $(GEM_HOME) bundler --version '1.2.4'
 	dh_auto_build --
 
 PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
