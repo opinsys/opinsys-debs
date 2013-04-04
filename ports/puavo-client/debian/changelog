@@ -1,3 +1,15 @@
+puavo-client (1.1.1-0+opinsys2) precise; urgency=low
+
+  * Add ruby-ldap dependency.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 04 Apr 2013 12:32:40 +0300
+
+puavo-client (1.1.1-0+opinsys1) precise; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 04 Apr 2013 12:31:09 +0300
+
 puavo-client (1.0.7-0+opinsys1) precise; urgency=low
 
   * https://github.com/opinsys/puavo-client/compare/1.0.6...1.0.7
