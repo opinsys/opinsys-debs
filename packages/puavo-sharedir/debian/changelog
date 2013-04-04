@@ -1,3 +1,9 @@
+puavo-sharedir (0.1.9-0+opinsys1) precise; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 04 Apr 2013 12:44:50 +0300
+
 puavo-sharedir (0.1.8-0+opinsys1) precise; urgency=low
 
   * New upstream release.
