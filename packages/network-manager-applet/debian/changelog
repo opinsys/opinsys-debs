@@ -1,3 +1,10 @@
+network-manager-applet (0.9.6.2-0ubuntu6+opinsys2) quantal; urgency=low
+
+  * Do not use libappindicator: it empties the menu mysteriously
+    from time to time
+
+ -- Opinsys Developers <dev@opinsys.fi>  Mon, 08 Apr 2013 16:52:25 +0300
+
 network-manager-applet (0.9.6.2-0ubuntu6+opinsys1) quantal; urgency=low
 
   * debian/patches/opinsys-allow-user-to-modify-connection-settings.patch
