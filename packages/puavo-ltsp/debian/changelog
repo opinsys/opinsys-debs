@@ -1,3 +1,9 @@
+puavo-ltsp (0.8.54-0+opinsys3) quantal; urgency=low
+
+  * Some templates in puavo-ltsp-client actually depend on libpam-ldap.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Tue, 09 Apr 2013 13:48:39 +0300
+
 puavo-ltsp (0.8.54-0+opinsys2) quantal; urgency=low
 
   * Install racoon and ipsec-tools to bootserver.
