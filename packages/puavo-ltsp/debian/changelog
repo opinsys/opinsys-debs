@@ -1,3 +1,9 @@
+puavo-ltsp (0.8.54-0+opinsys2) quantal; urgency=low
+
+  * Install racoon and ipsec-tools to bootserver.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Tue, 09 Apr 2013 13:43:35 +0300
+
 puavo-ltsp (0.8.54-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
