@@ -1,0 +1,12 @@
+Index: gnome-control-center-3.4.2/panels/network/cc-network-panel.c
+===================================================================
+--- gnome-control-center-3.4.2.orig/panels/network/cc-network-panel.c	2013-02-05 12:25:51.000000000 +0100
++++ gnome-control-center-3.4.2/panels/network/cc-network-panel.c	2013-02-05 12:27:11.191350929 +0100
+@@ -3498,6 +3498,7 @@
+         proxy_mode = g_settings_get_enum (panel->priv->proxy_settings, "mode");
+         switch (proxy_mode) {
+         case G_DESKTOP_PROXY_MODE_NONE:
++        case G_DESKTOP_PROXY_MODE_AUTO:
+                 reset_system_proxy (proxy, "http");
+                 reset_system_proxy (proxy, "https");
+                 reset_system_proxy (proxy, "ftp");
