@@ -1,0 +1,13 @@
+Source: nautilus-dropbox-dist
+Section: misc
+Priority: extra
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.9.3
+Homepage: https://github.com/opinsys
+
+Package: nautilus-dropbox-dist
+Architecture: i386
+Depends: ${misc:Depends}
+Description: Dropbox files (binaries and stuff)
+ Dropbox files (binaries and stuff), that are not in "nautilus-dropbox".
