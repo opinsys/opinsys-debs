@@ -1,3 +1,9 @@
+nautilus-dropbox (1.4.0-3+opinsys1) quantal; urgency=low
+
+  * Disable postinst-time "dropbox update", it sometimes fails.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 10 Apr 2013 12:42:54 +0300
+
 nautilus-dropbox (1.4.0-3) unstable; urgency=low
 
   * Add "Conflicts: dropbox" since dropbox (the company) renamed
