@@ -1,3 +1,10 @@
+puavo-ltsp (0.8.55-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.  Remove libpam-ldap dependency for now,
+    it breaks things.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 10 Apr 2013 09:10:03 +0300
+
 puavo-ltsp (0.8.54-0+opinsys3) quantal; urgency=low
 
   * Some templates in puavo-ltsp-client actually depend on libpam-ldap.
