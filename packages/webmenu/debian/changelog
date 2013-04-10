@@ -1,3 +1,10 @@
+webmenu (0.4.9-0+opinsys1) precise; urgency=low
+
+  * Fix start up
+  * https://github.com/opinsys/webmenu/compare/0.4.8...0.4.9
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 10 Apr 2013 14:53:21 +0300
+
 webmenu (0.4.8-0+opinsys1) quantal; urgency=low
 
   * Add swedish translations
