@@ -2,7 +2,7 @@ Source: webmenu
 Section: utils
 Priority: extra
 Maintainer: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
-Build-Depends: debhelper (>= 8), nodejs-bundle, python
+Build-Depends: debhelper (>= 8), nodejs-bundle (>= 0.8.23), python
 Standards-Version: 3.9.3
 Homepage: http://github.com/opinsys/webmenu
 

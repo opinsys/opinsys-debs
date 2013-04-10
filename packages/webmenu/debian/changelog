@@ -1,4 +1,10 @@
-webmenu (0.4.9-0+opinsys1) precise; urgency=low
+webmenu (0.4.9-0+opinsys2) quantal; urgency=low
+
+  * Update nodejs-bundle
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 10 Apr 2013 16:26:31 +0300
+
+webmenu (0.4.9-0+opinsys1) quantal; urgency=low
 
   * Fix start up
   * https://github.com/opinsys/webmenu/compare/0.4.8...0.4.9
