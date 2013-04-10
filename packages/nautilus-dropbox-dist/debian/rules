@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_shlibdeps:
+
+PACKAGE = nautilus-dropbox-dist
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):↳\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+
+.PHONY: get-orig-source
+get-orig-source:
+	wget http://repo.opinsys.fi/distfiles/$(TARBALL) -O ../$(TARBALL)
+	tar -zxf ../$(TARBALL) --strip-components=1 -C .
