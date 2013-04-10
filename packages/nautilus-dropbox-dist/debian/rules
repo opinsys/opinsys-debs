@@ -1,0 +1,8 @@
+#!/usr/bin/make -f
+
+TARBALL = dot_dropbox-dist-2.0.5.tar.gz
+
+.PHONY: get-orig-source
+get-orig-source:
+	wget http://repo.opinsys.fi/distfiles/$(TARBALL) -O ../$(TARBALL)
+	tar -zxf ../$(TARBALL)
