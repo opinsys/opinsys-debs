@@ -7,7 +7,18 @@
 %:
 	dh  $@
 
+# Setup environment variables so that puavo-ds Makefile can use the 'bundle'
+# command like it would have been installed by the system.
+export GEM_HOME := $(CURDIR)/debian/tmp
+export PATH := $(GEM_HOME)/bin:$(PATH)
+
+override_dh_auto_build:
+	# Install bundler to a tmp dir
+	gem1.9.1 install -i $(GEM_HOME) bundler --version '1.3.4'
+	dh_auto_build --
+
 override_dh_auto_install:
+	$(MAKE) install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-ca-rails
 	$(MAKE) -C puavo-ca-setup install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-ca-setup
 
 PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')

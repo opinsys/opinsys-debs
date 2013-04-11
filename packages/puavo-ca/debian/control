@@ -2,13 +2,18 @@ Source: puavo-ca
 Section: admin
 Priority: extra
 Maintainer: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
-Build-Depends: debhelper (>= 8)
+Build-Depends: debhelper (>= 8), rsync, ruby1.9.1, ruby1.9.1-dev, rubygems1.9.1, libsqlite3-dev
 Standards-Version: 3.9.3
 Homepage: https://github.com/opinsys/puavo-ca/
 
 Package: puavo-ca-setup
-Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, openssl, make
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}, openssl, make, ruby1.9.1
 Description: Setup Puavo-CA
  Setup certificates and shit for Puavo-CA
 
+Package: puavo-ca-rails
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}, openssl, make, ruby1.9.1
+Description: Puavo-CA Rails
+ Puavo-CA Rails application

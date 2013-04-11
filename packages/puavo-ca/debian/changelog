@@ -1,3 +1,9 @@
+puavo-ca (0.2.0-0+opinsys2) precise; urgency=low
+
+  *  Test release with puavo-ca rails
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Thu, 11 Apr 2013 12:05:57 +0300
+
 puavo-ca (0.1.1-0+opinsys2) precise; urgency=low
 
   * Add make to dependencies
