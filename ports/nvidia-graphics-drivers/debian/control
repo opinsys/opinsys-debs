@@ -16,8 +16,7 @@ Depends: x11-common (>= 1:7.0.0), make, sed (>> 3.0), dkms, linux-libc-dev, libc
  ${xviddriver:Depends}
 Recommends: nvidia-settings
 Provides: nvidia-current-updates, nvidia-experimental-304, nvidia-173,
- nvidia-173-updates, nvidia-96, nvidia-96-updates
- ${xviddriver:Provides}
+ nvidia-173-updates, nvidia-96, nvidia-96-updates, ${xviddriver:Provides}
 Conflicts: nvidia-current-modaliases, nvidia-180-modaliases, nvidia-185-modaliases,
  nvidia-experimental-304, nvidia-current-updates, nvidia-173, nvidia-173-updates,
  nvidia-96, nvidia-96-updates
