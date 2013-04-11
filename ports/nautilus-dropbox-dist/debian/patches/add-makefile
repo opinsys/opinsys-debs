@@ -6,6 +6,6 @@ diff -ruN nautilus-dropbox-dist.orig/Makefile nautilus-dropbox-dist/Makefile
 +
 +install:
 +	mkdir -p $(DESTDIR)
-+	cp -a var $(DESTDIR)
++	cp -pR var $(DESTDIR)
 +
 +clean:
