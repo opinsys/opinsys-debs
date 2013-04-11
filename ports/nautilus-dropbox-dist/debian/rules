@@ -3,7 +3,9 @@
 %:
 	dh $@
 
+override_dh_fixperms:
 override_dh_shlibdeps:
+override_dh_strip:
 
 PACKAGE = nautilus-dropbox-dist
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):↳\)\?\(.*\)-.*/\3/p')
