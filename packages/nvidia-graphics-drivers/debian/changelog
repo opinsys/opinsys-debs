@@ -1,22 +1,23 @@
-nvidia-graphics-drivers (304.51.really.304.43-0ubuntu1+opinsys3) quantal; urgency=low
+nvidia-graphics-drivers (304.88-0ubuntu0.1) quantal-security; urgency=low
 
-  * Add support for Linux 3.7 and 3.8
-    - Backported from nvidia-graphics-drivers-304 (304.84-0ubuntu1)
+  * SECURITY UPDATE: ARGB Cursor Buffer Overflow in "NoScanout" Mode
+    - CVE-2013-0131
 
- -- Opinsys Developers <dev@opinsys.fi>  Tue, 05 Mar 2013 15:30:29 +0200
+  * New upstream release
+    - Fixed CVE-2013-0131:
+      NVIDIA UNIX GPU Driver ARGB Cursor Buffer Overflow in
+      "NoScanout" Mode. This buffer overflow, which occurred
+      when an X client installed a large ARGB cursor on an
+      X server running in NoScanout mode, could cause a denial
+      of service (e.g., an X server segmentation fault), or
+      could be exploited to achieve arbitrary code execution.
 
-nvidia-graphics-drivers (304.51.really.304.43-0ubuntu1+opinsys2) quantal; urgency=low
+  [ Alberto Milone ]
+  * debian/substvars:
+    - Add support for xorg-video-abi-14.
+    - Drop versioned dependency on xserver-xorg-core.
 
-  * Do not enable quirks for the driver.
-
- -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Tue, 08 Jan 2013 12:08:44 +0200
-
-nvidia-graphics-drivers (304.51.really.304.43-0ubuntu1+opinsys1) quantal; urgency=low
-
-  * Remove the fglrx conflicts from package control lines.
-    We intend this package to co-exist with the fglrx driver.
-
- -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Thu, 03 Jan 2013 15:38:27 +0200
+ -- Alberto Milone <alberto.milone@canonical.com>  Thu, 04 Apr 2013 13:59:39 +0200
 
 nvidia-graphics-drivers (304.51.really.304.43-0ubuntu1) quantal; urgency=low
 
