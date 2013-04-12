@@ -14,6 +14,8 @@
 %:
 	dh $@ --buildsystem=ruby --with ruby
 
+export DH_RUBY_IGNORE_TESTS=all
+
 PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
