@@ -1,3 +1,9 @@
+network-manager-applet (0.9.6.2-0ubuntu6+opinsys3) quantal; urgency=low
+
+  * Use libappindicator again. The libappindicator has been patched instead.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 12 Apr 2013 13:08:15 +0300
+
 network-manager-applet (0.9.6.2-0ubuntu6+opinsys2) quantal; urgency=low
 
   * Do not use libappindicator: it empties the menu mysteriously

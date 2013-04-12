@@ -17,10 +17,10 @@ key-certificate-extensions.patch
 mobile-wizard.patch
 lp830178_adhoc_ip6_ignore.patch
 lp829673_gconf_hide_applet.patch
-#nm-applet-use-indicator.patch
+nm-applet-use-indicator.patch
 position_dialogs_to_center_of_the_screen.patch
-#make_menu_items_insensitive_based_on_permissions.patch
-#hide_policy_items_env_var.patch
+make_menu_items_insensitive_based_on_permissions.patch
+hide_policy_items_env_var.patch
 applet_adhoc_use_wpa_rsn_part1.patch
 lp1048516_dont_req_keyring_in_greeter.patch
 lp1048520_delay_pin_dialog_in_greeter.patch
