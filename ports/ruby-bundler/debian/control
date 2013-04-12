@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
 Uploaders: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
 DM-Upload-Allowed: yes
-Build-Depends: debhelper (>= 7.0.50~), gem2deb (>= 0.3.0~)
+Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.9.3
 #Vcs-Git: git://git.debian.org/pkg-ruby-extras/ruby-bundler.git
 #Vcs-Browser: http://git.debian.org/?p=pkg-ruby-extras/ruby-bundler.git;a=summary
