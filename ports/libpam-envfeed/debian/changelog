@@ -1,0 +1,5 @@
+libpam-envfeed (0.5-0+opinsys1) quantal; urgency=low
+
+  * Import to opinsys-debs.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 12 Apr 2013 10:27:26 +0300

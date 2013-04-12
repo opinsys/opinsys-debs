@@ -1,3 +1,16 @@
+puavo-ltsp (0.8.57-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 12 Apr 2013 12:05:03 +0300
+
+puavo-ltsp (0.8.56-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.  Add libpam-envfeed as a dependency to
+    puavo-ltsp-client, we will likely need it soon.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 12 Apr 2013 10:52:44 +0300
+
 puavo-ltsp (0.8.55-0+opinsys1) quantal; urgency=low
 
   * New upstream release.  Remove libpam-ldap dependency for now,
