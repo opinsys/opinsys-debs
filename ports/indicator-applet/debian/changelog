@@ -1,3 +1,9 @@
+indicator-applet (12.10.1-0ubuntu1+opinsys3) quantal; urgency=low
+
+  * debian/patches/opinsys-fix-shrinking-menu-bug
+
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 12 Apr 2013 08:28:23 +0300
+
 indicator-applet (12.10.1-0ubuntu1+opinsys2) quantal; urgency=low
 
   * Plug a memory leak in previous patch.
