@@ -1,0 +1,5 @@
+ruby-bundler (1.3.5-1) UNRELEASED; urgency=low
+
+  * Initial release (Closes: #nnnn)
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Fri, 12 Apr 2013 10:14:37 +0300
