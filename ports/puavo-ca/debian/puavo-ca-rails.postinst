@@ -10,6 +10,7 @@ case "$1" in
   configure)
       adduser --no-create-home --disabled-password --disabled-login --system --group puavoca
       mkdir -p /usr/share/puavo-ca-rails/tmp
+
       chown -R puavoca:puavoca \
         /usr/share/puavo-ca-rails/tmp \
         /usr/share/puavo-ca-rails/log \
@@ -17,6 +18,10 @@ case "$1" in
         # http://www.modrails.com/documentation/Users%20guide%20Apache.html#user_switching
         /usr/share/puavo-ca-rails/config/environment.rb \
         /usr/share/puavo-ca-rails/config.ru \
+
+      a2ensite 10-puavo-ca-rails
+      service apache2 reload
+
     ;;
   abort-upgrade)
     ;;
