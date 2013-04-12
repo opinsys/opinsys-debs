@@ -1,7 +1,7 @@
 Source: ruby-bundler
 Section: ruby
 Priority: optional
-Maintainer: Debian Ruby Extras Maintainers <pkg-ruby-extras-maintainers@lists.alioth.debian.org>
+Maintainer: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
 Uploaders: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
 DM-Upload-Allowed: yes
 Build-Depends: debhelper (>= 7.0.50~), gem2deb (>= 0.3.0~)
