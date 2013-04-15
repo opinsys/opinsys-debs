@@ -9,15 +9,13 @@ set -e
 case "$1" in
   configure)
       adduser --no-create-home --disabled-password --disabled-login --system --group puavoca
-      mkdir -p /usr/share/puavo-ca-rails/tmp
 
-      # http://www.modrails.com/documentation/Users%20guide%20Apache.html#user_switching
       chown -R puavoca:puavoca \
-        /usr/share/puavo-ca-rails/tmp \
-        /usr/share/puavo-ca-rails/log \
-        /usr/share/puavo-ca-rails/db \
-        /usr/share/puavo-ca-rails/config/environment.rb \
-        /usr/share/puavo-ca-rails/config.ru \
+        /var/app/puavo-ca-rails/tmp \
+        /var/app/puavo-ca-rails/log \
+        /var/app/puavo-ca-rails/db \
+        /var/app/puavo-ca-rails/config/environment.rb \
+        /var/app/puavo-ca-rails/config.ru \
     ;;
   abort-upgrade)
     ;;
