@@ -8,7 +8,7 @@ Homepage: https://github.com/opinsys/puavo-standalone
 
 Package: puavo-standalone
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, puavo-ds-master, puavo-client, puavo-ca-setup
+Depends: ${shlibs:Depends}, ${misc:Depends}, puavo-ds-master, puavo-client, puavo-ca-setup, puavo-ca-rails
 Description: Setup Puavo development environment to a single machine
  Puavo development!
 
