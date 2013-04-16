@@ -8,8 +8,8 @@
 description	"NFSv4 id <-> name mapper"
 author		"Steve Langasek <steve.langasek@canonical.com>"
 
-start on (local-filesystems or mounting TYPE=nfs4)
-stop on runlevel [06]
+start on local-filesystems
+stop on unmounted-remote-filesystems
 
 expect fork
 respawn

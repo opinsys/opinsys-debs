@@ -3,6 +3,8 @@
 description "Block the mounting event for NFS filesytems until statd is running"
 author "Clint Byrum <clint.byrum@canonical.com>"
 
+instance $MOUNTPOINT
+
 start on mounting TYPE=nfs
 stop on started statd or stopped statd
 task
@@ -13,10 +15,10 @@ normal exit 2
 
 script
 
-  status statd | grep -q "start/running" && exit 0
+  . /etc/default/nfs-common
 
-  # Attempt to start statd
-  start statd || true
+  [ "x$NEED_STATD" != "xno" ] || exit 0
+  status statd | grep -q "start/running" && exit 0
 
   # If its already starting we'll get killed by the impending 'stop on
   # started statd' 

@@ -29,9 +29,6 @@ pre-start script
 	logger -t statd-pre-start "$UPSTART_EVENTS" || true
 	echo UPSTART_EVENTS = "$UPSTART_EVENTS"
 
-    # This will block if portmap is mid-starting
-    start portmap-wait WAITER=statd
-
     exec sm-notify
 end script
 
