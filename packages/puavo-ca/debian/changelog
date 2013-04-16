@@ -1,4 +1,10 @@
-puavo-ca (0.2.0-0+opinsys27) precise; urgency=low
+puavo-ca (0.2.1-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-ca/compare/0.1.1...0.2.1
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 16 Apr 2013 10:54:19 +0300
+
+puavo-ca (0.2.0-0+opinsys28) precise; urgency=low
 
   *  Test release with puavo-ca rails
 
