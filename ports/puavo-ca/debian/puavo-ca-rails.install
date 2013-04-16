@@ -1,1 +1,1 @@
-debian/puavo-ca-rails-migrate usr/bin/puavo-ca-rails-migrate
+debian/puavo-ca-rails-migrate usr/sbin/
