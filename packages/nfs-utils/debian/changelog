@@ -1,3 +1,9 @@
+nfs-utils (1:1.2.8-0+opinsys1) quantal; urgency=low
+
+  * New upstream git release 0ce973a59ab3393481ba7c434a7353b5007cba71
+
+ -- Opinsys Developers <dev@opinsys.fi>  Tue, 16 Apr 2013 13:51:52 +0300
+
 nfs-utils (1:1.2.6-3ubuntu2) quantal; urgency=low
 
   [ Steve Langasek ]

@@ -29,7 +29,7 @@ build-stamp:
 		--enable-nfsv41 \
 		--enable-ipv6 \
 		--enable-libmount-mount \
-		--with-tcp-wrappers
+		--with-tcp-wrappers --with-gssglue --enable-gss
 	$(MAKE) $(MAKEFLAGS)
 	touch build-stamp
 
