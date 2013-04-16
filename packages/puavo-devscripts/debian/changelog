@@ -1,0 +1,18 @@
+puavo-devscripts (0.1.8-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-devscripts/compare/0.1.7...0.1.8
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 16 Apr 2013 15:24:21 +0300
+
+puavo-devscripts (0.1.7-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-devscripts/compare/0.1.6...0.1.7
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 16 Apr 2013 15:14:00 +0300
+
+puavo-devscripts (0.1.6-0+opinsys1) precise; urgency=low
+
+  * First real release
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 16 Apr 2013 15:05:59 +0300
+

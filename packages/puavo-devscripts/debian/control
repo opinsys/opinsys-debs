@@ -1,0 +1,13 @@
+Source: puavo-devscripts
+Section: utils
+Priority: extra
+Maintainer: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+Homepage: https://github.com/opinsys/puavo-devscripts
+
+Package: puavo-devscripts
+Architecture: all
+Depends: ${misc:Depends}
+Description: Puavo developer tools
+ Scripts to make the life of a Opinsys developer easier
