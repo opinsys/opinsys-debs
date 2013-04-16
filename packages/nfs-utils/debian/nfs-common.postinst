@@ -29,7 +29,7 @@ case "$1" in
             fi
         fi
 
-        chown statd /var/lib/nfs/sm \
+        chown statd: /var/lib/nfs/sm \
             /var/lib/nfs/sm.bak \
             /var/lib/nfs
         if [ -f /var/lib/nfs/state ]; then

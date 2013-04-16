@@ -28,7 +28,7 @@ build-stamp:
 		--mandir='$${prefix}/share/man' \
 		--enable-nfsv41 \
 		--enable-ipv6 \
-		--enable-tirpc \
+		--enable-libmount-mount \
 		--with-tcp-wrappers
 	$(MAKE) $(MAKEFLAGS)
 	touch build-stamp
@@ -57,7 +57,9 @@ binary-arch: build
 	dh_installinit -pnfs-common --upstart-only -R --name statd
 	dh_installinit -pnfs-common --upstart-only --no-start --name statd-mounting
 	dh_installinit -pnfs-common --upstart-only -R --name gssd
+	dh_installinit -pnfs-common --upstart-only --no-start --name gssd-mounting
 	dh_installinit -pnfs-common --upstart-only -R --name idmapd
+	dh_installinit -pnfs-common --upstart-only --no-start --name idmapd-mounting
 	install -m 0755 debian/nfs-kernel-server.init debian/nfs-kernel-server/etc/init.d/nfs-kernel-server
 	install -m 0644 debian/nfs-common.bugcontrol debian/nfs-common/usr/share/bug/nfs-common/control
 	install -m 0755 debian/nfs-common.bugscript debian/nfs-common/usr/share/bug/nfs-common/script
