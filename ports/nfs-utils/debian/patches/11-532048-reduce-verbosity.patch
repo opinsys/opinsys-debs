@@ -37,7 +37,7 @@ Steve Langasek <steve.langasek@canonical.com>
  	}
  
  	if (!authgss_get_private_data(auth, &pd)) {
--		printerr(0, "WARNING: Failed to obtain authentication "
+-		printerr(1, "WARNING: Failed to obtain authentication "
 +		printerr(2, "WARNING: Failed to obtain authentication "
  			    "data for user with uid %d for server %s\n",
  			 uid, clp->servername);

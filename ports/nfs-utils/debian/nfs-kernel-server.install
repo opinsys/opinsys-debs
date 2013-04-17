@@ -1,7 +1,7 @@
 debian/tmp/usr/sbin/exportfs
 debian/tmp/usr/sbin/rpc.mountd
 debian/tmp/usr/sbin/rpc.nfsd
-debian/tmp/usr/sbin/rpc.svcgssd
+debian/tmp/usr/sbin/nfsdcltrack
 debian/tmp/var/lib/nfs/xtab
 debian/tmp/var/lib/nfs/etab
 debian/tmp/var/lib/nfs/rmtab

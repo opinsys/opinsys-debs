@@ -1,0 +1,71 @@
+## Description: add some description
+## Origin/Author: add some origin or author
+## Bug: bug URL
+--- a/utils/gssd/gssd.c
++++ b/utils/gssd/gssd.c
+@@ -63,6 +63,7 @@
+ int  root_uses_machine_creds = 1;
+ unsigned int  context_timeout = 0;
+ char *preferred_realm = NULL;
++int ticket_expiry_is_error = 0;
+ 
+ void
+ sig_die(int signal)
+@@ -85,7 +86,7 @@
+ static void
+ usage(char *progname)
+ {
+-	fprintf(stderr, "usage: %s [-f] [-l] [-M] [-n] [-v] [-r] [-p pipefsdir] [-k keytab] [-d ccachedir] [-t timeout] [-R preferred realm]\n",
++	fprintf(stderr, "usage: %s [-e] [-f] [-l] [-M] [-n] [-v] [-r] [-p pipefsdir] [-k keytab] [-d ccachedir] [-t timeout] [-R preferred realm]\n",
+ 		progname);
+ 	exit(1);
+ }
+@@ -102,8 +103,11 @@
+ 	char *progname;
+ 
+ 	memset(ccachesearch, 0, sizeof(ccachesearch));
+-	while ((opt = getopt(argc, argv, "fvrlmnMp:k:d:t:R")) != -1) {
++	while ((opt = getopt(argc, argv, "efvrlmnMp:k:d:t:R")) != -1) {
+ 		switch (opt) {
++			case 'e':
++				ticket_expiry_is_error = 1;
++				break;
+ 			case 'f':
+ 				fg = 1;
+ 				break;
+--- a/utils/gssd/gssd.h
++++ b/utils/gssd/gssd.h
+@@ -67,6 +67,7 @@
+ extern int			root_uses_machine_creds;
+ extern unsigned int 		context_timeout;
+ extern char			*preferred_realm;
++extern int			ticket_expiry_is_error;
+ 
+ TAILQ_HEAD(clnt_list_head, clnt_info) clnt_list;
+ 
+--- a/utils/gssd/gssd.man
++++ b/utils/gssd/gssd.man
+@@ -130,6 +130,12 @@
+ seconds, which allows changing Kerberos tickets and identities frequently.
+ The default is no explicit timeout, which means the kernel context will live
+ the lifetime of the Kerberos service ticket used in its creation.
++.TP
++.B -e
++Return EACCESS instead of EKEYEXPIRED when a user's credentials expire.
++Returning EKEYEXPIRED was introduced around kernel 2.6.34 and causes all nfs4
++I/O to block when a user's credentials expire. This option reverts to old
++bevavior.
+ .SH SEE ALSO
+ .BR rpc.svcgssd(8)
+ .SH AUTHORS
+--- a/utils/gssd/gssd_proc.c
++++ b/utils/gssd/gssd_proc.c
+@@ -1008,7 +1008,7 @@
+ 				free(userdir);
+ 				userdir = NULL;
+ 			}
+-			if (err == -EKEYEXPIRED)
++			if (err == -EKEYEXPIRED && !ticket_expiry_is_error)
+ 				downcall_err = -EKEYEXPIRED;
+ 			else if (!err)
+ 				create_resp = create_auth_rpc_client(clp, &rpc_clnt, &auth, uid,

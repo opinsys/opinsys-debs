@@ -4,7 +4,7 @@ Section: net
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 XSBC-Original-Maintainer: Debian kernel team <debian-kernel@lists.debian.org>
 Uploaders: Anibal Monsalve Salazar <anibal@debian.org>, Ben Hutchings <ben@decadent.org.uk>, Luk Claes <luk@debian.org>
-Build-Depends: debhelper (>= 7.3.15ubuntu3), libwrap0-dev, libevent-dev, libnfsidmap-dev (>= 0.24), libkrb5-dev, libgssglue-dev (>= 0.3), libblkid-dev, libkeyutils-dev, pkg-config, libldap2-dev, libcap-dev, libtirpc-dev, libdevmapper-dev, dh-autoreconf
+Build-Depends: debhelper (>= 7.3.15ubuntu3), libwrap0-dev, libevent-dev, libnfsidmap-dev (>= 0.24), libkrb5-dev, libgssglue-dev (>= 0.3), libblkid-dev, libkeyutils-dev, pkg-config, libldap2-dev, libcap-dev, libtirpc-dev, libdevmapper-dev, dh-autoreconf, libmount-dev, libsqlite3-dev
 Standards-Version: 3.9.0
 Homepage: http://nfs.sourceforge.net/
 Vcs-Git: git://git.debian.org/kernel/nfs-utils.git
@@ -33,11 +33,12 @@ Homepage: http://nfs.sourceforge.net/
 
 Package: nfs-common
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, rpcbind (>= 0.2.0-6ubuntu1), adduser, ucf, lsb-base (>= 1.3-9ubuntu3), initscripts (>= 2.88dsf-13.3)
+Depends: ${shlibs:Depends}, ${misc:Depends}, rpcbind (>= 0.2.0-6ubuntu1), adduser, ucf, lsb-base (>= 1.3-9ubuntu3), initscripts (>= 2.88dsf-13.10ubuntu1), mountall
 Recommends: python
+Suggests: open-iscsi, watchdog
 Provides: nfs-client
 Conflicts: nfs-client
-Replaces: nfs-client, nfs-kernel-server (<< 1:1.0.7-5), mount (<< 2.13~)
+Replaces: nfs-client, nfs-kernel-server (<< 1:1.2.5-4), mount (<< 2.13~)
 Description: NFS support files common to client and server
  Use this package on any machine that uses NFS, either as client or
  server.  Programs included: lockd, statd, showmount, nfsstat, gssd,

@@ -6,9 +6,8 @@
 description	"rpcsec_gss daemon"
 author		"Steve Langasek <steve.langasek@canonical.com>"
 
-start on (started portmap
-          or mounting TYPE=nfs4 OPTIONS=*sec*krb5*)
-stop on (stopping portmap or runlevel [06])
+start on local-filesystems
+stop on unmounted-remote-filesystems
 
 expect fork
 respawn

@@ -7,7 +7,7 @@
 +    MULTIARCH=`dpkg-architecture -qDEB_HOST_MULTIARCH 2>/dev/null || true`
      if test "$K5CONFIG" != ""; then
        KRBCFLAGS=`$K5CONFIG --cflags`
-       KRBLIBS=`$K5CONFIG --libs gssapi`
+       KRBLIBS=`$K5CONFIG --libs`
 @@ -38,6 +39,7 @@
                  \( -f $dir/lib/libgssapi_krb5.a -o \
                     -f $dir/lib64/libgssapi_krb5.a -o \

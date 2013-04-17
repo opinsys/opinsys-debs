@@ -1,22 +1,109 @@
-nfs-utils (9:1.2.5-3ubuntu3.2+opinsys2) quantal; urgency=low
+nfs-utils (1:1.2.8-0+opinsys1) quantal; urgency=low
 
-  * New patch: debian/patches/20-opinsys-allow-null-service.patch
+  * New upstream git release 0ce973a59ab3393481ba7c434a7353b5007cba71
 
- -- Opinsys Developers <dev@opinsys.fi>  Mon, 18 Feb 2013 13:21:57 +0200
+ -- Opinsys Developers <dev@opinsys.fi>  Tue, 16 Apr 2013 13:51:52 +0300
 
-nfs-utils (9:1.2.5-3ubuntu3.2+opinsys1) quantal; urgency=low
+nfs-utils (1:1.2.6-3ubuntu2) quantal; urgency=low
 
-  * Repackage the Precise version to replace the broken Quantal package
-
- -- Opinsys Developers <dev@opinsys.fi>  Thu, 13 Dec 2012 11:33:48 +0200
-
-nfs-utils (1:1.2.5-3ubuntu3.1) precise-proposed; urgency=low
+  [ Steve Langasek ]
+  * Adjust upstart jobs to treat TYPE=nfs and TYPE=nfs4 mounts identically,
+    since TYPE=nfs4 is considered deprecated.
+  * Fix various boot-time race conditions between mountall and nfs-utils by
+    moving handling of the 'mounting' events to separate gssd-mounting and
+    idmapd-mounting jobs.  Requires mountall 2.41 or better to avoid deadlock
+    on boot.  LP: #643289, LP: #611397.
+  * Fix the stop conditions: never stop on 'runlevel [06]' since that gives
+    the system no time to cleanly unmount nfs mounts; instead, stop only on
+    the unmounted-remote-filesystems event.
+  * Newer versions of gssd don't talk to portmap, so don't make the upstart
+    job depend on it.
+  * Add an instance to statd-mounting, and change it to just wait for statd
+    instead of trying to trigger it potentially out of order.  This also means
+    we don't need to try to force portmap to start from statd.
 
   [ Matthew L. Dailey ]
   * Add "-e" (ticket expiry is error) option to rpc.gssd to prevent hangs due
-    to EKEYEXPIRED error from kernel on ticket expiry. LP: #794112 
+    to EKEYEXPIRED error from kernel on ticket expiry. LP: #794112
 
- -- Adam Stokes <adam.stokes@canonical.com>  Thu, 06 Sep 2012 13:06:19 -0400
+ -- Stéphane Graber <stgraber@ubuntu.com>  Fri, 28 Sep 2012 13:58:43 -0400
+
+nfs-utils (1:1.2.6-3ubuntu1) quantal; urgency=low
+
+  * Merge from Debian unstable. Remaining changes:
+    - debian/nfs-common.{statd,statd-mounting,gssd,idmapd}.upstart,
+      debian/control, debian/nfs-common.{preinst,postinst,prerm,postrm},
+      debian/rules: drop nfs-common init script in favor of upstart jobs,
+      and build-depend on debhelper (>= 7.3.15ubuntu3) for correct upstart
+      init handling.
+    - Depend on rpcbind (>= 0.2.0-6ubuntu1) for upstart support.
+    - debian/nfs-kernel-server.postinst: don't call "invoke-rc.d nfs-common"
+      in the postinst, this is redundant anyway and the nfs-common init script
+      is gone now.
+    - nfs-kernel-server.init: Unmount nfsd fs when init script stops
+    - Allow issuing options to rpc.nfsd
+    - debian/nfs-common.defaults: always start idmapd automatically; drop
+      the configuration option.
+    - Move /var/lib/nfs/rpc_pipefs to /run/rpc_pipefs.  This does not belong
+      in /var/lib.
+
+ -- Logan Rosen <logatronico@gmail.com>  Sun, 05 Aug 2012 00:56:05 -0400
+
+nfs-utils (1:1.2.6-3) unstable; urgency=low
+
+  * Iterate through exports.d to look for expors (Closes: #676604).
+
+ -- Luk Claes <luk@zomers.be>  Tue, 10 Jul 2012 19:38:22 +0200
+
+nfs-utils (1:1.2.6-2ubuntu1) quantal; urgency=low
+
+  * Merge from Debian unstable, remaining changes:
+    - debian/nfs-common.{statd,statd-mounting,gssd,idmapd}.upstart,
+      debian/control, debian/nfs-common.{preinst,postinst,prerm,postrm},
+      debian/rules: drop nfs-common init script in favor of upstart jobs,
+      and build-depend on debhelper (>= 7.3.15ubuntu3) for correct upstart
+      init handling.
+    - Depend on rpcbind (>= 0.2.0-6ubuntu1) for upstart support.
+    - debian/nfs-kernel-server.postinst: don't call "invoke-rc.d nfs-common"
+      in the postinst, this is redundant anyway and the nfs-common init script
+      is gone now.
+    - nfs-kernel-server.init: Unmount nfsd fs when init script stops
+    - Allow issuing options to rpc.nfsd
+    - debian/nfs-common.defaults: always start idmapd automatically; drop
+      the configuration option.
+    - Move /var/lib/nfs/rpc_pipefs to /run/rpc_pipefs.  This does not belong
+      in /var/lib.
+  * Dropped changes, included in Debian:
+    - nfs-kernel-server.default:  Add comment about how to disable nfs4.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Fri, 22 Jun 2012 11:25:28 -0700
+
+nfs-utils (1:1.2.6-2) unstable; urgency=low
+
+  * Move open-iscsi and watchdog to Suggests.
+
+ -- Luk Claes <luk@debian.org>  Sat, 26 May 2012 07:45:41 +0200
+
+nfs-utils (1:1.2.6-1) unstable; urgency=low
+
+  * New upstream version
+    - Remove 18-dont-use-PAGE_SIZE.patch: merged upstream.
+    - Update other patches.
+    - Install osd_login (part of the autologin feature).
+      - Add open-iscsi and watchdog to Recommends.
+  * Check for blank exports file (Closes: #673798).
+  * Add 18-osd_login-sbindir.patch to avoid FTBFS
+  * Add 19-iscsiadm-path.patch so osd_login works
+
+ -- Luk Claes <luk@debian.org>  Fri, 25 May 2012 20:41:58 +0200
+
+nfs-utils (1:1.2.5-4) unstable; urgency=low
+
+  * Add libmount-dev to Build-Depends and explicitly enable it.
+  * Move rpc.svcgssd to nfs-common (Closes: #651558).
+  * Also change owning group for /var/lib/nfs (Closes: #651634).
+
+ -- Luk Claes <luk@debian.org>  Sun, 22 Jan 2012 15:46:25 +0100
 
 nfs-utils (1:1.2.5-3ubuntu3) precise; urgency=low
 
