@@ -9,13 +9,6 @@ set -e
 case "$1" in
   configure)
       adduser --no-create-home --disabled-password --disabled-login --system --group puavo
-
-      chown -R puavo:puavo \
-        /var/app/puavo-ca-rails/tmp \
-        /var/app/puavo-ca-rails/log \
-        /var/app/puavo-ca-rails/db \
-        /var/app/puavo-ca-rails/config/environment.rb \
-        /var/app/puavo-ca-rails/config.ru \
     ;;
   abort-upgrade)
     ;;
