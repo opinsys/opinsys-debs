@@ -1,0 +1,206 @@
+This adds zenity support to nxdialog.
+
+
+Index: freenx-server-0.7.3.git110520.3884279/nxdialog
+===================================================================
+--- freenx-server-0.7.3.git110520.3884279.orig/nxdialog	2011-05-22 12:30:17.000000000 -0300
++++ freenx-server-0.7.3.git110520.3884279/nxdialog	2011-05-22 12:40:00.081241142 -0300
+@@ -26,6 +26,7 @@
+ 	done
+ }
+ 
++SESSION_END=0
+ PARAMS=( "$@" )
+ INPUTS=$(requote "$@")	#JJK: Save input parameter line...
+ 
+@@ -89,17 +90,18 @@
+     xterm_command=`which xterm`
+ fi
+ 
++# FIXME: This should be COMMAND_XDIALOG, ...
+ if [ -x /usr/bin/zenity ]
+ then
+-    dialog_interface="zenity"
+-    DIALOG=/usr/bin/zenity
+-# FIXME: This should be COMMAND_XDIALOG, ...
++	dialog_interface="zenity"
++	xmessage=$(which xmessage 2>/dev/null)
++	DIALOG=/usr/bin/zenity # just in case that we have no good path
+ elif [ -x /usr/bin/Xdialog ]
+-    then
++then
+ 	dialog_interface="xdialog"
+ 	DIALOG=/usr/bin/Xdialog # just in case that we have no good path
+-    elif [ -x /usr/bin/dialog ]
+-    then
++elif [ -x /usr/bin/dialog ]
++then
+ 	#JJK: Added 'dialog_interface=dialog' option because Xdialog not standard
+ 	#JJK: on some distros such as Fedora and xmessage won't handle long
+ 	#JJK: lists of ppd files while the combination of 'dialog' and 'xterm'
+@@ -121,12 +123,19 @@
+ 		rm -f $TMPFILE
+ 		exit 0
+ 	fi
+-    else
++else
+ 	dialog_interface="xmessage"
+ 	xmessage=$(which xmessage 2>/dev/null)
+ 	[ -z "$xmessage" ] && xmessage="/usr/X11R6/bin/xmessage"
+ fi
+ 
++session_end() {
++		SESSION_END_SCRIPTS_DIR=$(bash -c 'source nxloadconfig; echo ${SESSION_END_SCRIPTS_DIR}')
++		if [ -d "${SESSION_END_SCRIPTS_DIR}" ]; then
++			run-parts "${SESSION_END_SCRIPTS_DIR}"
++		fi
++}
++
+ #
+ # utility functions for all interfaces
+ #
+@@ -258,82 +267,96 @@
+ 	xmessage_printer_configure "${DRIVER_LIST[@]}"
+ }
+ 
++
+ #
+ # zenity interface
+ #
+ 
+ zenity_ok()
+ {
+-	$DIALOG --info --title="$DIALOG_CAPTION" --text="$DIALOG_MESSAGE"
++	$DIALOG --title="$DIALOG_CAPTION" --text="$DIALOG_MESSAGE"
+ 	return 0 # Give cancel on close ...
+ }
+ 
+ zenity_yesno()
+ {
+-	$DIALOG --question --title="$DIALOG_CAPTION" --text="$DIALOG_MESSAGE"
+-	RC=$?
+-	[ $RC -eq 0 ] && return 2
+-	[ $RC -eq 1 ] && return 0
++	if [ "$DIALOG_MESSAGE" = "Do you really want to close the session?" ]; then
++		$DIALOG --question --title "End Session?" \
++			--text="Do you really want to end the session?" \
++			--ok-label="Yes" --cancel-label="No"
++		RC=$?
++		[ $RC -eq 0 ] && SESSION_END=1
++	else
++		$DIALOG --question --title="$DIALOG_CAPTION" --text="$DIALOG_MESSAGE"
++		RC=$?
++	fi
++
++	if [ $RC -eq 0 ]; then
++		# YES
++		return 2
++	elif [ $RC -eq 1 ]; then
++		# NO
++		return 0
++	fi
+ }
+ 
+ zenity_yesnosuspend()
+ {
+-	Suspend="Disconnect (Suspend session)"
+-	Terminate="Terminate (Log Out)"
+-	ans=$( $DIALOG --title="$DIALOG_CAPTION" --text="$DIALOG_MESSAGE Close this dialog to cancel." --list --radiolist --column "" --column "" TRUE "$Terminate" FALSE "$Suspend" )
+-	RC=$?
+-	case $ans in
+-		$Terminate)
+-		    return 2;
+-		;;
+-		$Suspend)
+-		    return 3;
+-	esac
+-	[ $RC -eq 1 ] && return 0
++	local out="" msgfmt=""
++	# original text:
++	# Press the disconnect button to disconnect the running session. you will be able to resuem the session at a later time. Press the terminate button to exit the session and close all running programs
++	local msg="Select 'Disconnect' to disconnect from the session. You will be able to resume the session at a later time. Select 'End' to end the session and close all running programs."
++	msgfmt=$(echo "${msg}" | fmt -w 60) || msgfmt=${msg}
++	out=$($DIALOG --hide-header --list --radiolist \
++		--title "$DIALOG_CAPTION" \
++ 		--text "$msgfmt" \
++		--column "" --column val --hide-column 2 --column "label" \
++		TRUE disconnect "Disconnect" \
++		FALSE end "End")
++	RC=$?
++	[ $RC -eq 0 ] || return 0 # cancel button pressed
++	[ "$out" = "disconnect" ] && return 3
++	[ "$out" = "end" ] && SESSION_END=1 && return 2
++	return 1 # window killed (same as xmessage would do)
+ }
+ 
+ zenity_panic()
+ {
+-	$DIALOG --question --no-wrap --title="$DIALOG_CAPTION" --ok-label="Terminate" --cancel-label="Cancel" --text="$DIALOG_MESSAGE"
++	$DIALOG --question --title="$DIALOG_CAPTION" --ok-label="Terminate" --cancel-label="Cancel" --text="$DIALOG_MESSAGE"
+ 	RC=$?
+-	[ $RC -eq 0 ] && return 2
+-	[ $RC -eq 1 ] && return 0
++	[ $RC -eq 0 ] && return 2 # TERINATE
++	[ $RC -eq 1 ] && return 0 # CANCEL
+ }
+ 
+ zenity_quit()
+ {
+-        $DIALOG --info --title="$DIALOG_CAPTION" --text="$DIALOG_MESSAGE"
+-        return 0 # Give cancel on close ...
++	$DIALOG --question --ok-label="Quit" --title="$DIALOG_CAPTION" --text="$DIALOG_MESSAGE"
++	return 0 # Give cancel on close ...
+ }
+ 
+ zenity_printer_ask()
+ {
+-	$DIALOG --question --title="$DIALOG_CAPTION" --ok-label="Ok" --cancel-label="Configure" --text="$DIALOG_MESSAGE\n\nClose this dialog to cancel."
+-	RC=$?
+-	[ $RC -eq 255 ] && return 2
+-	return $RC
++	# Not sure if zenity works as xmessage
++	xmessage_printer_configure_vendor
++	return $?
+ }
+ 
+ zenity_printer_configure_vendor()
+ {
+-	IFS='|' VENDOR_LIST=( $(utility_printer getvendlist))
+-	unset IFS
+-	for el in $(seq 0 $(( ${#VENDOR_LIST[@]} -1 )) )
+-	do
+-	    z+=" $el"
+-	    z+=" ${VENDOR_LIST[$el]/ /_}"
+-	done
+-	$DIALOG --list  --title="$DIALOG_CAPTION" --text="$DIALOG_MESSAGE" --radiolist --column="" --column="" $z
++	# Not sure if zenity works as xmessage
++	xmessage_printer_configure_vendor
++	return $?
+ }
+ 
+ # zenity_printer_configure_driver vendor old_driver
+ zenity_printer_configure_driver()
+ {
+-	IFS='|' XDIALOG_LIST=( $(utility_printer getextdrvlist "$1" | sed 's,^,FALSE ,g; /'"$(basename $2)"'/ s,FALSE ,TRUE ,g' | tr '\n' '|' | sed 's/ /./g' | sed 's/TRUE./TRUE /g' ) )
+-	$DIALOG --list --radiolist --title="$DIALOG_CAPTION" --text="$DIALOG_MESSAGE" --column="" --column="" ${XDIALOG_LIST[@]}
++	# Not sure if zenity works as xmessage
++	xmessage_printer_configure_driver
++	return $?
+ }
+ 
+-#"
++#
+ # xdialog interface
+ #
+ 
+@@ -533,6 +556,10 @@
+ #
+ 
+ RC=$?
++
++if [ "${SESSION_END:-0}" != "0" ]; then
++	session_end
++fi
+ 	[ $RC -eq 2 ] && kill -TERM $DIALOG_PARENT
+ 	[ $RC -eq 3 ] && kill -HUP $DIALOG_PARENT
+ exit 0

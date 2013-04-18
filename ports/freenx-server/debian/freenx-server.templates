@@ -1,0 +1,32 @@
+Template: freenx/key_type
+Type: select
+Default: NoMachine Keys
+Choices: NoMachine Keys, Custom keys, User mode, Create new custom keys
+_Description: Which key type should freenx use?
+ NoMachine Keys: Allow login with the key shipped with the NoMachine client.
+ This is not as secure, but it simplifies the configuration of clients.
+ .
+ Custom keys: Create custom keys for freenx, while this is the most secure
+ option you will have to distribute the server key to all involved clients,
+ import your server's /var/lib/nxserver/home/.ssh/client.id_dsa.key to your
+ nx client (custom keys are not supported upstream). This will not override
+ existing custom key.
+ .
+ Create new custom keys: Create new custom keys for freenx see 'Custom keys'.
+ This will override existing custom key. But a backup will be created.
+ .
+ User mode: Don't use any key. Remove active ones.
+
+Template: freenx/auth_method
+Type: select
+Default: SSH
+Choices: SSH, SU, PASSDB, Usermode
+_Description: Which authentication type should freenx use?
+ SSH: Uses SSH to authenticate the user
+ .
+ SU: Uses SU to authenticate the user
+ .
+ PASSDB: Uses an internal user database.
+ .
+ Usermode: Don't use an authentication method. The user has already logged by
+ others means.

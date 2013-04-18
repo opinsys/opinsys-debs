@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_installinit:
+	dh_installinit --no-restart-on-upgrade
+
+create-tarball:
+	git clone git://git.altlinux.org/people/boris/packages/freenx-server.git /tmp/git-freenx-server
+	tar -czf ../freenx-server_0.7.3+`git --git-dir="/tmp/git-freenx-server/.git/" show --abbrev-commit  | grep commit | cut -d" " -f2`.orig.tar.gz -C /tmp/git-freenx-server/ freenx-server
+	rm -rf /tmp/git-freenx-server
+

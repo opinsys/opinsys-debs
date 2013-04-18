@@ -1,0 +1,122 @@
+#
+#    Translators, if you are not familiar with the PO format, gettext
+#    documentation is worth reading, especially sections dedicated to
+#    this format, e.g. by running:
+#         info -n '(gettext)PO Files'
+#         info -n '(gettext)Header Entry'
+#    Some information specific to po-debconf are available at
+#            /usr/share/doc/po-debconf/README-trans
+#         or http://www.debian.org/intl/l10n/po-debconf/README-trans#
+#    Developers do not need to manually edit POT or PO files.
+# Erik Schanze <mail@erikschanze.de>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: freenx_0.4.5-0a1_templates\n"
+"Report-Msgid-Bugs-To: s.l-h@gmx.de\n"
+"POT-Creation-Date: 2005-09-03 23:09+0200\n"
+"PO-Revision-Date: 2005-09-03 22:57+0100\n"
+"Last-Translator: Stefan Lippers-Hollmann <s.l-h@gmx.de>\n"
+"Language-Team: Stefan Lippers-Hollmann <s.l-h@gmx.de>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+
+#. Type: note
+#. Description
+#: ../templates:3
+msgid "Essential dependencies not met on your system"
+msgstr "Erforderliche Abhängigkeiten sind auf diesem System nicht erfüllt."
+
+#. Type: note
+#. Description
+#: ../templates:3
+msgid "You're missing at least one of these essential files:"
+msgstr "Es fehlt mindestens eine der folgenden erforderlichen Dateien:"
+
+#. Type: note
+#. Description
+#: ../templates:3
+msgid "/etc/group"
+msgstr "/etc/group"
+
+#. Type: note
+#. Description
+#: ../templates:3
+msgid "/etc/passwd"
+msgstr "/etc/passwd"
+
+#. Type: note
+#. Description
+#: ../templates:3
+msgid "/etc/shadow"
+msgstr "/etc/shadow"
+
+#. Type: note
+#. Description
+#: ../templates:3
+msgid ""
+"Please configure your system properly and run \"dpkg-reconfigure freenx\" "
+"afterwards to set up FreeNX."
+msgstr ""
+"Bitte konfigurieren Sie Ihr System entsprechend und starten \"dpkg-"
+"reconfigure freenx\" im Anschluß."
+
+#. Type: note
+#. Description
+#: ../templates:3
+msgid "FreeNX is not configured and can't be used right now."
+msgstr "FreeNX ist nicht konfiguriert und kann derzeit nicht verwendet werden"
+
+#. Type: select
+#. Description
+#: ../templates:20
+msgid "Which key type should freenx use?"
+msgstr "Welchen Schlüsseltyp soll freenx verwenden?"
+
+#. Type: select
+#. Description
+#: ../templates:20
+msgid ""
+"NoMachine Keys: Allow login with the key shipped with the NoMachine client. "
+"This is not as secure, but it simplifies the configuration of clients."
+msgstr ""
+"NoMachine Keys: Ermögliche den Zugang mittels des beim NoMachine Client "
+"beiliegenden Keys. Dies ist nicht die sicherste Lösung, vereinfacht aber die "
+"Konfiguration der Clients."
+
+#. Type: select
+#. Description
+#: ../templates:20
+msgid ""
+"Custom keys: Create custom keys for freenx, while this is the most secure "
+"option you will have to distribute the server key to all involved clients, "
+"import your server's /var/lib/nxserver/home/.ssh/client.id_dsa.key to your "
+"nx client (custom keys are not supported upstream)."
+msgstr ""
+"Custom keys: Generiere eigene Keys für freenx, obwohl dies die sicherste "
+"Option ist, muß der erstellte Key an alle beteiligten Clients verteilt "
+"werden, hierzu /var/lib/nxserver/home/.ssh/client.id_dsa.key des Servers in "
+"die nx Clientprogramme der Clients importieren (custom keys werden nicht von "
+"den freenx Autoren unterstützt)."
+
+#. Type: select
+#. Description
+#: ../templates:20
+msgid ""
+"Manual setup: setup freenx manually using /usr/sbin/nxsetup, leave existing  "
+"configurations alone."
+msgstr ""
+"Manual setup: freenx manuell mittels /usr/sbin/nxsetup einrichten und "
+"existierende Konfigurationen unangetastet lassen."
+
+#. Type: select
+#. Description
+#: ../templates:20
+msgid ""
+"Remove freenx keys: Remove or don't create keys and leave freenx "
+"unconfigured."
+msgstr ""
+"Remove freenx keys: Entferne oder erstelle keine Keys und lasse freenx "
+"unkonfiguriert."

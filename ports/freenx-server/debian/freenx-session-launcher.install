@@ -1,0 +1,4 @@
+nx-session-launcher/nx-session-launcher usr/bin/
+nx-session-launcher/ConsoleKit-NX.conf etc/dbus-1/system.d/
+nx-session-launcher/freenx.session.policy usr/share/PolicyKit/policy/
+usr/lib/nx/nx-session-launcher-suid	usr/bin/

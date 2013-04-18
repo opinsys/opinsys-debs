@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ ! -e "~nx/.ssh/authorized_keys" ]
+then
+	# Install NOMACHINE keys
+	install -D -m 600 -o nx /usr/share/nx-common/authorized_keys.nomachine ~nx/.ssh/authorized_keys
+fi
+
+if [ ! -e "~nx/.ssh/known_hosts" ]
+then
+	# Allow ssh authentication
+	echo -n "127.0.0.1 " > ~nx/.ssh/known_hosts
+	cat /etc/ssh/ssh_host_rsa_key.pub >> ~nx/.ssh/known_hosts
+	chown nx:root ~nx/.ssh/*
+	chmod 600 ~nx/.ssh/*
+fi

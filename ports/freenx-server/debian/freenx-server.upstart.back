@@ -1,0 +1,29 @@
+# apport - automatic crash report generation
+#
+# While this job is active, core dumps will captured by apport and
+# used to generate automatic crash reports.
+
+description	"automatic crash report generation"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+env PATH_BIN=/usr/lib/nx
+
+pre-start script
+    if [ ! -e "/var/run/freenx-server" ]; then
+        [ ! -d "/tmp/.X11-unix" ] && mkdir -m1755 /tmp/.X11-unix/
+        $PATH_BIN/nxserver --cleanup || true
+        $PATH_BIN/nxserver --start
+        touch "/var/run/freenx-server";
+    else
+        echo "Not starting freenx-server, it's already started."
+    fi
+end script
+
+post-stop script
+    $PATH_BIN/nxserver --stop
+    $PATH_BIN/nxserver --cleanup || true
+    rm -f /var/run/freenx-server
+end script
+

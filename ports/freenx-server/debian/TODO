@@ -1,0 +1,5 @@
+- add manpages for nxsetup and node.conf
+- check i18n
+  - fix french debconf translation
+- stress test debconf
+- set up the sshd while configuring freenx

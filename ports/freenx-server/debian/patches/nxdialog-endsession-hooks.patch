@@ -1,0 +1,88 @@
+This adds the running of "session end scripts".  The scripts in
+SESSION_END_SCRIPTS_DIR will run when the user ends the session cleanly
+by selecting 'Terminate' from the yes/no/suspend dialog or from the
+Terminate/Cancel dialog.
+
+--- a/node.conf.sample
++++ b/node.conf.sample
+@@ -653,3 +653,7 @@
+ # 
+ # If nxviewer cannot be found this is set automatically to "1".
+ #ENABLE_EXTERNAL_NXVIEWER="1"
++
++# If you want to run scripts when the user clicks "yes" to terminate
++# their session, put them in this directory.  They'll be run with run-parts
++#SESSION_END_SCRIPTS_DIR="/usr/lib/nx/session-end.d"
+--- a/nxdialog
++++ b/nxdialog
+@@ -26,6 +26,7 @@
+ 	done
+ }
+ 
++SESSION_END=0
+ PARAMS=( "$@" )
+ INPUTS=$(requote "$@")	#JJK: Save input parameter line...
+ 
+@@ -128,6 +129,13 @@
+ 	[ -z "$xmessage" ] && xmessage="/usr/X11R6/bin/xmessage"
+ fi
+ 
++session_end() {
++		SESSION_END_SCRIPTS_DIR=$(bash -c 'source nxloadconfig; echo ${SESSION_END_SCRIPTS_DIR}')
++		if [ -d "${SESSION_END_SCRIPTS_DIR}" ]; then
++			run-parts "${SESSION_END_SCRIPTS_DIR}"
++		fi
++}
++
+ #
+ # utility functions for all interfaces
+ #
+@@ -332,8 +340,16 @@
+ 
+ zenity_yesno()
+ {
+-	$DIALOG --question --title="$DIALOG_CAPTION" --text="$DIALOG_MESSAGE"
+-	local RC=$?
++	if [ "$DIALOG_MESSAGE" = "Do you really want to close the session?" ]; then
++		$DIALOG --question --title "End Session?" \
++			--text="Do you really want to end the session?" \
++			--ok-label="Yes" --cancel-label="No"
++		RC=$?
++		[ $RC -eq 0 ] && SESSION_END=1
++	else
++		$DIALOG --question --title="$DIALOG_CAPTION" --text="$DIALOG_MESSAGE"
++		RC=$?
++	fi
+ 
+ 	if [ $RC -eq 0 ]; then
+ 		# YES
+@@ -360,7 +376,7 @@
+ 	RC=$?
+ 	[ $RC -eq 0 ] || return 0 # cancel button pressed
+ 	[ "$out" = "disconnect" ] && return 3
+-	[ "$out" = "end" ] && return 2
++	[ "$out" = "end" ] && SESSION_END=1 && return 2
+ 	return 1 # window killed (same as xmessage would do)
+ }
+ 
+@@ -540,6 +556,10 @@
+ #
+ 
+ RC=$?
++
++if [ "${SESSION_END:-0}" != "0" ]; then
++	session_end
++fi
+ 	[ $RC -eq 2 ] && kill -TERM $DIALOG_PARENT
+ 	[ $RC -eq 3 ] && kill -HUP $DIALOG_PARENT
+ exit 0
+--- a/nxloadconfig
++++ b/nxloadconfig
+@@ -274,6 +274,7 @@
+ NUMLOCKX="numlockx"
+ NODE_APP_WAIT_TIMEOUT="5"
+ KDE4_ENABLE="1"
++SESSION_END_SCRIPTS_DIR="/usr/lib/nx/session-end.d"
+ 
+ ############################################################################
+ # OS specific directives
