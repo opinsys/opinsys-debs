@@ -1,0 +1,16 @@
+Index: freenx-server-0.7.3.git110520.3884279/nxserver
+===================================================================
+--- freenx-server-0.7.3.git110520.3884279.orig/nxserver	2011-05-21 13:52:14.291241791 -0300
++++ freenx-server-0.7.3.git110520.3884279/nxserver	2011-05-21 13:53:22.611241927 -0300
+@@ -319,9 +319,11 @@
+ 			[[ $(getparam screeninfo) =~ $pattern ]]
+ 			geom=${BASH_REMATCH[1]}
+ 			depth=${BASH_REMATCH[2]}
++			[ "$depth" = "32" ] && depth=24
+ 			render=${BASH_REMATCH[3]}
+ 			[[ $3 =~ $pattern ]]
+ 			udepth=${BASH_REMATCH[2]}
++			[ "$udepth" = "32" ] && udepth=24
+ 			urender=${BASH_REMATCH[3]}
+ 
+ 			mode="D"

@@ -1,0 +1,5 @@
+freenx-server (0.7.3+teambzr87-0ubuntu1) jaunty; urgency=low
+
+  * Initial release. (LP: #183801)
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 14 Feb 2009 17:31:50 -0200

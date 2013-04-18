@@ -1,0 +1,1089 @@
+freenx-server (0.7.3.zgit.120322.977c28d-0~ppa11) precise; urgency=low
+
+  * Add dependency alternative on kde-runtime, gnome fallback and lxde-core
+  * Don't restart on upgrade
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Wed, 09 May 2012 10:21:53 -0300
+
+freenx-server (0.7.3.zgit.120322.977c28d-0~ppa10) precise; urgency=low
+
+  * Remove esound/arts depends
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Wed, 02 May 2012 15:19:50 -0300
+
+freenx-server (0.7.3.zgit.120322.977c28d-0~ppa9) precise; urgency=low
+
+  * Fix /var/lib/nxserver/db permission
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Thu, 12 Apr 2012 11:48:37 -0300
+
+freenx-server (0.7.3.zgit.120322.977c28d-0~ppa8~precise1) precise; urgency=low
+
+  * Fix nxkeymanager permission
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Fri, 30 Mar 2012 11:36:22 -0300
+
+freenx-server (0.7.3.zgit.120322.977c28d-0~ppa7~precise1) precise; urgency=low
+
+  * Add freenx-server-usermode.postinst
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Thu, 29 Mar 2012 11:52:58 -0300
+
+freenx-server (0.7.3.zgit.120322.977c28d-0~ppa6~precise1) precise; urgency=low
+
+  * Split to freenx-server-usermode
+  * Remove upstart script from debian compatibility
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Thu, 29 Mar 2012 11:45:40 -0300
+
+freenx-server (0.7.3.zgit.120322.977c28d-0~ppa5~precise1) precise; urgency=low
+
+  * Add nx-common
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Wed, 28 Mar 2012 18:57:27 -0300
+
+freenx-server (0.7.3.zgit.120322.977c28d-0~ppa4~precise1) precise; urgency=low
+
+  * Fix resize on precise
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Wed, 28 Mar 2012 18:21:02 -0300
+
+freenx-server (0.7.3.zgit.120322.977c28d-0~ppa3~precise1ubuntu1) precise; urgency=low
+
+  * Rename and reupload
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Thu, 22 Mar 2012 10:52:54 -0300
+
+freenx-server (0.7.3.git977c28d-0~ppa2~precise1) precise; urgency=low
+
+  * Many fixes.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Wed, 21 Mar 2012 18:27:08 -0300
+
+freenx-server (0.7.3.git977c28d-0~ppa1~precise1) precise; urgency=low
+
+  * New upload.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Wed, 21 Mar 2012 15:51:00 -0300
+
+freenx-server (0.7.3.git110520.3884279-0ubuntu2~precise1) precise; urgency=low
+
+  * Upload to precise
+  * Use gnome-session --session gnome-fallback by default
+  * Other option is to use gnome-session --session unity-2d
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Wed, 21 Mar 2012 11:27:59 -0300
+
+freenx-server (0.7.3.git110520.3884279-0ubuntu1ppa4) lucid; urgency=low
+
+  * Merge zenity interface form awstrial package.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sun, 22 May 2011 12:43:18 -0300
+
+freenx-server (0.7.3.git110520.3884279-0ubuntu1ppa3) lucid; urgency=low
+
+  * Fix a typo
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 21 May 2011 19:45:25 -0300
+
+freenx-server (0.7.3.git110520.3884279-0ubuntu1ppa2) lucid; urgency=low
+
+  * Fix 32bit color client
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 21 May 2011 13:53:45 -0300
+
+freenx-server (0.7.3.git110520.3884279-0ubuntu1ppa1) lucid; urgency=low
+
+  * Readd missing files
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 21 May 2011 13:43:33 -0300
+
+freenx-server (0.7.3.git110520.3884279-0ubuntu1) lucid; urgency=low
+
+  * New snapshot from altlinux git
+  * Update patches
+  * Disable nxdialog-zenity-support.patch for now. The snapshot cotains
+    another implementation.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Fri, 20 May 2011 18:05:42 -0300
+
+freenx-server (0.7.3.git100327.e224628-0~ppa6~natty1.5ubuntu1) natty; urgency=low
+
+  * replace shell/awk/sed version of 'getparam' with one that uses python
+    and url.parse_qa.  This should fix getparam permenantly.
+
+ -- Scott Moser <smoser@ubuntu.com>  Tue, 19 Apr 2011 14:39:23 -0400
+
+freenx-server (0.7.3.git100327.e224628-0~ppa6~natty1.5) natty; urgency=low
+
+  * fix bug with nxdialog not running SESSION_END scripts
+
+ -- Scott Moser <smoser@ubuntu.com>  Thu, 07 Apr 2011 16:06:00 -0400
+
+freenx-server (0.7.3.git100327.e224628-0~ppa6~natty1.4) natty; urgency=low
+
+  * improve some of the wording of dialogs.
+    Use 'disconnect' instead of 'suspend', and 'end' instead of 'terminate'
+
+ -- Scott Moser <smoser@ubuntu.com>  Thu, 07 Apr 2011 10:34:30 -0400
+
+freenx-server (0.7.3.git100327.e224628-0~ppa6~natty1.3) natty; urgency=low
+
+  * add zenity support to nxdialog
+  * add session end hooks run when user ends session
+
+ -- Scott Moser <smoser@ubuntu.com>  Wed, 06 Apr 2011 15:26:23 -0400
+
+freenx-server (0.7.3.git100327.e224628-0~ppa6~natty1.2) natty; urgency=low
+
+  * globally fix '=' in command line to allow for multiple occurences
+
+ -- Scott Moser <smoser@ubuntu.com>  Mon, 07 Mar 2011 13:43:04 -0500
+
+freenx-server (0.7.3.git100327.e224628-0~ppa6~natty1.1) natty; urgency=low
+
+  * fix issue in nxnode if '=' appeared in the command line
+
+ -- Scott Moser <smoser@ubuntu.com>  Mon, 07 Mar 2011 12:04:56 -0500
+
+freenx-server (0.7.3.git100327.e224628-0~ppa6~natty1) natty; urgency=low
+
+  * Rebuild for natty
+
+ -- Dustin Kirkland <kirkland@ubuntu.com>  Wed, 16 Feb 2011 15:09:31 -0600
+
+freenx-server (0.7.3.git100327.e224628-0~ppa6~maverick) maverick; urgency=low
+
+  * fix upstart script
+
+ -- Marc Gariépy <mgariepy@ubuntu.com>  Tue, 21 Sep 2010 10:18:18 -0400
+
+freenx-server (0.7.3.git100327.e224628-0~ppa5~maverick) maverick; urgency=low
+
+  * fix upstart script.
+  * backport to maverick
+
+ -- Marc Gariépy <mgariepy@ubuntu.com>  Mon, 20 Sep 2010 14:32:05 -0400
+
+freenx-server (0.7.3.git100327.e224628-0~ppa4~lucid1) lucid; urgency=low
+
+  * Backport to lucid
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sun, 28 Mar 2010 22:50:08 -0300
+
+freenx-server (0.7.3.git100327.e224628-0~ppa4) lucid; urgency=low
+
+  * Fix nxnode
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sun, 28 Mar 2010 22:49:41 -0300
+
+freenx-server (0.7.3.git100327.e224628-0~ppa3) lucid; urgency=low
+
+  * Fix build
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sun, 28 Mar 2010 14:48:54 -0300
+
+freenx-server (0.7.3.git100327.e224628-0~ppa2) lucid; urgency=low
+
+  * Another try
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sun, 28 Mar 2010 13:37:39 -0300
+
+freenx-server (0.7.3.git100327.e224628-0~ppa1) lucid; urgency=low
+
+  * Switch to git upstream
+  * Convert to dh7
+  * Convert to source v3.0
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sun, 28 Mar 2010 11:40:25 -0300
+
+freenx-server (0.7.3+teambzr104-0ubuntu1~karmic1) karmic; urgency=low
+
+  * Backport to karmic
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 01 Aug 2009 13:05:26 -0300
+
+freenx-server (0.7.3+teambzr104-0ubuntu1) karmic; urgency=low
+
+  * Revert some changes, needs more testing
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 01 Aug 2009 13:04:06 -0300
+
+freenx-server (0.7.3+teambzr104-0freenxteam6) karmic; urgency=low
+
+  * Cleanup postinst/postrm
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Fri, 31 Jul 2009 20:39:26 -0300
+
+freenx-server (0.7.3+teambzr104-0freenxteam5) karmic; urgency=low
+
+  * New bzr revision
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Fri, 31 Jul 2009 20:03:19 -0300
+
+freenx-server (0.7.3+teambzr104-0freenxteam4) karmic; urgency=low
+
+  * Fix postinst
+  * Remove passdb support
+  * Conflicts with freenx-media
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Fri, 24 Jul 2009 19:20:25 -0300
+
+freenx-server (0.7.3+teambzr104-0freenxteam3) jaunty; urgency=low
+
+  * Make use of nx-common
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Mon, 20 Jul 2009 18:00:56 -0300
+
+freenx-server (0.7.3+teambzr104-0freenxteam2) jaunty; urgency=low
+
+  * Move nxcups-gethost and nxprint to freenx-server
+  * Rename freenx-media package to freenx-smb
+  * Let freenx-smb conflict with freenx-media
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Wed, 27 May 2009 16:36:17 -0300
+
+freenx-server (0.7.3+teambzr104-0freenxteam1) jaunty; urgency=low
+
+  * New bzr snapshot.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sun, 29 Mar 2009 09:12:59 -0300
+
+freenx-server (0.7.3+teambzr102-0freenxteam1) jaunty; urgency=low
+
+  * New bzr snapshot.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Tue, 03 Mar 2009 12:04:20 -0300
+
+freenx-server (0.7.3+teambzr99-0freenxteam1) jaunty; urgency=low
+
+  * New bzr snapshot.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sun, 01 Mar 2009 13:24:04 -0300
+
+freenx-server (0.7.3+teambzr98-0freenxteam1) jaunty; urgency=low
+
+  * New bzr snapshot.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sun, 01 Mar 2009 11:24:30 -0300
+
+freenx-server (0.7.3+teambzr79-0freenxteam1) jaunty; urgency=low
+
+  * New bzr snapshot.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 07 Feb 2009 09:33:59 -0200
+
+freenx-server (0.7.3+svn612-0freenxteam10~hardy1) hardy; urgency=low
+
+  * Backport to hardy
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Mon, 01 Dec 2008 14:48:08 -0200
+
+freenx-server (0.7.3+svn612-0freenxteam10) intrepid; urgency=low
+
+  * Fix shadowing local session.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Mon, 01 Dec 2008 14:43:35 -0200
+
+freenx-server (0.7.3+svn612-0freenxteam9) intrepid; urgency=low
+
+  * Changes for nx 3.3.0
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Tue, 25 Nov 2008 00:58:18 -0200
+
+freenx-server (0.7.3+svn612-0freenxteam8) intrepid; urgency=low
+
+  * Add kdebase-workspace-bin (KDE 4) as an alternative for session, thanks
+    Toby. (LP:#301679)
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Mon, 24 Nov 2008 13:36:45 -0200
+
+freenx-server (0.7.3+svn612-0freenxteam7) intrepid; urgency=low
+
+  * freenx-session-launcher depends on python-dbus, thanks Johann.
+  * Forgot to thanks Peter for the last commit.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Fri, 21 Nov 2008 11:09:49 -0200
+
+freenx-server (0.7.3+svn612-0freenxteam6) intrepid; urgency=low
+
+  * Add dep on x11-xserver-utils
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Wed, 19 Nov 2008 12:10:30 -0200
+
+freenx-server (0.7.3+svn612-0freenxteam5) intrepid; urgency=low
+
+  * Add patch to fix the rdp sessions.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Mon, 10 Nov 2008 01:51:57 -0200
+
+freenx-server (0.7.3+svn612-0freenxteam4~dapper2) dapper; urgency=low
+
+  * Depends on xutils-dev | imake. Corrects build on dapper.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 20 Sep 2008 15:04:49 -0300
+
+freenx-server (0.7.3+svn612-0freenxteam4~dapper1) dapper; urgency=low
+
+  * Backport to Dapper
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 20 Sep 2008 13:43:33 -0300
+
+freenx-server (0.7.3+svn612-0freenxteam4) intrepid; urgency=low
+
+  * Correct warning "`<' is obsolete, use `<=' or `<<' instead"
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 20 Sep 2008 13:42:00 -0300
+
+freenx-server (0.7.3+svn612-0freenxteam3) intrepid; urgency=low
+
+  * Demote consolekit to a Recommend. To make it installable on etch systems.
+  * Make ConsoleKit optional
+  * Add a patch to source the configs at /usr/share/freenx-server/node.conf
+  * Move the configuration overrides to /usr/share/freenx-server/node.conf and
+    remove the older at /etc/nxserver/node.conf.d
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 20 Sep 2008 12:06:12 -0300
+
+freenx-server (0.7.3+svn612-0freenxteam2) hardy; urgency=low
+
+  * Add patch to use Xsession to initialize the full desktop sessions.
+    Corrects the KDE session initialization.
+  * Remove freenx/configured from templates. This is not useful.
+  * Remove freenx-redir transition package and correct freenx package
+    description.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Fri, 19 Sep 2008 10:45:30 -0300
+
+freenx-server (0.7.3+svn612-0freenxteam1) hardy; urgency=low
+
+  * Upload to FreeNX Team PPA
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Mon, 15 Sep 2008 15:44:39 -0300
+
+freenx-server (0.7.3+svn612-0freenxteam0ppa4) hardy; urgency=low
+
+  * Add a function to handle the auth configs
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Fri, 12 Sep 2008 22:04:10 -0300
+
+freenx-server (0.7.3+svn612-0freenxteam0ppa3) hardy; urgency=low
+
+  * Continue rework of configuration scripts
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Fri, 12 Sep 2008 21:37:49 -0300
+
+freenx-server (0.7.3+svn612-0freenxteam0ppa2) hardy; urgency=low
+
+  * Changes to postinst, postrm config.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Fri, 12 Sep 2008 17:06:20 -0300
+
+freenx-server (0.7.3+svn612-0freenxteam0ppa1) hardy; urgency=low
+
+  * New svn snapshot
+  * Update 12_detected_sshd_port.dpatch
+  * Corrections to 00_ubuntu_overrides.conf
+  * Show authentication methods choices on package reconfiguration
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Thu, 11 Sep 2008 18:16:55 -0300
+
+freenx-server (0.7.3-0freenxteam7ppa1) hardy; urgency=low
+
+  * Add debconf choice for auth method.
+  * Create the files needed by PASSDB mode at postinst.
+  * Add ssh port detection: 12_detected_sshd_port.dpatch
+  * Move overrided configs to
+    /etc/nxserver/node.conf.d/00_ubuntu_overrides.conf instead of patching
+    nxloaconfig.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Thu, 11 Sep 2008 15:36:49 -0300
+
+freenx-server (0.7.3-0freenxteam7) hardy; urgency=low
+
+  * Correct a bug in nx-session-launcher
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Wed, 10 Sep 2008 12:31:44 -0300
+
+freenx-server (0.7.3-0freenxteam6) hardy; urgency=low
+
+  * Upload to FreeNX Team PPA. No more breakage, so please purge the installed
+    version to solve any problems
+  * Ship policykit policy, but not enabled.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Wed, 10 Sep 2008 09:04:08 -0300
+
+freenx-server (0.7.3-0freenxteam5ppa1) hardy; urgency=low
+
+  * Set suid /usr/bin/nx-session-launcher-suid again
+  * Lots of nx-session-launcher changes
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Wed, 10 Sep 2008 01:25:13 -0300
+
+freenx-server (0.7.3-0freenxteam5) hardy; urgency=low
+
+  * Change back to ssh auth method
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Tue, 09 Sep 2008 03:03:28 -0300
+
+freenx-server (0.7.3-0freenxteam4) hardy; urgency=low
+
+  * Remove suid from nx-session-launcher-suid. It is broken.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Tue, 09 Sep 2008 02:24:51 -0300
+
+freenx-server (0.7.3-0freenxteam3) hardy; urgency=low
+
+  * Correct some little issues.
+  * Default to su authentication. Seems better now.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Tue, 09 Sep 2008 01:33:35 -0300
+
+freenx-server (0.7.3-0freenxteam3~ppa1) hardy; urgency=low
+
+  * Don't use nxsetup, rewrite the installation scripts.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Tue, 09 Sep 2008 00:37:38 -0300
+
+freenx-server (0.7.3-0freenxteam2) hardy; urgency=low
+
+  * One more change to nxloadconfig.
+  * Upload to FreeNX Team PPA.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Mon, 08 Sep 2008 19:14:45 -0300
+
+freenx-server (0.7.3-0freenxteam2~ppa7) hardy; urgency=low
+
+  * Correct prerm and postinst scripts.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Mon, 08 Sep 2008 18:51:51 -0300
+
+freenx-server (0.7.3-0freenxteam2~ppa6) hardy; urgency=low
+
+  * Update 02_ubuntu_paths.dpatch
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Mon, 08 Sep 2008 18:17:41 -0300
+
+freenx-server (0.7.3-0freenxteam2~ppa5) hardy; urgency=low
+
+  * Move nxloadconfig back to /usr/bin.
+  * Set suid /usr/bin/nxserver-suid.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Mon, 08 Sep 2008 17:59:21 -0300
+
+freenx-server (0.7.3-0freenxteam2~ppa4) hardy; urgency=low
+
+  * Add 11_update_nxsetup.dpatch to cleanup some tests results
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Mon, 08 Sep 2008 17:33:15 -0300
+
+freenx-server (0.7.3-0freenxteam2~ppa3) hardy; urgency=low
+
+  * Changes to 03_make_aclpaths_configurable
+  * Remove 04_set_aclpaths.dpatch: obsolete
+  * Add 10_correct_su_login_non_en_lang.dpatch correct the su login with non
+    english locales
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Mon, 08 Sep 2008 16:10:05 -0300
+
+freenx-server (0.7.3-0freenxteam2~ppa2) hardy; urgency=low
+
+  * Move every program to /usr/lib/nx again. They are only helpers and we
+    don't want someone trying to execute them. Only keep nxserver,
+    nxserver-suid and nx-session-launcher* at /usr/bin, since they are useful.
+  * Don't check if the system is installed correctly. You need to have the
+    essential packages to make FreeNX work.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Mon, 08 Sep 2008 13:00:35 -0300
+
+freenx-server (0.7.3-0freenxteam2~ppa1) hardy; urgency=low
+
+  * Update dependencies
+  * Update 02_ubuntu_paths
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 06 Sep 2008 13:23:39 -0300
+
+freenx-server (0.7.3-0freenxteam1) hardy; urgency=low
+
+  * Add an workaround to not break running server on upgrades
+  * Upload to FreeNX-Team ppa
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Tue, 02 Sep 2008 15:48:51 -0300
+
+freenx-server (0.7.3-0freenxteam1~ppa9) hardy; urgency=low
+
+  * rename freenx-nxredir to freenx-media, and add a transitional package.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Tue, 02 Sep 2008 15:17:38 -0300
+
+freenx-server (0.7.3-0freenxteam1~ppa8) hardy; urgency=low
+
+  * Add patch to correct init script to not perform a cleanup when the server
+    is already started
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Tue, 02 Sep 2008 14:53:10 -0300
+
+freenx-server (0.7.3-0freenxteam1~ppa7) hardy; urgency=low
+
+  * Install init script properly.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Tue, 02 Sep 2008 12:22:26 -0300
+
+freenx-server (0.7.3-0freenxteam1~ppa6) hardy; urgency=low
+
+  * Add patch to correct the clean rule and remove workarounds on
+    debian/rules
+  * Correct 03_make_aclpaths_configurable.dpatch
+  * Apply patches before clean. Needed before the patch go upstream
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sun, 31 Aug 2008 11:46:05 -0300
+
+freenx-server (0.7.3-0freenxteam1~ppa5) hardy; urgency=low
+
+  * Add patches to use configurable binaries for *acl and checkload
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 30 Aug 2008 15:57:13 -0300
+
+freenx-server (0.7.3-0freenxteam1~ppa4) hardy; urgency=low
+
+  * Correct conffiles
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 30 Aug 2008 15:26:05 -0300
+
+freenx-server (0.7.3-0freenxteam1~ppa3) hardy; urgency=low
+
+  * Put samples at /etc/nxserver dir (Changes at freenx are pending)
+  * Add samples to conffiles
+  * Fix nxshadowacl.sample name
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 30 Aug 2008 14:17:24 -0300
+
+freenx-server (0.7.3-0freenxteam1~ppa2) hardy; urgency=low
+
+  * Add missing files
+  * Move samples to doc file
+  * Put node.conf at conffiles
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 30 Aug 2008 12:42:31 -0300
+
+freenx-server (0.7.3-0freenxteam1~ppa1) intrepid; urgency=low
+
+  * New upstream release
+  * debian/patches:
+    - 01_makefile: Dropped, applied upstream
+    - 02_ubuntu_paths: Updated
+    - 05_resume_on_different_os: Don't apply. Needs review
+    - 02_fix_X0_mirroring: Dropped, corrected upstream in a different way
+    - 04_nxdesktop_rootless_fix: Don't apply, mostly applied upstream
+    - 05_source_xresources_fix: Dropped, applied upstream
+    - 08_nx-session-launcher: Updated with new version, old version is
+      applied upstream
+  * Reload dbus configuration on freenx-session-launcher postinst
+  * Disabled 08_nx-session-launcher for now.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Fri, 29 Aug 2008 21:10:01 -0300
+
+freenx-server (0.7.2+svn544-0freenxteam6) intrepid; urgency=low
+
+  * Add conflicts on freenx-session-launcher (< 0.7.2+svn544-0freenxteam5)
+  * Execute nx-session-launcher instead of nx-session-launcher-suid
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sun, 27 Jul 2008 14:54:54 -0300
+
+freenx-server (0.7.2+svn544-0freenxteam5) intrepid; urgency=low
+
+  * Move nx-session-launcher-suid to freenx-server packages
+  * Use nx-session-launcher-suid by default
+  * Set/Remove suid on nx-session-launcher package
+  * Depends on consolekit | freenx-nxdesktop | freenx-nxviewer
+  * Fall back to ck-launch-session if ck-session-launcher-suid is not suid
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sun, 27 Jul 2008 12:48:44 -0300
+
+freenx-server (0.7.2+svn544-0freenxteam4) intrepid; urgency=low
+
+  * Change section to x11
+  * Change Maintainer to FreeNX Team
+  * Depends on gnome-session | ksmserver | xfce4-session | freenx-nxdesktop |
+    freenx-nxviewer
+  * Upload to FreeNX Team PPA
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 26 Jul 2008 20:53:32 -0300
+
+freenx-server (0.7.2+svn544-0freenxteam3) intrepid; urgency=low
+
+  * Remove patch 06_fix_mv. Applied upstream.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 26 Jul 2008 19:43:51 -0300
+
+freenx-server (0.7.2+svn544-0freenxteam2) intrepid; urgency=low
+
+  * Merge from Jeremy Wilkins package
+  * Merge from Marcelo Shima package
+  * Patches:
+    - 03_nxserver_color_depth_fix removed, applied upstream.
+    - 01_ubuntu_paths.dpatch deactivated, needs review.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sat, 26 Jul 2008 16:21:18 -0300
+
+freenx-server (0.7.2+svn544-0freenxteam1) hardy; urgency=low
+
+  * First upload to FreeNX Team PPA.
+
+ -- Marcelo Boveto Shima <marceloshima@gmail.com>  Sun, 13 Jul 2008 18:13:51 -0300
+
+freenx-server (0.7.2+svn544-0.11~px) unstable; urgency=low
+
+  * Non-maintainer upload
+  * fixed patch: 02_ubuntu_paths
+  * fixed patch: 05_resume_on_different_os.dpatch
+  * removed patch: 06_fix_mv.dpatch
+  * Added Build-Depends: xutils-dev
+
+ -- Per Hansen <spamhans@yahoo.de>  Sat, 20 Jun 2008 00:00:00 +0200
+
+freenx-server (0.7.2-0.1~px) unstable; urgency=low
+
+  * Non-maintainer upload
+  * New upstream release: 0.7.2
+  * Standards-Version: 3.8.0
+  * embedded some changes from http://ppa.launchpad.net/marceloshima/
+
+ -- Per Hansen <spamhans@yahoo.de>  Sat, 14 Jun 2008 00:00:00 +0200
+
+freenx (0.7.1-1.1~px) unstable; urgency=low
+
+  * Non-maintainer upload
+  * Updated to Debian Policy from 3.6.2 to 3.7.3
+  * Fixed all lintian warnings
+  * Created manpages for nxserver and nxsetup
+  * Fixed templates
+  * Rewrote copyright file
+  * Fixed dependencies
+
+ -- Per Hansen <spamhans@yahoo.de>  Sun,  2 Mar 2008 0:00:00 +0100
+
+freenx-server (0.7.2-1hardy2) hardy; urgency=low
+
+  * Added patch to support Windows RDP rootless mode
+
+ -- Jeremy Wilkins (Jesus Is Lord) <wjeremy@shaw.ca>  Tue, 13 May 2008 16:41:19 -0600
+
+freenx-server (0.7.2-1hardy1) hardy; urgency=low
+
+  * First Hardy release
+    - Being built in Gutsy still due to NX library linker errors
+  * Applied patch to fix resuming Windows sessions on linux
+    - Now you can suspend and resume a suspended Windows client
+      session on Linux and a Linux client session on Windows
+  * Compiled against new nx-3.2.0 libraries
+
+ -- Jeremy Wilkins (Jesus Is Lord) <wjeremy@shaw.ca>  Sun, 11 May 2008 00:21:15 -0600
+
+freenx-server (0.7.2-0) gutsy; urgency=low
+
+  * New upstream release and namechange
+  * Abandoned nxpasswd wrapper supporting VNC proxy on Debian as it
+    didn't work anyways, new release fixes this
+  * VNC proxy should work now, but it hasn't been tested
+  * Removed patches supporting the old NX 3.0.0 backend method
+  * Changed patches to modify nxloadconfig instead of node.conf
+    as per Fabian Franz's rant on changing defaults in node.conf
+
+ -- Jeremy Wilkins (Jesus Is Lord) <wjeremy@shaw.ca>  Sun, 23 Mar 2008 00:06:00 -0600
+
+freenx (0.7.1-1) gutsy; urgency=low
+
+  * Update node.conf to have more sane defaults
+
+ -- Jeremy Wilkins (Jesus Is Lord) <wjeremy@shaw.ca>  Wed, 16 Jan 2008 22:07:35 -0600
+
+freenx (0.7.1-0) gutsy; urgency=low
+
+  * New upstream release
+    + Patch provided to allow for NX 3.0.0 support.
+
+ -- Jeremy Wilkins (Jesus Is Lord) <wjeremy@shaw.ca>  Thu, 19 Oct 2007 01:41:35 -0600
+
+>>>>>>> MERGE-SOURCE
+freenx (0.6.0-0~seveas2) feisty; urgency=low
+
+  * Re-introduce dpatch, no more patch-embedded-in-diff.gz
+
+ -- Dennis Kaarsemaker <dennis@blackbird.kaarsemaker.net>  Sun, 29 Apr 2007 20:53:25 +0200
+
+freenx (0.6.0-0~seveas1) feisty; urgency=low
+
+  * New upstream release. Dropped some no longer needed patches, adjusted some
+    others and kicked out dpatch. For now it's all in diff.gz, but I'll split
+    out patches later
+  * Keytype question downgraded to low priority, defaulting to Nomachine Keys 
+
+ -- Dennis Kaarsemaker <dennis@blackbird.kaarsemaker.net>  Sun, 22 Apr 2007 21:28:07 +0200
+
+freenx (0.4.4+0.4.5-4ubuntu3) unstable; urgency=low
+
+  * Add binutils to the dependencies, nxloadconfig uses the strings command
+
+ -- Dennis Kaarsemaker <dennis@kaarsemaker.net>  Fri,  4 Aug 2006 11:09:57 +0200
+
+freenx (0.4.4+0.4.5-4ubuntu2) unstable; urgency=low
+
+  * Don't patch node.conf.sample but nxloadconfig
+  * Add dbus support
+
+ -- Dennis Kaarsemaker <dennis@kaarsemaker.net>  Sun, 28 May 2006 23:55:01 +0200
+
+freenx (0.4.4+0.4.5-4ubuntu1) unstable; urgency=low
+
+  * Re-add the ubuntu fontpath patch
+
+ -- Dennis Kaarsemaker <dennis@kaarsemaker.net>  Thu, 11 May 2006 10:53:27 +0200
+
+freenx (0.4.4+0.4.5-4) unstable; urgency=low
+
+  * add r167 from upstream svn, freenx-0.4 branch:
+    - Security: Added timeout for first stage of authentication to prevent
+      DOS.
+  * adapt for X.org 7.
+  * depend on openssh-{server,client} directly.
+  * minor touch ups.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 13 Apr 2006 01:20:44 +0200
+
+freenx (0.4.4+0.4.5-3) unstable; urgency=low
+
+  * remodel --auto patch following upstream conventions.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed,  7 Sep 2005 21:56:48 +0200
+
+freenx (0.4.4+0.4.5-2) unstable; urgency=low
+
+  * ensure policy 3.10.1 conformity (debconf is the only way to interact with
+    the user --> freenx 0.4.5 changes).
+  * ensure policy 10.8 conformity (delete stale log files).
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun,  4 Sep 2005 03:40:32 +0200
+
+freenx (0.4.4+0.4.5-1) unstable; urgency=low
+
+  * (NOT RELEASED YET) New upstream release
+  * (NOT RELEASED YET) Test version of the unreleased, but already tagged 0.4.5
+    version of freenx
+  * remove bashisms in maintainer scripts
+  * suggest esound-clients and libarts1c2 | libarts1.
+  * suggest smbfs and cupsys.
+  * add cdebconf as alternative
+  * fix /etc/nxserver/node.conf.
+  * hardcode nx 1.5.0 support.
+  * make rootless support default.
+  * add tests and debconf warning for /etc/passwd and /etc/shadow.
+  * tighten dependency on >= nx 1.4.90 (1.5.0 release).
+  * disable connect test in postinst (nxsetup ... --auto), as this would break
+    the non interactive nature of maintainer scripts.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat,  3 Sep 2005 23:39:35 +0200
+
+freenx (0.4.4-0) UNRELEASED; urgency=low
+
+  * (NOT RELEASED YET) New upstream release
+  * depend on nx 1.5.0.
+  * ENABLE_1_5_0_BACKEND="1" in /etc/nxserver/node.conf is required!
+  * add esound-clients libarts1c2 || libarts1 to suggests.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 17 Aug 2005 17:54:32 +0200
+
+freenx (0.4.3-0) UNRELEASED; urgency=low
+
+  * (NOT RELEASED YET) New upstream release:
+    - Fixed reconnection problems with !M 1.5.0 client.
+    - Fixed reconnection problems with !M 1.5.0 backend.
+    - Added evaluation of $NX_ETC_DIR/node.conf.d/* config files.
+    - Fixed a possible security problem. (The client was able to overwrite
+      parameters set by the server)
+    - Added ENABLE_1_5_0_BACKEND configuration directive:
+      - Added support for fake cookie authentication with !M 1.5.0 client and
+        1.5.0 backend.
+      - Fixed nxagent termination problems with !M 1.5.0 backend.
+    - Added secure logging
+    - Passwords are no longer shown in log files.
+    - Security: Certain passwords for VNC/RDP could have been visible via
+      `ps aux`.
+    - Added experimental usermode authentication scheme. (Disabled by default)
+  * remove previously backported upstream patches.
+  * adapt 01_binpath.dpatch.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 29 Jul 2005 00:13:47 +0200
+
+freenx (0.4.2-0) UNRELEASED; urgency=low
+
+  * new upstream version.
+  * initial svn commit.
+  * implement upstream patch for initial nxclient 1.5.0 compatibility.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 26 Jul 2005 23:12:24 +0200
+
+freenx (0.4.1-0alpha5) experimental; urgency=low
+
+  * include full source in *.changes.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 12 Jul 2005 12:18:34 +0200
+
+freenx (0.4.1-0alpha4) experimental; urgency=low
+
+  * add missing build-dep for dpatch.
+  * handle symlinks with dh_link.
+  * include node.conf.sample as documentation.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 12 Jul 2005 12:15:32 +0200
+
+freenx (0.4.1-0alpha3) experimental; urgency=low
+
+  * switch to debhelper.
+  * remove incomplete template manpage.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 11 Jul 2005 11:36:23 +0200
+
+freenx (0.4.1-0alpha2) experimental; urgency=low
+
+  * provide necessary path informations to nxagent (nxnode).
+    1.65 +2 -2 freenx/nxnode, rev 1.65, prev_rev 1.64.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 11 Jul 2005 09:49:41 +0200
+
+freenx (0.4.1-0alpha1) experimental; urgency=low
+
+  * update to new upstream version.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 27 Jun 2005 22:41:53 +0200
+
+freenx (0.4.0-0pre4) experimental; urgency=low
+
+  * sanitize "manual key" usage.
+  * update italian debconf translations. 
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon,  6 Jun 2005 13:14:33 +0200
+
+freenx (0.4.0-0pre3) experimental; urgency=low
+
+  * add "manual setup" to debconf options.
+  * update dutch and german debconf translations.
+  * substitute italian and french debconf translations with the english terms.
+  * fix regression in 0.4.0-0pre2 due to improper handling of nxloadconfig.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon,  6 Jun 2005 00:23:44 +0200
+
+freenx (0.4.0-0pre2) experimental; urgency=low
+
+  * move nxloadconfig to /usr/lib/nx/.
+  * fix problems with previous group "root" not existing fix.
+  * add rudimentary manpage for nxserver. 
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun,  5 Jun 2005 18:17:45 +0200
+
+freenx (0.4.0-0pre1) experimental; urgency=low
+
+  * new upstream version.
+  * modify packaging.
+    - move binaries to /usr/lib/nx/
+    - move nxsetup to /usr/sbin/
+    - move nxserver to /usr/bin/
+    - move nxloadconfig to /usr/bin/
+  * fix rare problem when the group "root" doesn't exist.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 28 May 2005 22:04:38 +0200
+
+freenx (0.3.1-5) experimental; urgency=low
+
+  * revert to /usr/bin/ due to various problems.
+  * remove bogus manpages. 
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 25 Apr 2005 15:18:40 +0200
+
+freenx (0.3.1-4) experimental; urgency=low
+
+  * modify packaging.
+    - move binaries to /usr/lib/nx/
+    - move nxsetup to /usr/sbin/
+    - move nxserver to /usr/bin/
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 24 Apr 2005 15:04:27 +0200
+
+freenx (0.3.1-3) experimental; urgency=low
+
+  * fix dependencies, depend on a locally installed xfonts-base in direct
+    violation of section 11.8.5 of the Debian Policy Manual.
+  * add nxssh to suggests.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri,  1 Apr 2005 21:25:23 +0200
+
+freenx (0.3.1-2) experimental; urgency=low
+
+  * ensure correct permission for $SSH_AUTHORIZED_KEYS.
+  * add italian debconf translation (thanks for the contribution).
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 31 Mar 2005 21:34:54 +0200
+
+freenx (0.3.1-1) experimental; urgency=low
+
+  * new upstream version
+  * remove double changelog.
+  * add french and dutch debconf translations (thanks for the contributions).
+  * fix some spelling errors.
+  * fix debconf translations.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 23 Mar 2005 01:00:30 +0100
+
+freenx (0.3.0-2) experimental; urgency=low
+
+  * fix debconf issues, allow dpkg-reconfigure.
+  * update to 0.3.1-pre.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 12 Mar 2005 17:24:07 +0100
+
+freenx (0.3.0-1) experimental; urgency=low
+
+  * new upstream release.
+  * add debconf support.
+  * please remove /home/.nx/ manually. 
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun,  6 Mar 2005 18:25:36 +0100
+
+freenx (0.2.8-1) experimental; urgency=low
+
+  * new upstream release:
+    - Fixed a security blunder. Authority file was not used and so basically
+      xhost +localhost was set.
+    - Fixed two possible security problems (umask was not set correctly).
+  * CVS patches:
+    - Fixed problems with session resume with windows client.
+  * changed nxsetup to create a system user.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 17 Feb 2005 19:36:39 +0100
+
+freenx (0.2.7-1) experimental; urgency=low
+
+  * new upstream release (hopefully fixes knx compatibilty).
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 22 Nov 2004 12:23:25 +0100
+
+freenx (0.2.6-2) experimental; urgency=low
+
+  * fix packaging, allow installing without !M nxclient.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 13 Nov 2004 14:40:29 +0100
+
+freenx (0.2.6-1) experimental; urgency=low
+
+  * new upstream release, fixes potential security weakness:
+    http://mail.kde.org/pipermail/freenx-knx/2004-November/000422.html
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 11 Nov 2004 21:20:18 +0100
+
+freenx (0.2.5-1) experimental; urgency=low
+
+  * new upstream release.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 14 Oct 2004 22:09:22 +0200
+
+freenx (0.2.4-0) experimental; urgency=low
+
+  * rename package to freenx for kalyxo compatibility.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat,  9 Oct 2004 18:04:04 +0200
+
+nxserver (0.2-4.3) experimental; urgency=low
+
+  * re- added nxclient dependency. 
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 19 Sep 2004 19:00:20 +0200
+
+nxserver (0.2-4.2) experimental; urgency=low
+
+  * updated dependencies.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 19 Sep 2004 18:38:29 +0200
+
+nxserver (0.2-4.1) experimental; urgency=low
+
+  * fix dependencies. 
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 12 Sep 2004 17:35:38 +0200
+
+nxserver (0.2-4.0) experimental; urgency=low
+
+  * new upstream prerelease 0.2-4. 
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sun, 12 Sep 2004 16:42:06 +0200
+
+nxserver (0.2-3.92) experimental; urgency=low
+
+  * new upstream prerelease 0.2-4pre2 (internal testing). 
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 11 Sep 2004 21:38:10 +0200
+
+nxserver (0.2-3.91) experimental; urgency=low
+
+  * new upstream prerelease 0.2-4pre1 (internal testing). 
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 11 Sep 2004 17:28:38 +0200
+
+nxserver (0.2-3.1) unstable; urgency=low
+
+  * fix ssl link negotiation (upstream patch). 
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 11 Sep 2004 16:06:01 +0200
+
+nxserver (0.2-3.0) unstable; urgency=low
+
+  * new upstream version. 
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 11 Sep 2004 12:41:14 +0200
+
+nxserver (0.2-2.3) unstable; urgency=low
+
+  * add nclient as a dependency. 
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 10 Sep 2004 23:53:18 +0200
+
+nxserver (0.2-2.2) unstable; urgency=low
+
+  * added compatibility with nomachine's nxclient.
+  * move package formally to unstable for dist-upgrade reasons. 
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 10 Sep 2004 23:41:39 +0200
+
+nxserver (0.2-2.1) unstable; urgency=low
+
+  * Slight changes to the packaging.
+  * Take over package maintainership for testing releases (upstream author is
+    still Fabian Franz of course).
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 10 Sep 2004 23:38:16 +0200
+
+nxserver (0.2-2) experimental; urgency=low
+
+  * new upstream release.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 10 Sep 2004 13:36:42 +0200
+
+nxserver (0.2-1) experimental; urgency=low
+
+  * new upstream release.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu,  9 Sep 2004 01:31:54 +0200
+
+nxserver (0.1-2) experimental; urgency=low
+
+  * Slight changes to the packaging.
+  * Take over package maintainership (upstream author is still Fabian Franz of
+    course).
+
+ -- Peter Rockai (mornfall) <mornfall@danill.sk>  Mon, 23 Aug 2004 19:45:14 +0200
+
+nxserver (0.1-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Fabian Franz <nxserver@fabian-franz.de>  Tue,  3 Aug 2004 19:03:01 +0200
+

@@ -1,0 +1,37 @@
+This package was debianized by Fabian Franz <ffranz@Enterprise> on
+Tue,  3 Aug 2004 19:03:01 +0200.
+
+The current Debian maintainer is Per Hansen <spamhans@yahoo.de>
+
+It was downloaded from: http://download.berlios.de/freenx/freenx-0.7.1.tar.gz
+
+Upstream Authors: Fabian Franz, Rick Stout, Thorsten Sandfuchs, Kurt Pfeifle,
+                  Jon Severinsson, Stuart Herbert, Jonathan "Arrouan" Rouzaud-Cornabas
+
+Copyright: 2004 - 2007 Fabian Franz
+           2004        Rick Stout
+           2005 - 2007 Thorsten Sandfuchs
+           2005 - 2007 Kurt Pfeifle
+           2005        Jon Severinsson
+           2004        Gentoo Foundation (Stuart Herbert)
+           See AUTHORS and ChangeLog all involved persons
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License with
+ the Debian GNU/Linux distribution in file /usr/share/common-licenses/GPL;
+ if not, write to the Free Software Foundation, Inc.,
+ 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.
+
+On Debian systems, the complete text of the GNU General Public
+License, version 2, can be found in /usr/share/common-licenses/GPL-2.
+
+The Debian packaging is (C) 2008, Per Hansen <spamhans@yahoo.de> and
+is licensed under the GPL, see above.

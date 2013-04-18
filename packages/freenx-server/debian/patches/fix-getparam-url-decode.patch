@@ -1,0 +1,21 @@
+Add handling of '=' in the CMDLINE.
+This was an issue when we were passing a command line for unix type of
+ gnome-session --session=2d-unity
+The '=' was not getting decoded and gnome-session would die.
+--- a/nxnode
++++ b/nxnode
+@@ -72,9 +72,11 @@
+ 
+ getparam()
+ {
+-	stringinstring "&$1=" "$CMDLINE" || return 1
+-	echo "$CMDLINE" |  tr "&" "\n" | egrep "^"$1"=" | awk -F= '{ VAL=$2 } END { print VAL }' | sed 's|%24|$|'
+-	return 0
++	python -c "
++import sys; from urlparse import parse_qs;
++v=parse_qs(sys.argv[2]).get(sys.argv[1],[None])[0];
++if (v==None): sys.exit(1);
++print v;" "$1" "${CMDLINE}"
+ }
+ 
+ find_app()

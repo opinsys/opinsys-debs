@@ -1,0 +1,90 @@
+.TH NXSERVER 1
+.SH NAME
+nxserver \- A script to start the NX server for thin-clients.
+.SH SYNOPSIS
+.B nxserver
+.I "[options]"
+.SH DESCRIPTION
+.B FreeNX
+consists of some scripts to configure the free NX server by NoMachine.
+.PP
+This manual page documents briefly 
+.BR FreeNX
+.
+This manual page was written for the Debian GNU/Linux distribution
+because the original program does not have a manual page.
+
+.SH OPTIONS
+.TP
+.B \--adduser <user>
+Add a new user in PASSDB backend. PASSDB is deprecated.
+.TP
+.B \--passwd <user>
+Change password of <user>
+Add a new user in PASSDB backend. PASSDB is deprecated.
+.TP
+.B \--deluser <user>
+Remove a user from PASSDB backend. PASSDB is deprecated.
+.TP
+.B \--listuser
+List enabled users from PASSDB backend. PASSDB is deprecated.
+.TP
+.B \--start
+Start the nx server
+.TP
+.B \--stop
+Stop the nx server
+.TP
+.B \--status
+Show status of nx server
+.TP
+.B \--restart
+Restart the nx server. (start,stop)
+.TP
+.B \--list [ user | sessionid ]
+List running sessions of user or sessionid
+.TP
+.B \--history [ user | sessionid | clear ]
+Show history [ of user | sessionid ] or clear the history
+.TP
+.B \--terminate <user | :display | sessionid>
+Terminate the session pointed to by
+       sessionid or display, or all sessions of the specified user.
+       Use * for all sessions.
+.TP
+.B \--force-terminate
+Like terminate, but removes also session info.
+.TP
+.B \--suspend <user | :display | sessionid>
+Suspend the session pointed to by
+       sessionid or display, or all sessions of the specified user.
+       Use * for all sessions.
+.TP
+.B \--cleanup
+Terminates all running sessions. Useful after power-outage.
+.TP
+.B \--broadcast <message>: Send a message to all users
+.TP
+.B \--send <user | :display | sessionid> <message>
+Send a message to the specified user or sessionid
+
+.SH FILES
+The /etc/nxserver/node.conf is the main configuration file.
+
+.SH NOTES
+NoMachine offers a commercial and a freeware version of this server.
+The freeware is named "NX Free Edition" and limited to two users.
+FreeNX does not have any connection with "NX Free Edition" and does
+not have users limitations.
+
+FreeNX can be runned using qtnx but a non-free "NX Client" which can
+be downloaded from http://www.nomachine.com/download.php is
+recommended
+
+.SH KONTACT
+Informations can be found on http://freenx.berlios.de/.
+
+.SH AUTHOR
+This manual page was written by Per Hansen <spamhans@yahoo.de>,
+for the Debian GNU/Linux system (but may be used by others).
+

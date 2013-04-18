@@ -1,0 +1,96 @@
+Index: freenx-server-0.7.3.git100327/nxnode
+===================================================================
+--- freenx-server-0.7.3.git100327.orig/nxnode	2010-03-28 22:33:26.062038843 -0300
++++ freenx-server-0.7.3.git100327/nxnode	2010-03-28 22:46:19.752123761 -0300
+@@ -487,6 +487,9 @@
+ 		nxlog "$FUNCNAME: NODE_WM_PID=\"$NODE_WM_PID\""
+ 	fi
+ 
++	#echo "Xft.dpi: 96" | DISPLAY=:$display xrdb -merge >>"$USER_FAKE_HOME/.nx/C-$sess_id/session" 2>&1
++	#[ -d /etc/X11/Xresources ] && xrdb -display :$display -merge /etc/X11/Xresources/* >>"$USER_FAKE_HOME/.nx/C-$sess_id/session" 2>&1
++
+ 	#
+ 	# Use Xsession to execute the Desktop session
+ 	#
+@@ -517,8 +520,13 @@
+ 	#
+ 	# Startup the application
+ 	#
+-	nxlog "$FUNCNAME: Starting NODE_APPLICATION with /etc/nxserver/Xsession"
+-	DISPLAY=:$display /etc/nxserver/Xsession $NODE_APPLICATION >>"$USER_FAKE_HOME/.nx/C-$sess_id/session" 2>&1 &
++	if [ -x "/etc/nxserver/Xsession" ]
++	then
++		nxlog "$FUNCNAME: Starting NODE_APPLICATION with /etc/nxserver/Xsession"
++		NODE_APPLICATION="/etc/nxserver/Xsession $NODE_APPLICATION"
++	fi
++	
++	DISPLAY=:$display $NODE_APPLICATION >>"$USER_FAKE_HOME/.nx/C-$sess_id/session" 2>&1 &
+ 	NODE_APP_PID=$!
+ 	nxlog "$FUNCNAME: Start successful. NODE_APP_PID=$NODE_APP_PID"
+ 	
+@@ -998,6 +1006,12 @@
+ 	#JJK: Also copy over pstoraster.convs
+ 	cp -af "$CUPS_ETC"/mime.* "$CUPS_ETC"/pstoraster.convs "$USER_FAKE_HOME/.nx/C-$sess_id/cups/"
+ 
++	if [ -e "/etc/apparmor.d/usr.sbin.cupsd" ]
++	then
++		cp /usr/sbin/cupsd "$USER_FAKE_HOME/.nx/C-$sess_id/cups/"
++		COMMAND_CUPSD="$USER_FAKE_HOME/.nx/C-$sess_id/cups/cupsd"
++	fi
++
+ 	# start cupsd
+ #JJK: Note the directive PidFile in the original cupsd.conf intended for 
+ #JJK: recording the pid is a Debianism. Instead, we will use the non-daemon
+@@ -1907,9 +1921,9 @@
+ 	# dimbor: add russian, save cmdstr and kill dialogs
+ 	if [ -n "$SMB_MOUNT_OPTIONS" ]
+ 	then
+-	    MNTSTR="$COMMAND_SMBMOUNT //$computername/$share $dir -o username=$username,password=$password,ip=127.0.0.1,port=$port,$SMB_MOUNT_OPTIONS 2>&1"
++	    MNTSTR="PASSWD=\"$password\" $COMMAND_SMBMOUNT //$computername/$share $dir -o username=$username,ip=127.0.0.1,port=$port,$SMB_MOUNT_OPTIONS 2>&1"
+ 	else
+-	    MNTSTR="$COMMAND_SMBMOUNT //$computername/$share $dir -o username=$username,password=$password,ip=127.0.0.1,port=$port 2>&1"
++	    MNTSTR="PASSWD=\"$password\" $COMMAND_SMBMOUNT //$computername/$share $dir -o username=$username,ip=127.0.0.1,port=$port 2>&1"
+ 	fi
+ 	echo "$DELIM 701 Attempt to start $MNTSTR"
+ 	error=$($MNTSTR)
+@@ -1939,7 +1953,7 @@
+ 	type=$(getparam type)
+ 	port=$(getparam port)
+ 	username=$(getparam username)
+-    	password=$(getparam password)
++	password=$(getparam password)
+ 	share=$(getparam share)
+ 	printer=$(getparam printer)
+ 	computername=$(getparam computername)
+@@ -2153,6 +2167,11 @@
+ 		cmd_node_suspend
+ 	;;
+ 	--smbmount)
++		if [ ! "$SLAVE_MODE" = "1" ]
++		then
++			# double fork
++			trap '' 1; for ((i=3; i<255; i++)); do eval "exec $i<&- $i>&-"; done
++		fi
+ 		# chg by dimbor
+ 	   if [ "$ENABLE_SHARE_MULTIMOUNT" = "1" ]
+ 	   then
+@@ -2168,6 +2187,11 @@
+ 	   fi
+ 	;;
+ 	--addprinter)
++		if [ ! "$SLAVE_MODE" = "1" ]
++		then
++			# double fork
++			trap '' 1; for ((i=3; i<255; i++)); do eval "exec $i<&- $i>&-"; done
++		fi
+ 		# chg by dimbor
+ 		if [ "$ENABLE_CUPS_SERVER_MODE" = "1" ]
+ 		then
+@@ -2211,6 +2235,7 @@
+ 	# New slave mode accepts more than 1 command at a time
+ 	echo "NX> 716 Slave mode started successfully."
+ 	NODE_SESSION=""
++	SLAVE_MODE="1"
+ 
+ 	while read CMD
+ 	do

@@ -1,0 +1,40 @@
+Description: Upstream changes introduced in version 0.7.3+teambzr104-0ubuntu1~karmic1
+ This patch has been created by dpkg-source during the package build.
+ Here's the last changelog entry, hopefully it gives details on why
+ those changes were made:
+ .
+ freenx-server (0.7.3+teambzr104-0ubuntu1~karmic1) karmic; urgency=low
+ .
+   * Backport to karmic
+ .
+ The person named in the Author field signed this changelog entry.
+Author: Marcelo Boveto Shima <marceloshima@gmail.com>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- freenx-server-0.7.3+teambzr104.orig/nxnode
++++ freenx-server-0.7.3+teambzr104/nxnode
+@@ -696,6 +696,13 @@ EOF
+ 	# copy mime.* files
+ 	cp -af "$CUPS_ETC"/mime.* "$USER_FAKE_HOME/.nx/C-$sess_id/cups/"
+ 
++	# If cupsd is profiled by apparmor, then we need a non profiled executable.
++	if [ -e "/etc/apparmor.d/usr.sbin.cupsd" ]
++	then
++		cp /usr/sbin/cupsd "$USER_FAKE_HOME/.nx/C-$sess_id/cups/"
++		COMMAND_CUPSD="$USER_FAKE_HOME/.nx/C-$sess_id/cups/cupsd"
++	fi
++
+ 	# start cupsd
+ 	$COMMAND_CUPSD -c "$USER_FAKE_HOME/.nx/C-$sess_id/cups/cupsd.conf" &>/dev/null </dev/null
+ 

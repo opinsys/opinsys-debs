@@ -1,0 +1,8 @@
+etc/nxserver
+etc/nxserver/node.conf.d
+usr/bin
+usr/lib/nx
+var/lib/nxserver/db/failed
+var/lib/nxserver/db/running
+var/lib/nxserver/db/closed
+usr/share/freenx-server/node.conf.d

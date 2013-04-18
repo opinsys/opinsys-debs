@@ -1,0 +1,98 @@
+Source: freenx-server
+Section: x11
+Priority: extra
+Maintainer: Ubuntu MOTU Developers <ubuntu-motu@lists.ubuntu.com>
+Build-Depends: debhelper (>= 7.0.25), xutils-dev | imake
+Standards-Version: 3.8.4
+
+Package: freenx-server
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, debconf (>= 0.5.00) | debconf-2.0,
+ nxagent (>= 2.1.0-0), openssh-server, openssh-client, netcat, expect,
+ bash (>= 2.05), adduser, binutils, x11-xserver-utils, python,
+ nx-common,
+ gnome-session | gnome-session-fallback | kde-runtime | kdebase-workspace-bin | ksmserver | xfce4-session | freenx-rdp | freenx-vnc | lxde-core
+Conflicts: freenx-media
+Recommends: xfonts-base, consolekit
+Suggests: freenx-session-launcher, esound-clients, libarts1c2 | libarts1, xdm, freenx
+Description: Remote desktop/application/thin-client server core features
+ NX is a software suite from NoMachine which implements very efficient
+ compression of the X11 protocol. This increases performance when
+ using X applications over a network, especially a slow one.
+ .
+ This package contains a free (GPL) implementation of the nxserver component.
+
+Package: freenx
+Architecture: all
+Depends: ${misc:Depends}, freenx-server, freenx-smb, freenx-rdp, freenx-vnc
+Conflicts: freenx-media
+Description: Remote desktop/application/thin-client server
+ NX is a software suite from NoMachine which implements very efficient
+ compression of the X11 protocol. This increases performance when
+ using X applications over a network, especially a slow one.
+ .
+ This package is a meta package that depends on freenx-server (core server),
+ freenx-smb (printer/folder), freenx-rdp (connect to rdp session),
+ freenx-vnc (connect to vnc session)
+
+Package: freenx-usermode
+Architecture: all
+Depends: ${misc:Depends}, freenx-server
+Description: Remote desktop/application/thin-client server
+ NX is a software suite from NoMachine which implements very efficient
+ compression of the X11 protocol. This increases performance when
+ using X applications over a network, especially a slow one.
+ .
+ This package is contains the usermode binary files.
+
+Package: freenx-smb
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, smbfs,
+ cups | cupsys
+Conflicts: freenx-media
+Description: Remote desktop/application/thin-client server smb support
+ NX is a software suite from NoMachine which implements very efficient
+ compression of the X11 protocol. This increases performance when
+ using X applications over a network, especially a slow one.
+ .
+ This package contains the programs for printer support.
+
+Package: freenx-vnc
+Architecture: all
+Depends: ${misc:Depends}, freenx-server, xvnc4viewer | vnc-viewer, x11vnc
+Description: Remote desktop/application/thin-client server VNC proxy
+ NX is a software suite from NoMachine which implements very efficient
+ compression of the X11 protocol. This increases performance when
+ using X applications over a network, especially a slow one.
+ .
+ This is a meta package that depends on a vnc client.
+ A vnc client is used to proxy a vnc session using nx compression.
+
+Package: freenx-rdp
+Architecture: all
+Depends: ${misc:Depends}, freenx-server, rdesktop
+Description: Remote desktop/application/thin-client server RDP proxy
+ NX is a software suite from NoMachine which implements very efficient
+ compression of the X11 protocol. This increases performance when
+ using X applications over a network, especially a slow one.
+ .
+ This is a meta package that depends on rdesktop.
+ rdesktop is used to proxy a rdp session using nx compression.
+
+Package: freenx-session-launcher
+Architecture: any
+Depends: ${misc:Depends}, python, consolekit, freenx-server | nxnode,
+ python-dbus
+Description: Remote desktop/application/thin-client server ConsoleKit helper
+ NX is a software suite from NoMachine which implements very efficient
+ compression of the X11 protocol. This increases performance when
+ using X applications over a network, especially a slow one.
+ .
+ This package contains a helper launcher to create a ConsoleKit session.
+
+Package: nx-common
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: freenx-server (< 0.7.3+teambzr104-0)
+Description: NX server common package.
+ Common package for the NX server alternatives

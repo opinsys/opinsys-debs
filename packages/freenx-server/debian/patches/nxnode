@@ -1,0 +1,69 @@
+Index: freenx-server-0.7.3.git110520.3884279/nxnode
+===================================================================
+--- freenx-server-0.7.3.git110520.3884279.orig/nxnode	2011-05-21 13:53:38.351243509 -0300
++++ freenx-server-0.7.3.git110520.3884279/nxnode	2011-05-21 19:44:23.802491525 -0300
+@@ -559,6 +559,9 @@
+ 		nxlog "$FUNCNAME ($$): NODE_WM_PID=\"$NODE_WM_PID\"" &
+ 	fi
+ 
++	#echo "Xft.dpi: 96" | DISPLAY=:$display xrdb -merge >>"$USER_FAKE_HOME/.nx/C-$sess_id/session" 2>&1
++	#[ -d /etc/X11/Xresources ] && xrdb -display :$display -merge /etc/X11/Xresources/* >>"$USER_FAKE_HOME/.nx/C-$sess_id/session" 2>&1
++
+ 	#
+ 	# Use Xsession to execute the Desktop session
+ 	#
+@@ -590,7 +593,14 @@
+ 	# Startup the application
+ 	#
+ 	nxlog "$FUNCNAME ($$): Starting NODE_APPLICATION with /etc/nxserver/Xsession" &
+-	DISPLAY=:$display /etc/nxserver/Xsession $NODE_APPLICATION >>"$USER_FAKE_HOME/.nx/C-$sess_id/session" 2>&1 &
++
++	if [ -x "/etc/nxserver/Xsession" ]
++	then
++		nxlog "$FUNCNAME: Starting NODE_APPLICATION with /etc/nxserver/Xsession"
++		NODE_APPLICATION="/etc/nxserver/Xsession $NODE_APPLICATION"
++	fi
++	
++	DISPLAY=:$display $NODE_APPLICATION >>"$USER_FAKE_HOME/.nx/C-$sess_id/session" 2>&1 &
+ 	NODE_APP_PID=$!
+ 	nxlog "$FUNCNAME ($$): Start successful. NODE_APP_PID=$NODE_APP_PID" &
+ 	
+@@ -1096,6 +1106,12 @@
+ 	#JJK: Also copy over pstoraster.convs
+ 	cp -af "$CUPS_ETC"/mime.* "$CUPS_ETC"/pstoraster.convs "$USER_FAKE_HOME/.nx/C-$sess_id/cups/"
+ 
++	if [ -e "/etc/apparmor.d/usr.sbin.cupsd" ]
++	then
++		cp /usr/sbin/cupsd "$USER_FAKE_HOME/.nx/C-$sess_id/cups/"
++		COMMAND_CUPSD="$USER_FAKE_HOME/.nx/C-$sess_id/cups/cupsd"
++	fi
++
+ 	# start cupsd
+ #JJK: Note the directive PidFile in the original cupsd.conf intended for 
+ #JJK: recording the pid is a Debianism. Instead, we will use the non-daemon
+@@ -1222,12 +1238,16 @@
+     [ -n "$6" ] && SMB_OPTS="$SMB_OPTS""password=$6," || SMB_OPTS="$SMB_OPTS""password=,"
+     SMB_OPTS="$SMB_OPTS""ip=127.0.0.1,port=$4$SMB_MOUNT_OPTIONS"
+     [ $TRY_USER -ne 0 ] && {
++	## verify security pass password as env parameter PASSWD=\"$password\" like
++	## MNTSTR="PASSWD=\"$password\" $COMMAND_SMBMOUNT //$computername/$share $dir -o username=$username,ip=127.0.0.1,port=$port,$SMB_MOUNT_OPTIONS 2>&1"
+ 	MNTSTR="$COMMAND_SMBMOUNT $1 $2 -o $SMB_OPTS"
+     	nxlog "$FUNCNAME ($$): invoke $MNTSTR 2>&1" &
+ 	error="$($MNTSTR 2>&1)"; RC=$?
+ 	[ $RC -ne 0 ] && nxlog "$FUNCNAME ($$): Mount error: \"$error\"" &
+     }
+     [ $TRY_SUDO -ne 0 -a $RC -ne 0 ] && {
++	## verify security pass password as env parameter PASSWD=\"$password\" like
++	## MNTSTR="PASSWD=\"$password\" $COMMAND_SMBMOUNT //$computername/$share $dir -o username=$username,ip=127.0.0.1,port=$port 2>&1"
+ 	MNTSTR="/usr/bin/sudo $COMMAND_SMBMOUNT $1 $2 -o $5$SMB_OPTS"
+     	nxlog "$FUNCNAME ($$): invoke $MNTSTR 2>&1" &
+ 	error="$($MNTSTR 2>&1)"; RC=$?
+@@ -2169,7 +2189,7 @@
+ 	type=$(getparam type)
+ 	port=$(getparam port)
+ 	username=$(getparam username)
+-    	password=$(getparam password)
++	password=$(getparam password)
+ 	share=$(getparam share)
+ 	printer=$(getparam printer)
+ 	computername=$(getparam computername)

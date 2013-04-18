@@ -1,0 +1,77 @@
+.TH NXSETUP 1
+.SH NAME
+nxsetup \- A script to configure the NX server for thin-clients.
+.SH SYNOPSIS
+.B nxserver
+.I "[options]"
+.SH DESCRIPTION
+.B FreeNX
+consists of some scripts to configure the free NX server by NoMachine.
+.PP
+This manual page documents briefly 
+.BR FreeNX
+.
+This manual page was written for the Debian GNU/Linux distribution
+because the original program does not have a manual page.
+
+.SH OPTIONS
+.TP
+.B \--help
+Display the help message.
+.TP
+.B \--install [--setup-nomachine-key] [--uid <nummber>] [--clean [--purge]]
+Install necessary files and add the special user "nx".
+.TP
+.B \--ignore-errors
+Check for false configuration, but don't complain.
+.TP
+.B \--setup-nomachine-key
+Allow login with the key shipped with the NoMachine
+client. This is fairly secure, and it simplifies the
+configuration of clients. (Using a custom key pair.
+increases security even more, but complicates the
+configuration of clients.)
+Use this option at your own risk.
+.TP
+.B \--ssh2
+Create additionally commercial pubkey-support; beware:
+own _commercial_ ssh2-key is not supported!
+.TP
+.B \--uid <number>
+Give the uid <number> to the user "nx".
+.TP
+.B \--gid <number>
+Give the gid <number> to the user "nx".
+"luseradd", for use in NIS and NISplus environments.
+.TP
+.B \--clean
+Perform an uninstallation prior to installation.
+.TP
+.B \--uninstall [--purge]
+Remove log and session files, as well as the special
+user "nx".
+.TP
+.B \--purge
+Remove extra configuration files and ssh keys when
+performing a "--uninstall".
+Note that node.conf will always be saved.
+
+.SH FILES
+The /etc/nxserver/node.conf is the main configuration file.
+
+.SH NOTES
+NoMachine offers a commercial and a freeware version of this server.
+The freeware is named "NX Free Edition" and limited to two users.
+FreeNX does not have such lemitations
+A client needs the unfree "NX Client" which can be downloaded from
+http://www.nomachine.com/download.php to make use of FreeNX
+
+.SH KONTACT
+Informations can be found on http://freenx.berlios.de/.
+
+.SH AUTHOR
+This manual page was written by Per Hansen <spamhans@yahoo.de>,
+for the Debian GNU/Linux system (but may be used by others).
+
+#.SH SEE ALSO
+#java(1)
