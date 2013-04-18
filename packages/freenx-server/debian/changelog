@@ -1,3 +1,9 @@
+freenx-server (0.7.3.zgit.120322.977c28d-0+opinsys1) quantal; urgency=low
+
+  * Replace dependency on smbfs to cifs-utils
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Thu, 18 Apr 2013 15:46:07 +0300
+
 freenx-server (0.7.3.zgit.120322.977c28d-0~ppa11) precise; urgency=low
 
   * Add dependency alternative on kde-runtime, gnome fallback and lxde-core
