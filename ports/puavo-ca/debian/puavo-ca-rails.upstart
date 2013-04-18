@@ -7,6 +7,6 @@ chdir /var/app/puavo-ca-rails
 
 env RAILS_ENV=production
 
-exec sudo -E -u puavoca bundle exec unicorn_rails -c ./config/unicorn.rb
+exec sudo -E -u puavo bundle exec unicorn_rails -c ./config/unicorn.rb
 
 respawn

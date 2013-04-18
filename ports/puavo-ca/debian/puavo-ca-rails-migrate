@@ -8,4 +8,4 @@ fi
 
 export RAILS_ENV=production
 cd /var/app/puavo-ca-rails
-sudo -E -u puavoca bundle exec rake db:migrate
+sudo -E -u puavo bundle exec rake db:migrate
