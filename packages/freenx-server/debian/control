@@ -47,7 +47,7 @@ Description: Remote desktop/application/thin-client server
 
 Package: freenx-smb
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, smbfs,
+Depends: ${misc:Depends}, ${shlibs:Depends}, cifs-utils,
  cups | cupsys
 Conflicts: freenx-media
 Description: Remote desktop/application/thin-client server smb support
