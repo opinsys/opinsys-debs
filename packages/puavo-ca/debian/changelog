@@ -1,3 +1,9 @@
+puavo-ca (0.2.2-0+opinsys2) precise; urgency=low
+
+  * Fix upstart and migrate user
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 17 Apr 2013 16:41:19 +0300
+
 puavo-ca (0.2.2-0+opinsys1) precise; urgency=low
 
   * Run as rails as puavo user
