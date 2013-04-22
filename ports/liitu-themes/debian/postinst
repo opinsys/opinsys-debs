@@ -26,6 +26,10 @@ case "$1" in
 		  /lib/plymouth/themes/$plymouth_theme 100
 	done
 
+	update-alternatives --install \
+	    /lib/plymouth/themes/text.plymouth text.plymouth \
+	    /lib/plymouth/themes/opinmouth-text/opinmouth-text.plymouth 100
+
 	if which update-initramfs >/dev/null 2>&1
 	then
 	    update-initramfs -u
