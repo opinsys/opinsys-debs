@@ -1,3 +1,11 @@
+liitu-themes (0.2.6-0+opinsys1ubuntu1) precise; urgency=low
+
+  * New upstream release.
+    - Opinmouth plymouth text splash.
+  * Change Debian source format to 3.0 (quilt)
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Mon, 22 Apr 2013 09:51:53 +0300
+
 liitu-themes (0.2.5-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
