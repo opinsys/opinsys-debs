@@ -1,3 +1,9 @@
+liitu-themes (0.2.6-0+opinsys2) precise; urgency=low
+
+  * Install opinmouth-text to text.plymouth alternatives.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Mon, 22 Apr 2013 10:12:43 +0300
+
 liitu-themes (0.2.6-0+opinsys1ubuntu1) precise; urgency=low
 
   * New upstream release.
