@@ -1,0 +1,18 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = "remove" ]; then
+  if [ -x "`which update-mime 2>/dev/null`" ]; then
+    update-mime
+  fi
+  if [ -x "`which update-mime-database 2>/dev/null`" ]; then
+    update-mime-database /usr/share/mime
+  fi
+  if [ -x "`which update-desktop-database 2>/dev/null`" ]; then
+    update-desktop-database /usr/share/applications
+  fi
+  if [ -x "`which update-initramfs 2>/dev/null`" ]; then
+    update-initramfs -u
+  fi
+fi
