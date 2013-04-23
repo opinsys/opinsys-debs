@@ -1,0 +1,21 @@
+Index: cmaptools/Makefile
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ cmaptools/Makefile	2013-04-23 09:32:33.000000000 +0300
+@@ -0,0 +1,16 @@
++INSTALL = install
++INSTALL_PROGRAM = $(INSTALL)
++INSTALL_DATA = $(INSTALL) -m 644
++
++all :
++
++installdirs :
++	mkdir -p $(DESTDIR)/opt
++	mkdir -p $(DESTDIR)/usr/share/applications
++
++install : installdirs
++	cp -ar opt/cmaptools $(DESTDIR)/opt
++	$(INSTALL_DATA) -t $(DESTDIR)/usr/share/applications \
++		cmaptools.desktop
++
++clean :
