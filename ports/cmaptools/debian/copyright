@@ -1,0 +1,208 @@
+This work was packaged for Debian by:
+
+    Juha Erkkilä <Juha.Erkkila@opinsys.fi> on Tue, 16 Aug 2011 14:39:26 +0300
+
+It was downloaded from:
+
+    http://cmap.ihmc.us/download/index.php
+
+Upstream Author(s):
+
+    Institute for Human & Machine Cognition (IHMC)
+
+Copyright:
+
+    Copyright (c) 1998-2010  Institute for Human & Machine Cognition (IHMC)
+
+License:
+
+License Agreement for Public CmapTools Client Software
+
+Copyright (c) 1998-2010  Institute for Human & Machine Cognition (IHMC)
+
+License Agreement for Public CmapTools Client Software NOTICE TO USER:
+PLEASE READ THIS CONTRACT CAREFULLY. BY USING ALL OR ANY PORTION OF
+THE SOFTWARE YOU ACCEPT ALL THE TERMS AND CONDITIONS OF THIS AGREEMENT,
+INCLUDING, IN PARTICULAR THE LIMITATIONS ON: USE CONTAINED IN SECTION
+2; WARRANTY IN SECTION 4; LIABILITY IN SECTION 7. YOU AGREE THAT THIS
+AGREEMENT IS ENFORCEABLE AS ANY WRITTEN NEGOTIATED AGREEMENT SIGNED BY
+YOU. IF YOU DO NOT AGREE, DO NOT USE THIS SOFTWARE.
+
+1. Definitions. "Software" means (a) all of the contents of the files,
+disk(s), CD-ROM(s) or other media with which this Agreement is provided,
+including but not limited to (i) the Public CmapTools Client or third
+party computer information or software; (ii) concept maps, included
+with the distribution or accessible via networked Concept Map Servers;
+(iii) related explanatory written materials or files ("Documentation");
+and (b) upgrades, modified versions, updates, additions, and copies
+of the Software, if any, licensed to you by the Research Foundation
+(collectively, "Updates"). "Use" or "Using" means to access, install,
+download, copy or otherwise benefit from using the functionality of
+the Software in accordance with the Documentation. "Permitted Number"
+means one (1) unless user holds a valid license which specifies a number
+other than one and is granted by Research Foundation. "Computer" means
+an electronic device that accepts information in digital or similar
+form and manipulates it for a specific result based on a sequence of
+instructions. "Research Foundation" means The Research Foundation of the
+University of West Florida, Inc., 11000 University Parkway, Pensacola, FL
+32514. "IHMC" means the Florida Institute for Human & Machine Cognition, a
+not-for-profit corporation created pursuant to 1004.447, F.S., located at
+40 S. Alcaniz St., Pensacola, FL 32502. "University" means the University
+of West Florida, 11000 University Parkway, Pensacola, FL 32514.
+
+2. Software License. As long as you comply with the terms of this License
+Agreement (the "Agreement"), Research Foundation, by and on behalf of
+IHMC, grants to you a non-exclusive non-transferable license to Use the
+Software for the purposes described in the Documentation. Some third party
+materials included in the Software may be subject to other terms and
+conditions, which are typically found either attached herein or in the
+"licenses" sub-directory under the installation directory. Specifically
+all licensees are subject to Sun Microsystem's Java Binary License
+Agreement found in the licenses sub-directory under the installation
+directory.
+
+2.1. General Beta Test Use. Permission to install and use multiple copies
+of the Software on your compatible computer without fee is hereby granted
+in the context of a "Beta Test", provided that the conditions set forth in
+Section 6 are adhered to, the above copyright notice and this permission
+notice appear in all copies, and that the name of IHMC not be used in
+advertising or publicity pertaining to this material without the specific,
+prior written permission of an authorized representative of IHMC.
+
+2.2. Permitted Use. Permission to install and use multiple copies of the
+software, provided that the above copyright notice and this permission
+notice appear in all copies, and that the name of IHMC not be used in
+advertising or publicity pertaining to this material without the specific,
+prior written permission of an authorized representative of IHMC, is
+hereby granted. Use of the Software to access publicly available CmapTools
+servers, within the "cmapdp", or "public" SLP scope, is specifically
+permitted. Use of the Software to access private CmapTools servers, with
+an SLP scope other than that of "cmapdp" or "public" is not available.
+
+3. Intellectual Property Rights. The Software and any copies that you are
+authorized to make are the intellectual property of and are owned by IHMC
+and the University. The structure, organization and code of the Software
+are the valuable trade secrets and contain confidential information. The
+Software is protected by U.S. Patent # 5,506,937. The Software is also
+protected by copyright, including without limitation by United States
+Copyright Law, international treaty provisions and applicable laws in
+the country in which it is being used. You may not copy the Software,
+except as set forth in Section 2 ("Software License"). Any copies that
+you are permitted to make pursuant to this Agreement must contain the
+same copyright and other proprietary notices that appear on or in the
+Software. You agree not to modify, adapt or translate the Software. You
+also agree not to reverse engineer, decompile, disassemble or otherwise
+attempt to discover the source code of the Software.
+
+4. Warranties. RESEARCH FOUNDATION, UNIVERSITY, AND IHMC MAKE NO
+WARRANTIES WHATSOEVER, EXPRESS OR IMPLIED, WITH REGARD TO ANY SERVICES
+PROVIDED UNDER THIS AGREEMENT AND/OR THE LICENSED SOFTWARE, IN WHOLE OR
+IN PART. RESEARCH FOUNDATION, UNIVERSITY,  AND IHMC EXPLICITLY DISCLAIM
+ALL WARRANTIES OF MERCHANTABILITY AND OF FITNESS FOR A PARTICULAR
+PURPOSE. RESEARCH FOUNDATION, UNIVERSITY, AND IHMC EXPRESSLY DO NOT
+WARRANT THAT THE LICENSED SOFTWARE, IN WHOLE OR IN PART, WILL BE ERROR
+FREE, WILL OPERATE WITHOUT INTERRUPTION OR WILL BE COMPATIBLE WITH ANY
+HARDWARE OR SOFTWARE.
+
+5. Pre-release Code. Product is pre-release code and is not at the level
+of performance and compatibility of a final, generally available product
+offering. Product may not operate correctly and may be substantially
+modified prior to first commercial shipment or withdrawn. Product is
+provided "AS IS" without warranty of any kind. WHERE LEGALLY LIABILITY
+CANNOT BE EXCLUDED FOR PRE-RELEASE SOFTWARE, BUT IT MAY BE LIMITED,
+THE COMBINED LIABILITY OF THE RESEARCH FOUNDATION, THE UNIVERSITY,
+AND IHMC SHALL BE LIMITED TO THE SUM OF FIFTY DOLLARS (U.S. $50) IN TOTAL.
+
+6. Beta Test Conditions. In the event that you received or downloaded
+this software in the context of a "Beta Test", this section applies. In
+consideration for receiving a copy of the Software for testing, Licensee
+agrees to serve as a "Beta Test Site" for the Software and will notify
+IHMC of all problems and ideas for enhancements which come to Licensee's
+attention during the period of this Agreement, and hereby assigns to
+Research Foundation, University, IHMC and FIHMC all right, title and
+interest to such enhancements and all property rights therein including
+without limitation all patent, copyright, trade secret, mask work,
+trademark, moral right or other intellectual property rights. Feedback
+to IHMC will be provided via electronic mail to the address "cmapsupport
+"AT" ihmc.us", or via the specified form on the CmapTools web site. Upon
+receipt of a later unreleased version of the Pre-release Software or
+release by IHMC, Research Foundation or its Licensors of a publicly
+released commercial version of the Software, whether as a stand-alone
+product or as part of a larger product, you agree to return or destroy all
+earlier Pre-release Software received from IHMC and to abide by the terms
+of the License Agreement for any such later versions of the Pre-release
+Software. Notwithstanding anything in this Section to the contrary,
+if you are located outside the United States of America, you agree that
+you will return or destroy all unreleased versions of the Pre-release
+Software within thirty (30) days of the completion of your testing of
+the Software when such date is earlier than the date University, IHMC,
+Research Foundation or its Licensors first commercial shipment of the
+publicly released (commercial) Software.
+
+7. Limitation of Liability. THE ENTIRE RISK ARISING OUT OF THE USE
+OR PERFORMANCE OF PRODUCT REMAINS WITH LICENSEE. IN NO EVENT SHALL
+THE RESEARCH FOUNDATION, UNIVERSITY, UNIVERSITY OF WEST FLORIDA BOARD
+OF TRUSTEES, THE FLORIDA BOARD OF GOVERNORS, THE FLORIDA INSTITUTE FOR
+HUMAN AND MACHINE COGNITION, INC., THE STATE BOARD OF EDUCATION, OR THEIR
+LICENSORS (SUBJECT PARTIES) BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE
+OR ANY THIRD PARTY AS A RESULT OF USING OR DISTRIBUTING SOFTWARE. IN
+NO EVENT WILL SUBJECT PARTIES BE LIABLE FOR ANY LOST REVENUE, PROFIT
+OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL, INCIDENTAL
+OR PUNITIVE DAMAGES, HOWEVER CAUSED AND REGARDLESS OF THE THEORY OF
+LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE SOFTWARE, EVEN
+IF THE SUBJECT PARTIES WERE ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+8. Governing Law. This Agreement is to be governed by, construed and
+enforced according to the laws of the United States of America and the
+State of Florida. Venue for any legal action(s) shall be in Pensacola,
+Florida. Any notices, other than normal feedback or questions as to
+product functionality, required by this Agreement shall be given by
+prepaid, first class, certified mail, return receipt requested, addressed
+to: Office of the General Counsel, IHMC, 40 S. Alcaniz St. Pensacola,
+Florida 32502
+
+9. Legal Compliance. Licensee shall comply with all applicable federal,
+state and local laws, regulations, and ordinances in connection with
+its activities pursuant to this Agreement.
+
+10. No Assignment. Licensee may not assign this Agreement without the
+prior written consent of IHMC. This Agreement shall be binding upon and
+inure to the benefit of the parties and their respective administrators,
+successors and assigns.
+
+11. Entirety of Agreement. This Agreement constitutes the entire and
+only agreement between the parties for use of Product and terminates and
+supersedes all prior understandings or agreements on the subject matter
+hereof. No agreements altering or supplementing the terms hereof may be
+made except by means of a written document signed by the duly authorized
+representative of the parties.
+
+12. Terms of Agreement. Failure of the University, Research Foundation,
+or IHMC to enforce a right under this Agreement shall not act as a waiver
+of that right or the ability to later assert that right relative to the
+particular situation involved. Further, if any provision of this Agreement
+shall be found by a court of law to be void, invalid, or unenforceable,
+this shall not affect the validity or enforceability of the remainder
+of this Agreement.
+
+13. Export Regulations. Software, including technical data, is subject to
+U.S. export control laws, including the U.S. Export Administration Act
+and its associated regulations, and may be subject to export or import
+regulations in other countries. Licensee agrees to comply strictly with
+all such regulations and acknowledges that it has the esponsibility
+to obtain licenses to export, re-export, or import Software. Software
+may not be downloaded, or otherwise exported or re-exported (i) into,
+or to a national or resident of, Cuba, Iran, North Korea, Sudan, Syria
+or any country to which the U.S. has embargoed goods; or (ii) to anyone
+on the U.S. Treasury Department's list of Specially Designated Nations
+or the U.S. Commerce Department's Table of Denial Orders.
+
+14. Restricted Rights. Use, duplication or disclosure by the United States
+government is subject to the restrictions as set forth in the Rights in
+Technical Data and Computer Software Clauses in DFARS 252.227-7013(c)
+(1) (ii) and FAR 52.227-19(c) (2) as applicable.
+
+15. Questions regarding use of this software or the licensing thereof
+should be addressed in email to cmapsupport "AT" ihmc.us.
+
+Copyright (c) 1998-2010 Institute for Human & Machine Cognition (IHMC)
