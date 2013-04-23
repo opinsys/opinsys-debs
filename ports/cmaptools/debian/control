@@ -8,7 +8,7 @@ Homepage: http://cmap.ihmc.us/
 
 Package: cmaptools
 Architecture: i386
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, oxygen-icon-theme
 Description: CmapTools Concept Map software
  The IHMC CmapTools software empowers users to
  construct, navigate, share, and criticize knowledge
