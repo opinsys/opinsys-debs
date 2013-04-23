@@ -1,0 +1,14 @@
+Index: mimio-studio/Makefile
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ mimio-studio/Makefile	2013-04-23 12:43:24.000000000 +0300
+@@ -0,0 +1,9 @@
++all:
++
++install:
++	cp -ar etc $(DESTDIR)
++	cp -ar lib $(DESTDIR)
++	cp -ar usr $(DESTDIR)
++	cp -ar var $(DESTDIR)
++
++clean:
