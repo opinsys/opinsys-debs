@@ -1,13 +1,17 @@
-Source: mimio-studio-by-opinsys
+Source: mimio-studio
 Section: misc
 Priority: optional
-Maintainer: Juha Erkkilä <Juha.Erkkila@opinsys.fi>
-Build-Depends: debhelper (>= 7)
-Standards-Version: 3.8.3
-Homepage: http://www.opinsys.fi/
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+Homepage: http://www.mimio.com/en-EM/Products/MimioStudio-Software.aspx
 
-Package: mimio-studio-by-opinsys
+Package: mimio-studio
 Architecture: i386
 Depends: ${misc:Depends}
-Description: Mimio Studio software (repackaged by Opinsys)
- Mimio Studio software (repackaged by Opinsys).
+Description: MimioStudio Classroom Software 
+ MimioStudio is easy-to-learn classroom software solution that can be
+ used with any interactive whiteboards you already have.
+ .
+ MimioStudio has been repackaged by Opinsys with reduced support for
+ languages (only fi, en and sv are supported).
