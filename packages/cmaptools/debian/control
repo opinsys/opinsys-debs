@@ -1,0 +1,15 @@
+Source: cmaptools
+Section: misc
+Priority: extra
+Maintainer: Juha Erkkilä <Juha.Erkkila@opinsys.fi>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.3
+Homepage: http://cmap.ihmc.us/
+
+Package: cmaptools
+Architecture: any
+Depends: ${misc:Depends}
+Description: CmapTools Concept Map software
+ The IHMC CmapTools software empowers users to
+ construct, navigate, share, and criticize knowledge
+ models represented as Concept Maps.
