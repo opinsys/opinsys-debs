@@ -1,3 +1,12 @@
+mimio-studio (9.12.opinsys1-0+opinsys1) quantal; urgency=low
+
+  * Import package to opinsys-debs from liitu-debs.
+  * Fixed upstream version number to reflect the fact that we have
+    made changes to the upstream tarball.
+  * Add Makefile via patch.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Tue, 23 Apr 2013 12:56:33 +0300
+
 mimio-studio-by-opinsys (9.12-opinsys1) lucid; urgency=low
 
   * Repackaged a newer version of mimio-studio, in celebration of
