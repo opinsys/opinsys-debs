@@ -1,3 +1,9 @@
+cmaptools (5.05.08-0+opinsys1) quantal; urgency=low
+
+  * Import packaging from Lucid to Quantal.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Tue, 23 Apr 2013 09:08:55 +0300
+
 cmaptools (5.05.08~opinsys1) unstable; urgency=low
 
   * Update to newer a version of cmaptools.
