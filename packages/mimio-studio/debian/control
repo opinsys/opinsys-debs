@@ -1,0 +1,13 @@
+Source: mimio-studio-by-opinsys
+Section: misc
+Priority: optional
+Maintainer: Juha Erkkilä <Juha.Erkkila@opinsys.fi>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.3
+Homepage: http://www.opinsys.fi/
+
+Package: mimio-studio-by-opinsys
+Architecture: i386
+Depends: ${misc:Depends}
+Description: Mimio Studio software (repackaged by Opinsys)
+ Mimio Studio software (repackaged by Opinsys).

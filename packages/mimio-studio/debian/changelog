@@ -1,0 +1,12 @@
+mimio-studio-by-opinsys (9.12-opinsys1) lucid; urgency=low
+
+  * Repackaged a newer version of mimio-studio, in celebration of
+    the anniversary of the 8.01-opinsys1 -version ;-)
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Wed, 21 Nov 2012 13:24:36 +0200
+
+mimio-studio-by-opinsys (8.01-opinsys1) lucid; urgency=low
+
+  * Repackaged mimio-studio.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Mon, 21 Nov 2011 16:31:02 +0200
