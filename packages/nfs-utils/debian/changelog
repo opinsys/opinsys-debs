@@ -1,3 +1,9 @@
+nfs-utils (1:1.2.8-0+opinsys2) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Tue, 23 Apr 2013 15:48:12 +0300
+
 nfs-utils (1:1.2.8-0+opinsys1) quantal; urgency=low
 
   * New upstream git release 0ce973a59ab3393481ba7c434a7353b5007cba71
