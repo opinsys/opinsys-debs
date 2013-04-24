@@ -1,0 +1,5 @@
+oracle-java-distfiles (1.7.21-0+opinsys1) quantal; urgency=low
+
+  * Initial release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 24 Apr 2013 16:21:18 +0300
