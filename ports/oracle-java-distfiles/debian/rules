@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+TARBALL = jdk-7u21-linux-i586.tar.gz
+
+.PHONY: get-orig-source
+get-orig-source:
+	wget http://repo.opinsys.fi/distfiles/$(TARBALL) -O $(TARBALL)
