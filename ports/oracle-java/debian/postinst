@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+priority=1100
+version=jdk1.7.0_21
+
+update-alternatives --install \
+  /usr/lib/mozilla/plugins/libjavaplugin.so \
+  mozilla-javaplugin.so \
+  /opt/java/${version}/jre/lib/i386/libnpjp2.so \
+  $priority
+
+update-alternatives --install \
+  /usr/bin/javaws \
+  javaws \
+  /opt/java/${version}/bin/javaws \
+  $priority \
+  --slave /usr/share/man/man1/javaws.1.gz \
+          javaws.1.gz \
+          /opt/java/${version}/man/man1/javaws.1

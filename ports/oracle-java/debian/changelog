@@ -1,3 +1,10 @@
+oracle-java (1.7.21-0+opinsys2) quantal; urgency=low
+
+  * Setup alternatives so that javaws and mozilla-plugin will take
+    priority, but other java things are not registered to alternatives.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 25 Apr 2013 13:50:32 +0300
+
 oracle-java (1.7.21-0+opinsys1) quantal; urgency=low
 
   * Initial release.
