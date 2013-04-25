@@ -1,7 +1,7 @@
 diff -ruN oracle-java.orig/Makefile oracle-java/Makefile
 --- oracle-java.orig/Makefile	1970-01-01 02:00:00.000000000 +0200
-+++ oracle-java/Makefile	2013-04-25 12:27:05.000000000 +0300
-@@ -0,0 +1,12 @@
++++ oracle-java/Makefile	2013-04-25 12:38:55.019409714 +0300
+@@ -0,0 +1,11 @@
 +BINDIR = opt/java
 +DISTFILE = jdk-7u21-linux-i586.tar.gz
 +
@@ -13,4 +13,3 @@ diff -ruN oracle-java.orig/Makefile oracle-java/Makefile
 +	cp -pR opt $(DESTDIR)/
 +
 +clean:
-+	rm -rf opt $(DISTFILE)
