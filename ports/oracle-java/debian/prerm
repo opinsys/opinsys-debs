@@ -8,8 +8,8 @@ version=jdk1.7.0_21
 
 update-alternatives --remove \
   mozilla-javaplugin.so \
-  /usr/lib/mozilla/plugins/libjavaplugin.so
+  /opt/java/${version}/jre/lib/i386/libnpjp2.so
 
 update-alternatives --remove \
   javaws \
-  /usr/bin/javaws
+  /opt/java/${version}/bin/javaws \
