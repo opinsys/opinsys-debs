@@ -2,6 +2,7 @@ Source: oracle-java-distfiles
 Section: misc
 Priority: extra
 Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8.0.0)
 Standards-Version: 3.9.3
 Homepage: https://github.com/opinsys/opinsys-debs
 
