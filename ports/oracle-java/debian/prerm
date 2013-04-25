@@ -7,9 +7,9 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 version=jdk1.7.0_21
 
 update-alternatives --remove \
-  /usr/lib/mozilla/plugins/libjavaplugin.so \
-  mozilla-javaplugin.so
+  mozilla-javaplugin.so \
+  /usr/lib/mozilla/plugins/libjavaplugin.so
 
 update-alternatives --remove \
-  /usr/bin/javaws \
-  javaws
+  javaws \
+  /usr/bin/javaws
