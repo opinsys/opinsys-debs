@@ -13,5 +13,5 @@ Description: Puavo shared directory client
 
 Package: puavo-sharedir-manager
 Architecture: all
-Depends: ${misc:Depends}, ruby, acl, libinotify-ruby
+Depends: ${misc:Depends}, ruby, acl, libinotify-ruby, librb-inotify-ruby
 Description: Puavo shared directory manager
