@@ -1,3 +1,11 @@
+lightdm (1.4.0-0ubuntu2+opinsys1) quantal; urgency=low
+
+  * debian/patches/opinsys-fix-session-child-race.patch:
+    - Fix session child spawning race condition
+      LP: #1172752
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Fri, 26 Apr 2013 16:35:20 +0300
+
 lightdm (1.4.0-0ubuntu2) quantal; urgency=low
 
   * debian/patches/01_transition_ubuntu2d_ubuntu_desktop.patch:
