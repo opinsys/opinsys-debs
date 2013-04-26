@@ -1,3 +1,9 @@
+puavo-sharedir (0.2.1-0+opinsys3) precise; urgency=low
+
+  * Add librb-inotify-ruby as a dependency.
+
+ -- Opinsys Developers <juhaerk@termiikki>  Fri, 26 Apr 2013 15:29:54 +0300
+
 puavo-sharedir (0.2.1-0+opinsys2) precise; urgency=low
 
   * Fix upstart link.
