@@ -1,8 +1,14 @@
+puavo-ltsp (0.8.69-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Fri, 26 Apr 2013 16:15:11 +0300
+
 puavo-ltsp (0.8.68-0+opinsys2) quantal; urgency=low
 
   * Add puavo-sharedir-manager as a dependency.
 
- -- Opinsys Developers <juhaerk@termiikki>  Fri, 26 Apr 2013 15:58:24 +0300
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 26 Apr 2013 15:58:24 +0300
 
 puavo-ltsp (0.8.68-0+opinsys1) quantal; urgency=low
 
