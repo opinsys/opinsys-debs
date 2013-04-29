@@ -1,3 +1,9 @@
+openldap (2.4.31-1ubuntu2+opinsys6) quantal; urgency=low
+
+  * Fix conflicting slapd-smbkrb5pwd files.
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 29 Apr 2013 13:57:19 +0300
+
 openldap (2.4.31-1ubuntu2+opinsys5) quantal; urgency=low
 
   * Fix slapd-smbkrb5pwd linking.
