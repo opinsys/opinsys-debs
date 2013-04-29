@@ -125,6 +125,7 @@ override_dh_auto_install:
 override_dh_install:
 	dh_install
 	rm -rf $(CURDIR)/debian/slapd/usr/lib/ldap/smbk5pwd*
+	rm -rf $(CURDIR)/debian/slapd/usr/lib/ldap/smbkrb5pwd*
 	chmod 0755 $(CURDIR)/debian/slapd/usr/share/slapd/ldiftopasswd
 
 	# install AppArmor profile
