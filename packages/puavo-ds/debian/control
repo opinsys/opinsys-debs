@@ -19,3 +19,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, ruby1.9.3, slapd, ldap-utils, krb5-
 Description: LDAP slave replication tool
  puavo-ds-slave handles LDAP slave replication from master
  server.
+
+ Note that this package contains scripts which do touch the contents of
+ your /etc directories with a heavy hand.  Those are *not* run automatically,
+ but you should check them out before running them blindly (as root). 
