@@ -1,7 +1,7 @@
-LIBGL_DRIVERS_PATH=/#PKGLIBDIR#/dri
+LIBGL_DRIVERS_PATH=/#PKGLIBDIR#/dri:/usr/lib/#DEB_HOST_MULTIARCH#/dri:/usr/lib/dri
 if [ `uname -m` = 'x86_64' ]; then
   if [ -d /#PKGLIBDIR32#/dri ]; then
-    LIBGL_DRIVERS_PATH=${LIBGL_DRIVERS_PATH}:/#PKGLIBDIR32#/dri
+    LIBGL_DRIVERS_PATH=${LIBGL_DRIVERS_PATH}:/#PKGLIBDIR32#/dri:/usr/lib/#OTHER_ARCH#/dri
     if [ ! -z $LD_LIBRARY_PATH ]; then
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:
     fi

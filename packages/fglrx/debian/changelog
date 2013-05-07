@@ -1,9 +1,53 @@
-fglrx-installer (2:9.000-0ubuntu3+opinsys1) quantal; urgency=low
+fglrx-installer (2:9.010-0ubuntu3) raring; urgency=low
 
-  * Remove nvidia-conflicts lines from control-files.  We intend
-    this package to co-exist with nvidia-packages.
+  * debian/control:
+    - Conflict/replace/provide xorg-driver-binary. Also
+      get rid of all the other entries which have no
+      use now that xorg-driver-binary is in place.
 
- -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Thu, 03 Jan 2013 15:54:42 +0200
+ -- Alberto Milone <alberto.milone@canonical.com>  Mon, 15 Apr 2013 13:19:40 +0200
+
+fglrx-installer (2:9.010-0ubuntu2) raring; urgency=low
+
+  * debian/control:
+    - Drop all the dependencies on the linux-headers.
+    - Drop redundant dependency on the xserver.
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Thu, 17 Jan 2013 17:46:04 +0100
+
+fglrx-installer (2:9.010-0ubuntu1) raring; urgency=low
+
+  * New upstream release.
+  * debian/dkms.conf.in,
+    replace-archdata.acpi_handle-with-acpi_node.handle.patch:
+    - Add support for Linux 3.8 (LP: #1095755).
+      Thanks to Robert Hooker for the patch.
+  * debian/substvars:
+    - Remove versioned dependency on xserver-xorg-core.
+  * debian/10fglrx.in, debian/rules:
+    - Fix paths which prevented OpenGL operations on hybrid systems
+      on amd64 (LP: #1068661). Thanks to Nick Andrik for the patch.
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Tue, 08 Jan 2013 16:12:09 +0100
+
+fglrx-installer (2:9.000-0ubuntu4) raring; urgency=low
+
+  * debian/control:
+    - Conflict/replace/provide new nvidia flavours.
+    - Depend on other flavours of kernel headers.
+  * debian/dkms.conf.in,
+    replace-VM_RESERVED-with-VM_DONTEXPAND-and-VM_DONTDU.patch:
+    - Add support for Linux 3.7 (LP: #1075937).
+  * debian/10fglrx.in:
+    - Fix path for powerxpress (LP: #1068661). Thanks
+      to Nick Andrik and Lu Xingzhe for suggesting
+      the fix.
+
+  [ Benjamin Kerensa ]
+  * debian/control:
+    - Add ${misc:Depends} depends as needed.
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Fri, 07 Dec 2012 15:16:01 +0100
 
 fglrx-installer (2:9.000-0ubuntu3) quantal; urgency=low
 

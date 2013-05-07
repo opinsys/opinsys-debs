@@ -25,14 +25,12 @@ Homepage: http://support.amd.com
 Package: fglrx
 Architecture: amd64 i386
 Recommends: fglrx-amdcccle
-Depends: ${shlibs:Depends}, xserver-xorg-core, lib32gcc1 [amd64], libc6-i386 [amd64], dkms, make, linux-libc-dev,
- linux-headers-generic | linux-headers,
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ lib32gcc1 [amd64], libc6-i386 [amd64], dkms, make, linux-libc-dev,
  ${xviddriver:Depends}
-Provides: fglrx-driver, fglrx-updates, ${xviddriver:Provides}
-Conflicts: fglrx-driver, xfree86-driver-fglrx, xorg-driver-fglrx, fglrx-kernel-source,
- libamdxvba1, fglrx-modaliases, fglrx-updates
-Replaces: fglrx-driver, xfree86-driver-fglrx, xorg-driver-fglrx, fglrx-kernel-source,
- libamdxvba1, fglrx-modaliases, fglrx, fglrx-updates, fglrx-amdcccle
+Provides: fglrx-driver, xorg-driver-binary, ${xviddriver:Provides}
+Conflicts: fglrx-driver, xorg-driver-binary
+Replaces: fglrx-driver, xorg-driver-binary
 XB-Modaliases: ${modaliases}
 Description: Video driver for the AMD graphics accelerators
  Video driver for the AMD Radeon and FireGL graphics accelerators.
@@ -42,7 +40,7 @@ Description: Video driver for the AMD graphics accelerators
 
 Package: fglrx-dev
 Architecture: amd64 i386
-Depends: fglrx
+Depends: fglrx, ${misc:Depends}
 Conflicts: fglrx-driver-dev, xfree86-driver-fglrx-dev
 Replaces: fglrx-driver-dev, xfree86-driver-fglrx-dev, xorg-driver-fglrx-dev, fglrx-updates-dev
 Provides: fglrx-driver-dev
@@ -53,7 +51,7 @@ Description: Video driver for the AMD graphics accelerators (devel files)
 
 Package: fglrx-amdcccle
 Architecture: amd64 i386
-Depends: fglrx, ${shlibs:Depends}
+Depends: fglrx, ${shlibs:Depends}, ${misc:Depends}
 Conflicts: fglrx-control-qt2, fglrx-control
 Replaces: fglrx-control, fglrx-amdcccle-updates
 Provides: fglrx-control
