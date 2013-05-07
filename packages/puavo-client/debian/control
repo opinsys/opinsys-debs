@@ -8,7 +8,7 @@ Homepage: https://github.com/opinsys/puavo-client
 
 Package: puavo-client
 Architecture: all
-Depends: ${misc:Depends}, ruby1.9.1, ruby-ldap
+Depends: ${misc:Depends}, ruby1.9.1, ruby-ldap, facter
 Replaces: puavo-register
 Conflicts: puavo-register
 Provides: puavo-register
