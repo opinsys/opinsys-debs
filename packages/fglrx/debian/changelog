@@ -1,3 +1,9 @@
+fglrx-installer (2:9.010-0ubuntu3+opinsys1) quantal; urgency=low
+
+  * Import new version 2:9.010-0ubuntu3 from raring
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Tue, 07 May 2013 16:26:30 +0300
+
 fglrx-installer (2:9.010-0ubuntu3) raring; urgency=low
 
   * debian/control:
