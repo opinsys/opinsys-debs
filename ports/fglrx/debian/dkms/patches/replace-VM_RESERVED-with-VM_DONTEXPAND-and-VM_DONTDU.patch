@@ -1,0 +1,169 @@
+From cc1a99215c6b3440ed42cf4fa187950a4ec68117 Mon Sep 17 00:00:00 2001
+From: Alberto Milone <alberto.milone@canonical.com>
+Date: Wed, 7 Nov 2012 15:45:44 +0100
+Subject: [PATCH 1/1] Replace VM_RESERVED with VM_DONTEXPAND and VM_DONTDUMP
+
+---
+ firegl_public.c |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ make.sh         |    4 ++--
+ 2 files changed, 50 insertions(+), 2 deletions(-)
+
+diff --git a/firegl_public.c b/firegl_public.c
+index 7b028e5..834955a 100755
+--- a/firegl_public.c
++++ b/firegl_public.c
+@@ -3892,7 +3892,11 @@ int ATI_API_CALL KCL_MEM_VM_MapRegion(KCL_IO_FILE_Handle filp,
+                 KCL_DEBUG_ERROR(REMAP_PAGE_RANGE_STR " failed\n");
+                 return -EAGAIN;
+             }
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
+             vma->vm_flags |= VM_SHM | VM_RESERVED; /* Don't swap */
++#else
++            vma->vm_flags |= VM_SHM | VM_DONTEXPAND | VM_DONTDUMP; /* Don't swap */
++#endif
+             vma->vm_ops = &vm_ops;
+ 			break;
+ 
+@@ -3922,14 +3926,22 @@ int ATI_API_CALL KCL_MEM_VM_MapRegion(KCL_IO_FILE_Handle filp,
+                 KCL_DEBUG_ERROR(REMAP_PAGE_RANGE_STR " failed\n");
+                 return -EAGAIN;
+             }
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
+             vma->vm_flags |= VM_SHM | VM_RESERVED; /* Don't swap */
++#else
++            vma->vm_flags |= VM_SHM | VM_DONTEXPAND | VM_DONTDUMP; /* Don't swap */
++#endif
+             vma->vm_ops = &vm_ops;
+             }
+ 			break;
+ #endif                    
+ 
+         case __KE_SHM:
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
+             vma->vm_flags |= VM_SHM | VM_RESERVED; /* Don't swap */
++#else
++            vma->vm_flags |= VM_SHM | VM_DONTEXPAND | VM_DONTDUMP; /* Don't swap */
++#endif
+             vma->vm_ops = &vm_shm_ops;
+             break;
+ 
+@@ -3937,7 +3949,11 @@ int ATI_API_CALL KCL_MEM_VM_MapRegion(KCL_IO_FILE_Handle filp,
+ 
+             pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
+ 
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
+             vma->vm_flags |= VM_RESERVED;
++#else
++            vma->vm_flags |= VM_DONTEXPAND | VM_DONTDUMP;
++#endif
+ 
+             //vma->vm_flags |=  VM_SHM | VM_LOCKED; /* DDDDDDDDDDon't swap */
+             //vma->vm_mm->locked_vm += pages; /* Kernel tracks aqmount of locked pages */
+@@ -3946,14 +3962,22 @@ int ATI_API_CALL KCL_MEM_VM_MapRegion(KCL_IO_FILE_Handle filp,
+ 
+         case __KE_CTX:
+             pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
+             vma->vm_flags |= VM_LOCKED | VM_SHM | VM_RESERVED; /* Don't swap */
++#else
++            vma->vm_flags |= VM_LOCKED | VM_SHM | VM_DONTEXPAND | VM_DONTDUMP; /* Don't swap */
++#endif
+             vma->vm_mm->locked_vm += pages; /* Kernel tracks aqmount of locked pages */
+             vma->vm_ops = &vm_ctx_ops;
+             break;
+ 
+         case __KE_PCI_BQS:
+             pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
+             vma->vm_flags |= VM_LOCKED | VM_SHM | VM_RESERVED; /* Don't swap */
++#else
++            vma->vm_flags |= VM_LOCKED | VM_SHM | VM_DONTEXPAND | VM_DONTDUMP; /* Don't swap */
++#endif
+             vma->vm_mm->locked_vm += pages; /* Kernel tracks aqmount of locked pages */
+             vma->vm_ops = &vm_pci_bq_ops;
+             break;
+@@ -3984,9 +4008,17 @@ int ATI_API_CALL KCL_MEM_VM_MapRegion(KCL_IO_FILE_Handle filp,
+                     return -EAGAIN;
+                 }
+ #ifdef __x86_64__
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
+                 vma->vm_flags |= VM_RESERVED;
+ #else
++                vma->vm_flags |= VM_DONTEXPAND | VM_DONTDUMP;
++#endif
++#else
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
+                 vma->vm_flags |= VM_SHM | VM_RESERVED; /* Don't swap */
++#else
++                vma->vm_flags |= VM_SHM | VM_DONTEXPAND | VM_DONTDUMP; /* Don't swap */
++#endif
+ #endif
+                 vma->vm_ops = &vm_ops;
+             }
+@@ -4015,9 +4047,17 @@ int ATI_API_CALL KCL_MEM_VM_MapRegion(KCL_IO_FILE_Handle filp,
+                     return -EAGAIN;
+                 }
+ #ifdef __x86_64__
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
+                 vma->vm_flags |= VM_RESERVED;
+ #else
++                vma->vm_flags |= VM_DONTEXPAND | VM_DONTDUMP;
++#endif
++#else
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
+                 vma->vm_flags |= VM_SHM | VM_RESERVED; /* Don't swap */
++#else
++                vma->vm_flags |= VM_SHM | VM_DONTEXPAND | VM_DONTDUMP; /* Don't swap */
++#endif
+ #endif
+                 vma->vm_ops = &vm_agp_bq_ops;
+             }
+@@ -4025,7 +4065,11 @@ int ATI_API_CALL KCL_MEM_VM_MapRegion(KCL_IO_FILE_Handle filp,
+ #endif /* __AGP__BUILTIN__ */
+ 
+         case __KE_KMAP:
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
+ 		    vma->vm_flags |= VM_SHM | VM_RESERVED;
++#else
++		    vma->vm_flags |= VM_SHM | VM_DONTEXPAND | VM_DONTDUMP;
++#endif
+             vma->vm_ops = &vm_kmap_ops;
+             if (readonly && (vma->vm_flags & VM_WRITE))
+             {
+@@ -4046,7 +4090,11 @@ int ATI_API_CALL KCL_MEM_VM_MapRegion(KCL_IO_FILE_Handle filp,
+ #endif            
+             // fall through
+          case __KE_GART_CACHEABLE:
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3,7,0)
+              vma->vm_flags |= VM_RESERVED;
++#else
++             vma->vm_flags |= VM_DONTEXPAND | VM_DONTDUMP;
++#endif
+              vma->vm_ops = &vm_gart_ops;
+              break;
+         default:
+diff --git a/make.sh b/make.sh
+index a1cb241..bbb2675 100755
+--- a/make.sh
++++ b/make.sh
+@@ -202,7 +202,7 @@ cd $current_wd
+ # verify match with respective line in linux/version.h
+ # sample: #define UTS_RELEASE "2.4.0-test7"
+ 
+-src_file=$linuxincludes/linux/version.h
++src_file=$linuxincludes/generated/uapi/linux/version.h
+ 
+ if [ ! -e $src_file ]; then
+   echo "kernel includes at $linuxincludes not found or incomplete" | tee -a $logfile
+@@ -218,7 +218,7 @@ OsRelease=${uname_r}
+ # Some old distributions used to define UTS-defines in external
+ # version-*.h files, e.g. linux-2.2.14-5.0-RedHat. Is this kludge still needed?
+ for src_file in \
+-    "$linuxincludes/linux/version.h" \
++    "$linuxincludes/generated/uapi/linux/version.h" \
+     "$linuxincludes/linux/utsrelease.h" \
+     "$linuxincludes/generated/utsrelease.h" \
+     "$linuxincludes/linux/version-*.h";
+-- 
+1.7.9.5
+
