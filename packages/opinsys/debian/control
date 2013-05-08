@@ -8,7 +8,7 @@ Homepage: https://github.com/opinsys/opinsys
 
 Package: opinsys-bootserver
 Architecture: all
-Depends: ${misc:Depends}, puppet
+Depends: ${misc:Depends}, puppet, nagios-nrpe-server
 Description: Opinsys-specific configurations for (Puavo) bootservers
  This package contains some Opinsys-specific configurations
  for (Puavo) bootservers.  Generally the stuff here should not be public,
