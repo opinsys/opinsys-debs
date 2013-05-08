@@ -6,10 +6,10 @@ Build-Depends: debhelper (>= 8.0.0)
 Standards-Version: 3.9.3
 Homepage: https://github.com/opinsys/opinsys
 
-Package: opinsys-config
+Package: opinsys-bootserver
 Architecture: all
 Depends: ${misc:Depends}, puppet
-Description: Opinsys-specific configurations
- This package contains some Opinsys-specific configurations.
- Generally the stuff here should not be public, but should not be
- a security risk if something accidentally is.
+Description: Opinsys-specific configurations for (Puavo) bootservers
+ This package contains some Opinsys-specific configurations
+ for (Puavo) bootservers.  Generally the stuff here should not be public,
+ but should not be a security risk if something accidentally is.
