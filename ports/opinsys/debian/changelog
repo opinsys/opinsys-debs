@@ -1,3 +1,9 @@
+opinsys (0.1.1-0+opinsys1) precise; urgency=low
+
+  * Nwew upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Fri, 10 May 2013 11:17:15 +0300
+
 opinsys (0.1-0+opinsys1) precise; urgency=low
 
   * Initial release.
