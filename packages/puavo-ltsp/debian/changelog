@@ -1,3 +1,9 @@
+puavo-ltsp (0.8.76-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 15 May 2013 12:49:37 +0300
+
 puavo-ltsp (0.8.75-0+opinsys2) quantal; urgency=low
 
   * Add puavo-logrelay to bootserver dependencies.
