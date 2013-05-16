@@ -1,0 +1,6 @@
+opinsys-linux-firmware (0.1.0-0+opinsys1) quantal; urgency=low
+
+  * Initial release
+    - bnx2-mips-06-6.2.3.fw
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Thu, 16 May 2013 17:18:19 +0300
