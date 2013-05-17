@@ -11,3 +11,9 @@ Architecture: amd64
 Depends: ${shlibs:Depends}, ${misc:Depends}, make, ruby1.9.1, ruby-bundler (>= 1.3.5), puavo-client, ruby-ldap
 Description: puavo-rest
  JSON-REST Adapter for LDAP
+
+Package: puavo-load-balancer
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}, curl, dnsutils
+Description: puavo-load-balancer
+ Load balancer client for LTSP server
