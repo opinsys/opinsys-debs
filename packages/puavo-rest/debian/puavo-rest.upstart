@@ -10,6 +10,6 @@ end script
 
 chdir /var/app/puavo-rest
 
-exec sudo -E -u puavo bundle exec rackup
+exec sudo -E -u puavo bundle exec rackup -o 127.0.0.1
 
 respawn
