@@ -1,3 +1,15 @@
+puavo-rest (0.1.6-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-rest/compare/0.1.5...0.1.6
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Fri, 17 May 2013 13:00:25 +0300
+
+puavo-rest (0.1.5-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-rest/compare/0.1.4...0.1.5
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Fri, 17 May 2013 12:28:04 +0300
+
 puavo-rest (0.1.4-0+opinsys5) precise; urgency=low
 
   * https://github.com/opinsys/puavo-rest/compare/0.1.3...0.1.4
