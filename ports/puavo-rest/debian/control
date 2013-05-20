@@ -8,7 +8,7 @@ Homepage: https://github.com/opinsys/puavo-rest/
 
 Package: puavo-rest
 Architecture: amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}, make, ruby1.9.1, ruby-bundler (>= 1.3.5), puavo-client, ruby-ldap
+Depends: ${shlibs:Depends}, ${misc:Depends}, make, ruby1.9.1, ruby-bundler (>= 1.3.5), puavo-client, ruby-ldap, nginx
 Description: puavo-rest
  JSON-REST Adapter for LDAP
 

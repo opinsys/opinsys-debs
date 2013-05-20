@@ -1,3 +1,33 @@
+puavo-rest (0.1.11-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-rest/compare/0.1.10...0.1.11
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Mon, 20 May 2013 11:23:27 +0300
+
+puavo-rest (0.1.10-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-rest/compare/0.1.9...0.1.10
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Mon, 20 May 2013 10:56:34 +0300
+
+puavo-rest (0.1.9-0+opinsys3) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-rest/compare/0.1.8...0.1.9
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Mon, 20 May 2013 09:53:27 +0300
+
+puavo-rest (0.1.8-0+opinsys3) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-rest/compare/0.1.7...0.1.8
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Fri, 17 May 2013 16:30:17 +0300
+
+puavo-rest (0.1.7-0+opinsys5) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-rest/compare/0.1.6...0.1.7
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Fri, 17 May 2013 15:25:39 +0300
+
 puavo-rest (0.1.6-0+opinsys1) precise; urgency=low
 
   * https://github.com/opinsys/puavo-rest/compare/0.1.5...0.1.6
