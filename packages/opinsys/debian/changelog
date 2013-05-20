@@ -1,8 +1,14 @@
+opinsys (0.1.7-0+opinsys2) precise; urgency=low
+
+  * Add vlan-package to opinsys-bootserver dependencies.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Mon, 20 May 2013 13:40:20 +0300
+
 opinsys (0.1.7-0+opinsys1) precise; urgency=low
 
   * New upstream release.
 
- -- Opinsys Developers <dev@opinsys.fi>  Thu, 16 May 2013 11:27:22 +0300
+ -- Opinsys Developers <dev@opinsys.fi>  Mon, 20 May 2013 13:40:19 +0300
 
 opinsys (0.1.6-0+opinsys1) precise; urgency=low
 
