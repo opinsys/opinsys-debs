@@ -1,3 +1,9 @@
+opinsys-ca-certificates (1.0.2-0+opinsys2) precise; urgency=low
+
+  * Fix packaging.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Mon, 20 May 2013 15:44:01 +0300
+
 opinsys-ca-certificates (1.0.2-0+opinsys1) precise; urgency=low
 
   * New upstream release.
