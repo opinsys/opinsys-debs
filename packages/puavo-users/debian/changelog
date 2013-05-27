@@ -1,3 +1,9 @@
+puavo-users (0.1.16-0+opinsys1) precise; urgency=low
+
+  * moved to puavo-users git repository
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 27 May 2013 13:06:54 +0300
+
 puavo-rest (0.1.15-0+opinsys1) precise; urgency=low
 
   * https://github.com/opinsys/puavo-rest/compare/0.1.14...0.1.15
