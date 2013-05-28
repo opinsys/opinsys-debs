@@ -1,3 +1,9 @@
+puavo-client (1.3.9-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-client/compare/1.3.8...1.3.9
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Tue, 28 May 2013 08:45:31 +0300
+
 puavo-client (1.3.8-0+opinsys2) precise; urgency=low
 
   * https://github.com/opinsys/puavo-client/compare/1.3.7...1.3.8
