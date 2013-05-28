@@ -1,0 +1,138 @@
+#! /bin/sh
+# postinst script for cups-daemon
+#
+# see: dh_installdeb(1)
+
+set -e
+
+# summary of how this script can be called:
+#        * <postinst> `configure' <most-recently-configured-version>
+#        * <old-postinst> `abort-upgrade' <new version>
+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
+#          <new-version>
+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
+#          <failed-install-package> <version> `removing'
+#          <conflicting-package> <version>
+# for details, see /usr/doc/packaging-manual/
+#
+# quoting from the policy:
+#     Any necessary prompting should almost always be confined to the
+#     post-installation script, and should be protected with a conditional
+#     so that unnecessary prompting doesn't happen if a package's
+#     installation fails and the `postinst' is called with `abort-upgrade',
+#     `abort-remove' or `abort-deconfigure'.
+
+# Default Configuration file
+if [ -e /etc/default/cups ]; then
+	. /etc/default/cups
+fi
+
+if [ "$1" = configure ]; then
+    # Set up lpadmin group.
+    if [ -z "`getent group lpadmin`" ]; then 
+	addgroup --system lpadmin
+    fi
+
+    if [ -f /etc/cups/classes.conf ]; then
+      chown root:lp /etc/cups/classes.conf ; chmod 600 /etc/cups/classes.conf
+    fi
+    if [ -f /etc/cups/printers.conf ]; then
+      chown root:lp /etc/cups/printers.conf ; chmod 600 /etc/cups/printers.conf
+    fi
+
+    # symlink snakeoil SSL certificate if present
+    if [ -e /etc/ssl/certs/ssl-cert-snakeoil.pem -a \
+	  -e /etc/ssl/private/ssl-cert-snakeoil.key -a \
+	  -n "`getent group ssl-cert`" -a ! -e /etc/cups/ssl/server.crt \
+	  -a ! -e /etc/cups/ssl/server.key -a ! -h /etc/cups/ssl/server.crt \
+	  -a ! -h /etc/cups/ssl/server.key ]; then
+	 ln -s /etc/ssl/certs/ssl-cert-snakeoil.pem /etc/cups/ssl/server.crt
+	 ln -s /etc/ssl/private/ssl-cert-snakeoil.key /etc/cups/ssl/server.key
+    fi
+
+    APP_PROFILE=/etc/apparmor.d/usr.sbin.cupsd
+    if [ -f "$APP_PROFILE" ]; then
+        # Add the local/ include
+        LOCAL_APP_PROFILE=/etc/apparmor.d/local/usr.sbin.cupsd
+
+        [ -e "$LOCAL_APP_PROFILE" ] || \
+        [ -e /etc/apparmor.d/local -a ! -d /etc/apparmor.d/local ] || {
+            tmp=`mktemp`
+        cat <<EOM > "$tmp"
+# Site-specific additions and overrides for usr.sbin.cupsd.
+# For more details, please see /etc/apparmor.d/local/README.
+EOM
+            mkdir `dirname $LOCAL_APP_PROFILE` 2>/dev/null || true
+            mv -f "$tmp" "$LOCAL_APP_PROFILE"
+            chmod 644 "$LOCAL_APP_PROFILE"
+        }
+
+        # Reload the profile, including any abstraction updates
+        if aa-status --enabled 2>/dev/null; then
+            apparmor_parser -r -T -W "$APP_PROFILE" || true
+        fi
+    fi
+
+    # Clear cache if we upgrade to 1.4.x
+    if dpkg --compare-versions "$2" lt-nl "1.4.1-5"; then
+	rm /var/cache/cups/* 2> /dev/null || :
+    fi
+
+    # Clear PPD cache if we upgrade to 1.5.x
+    if dpkg --compare-versions "$2" lt-nl "1.5.0-3"; then
+	rm /var/cache/cups/ppds.dat 2> /dev/null || :
+    fi
+
+    # Manage printcap file and associated symlinks
+    if [ -e /etc/cups/cupsd.conf ]; then
+	if [ -e /etc/printcap.cups ]; then
+	    rm -f /etc/printcap.cups
+	fi
+	if [ -L /etc/printcap -a ! -e /etc/printcap ]; then
+	    rm -f /etc/printcap
+	fi
+
+	printcap_file=`egrep '^Printcap ' /etc/cups/cupsd.conf | awk '{print $2}' | tail -n 1`
+	if [ -z "$printcap_file" ]; then
+	    printcap_file=/var/run/cups/printcap
+	fi
+	if [ ! -e /etc/printcap -a -e $printcap_file ]; then
+	    ln -s $printcap_file /etc/printcap
+	fi
+    fi
+
+    # Create default cupsd.conf if it doesn't exist
+    if [ ! -r /etc/cups/cupsd.conf ]; then
+        if dpkg --compare-versions "$2" le "1.6.1" && [ -e /etc/cups/cupsd.conf.conffile-bak ]; then
+            # Move cupsd.conf back as it is now a non-conffile
+            mv /etc/cups/cupsd.conf.conffile-bak /etc/cups/cupsd.conf
+        else
+            cp /etc/cups/cupsd.conf.default /etc/cups/cupsd.conf
+        fi
+    fi
+
+    # Remove lines from cupsd.conf which got obsolete in CUPS 1.6.x and would
+    # prevent the CUPS daemon from starting due to being invalid now.
+    cat /etc/cups/cupsd.conf | grep -Eiv '^\s*Browse(Order|Allow|Deny|Poll|RemoteProtocols)' > /etc/cups/cupsd.conf.new
+    if [ -r /etc/cups/cupsd.conf.new ]; then
+	if ! diff -q /etc/cups/cupsd.conf /etc/cups/cupsd.conf.new > /dev/null 2>&1; then
+	    mv -f /etc/cups/cupsd.conf.new /etc/cups/cupsd.conf
+	else
+	    rm /etc/cups/cupsd.conf.new
+	fi
+    fi
+    # Also the argument "cups" for BrowseLocalProtocols is obsolete. Remove the
+    # argument and put "dnssd" if there are no arguments left.
+    cat /etc/cups/cupsd.conf | perl -p -e 's/^(\s*BrowseLocalProtocols.*?)\s+cups/$1/i; s/^(\s*BrowseLocalProtocols)(\s*)$/$1 dnssd$2/i' > /etc/cups/cupsd.conf.new
+    if [ -r /etc/cups/cupsd.conf.new ]; then
+	if ! diff -q /etc/cups/cupsd.conf /etc/cups/cupsd.conf.new > /dev/null 2>&1; then
+	    mv -f /etc/cups/cupsd.conf.new /etc/cups/cupsd.conf
+	else
+	    rm /etc/cups/cupsd.conf.new
+	fi
+    fi    
+fi
+
+#DEBHELPER#
+
+exit 0

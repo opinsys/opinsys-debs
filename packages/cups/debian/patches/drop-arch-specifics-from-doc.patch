@@ -1,0 +1,17 @@
+Description: Drop the only arch-specificity of the cups documentation, to be
+ able to move it to the cups-common package
+Author: Didier Raboud <odyx@debian.org>
+Last-Update: 2013-03-20
+--- a/doc/help/standard.html.in
++++ b/doc/help/standard.html.in
+@@ -109,10 +109,6 @@
+ 	<TD>The location of CUPS include files.</TD>
+ </TR>
+ <TR>
+-	<TD><VAR>@libdir@</VAR></TD>
+-	<TD>The location of CUPS library files.</TD>
+-</TR>
+-<TR>
+ 	<TD><VAR>@CUPS_SERVERBIN@</VAR></TD>
+ 	<TD>The location of server programs such as backends and
+ 	filters. Overridden by the <A
