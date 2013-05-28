@@ -1,3 +1,10 @@
+qpdf (4.0.1-2+opinsys1) precise; urgency=low
+
+  * Backported to Precise.
+    - use debhelper 8 instead of 9
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Tue, 28 May 2013 10:14:05 +0300
+
 qpdf (4.0.1-2) experimental; urgency=low
 
   * Bug fix: proper handling of overridden compressed objects.  This fix
