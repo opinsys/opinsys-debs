@@ -1,0 +1,263 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: cups-filters
+Upstream-Contact: OpenPrinting <printing-architecture@lists.linux-foundation.org>
+Source: http://www.openprinting.org/download/cups-filters/
+
+Files: AUTHORS
+ NEWS
+ autogen.sh
+ config.h.in
+ configure.ac
+ libcupsfilters.pc.in
+ libfontembed.pc.in
+ Makefile.am
+Copyright: 2012, Till Kamppeter <till.kamppeter@gmail.com>
+	   2012, Tomáš Chvátal <tchvatal@suse.cz>
+License: GPL-2+
+
+Files: debian/*
+Copyright: 1999-2003, Jeff Licquia <licquia@debian.org>
+	   2003-2007, Kenshi Muto <kmuto@debian.org>
+           2007-2012, Martiin Pitt <mpitt@debian.org>
+           2012, Till Kamppeter <till.kamppeter@gmail.com>
+License: GPL-2+
+
+Files: aclocal.m4
+ compile
+ config.guess
+ config.sub
+ configure
+ depcomp
+ ltmain.sh
+ Makefile.in
+ missing
+Copyright: 1999-2012, Free Software Foundation, Inc.
+License: GPL-2+
+
+Files: install-sh
+Copyright: 2008-2009, Apple Inc.
+           1991, Massachusetts Institute of Technology
+License: MIT
+
+Files: m4/ac_define_dir.m4
+Copyright: 2006, Stepan Kasal <kasal@ucw.cz>
+           2006, Andreas Schwab <schwab@suse.de>
+           2006, Guido U. Draheim <guidod@gmx.de>
+           2006, Alexandre Oliva
+License: AllPermissive
+ Copying and distribution of this file, with or without modification,
+ are permitted in any medium without royalty provided the copyright
+ notice and this notice are preserved.  This file is offered as-is,
+ without any warranty.
+
+Files:m4/ax_compare_version.m4
+Copyright: 2008, Tim Toolan <toolan@ele.uri.edu>
+License: ax_compare_version
+
+Files: filter/textonly 
+ ppd/textonly.ppd
+Copyright: 2003-2006 Red Hat, Inc.
+ 2003-2006 Tim Waugh <twaugh@redhat.com>
+License: GPL-2
+
+Files: INSTALL
+ COPYING
+ README
+ backend/*
+ scripting/*
+ filter/commandtoescpx.c
+ filter/commandtopclx.c
+ filter/common.c
+ filter/common.h
+ filter/Dependencies
+ filter/escp.h
+ filter/imagetoraster.c
+ filter/pcl-common.c
+ filter/pcl-common.h
+ filter/pcl.h
+ filter/pdftops.c
+ filter/pdfutils.c
+ filter/pdfutils.h
+ filter/rastertoescpx.c
+ filter/rastertopclx.c
+ filter/textcommon.c
+ filter/textcommon.h
+ mime/cupsfilters.convs
+ mime/cupsfilters.types
+Copyright: 2007-2011, Apple Inc.
+ 1997-2007, Easy Software Products.
+ 2012, Till Kamppeter <till.kamppeter@gmail.com>
+License: GPL-2
+
+Files: ppd/Generic-PDF_Printer-PDF.ppd
+ ppd/HP-Color_LaserJet_CM3530_MFP-PDF.ppd
+ filter/texttops
+ filter/imagetops
+Copyright: 2012, Till Kamppeter <till.kamppeter@gmail.com>
+License: GPL-2
+
+Files: cupsfilters/*
+Copyright: 2007-2011, Apple Inc.
+ 1997-2007, Easy Software Products.
+License: LGPL-2
+
+Files: charset/pdf.utf-8.heavy
+ charset/pdf.utf-8.simple
+ filter/pdfutils.c
+ filter/pdfutils.h
+ filter/test_pdf1.c
+ filter/test_pdf2.c
+ filter/texttopdf.c
+Copyright: 2008, Tobias Hoffmann.
+ 2007, Apple Inc.
+ 1993-2007, Easy Software Products.
+License: GPL-2
+
+Files: fontembed/*
+Copyright: 2008,2012 by Tobias Hoffmann
+License: MIT
+
+Files: filter/pstopdf
+Copyright: 2003, Robert Sander <robert.sander@epigenomics.com>
+ 2008-2012, Till Kamppeter <till.kamppeter@gmail.com>
+License: GPL-2
+
+Files: filter/imagetopdf.c
+Copyright: 1993-2006, Easy Software Products.
+ 2006-2007, BBR Inc.
+License: GPL-2
+
+Files: filter/banner.c
+ filter/banner.h
+ filter/bannertopdf.c
+ filter/pdf.cxx
+ filter/pdf.h
+ banners/*
+ data/*
+Copyright: 2012, Canonical Ltd.
+License: GPL-3
+
+Files: filter/pdftoopvp/*
+ filter/pdftopdf.old/*
+ filter/pdftoraster.cxx
+Copyright: Copyright 2006-2011, BBR Inc. All rights reserved.
+License: Expat
+
+Files: filter/PDFError.h
+Copyright: Copyright 2012, BBR Inc. All rights reserved.
+License: Expat
+
+Files: filter/pdftopdf/*
+Copyright: Copyright 2006-2011, BBR Inc. All rights reserved.
+ 2012, Tobias Hoffmann
+License: MIT
+
+Files: filter/pdftoijs.cxx
+ ppd/HP-PhotoSmart_Pro_B8300-hpijs-pdftoijs.ppd
+Copyright: 2008, BBR Inc. All rights reserved.
+ 2008, Tobias Hoffmann
+License: Expat
+
+Files: drv/*
+Copyright: 2012, Franz Pförtsch <Franz.Pfoertsch@brose.com>
+ 2012, Till Kamppeter <till.kamppeter@gmail.com>
+License: GPL-2
+
+License: GPL-2
+ This program may be distributed and/or modified under the terms of the
+ version 2 of the GNU General Public License as published by the Free
+ Software Foundation (the "GPL").
+ .
+ When distributed under the terms of the GPL, this program is
+ distributed in the hope that it will be useful, but WITHOUT ANY
+ WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE.  See the GPL for more details.
+ .
+ On Debian systems the GNU General Public License (GPL) version 2 is
+ located in '/usr/share/common-licenses/GPL-2'.
+ .
+ You should have received a copy of the GNU General Public License along
+ with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+License: GPL-2+
+ This program may be distributed and/or modified under the terms of the
+ GNU General Public License as published by the Free Software Foundation
+ (the "GPL"); either version 2 of the GPL, or (at your option) any later
+ version.
+ .
+ When distributed under the terms of the GPL, this program is
+ distributed in the hope that it will be useful, but WITHOUT ANY
+ WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE.  See the GPL for more details.
+ .
+ On Debian systems the GNU General Public License (GPL) version 2 is
+ located in '/usr/share/common-licenses/GPL-2'.
+ .
+ You should have received a copy of the GNU General Public License along
+ with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+License: GPL-3
+ This program may be distributed and/or modified under the terms of the
+ version 3 of the GNU General Public License as published by the Free
+ Software Foundation (the "GPL").
+ .
+ When distributed under the terms of the GPL, this program is
+ distributed in the hope that it will be useful, but WITHOUT ANY
+ WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE.  See the GPL for more details.
+ .
+ On Debian systems the GNU General Public License (GPL) version 2 is
+ located in '/usr/share/common-licenses/GPL-3'.
+ .
+ You should have received a copy of the GNU General Public License along
+ with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+License: LGPL-2
+ The libcupsfilters library is provided under the terms of version 2 of
+ the GNU Library General Public License. This program is distributed in
+ the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ PARTICULAR PURPOSE.
+ .
+ On Debian systems the GNU Library General Public License (GPL) version 2 is
+ located in '/usr/share/common-licenses/LGPL-2'.
+ .
+ You should have received a copy of the GNU Library General Public License along
+ with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+License: Expat
+ Permission is hereby granted, free of charge, to any person obtaining
+  a copy of this software and associated documentation files (the
+ "Software"), to deal in the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
+ .
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+License: MIT
+ Permission to use, copy, modify, distribute, and sell this software and its
+ documentation for any purpose is hereby granted without fee, provided that
+ the above copyright notice appear in all copies and that both that
+ copyright notice and this permission notice appear in supporting
+ documentation, and that the name of M.I.T. not be used in advertising or
+ publicity pertaining to distribution of the software without specific,
+ written prior permission.  M.I.T. makes no representations about the
+ suitability of this software for any purpose.  It is provided "as is"
+ without express or implied warranty.
+
+License: ax_compare_version
+ Copying and distribution of this file, with or without modification, are
+ permitted in any medium without royalty provided the copyright notice
+ and this notice are preserved. This file is offered as-is, without any
+ warranty.

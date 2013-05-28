@@ -1,0 +1,134 @@
+Source: cups-filters
+Standards-Version: 3.9.3
+Priority: optional
+Section: net
+Maintainer: Debian Printing Team <debian-printing@lists.debian.org>
+Uploaders: 
+ Till Kamppeter <till.kamppeter@gmail.com>,
+ Martin Pitt <mpitt@debian.org>,
+ Didier Raboud <odyx@debian.org>
+Build-Depends: 
+ autoconf,
+ autotools-dev,
+ cdbs (>= 0.4.93~),
+ debhelper (>= 9~),
+ dpkg-dev (>= 1.16.1~),
+ pkg-config,
+ sharutils,
+ ghostscript (>= 9.02~),
+ poppler-utils,
+ liblcms2-dev,
+ libpoppler-private-dev (>= 0.16.0),
+ libpoppler-cpp-dev,
+ libqpdf-dev (>= 4.0.1),
+ libjpeg-dev,
+ libpng-dev | libpng12-dev,
+ libtiff-dev,
+ libcups2-dev,
+ libcupsimage2-dev (>= 1.5.2-6~),
+ libijs-dev,
+ zlib1g-dev,
+ libfontconfig1-dev,
+ libavahi-common-dev,
+ libavahi-client-dev,
+ libavahi-glib-dev
+Homepage: http://www.openprinting.org/
+Vcs-Bzr: http://bzr.debian.org/pkg-cups/cups-filters/debian-trunk/
+Vcs-Browser: http://bzr.debian.org/loggerhead/pkg-cups/cups-filters/debian-trunk/
+
+Package: libcupsfilters1
+Section: libs
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, 
+ ${misc:Depends}
+Multi-Arch: same
+Description: OpenPrinting CUPS Filters - Shared library
+ This library contains functions commonly used by the CUPS filters
+ in the OpenPrinting CUPS filters package, currently functions to read
+ several different image formats and to convert bitmaps between different
+ color spaces.
+
+Package: libfontembed1
+Section: libs
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, 
+ ${misc:Depends}
+Multi-Arch: same
+Description: OpenPrinting CUPS Filters - Font Embed Shared library
+ This library contains functions for font embedding in PDF files, commonly
+ used by CUPS filters.
+
+Package: cups-filters
+Architecture: any
+Depends: ${shlibs:Depends}, 
+ ${misc:Depends},
+ bc,
+ ghostscript (>= 9.02~),
+ fonts-freefont-ttf | fonts-liberation | ttf-dejavu
+Recommends: colord, 
+ foomatic-filters (>= 4.0), 
+ ghostscript-cups (>= 9.02~)
+Suggests: foomatic-db-compressed-ppds | foomatic-db
+Replaces: cups (<< 1.5.0-16), 
+ cups-common (<< 1.5.0-16),
+ ghostscript-cups (<< 9.02~)
+Breaks: cups (<< 1.5.0-16), 
+ cups-common (<< 1.5.0-16),
+ ghostscript-cups (<< 9.02~)
+Description: OpenPrinting CUPS Filters
+ This package provides additional CUPS filters which are not provided
+ by the CUPS project itself. This includes filters for a PDF based
+ printing workflow.
+
+Package: libcupsfilters-dev
+Section: libdevel
+Architecture: any
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
+ libcupsfilters1 (= ${binary:Version})
+Description: OpenPrinting CUPS Filters - Development files for the library
+ This library contains functions commonly used by the CUPS filters
+ in the OpenPrinting CUPS filters package, currently functions to read
+ several different image formats and to convert bitmaps between different
+ color spaces.
+ .
+ This package contains the header files to develop applications (CUPS
+ filters, printer drivers) using libcupsfilters.
+
+Package: libfontembed-dev
+Section: libdevel
+Architecture: any
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
+ libfontembed1 (= ${binary:Version})
+Description: OpenPrinting CUPS Filters - Development files for font embed library
+ This library contains functions for font embedding in PDF files, commonly
+ used by CUPS filters.
+ .
+ This package contains the header files to develop applications using
+ libfontembed.
+
+Package: cups-browsed
+Architecture: any
+Depends: ${shlibs:Depends}, 
+ ${misc:Depends},
+ cups
+Description: OpenPrinting CUPS Filters - cups-browsed
+ This package provides cups-browsed, a daemon which browses the Bonjour
+ broadcasts of shared remote CUPS printers and makes the printers
+ available locally, replacing the CUPS broadcasting/browsing which was
+ dropped in CUPS 1.6.x. This way the old behavior of having the remote
+ printers available automatically is now re-implemented with Bonjour.
+
+#Package: cups-filters-dbg
+#Priority: extra
+#Section: debug
+#Architecture: any
+#Depends: ${shlibs:Depends},
+#  ${misc:Depends},
+#  cups-filters (= ${binary:Version}) | libcupsfilters1 (= ${binary:Version})
+#Description: OpenPrinting CUPS Filters - Debugging symbols
+# This package provides the debugging symbols for OpenPrinting
+# CUPS Filters.
