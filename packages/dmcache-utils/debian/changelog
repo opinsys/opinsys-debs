@@ -1,3 +1,10 @@
+dmcache-utils (0.1.1-0+opinsys1) precise; urgency=low
+
+  * Upstream bug fix release.
+    - Updated README
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Wed, 29 May 2013 15:49:30 +0300
+
 dmcache-utils (0.1.0-0+opinsys1) precise; urgency=low
 
   * Initial release
