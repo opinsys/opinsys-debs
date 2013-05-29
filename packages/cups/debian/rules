@@ -135,7 +135,7 @@ override_dh_fixperms:
 	dh_fixperms -Xusr/lib/cups/backend-available
 
 override_dh_auto_test:
-	make check
+#	make check
 
 ifeq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 override_dh_makeshlibs:
