@@ -1,3 +1,9 @@
+qpdf (4.0.1-2+opinsys2) precise; urgency=low
+
+  * Using debhelper 9 is fine.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Wed, 29 May 2013 13:14:57 +0300
+
 qpdf (4.0.1-2+opinsys1) precise; urgency=low
 
   * Backported to Precise.
