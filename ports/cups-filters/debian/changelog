@@ -1,3 +1,9 @@
+cups-filters (1.0.34-0ubuntu1+opinsys2) precise; urgency=low
+
+  * Using debhelper 9 is fine.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Wed, 29 May 2013 13:22:01 +0300
+
 cups-filters (1.0.34-0ubuntu1+opinsys1) precise; urgency=low
 
   * Backport to Precise
