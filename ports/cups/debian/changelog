@@ -1,3 +1,9 @@
+cups (1.6.2-7+opinsys1) precise; urgency=low
+
+  * Backport to Precise
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Wed, 29 May 2013 11:39:06 +0300
+
 cups (1.6.2-7) experimental; urgency=low
 
   * Update the patch adding libusb error handling to also discard its
