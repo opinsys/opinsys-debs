@@ -1,3 +1,9 @@
+tuxmath (1.8.0-4ubuntu1+opinsys1) quantal; urgency=low
+
+  * Add improvements to finnish translation of tuxmath.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 29 May 2013 12:38:57 +0300
+
 tuxmath (1.8.0-4) unstable; urgency=low
 
   * debian/control:
