@@ -1,3 +1,9 @@
+puavo-ltsp (0.8.84-0+opinsys3) quantal; urgency=low
+
+  * Bootserver does not depend on puavo-rest until puavo-rest gets fixed
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Thu, 30 May 2013 14:31:49 +0300
+
 puavo-ltsp (0.8.84-0+opinsys2) quantal; urgency=low
 
   * Bootserver depends on puavo-rest
