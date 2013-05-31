@@ -1,0 +1,15 @@
+--- /dev/null
++++ av4kav-4.1.9/Makefile
+@@ -0,0 +1,12 @@
++all:
++
++install:
++	cp -ar opt $(DESTDIR)
++
++	mkdir -p $(DESTDIR)/usr/share
++	cp -ar usr/share/applications $(DESTDIR)/usr/share
++
++	mkdir -p $(DESTDIR)/usr/share/pixmaps
++	cp -a usr/share/pixmaps/av4.xpm $(DESTDIR)/usr/share/pixmaps/av4.xpm
++
++clean:

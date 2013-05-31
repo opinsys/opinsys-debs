@@ -1,0 +1,22 @@
+Source: av4kav
+Section: misc
+Priority: optional
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+Homepage: http://ken-a-vision.com/support/applied-vision-4-software
+
+Package: av4kav
+Architecture: i386
+Depends: ${misc:Depends}, libstdc++5
+Description: Applied Vision 4 for Linux from Ken-A-Vision
+ With our Applied Vision 4 software (AV4), you can easily connect all
+ your Ken-A-Vision digital products directly to your computer. The
+ intuitive user-interface was designed with input from educators to help
+ you make the most of your classroom time while still creating and
+ presenting attention-grabbing materials.
+ .
+ Ken-A-Vision’s Applied Vision 4 works with all our digital microscopes
+ and cameras and has all the features needed for the modern classroom
+ setting.
+ .

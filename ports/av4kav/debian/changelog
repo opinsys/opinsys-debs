@@ -1,0 +1,7 @@
+av4kav (4.1.9-0+opinsys1) quantal; urgency=low
+
+  * Initial package.
+    - upstream source is constructed simply from http://www.ken-a-vision.com/AV/av4/av4_i386-4.1.9.deb
+    - debian/patches/opinsys-add-makefile.patch
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Fri, 31 May 2013 16:00:23 +0300
