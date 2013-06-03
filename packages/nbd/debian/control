@@ -3,7 +3,7 @@ Section: admin
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 XSBC-Original-Maintainer: Wouter Verhelst <wouter@debian.org>
-Build-Depends: debhelper (>= 9), libglib2.0-dev (>= 2.26.0)
+Build-Depends: debhelper (>= 9), libglib2.0-dev (>= 2.26.0), quilt
 Standards-Version: 3.9.2
 Vcs-Git: git://anonscm.debian.org/users/wouter/nbd.git
 Vcs-Browser: http://git.debian.org/?p=users/wouter/nbd.git;a=summary
