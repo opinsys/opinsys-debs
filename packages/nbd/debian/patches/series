@@ -1,1 +1,1 @@
-opinsys-ignore-sigpipe
+opinsys-child-negotiation.patch
