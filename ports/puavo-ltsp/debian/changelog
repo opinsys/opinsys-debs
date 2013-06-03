@@ -1,3 +1,9 @@
+puavo-ltsp (0.8.85-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Mon, 03 Jun 2013 12:46:41 +0300
+
 puavo-ltsp (0.8.84-0+opinsys3) quantal; urgency=low
 
   * Bootserver does not depend on puavo-rest until puavo-rest gets fixed
