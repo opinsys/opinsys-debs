@@ -1,3 +1,10 @@
+puavo-client (1.3.14-0+opinsys1) precise; urgency=low
+
+  * Depend on dnsutils because dig is used in puavo-resolve-api-server
+  * https://github.com/opinsys/puavo-client/compare/1.3.13...1.3.14
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 05 Jun 2013 14:36:49 +0300
+
 puavo-client (1.3.13-0+opinsys1) precise; urgency=low
 
   * https://github.com/opinsys/puavo-client/compare/1.3.12...1.3.13
