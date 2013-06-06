@@ -1,3 +1,9 @@
+puavo-ltsp (0.8.88-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 06 Jun 2013 10:02:57 +0300
+
 puavo-ltsp (0.8.87-0+opinsys2) quantal; urgency=low
 
   * These days puavo-ltsp-bootserver actually wants nginx as well
