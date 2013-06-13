@@ -1,0 +1,215 @@
+From: Kaj Ailomaa <zequence@mousike.me>
+Description: Fixes an issue where pulseaudio was not giving up a reserved card
+Origin/Author: upstream, commits dd7cf7ad5ef17e217505fa41ace0c699fe79dada, 6be6766b58b3fa668a95563ac72ebe9970643cad, cb0f3d287857d5385f4a879f8ab565d71bc8f068 and 58def1fd1de0de7d5732519539503a7ad83f24a2
+Ubuntu-Bug: https://bugs.launchpad.net/ubuntu/+source/pulseaudio/+bug/1163638
+Index: pulseaudio-1.1/src/modules/reserve-monitor.c
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/reserve-monitor.c	2009-12-07 13:10:37.000000000 +0100
++++ pulseaudio-1.1/src/modules/reserve-monitor.c	2013-05-15 20:07:20.995250003 +0200
+@@ -32,6 +32,7 @@
+ #include <assert.h>
+ 
+ #include "reserve-monitor.h"
++#include "reserve.h"
+ 
+ struct rm_monitor {
+ 	int ref;
+@@ -59,6 +60,23 @@
+ 	"member='NameOwnerChanged',"		\
+ 	"arg0='%s'"
+ 
++static unsigned get_busy(
++	DBusConnection *c,
++	const char *name_owner) {
++
++	const char *un;
++
++	if (!name_owner || !*name_owner)
++		return FALSE;
++
++	/* If we ourselves own the device, then don't consider this 'busy' */
++	if ((un = dbus_bus_get_unique_name(c)))
++		if (strcmp(name_owner, un) == 0)
++			return FALSE;
++
++	return TRUE;
++}
++
+ static DBusHandlerResult filter_handler(
+ 	DBusConnection *c,
+ 	DBusMessage *s,
+@@ -85,18 +103,11 @@
+ 			goto invalid;
+ 
+ 		if (strcmp(name, m->service_name) == 0) {
+-			m->busy = !!(new && *new);
++			unsigned old_busy = m->busy;
+ 
+-			/* If we ourselves own the device, then don't consider this 'busy' */
+-			if (m->busy) {
+-				const char *un;
+-
+-				if ((un = dbus_bus_get_unique_name(c)))
+-					if (strcmp(new, un) == 0)
+-						m->busy = FALSE;
+-			}
++			m->busy = get_busy(c, new);
+ 
+-			if (m->change_cb) {
++			if (m->busy != old_busy && m->change_cb) {
+ 				m->ref++;
+ 				m->change_cb(m);
+ 				rm_release(m);
+@@ -113,11 +124,12 @@
+ int rm_watch(
+ 	rm_monitor **_m,
+ 	DBusConnection *connection,
+-	const char*device_name,
++	const char *device_name,
+ 	rm_change_cb_t change_cb,
+ 	DBusError *error)  {
+ 
+ 	rm_monitor *m = NULL;
++	char *name_owner;
+ 	int r;
+ 	DBusError _error;
+ 
+@@ -176,12 +188,11 @@
+ 
+ 	m->matching = 1;
+ 
+-	m->busy = dbus_bus_name_has_owner(m->connection, m->service_name, error);
+-
+-	if (dbus_error_is_set(error)) {
+-		r = -EIO;
++	if ((r = rd_dbus_get_name_owner(m->connection, m->service_name, &name_owner, error)) < 0)
+ 		goto fail;
+-	}
++
++	m->busy = get_busy(m->connection, name_owner);
++	free(name_owner);
+ 
+ 	*_m = m;
+ 	return 0;
+Index: pulseaudio-1.1/src/modules/reserve.c
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/reserve.c	2009-12-07 13:10:37.000000000 +0100
++++ pulseaudio-1.1/src/modules/reserve.c	2013-05-15 20:07:23.723250100 +0200
+@@ -293,6 +293,7 @@
+ 
+ 	rd_device *d;
+ 	DBusError error;
++	char *name_owner = NULL;
+ 
+ 	dbus_error_init(&error);
+ 
+@@ -310,6 +311,21 @@
+ 			goto invalid;
+ 
+ 		if (strcmp(name, d->service_name) == 0 && d->owning) {
++			/* Verify the actual owner of the name to avoid leaked NameLost
++			 * signals from previous reservations. The D-Bus daemon will send
++			 * all messages asynchronously in the correct order, but we could
++			 * potentially process them too late due to the pseudo-blocking
++			 * call mechanism used during both acquisition and release. This
++			 * can happen if we release the device and immediately after
++			 * reacquire it before NameLost is processed. */
++			if (!d->gave_up) {
++				const char *un;
++
++				if ((un = dbus_bus_get_unique_name(c)) && rd_dbus_get_name_owner(c, d->service_name, &name_owner, &error) == 0)
++					if (strcmp(name_owner, un) == 0)
++						goto invalid; /* Name still owned by us */
++			}
++
+ 			d->owning = 0;
+ 
+ 			if (!d->gave_up)  {
+@@ -326,6 +342,7 @@
+ 	}
+ 
+ invalid:
++	free(name_owner);
+ 	dbus_error_free(&error);
+ 
+ 	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+@@ -606,3 +623,59 @@
+ 
+ 	return d->userdata;
+ }
++
++int rd_dbus_get_name_owner(
++	DBusConnection *connection,
++	const char *name,
++	char **name_owner,
++	DBusError *error) {
++
++	DBusMessage *msg, *reply;
++	int r;
++
++	*name_owner = NULL;
++
++	if (!(msg = dbus_message_new_method_call(DBUS_SERVICE_DBUS, DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS, "GetNameOwner"))) {
++		r = -ENOMEM;
++		goto fail;
++	}
++
++	if (!dbus_message_append_args(msg, DBUS_TYPE_STRING, &name, DBUS_TYPE_INVALID)) {
++		r = -ENOMEM;
++		goto fail;
++	}
++
++	reply = dbus_connection_send_with_reply_and_block(connection, msg, DBUS_TIMEOUT_USE_DEFAULT, error);
++	dbus_message_unref(msg);
++	msg = NULL;
++
++	if (reply) {
++		if (!dbus_message_get_args(reply, error, DBUS_TYPE_STRING, name_owner, DBUS_TYPE_INVALID)) {
++			dbus_message_unref(reply);
++			r = -EIO;
++			goto fail;
++		}
++
++		*name_owner = strdup(*name_owner);
++		dbus_message_unref(reply);
++
++		if (!*name_owner) {
++			r = -ENOMEM;
++			goto fail;
++		}
++
++	} else if (dbus_error_has_name(error, "org.freedesktop.DBus.Error.NameHasNoOwner"))
++		dbus_error_free(error);
++	else {
++		r = -EIO;
++		goto fail;
++	}
++
++	return 0;
++
++fail:
++	if (msg)
++		dbus_message_unref(msg);
++
++	return r;
++}
+Index: pulseaudio-1.1/src/modules/reserve.h
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/reserve.h	2011-10-28 14:44:20.000000000 +0200
++++ pulseaudio-1.1/src/modules/reserve.h	2013-05-15 20:07:20.997250003 +0200
+@@ -72,6 +72,15 @@
+  * userdata was set. */
+ void* rd_get_userdata(rd_device *d);
+ 
++/* Helper function to get the unique connection name owning a given
++ * name. Returns 0 on success, a negative errno style return value on
++ * error. */
++int rd_dbus_get_name_owner(
++	DBusConnection *connection,
++	const char *name,
++	char **name_owner,
++	DBusError *error);
++
+ #ifdef __cplusplus
+ }
+ #endif

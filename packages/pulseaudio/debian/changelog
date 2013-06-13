@@ -1,9 +1,18 @@
-pulseaudio (1:1.1-0ubuntu15.2+opinsys1) precise; urgency=low
+pulseaudio (1:1.1-0ubuntu15.3+opinsys1) precise; urgency=low
 
   * Turn off x86-specific optimizations (on some machines pulseaudio
     is completely broken because of those).
 
- -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Mon, 21 Jan 2013 12:09:30 +0200
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Thu, 13 Jun 2013 16:22:51 +0200
+
+pulseaudio (1:1.1-0ubuntu15.3) precise-proposed; urgency=low
+
+  [ Kaj Ailomaa ]
+  * 0127-reserve-card.patch:
+    make pulseaudio let go of reserved cards when acquired by jack
+    (LP: #1163638)
+
+ -- Luke Yelavich <themuso@ubuntu.com>  Thu, 23 May 2013 12:15:02 +1000
 
 pulseaudio (1:1.1-0ubuntu15.2) precise-proposed; urgency=low
 
