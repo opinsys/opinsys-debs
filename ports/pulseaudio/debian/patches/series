@@ -33,6 +33,7 @@
 0124-device-manager-Fix-a-memory-leak.patch
 0125-alsa-sink-source-Really-set-volumes-on-port-change.patch
 0126-alsa-sink-source-Make-sure-volumes-are-synchronised-.patch
+0127-reserve-card.patch
 
 # Jack detection patches (upstreamed)
 0600-ship-PROTOCOL-file.patch
