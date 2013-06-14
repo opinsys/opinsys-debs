@@ -35,5 +35,5 @@ Description: Bits and pieces needed inside the LTSP chroot image.
 Package: puavo-ltsp-install
 Architecture: all
 Conflicts: nscd
-Depends: ${misc:Depends}, ruby1.8, ruby-highline, nbd-client, pv, rdiff
+Depends: ${misc:Depends}, ruby1.8, ruby-highline, nbd-client, pv, rdiff, curl
 Description: Bits and pieces needed inside the LTSP chroot image.
