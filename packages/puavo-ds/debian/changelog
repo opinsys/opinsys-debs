@@ -1,3 +1,9 @@
+puavo-ds (0.2.7-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-ds/compare/0.2.6...0.2.7
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Mon, 17 Jun 2013 10:34:33 +0300
+
 puavo-ds (0.2.6-0+opinsys1) precise; urgency=low
 
   * New upstream release
