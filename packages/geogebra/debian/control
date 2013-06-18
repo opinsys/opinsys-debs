@@ -1,0 +1,25 @@
+Source: geogebra
+Section: education
+Priority: extra
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+Homepage: http://www.geogebra.org
+
+Package: geogebra
+Architecture: all
+Depends: ${misc:Depends}, default-jre | java5-runtime | java6-runtime | java7-runtime
+Suggests: cups, icedtea-netx-common
+Description: Free mathematics software for learning and teaching
+ GeoGebra is free dynamic mathematics software for all levels of education
+ that joins geometry, algebra, graphing, and calculus in one
+ easy-to-use package.
+ .
+ Quick Facts:
+ Graphics, algebra and spreadsheet are connected and fully dynamic.
+ Easy-to-use interface, yet many powerful features.
+ Authoring tool to create and share interactive online learning materials.
+ Available in many languages for our millions of users around the world.
+ Free and open source math/maths software.
+ .
+ This package is repackaged by Opinsys.
