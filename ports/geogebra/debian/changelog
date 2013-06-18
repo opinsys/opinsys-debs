@@ -1,0 +1,7 @@
+geogebra (4.2.47.0-0+opinsys1) quantal; urgency=low
+
+  * Initial package for upstream version 4.2.47.0-24712
+    - upstream source is constructed simply from geogebra_4.2.47.0-24712_all.deb
+    - debian/patches/opinsys-add-makefile.patch
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Thu, 06 Jun 2013 15:15:22 +0300
