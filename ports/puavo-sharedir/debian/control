@@ -8,7 +8,7 @@ Homepage: https://github.com/opinsys/puavo-sharedir
 
 Package: puavo-sharedir-client
 Architecture: all
-Depends: ${misc:Depends}, smbnetfs
+Depends: ${misc:Depends}
 Description: Puavo shared directory client
 
 Package: puavo-sharedir-manager
