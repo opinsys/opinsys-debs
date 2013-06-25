@@ -1,3 +1,27 @@
+puavo-users (0.3.4-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.3.3...0.3.4
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 25 Jun 2013 17:26:45 +0300
+
+puavo-users (0.3.3-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.3.2...0.3.3
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 25 Jun 2013 17:21:56 +0300
+
+puavo-users (0.3.2-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.3.1...0.3.2
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 25 Jun 2013 17:10:56 +0300
+
+puavo-users (0.3.1-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.3.0...0.3.1
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 25 Jun 2013 17:07:20 +0300
+
 puavo-users (0.3.0-0+opinsys1) precise; urgency=low
 
   * GSSAPI SPNEGO KRB support!
