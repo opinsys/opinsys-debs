@@ -9,7 +9,7 @@ set -e
 case "$1" in
   configure)
       adduser --no-create-home --disabled-password --disabled-login --system --group puavo
-      service nginx reload
+      service nginx reload || true
     ;;
   abort-upgrade)
     ;;
