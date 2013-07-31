@@ -1,3 +1,9 @@
+nodejs-bundle (0.10.15-0+opinsys1) quantal; urgency=low
+
+  * Update to 0.10.15
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 29 Jul 2013 15:13:05 +0300
+
 nodejs-bundle (0.10.12-0+opinsys1) quantal; urgency=low
 
   * Update to 0.10.12
