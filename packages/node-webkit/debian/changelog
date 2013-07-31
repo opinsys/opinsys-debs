@@ -1,3 +1,10 @@
+node-webkit (0.6.3-0+opinsys1ubuntu1) precise; urgency=low
+
+  * Release 0.6.3
+  * https://groups.google.com/forum/#!msg/node-webkit/OfJwV1aFdxw/aP6V9IX60_AJ
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 31 Jul 2013 09:56:05 +0300
+
 node-webkit (0.6.2-0+opinsys1) quantal; urgency=low
 
   * Release 0.6.2
