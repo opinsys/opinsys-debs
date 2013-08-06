@@ -1,3 +1,9 @@
+webmenu (0.5.2-0+opinsys1) quantal; urgency=low
+
+  * https://github.com/opinsys/webmenu/compare/0.5.1...0.5.2
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 06 Aug 2013 15:57:03 +0300
+
 webmenu (0.5.1-0+opinsys2) precise; urgency=low
 
   * Upgrade node-webkit to 0.6.3
