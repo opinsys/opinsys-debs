@@ -9,5 +9,8 @@ Homepage: http://github.com/opinsys/eleet
 Package: eleet
 Architecture: i386
 Depends: ${misc:Depends}, node-webkit (>= 0.6.3), xdotool, libnotify-bin, leap
-Description: eleet
- Simple Leap Motion integration
+Description: Simple Leap Motion integration
+ BindLeap Motion swipe gestures to arrow key strokes. This can be used to
+ control Libre Office Impress presentations for example. Designed for Opinsys
+ Desktop integration.
+
