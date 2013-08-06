@@ -10,9 +10,14 @@
 override_dh_auto_test:
 
 override_dh_auto_build:
+	# puavo-rest
 	$(MAKE) -C rest
 
+	# puavo-web
+	$(MAKE)
+
 override_dh_install:
+	# puavo-rest
 	$(MAKE) -C rest install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-rest
 	$(MAKE) -C rest install-client prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-load-balancer
 	mkdir -p $(CURDIR)/debian/puavo-rest/etc/nginx/sites-available/
@@ -20,9 +25,8 @@ override_dh_install:
 	mkdir -p $(CURDIR)/debian/puavo-rest/etc/nginx/sites-enabled/
 	ln -s ../sites-available/puavo-rest $(CURDIR)/debian/puavo-rest/etc/nginx/sites-enabled/puavo-rest
 
-override_dh_auto_install:
-	$(MAKE) -C rest install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-rest
-	$(MAKE) -C rest install-client prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-post-ltsp-server-load
+	# puavo-web
+	$(MAKE) install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-web
 
 PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
