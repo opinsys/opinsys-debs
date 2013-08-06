@@ -1,0 +1,13 @@
+Source: eleet
+Section: utils
+Priority: extra
+Maintainer: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
+Build-Depends: debhelper (>= 8), nodejs-bundle (>= 0.10.12), python
+Standards-Version: 3.9.3
+Homepage: http://github.com/opinsys/eleet
+
+Package: eleet
+Architecture: i386
+Depends: ${misc:Depends}, node-webkit (>= 0.6.3), xdotool, libnotify-bin, leap
+Description: eleet
+ Simple Leap Motion integration
