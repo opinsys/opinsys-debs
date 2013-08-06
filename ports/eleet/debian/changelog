@@ -1,3 +1,21 @@
+eleet (1.0.2-0+opinsys1) quantal; urgency=low
+
+  * https://github.com/opinsys/eleet/compare/1.0.1...1.0.2
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 06 Aug 2013 14:29:22 +0300
+
+eleet (1.0.1-0+opinsys1) quantal; urgency=low
+
+  * https://github.com/opinsys/eleet/compare/1.0.0...1.0.1
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 06 Aug 2013 14:26:53 +0300
+
+eleet (1.0.0-0+opinsys1) quantal; urgency=low
+
+  * https://github.com/opinsys/eleet/compare/...1.0.0
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 06 Aug 2013 14:26:15 +0300
+
 webmenu (1.0.0-0+opinsys1) precise; urgency=low
 
   * Initial
