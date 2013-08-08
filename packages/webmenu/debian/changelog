@@ -1,3 +1,9 @@
+webmenu (0.5.4-0+opinsys1) quantal; urgency=low
+
+  * https://github.com/opinsys/webmenu/compare/0.5.3...0.5.4
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Thu, 08 Aug 2013 16:44:52 +0300
+
 webmenu (0.5.3-0+opinsys1) quantal; urgency=low
 
   * https://github.com/opinsys/webmenu/compare/0.5.2...0.5.3
