@@ -8,9 +8,15 @@ Homepage: https://github.com/opinsys/puavo-users/
 
 Package: puavo-rest
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, make, ruby1.9.1, ruby-bundler (>= 1.3.5), puavo-client, ruby-ldap, nginx
+Depends: ${shlibs:Depends}, ${misc:Depends}, make, ruby1.9.1, ruby-bundler (>= 1.3.5), puavo-client, ruby-ldap
 Description: puavo-rest
  JSON-REST Adapter for LDAP
+
+Package: puavo-rest-bootserver
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, make, nginx
+Description: puavo-rest-bootserver
+ Nginx server configuration for puavo-rest
 
 Package: puavo-load-balancer
 Architecture: all
