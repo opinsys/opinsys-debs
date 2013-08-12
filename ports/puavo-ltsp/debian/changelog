@@ -1,3 +1,9 @@
+puavo-ltsp (0.9.14-0+opinsys1) quantal; urgency=low
+
+  * https://github.com/opinsys/puavo-ltsp/compare/0.9.13...0.9.14
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Fri, 09 Aug 2013 11:59:39 +0300
+
 puavo-ltsp (0.9.13-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
