@@ -1,3 +1,9 @@
+puavo-users (0.3.8-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.3.7...0.3.8
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Tue, 13 Aug 2013 15:32:04 +0300
+
 puavo-users (0.3.7-0+opinsys2) precise; urgency=low
 
   * Listen to all interfaces
