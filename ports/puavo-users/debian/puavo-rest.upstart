@@ -11,6 +11,6 @@ end script
 chdir /var/app/puavo-rest
 env RACK_ENV=production
 
-exec sudo -E -u puavo bundle exec rackup -o 127.0.0.1
+exec sudo -E -u puavo bundle exec rackup
 
 respawn
