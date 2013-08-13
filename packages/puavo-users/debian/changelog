@@ -1,3 +1,21 @@
+puavo-users (0.3.7-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.3.6...0.3.7
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 13 Aug 2013 10:54:42 +0300
+
+puavo-users (0.3.6-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.3.5...0.3.6
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 12 Aug 2013 16:38:28 +0300
+
+puavo-users (0.3.5-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.3.4...0.3.5
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 12 Aug 2013 13:43:24 +0300
+
 puavo-users (0.3.4-0+opinsys1) precise; urgency=low
 
   * https://github.com/opinsys/puavo-users/compare/0.3.3...0.3.4
