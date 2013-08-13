@@ -20,10 +20,10 @@ override_dh_install:
 	# puavo-rest
 	$(MAKE) -C rest install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-rest
 	$(MAKE) -C rest install-client prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-load-balancer
-	mkdir -p $(CURDIR)/debian/puavo-rest/etc/nginx/sites-available/
-	install -m 644 $(CURDIR)/debian/nginx-puavo-rest $(CURDIR)/debian/puavo-rest/etc/nginx/sites-available/puavo-rest
-	mkdir -p $(CURDIR)/debian/puavo-rest/etc/nginx/sites-enabled/
-	ln -s ../sites-available/puavo-rest $(CURDIR)/debian/puavo-rest/etc/nginx/sites-enabled/puavo-rest
+	mkdir -p $(CURDIR)/debian/puavo-rest-nginx/etc/nginx/sites-available/
+	install -m 644 $(CURDIR)/debian/nginx-puavo-rest $(CURDIR)/debian/puavo-rest-nginx/etc/nginx/sites-available/puavo-rest
+	mkdir -p $(CURDIR)/debian/puavo-rest-nginx/etc/nginx/sites-enabled/
+	ln -s ../sites-available/puavo-rest-nginx $(CURDIR)/debian/puavo-rest-nginx/etc/nginx/sites-enabled/puavo-rest-nginx
 
 	# puavo-web
 	$(MAKE) install prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-web
