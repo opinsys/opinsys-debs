@@ -1,3 +1,9 @@
+puavo-ltsp (0.9.15-0+opinsys1) quantal; urgency=low
+
+  * https://github.com/opinsys/puavo-ltsp/compare/0.9.14...0.9.15
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Thu, 15 Aug 2013 12:59:12 +0300
+
 puavo-ltsp (0.9.14-0+opinsys1) quantal; urgency=low
 
   * https://github.com/opinsys/puavo-ltsp/compare/0.9.13...0.9.14
