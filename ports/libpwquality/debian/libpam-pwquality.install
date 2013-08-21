@@ -1,0 +1,3 @@
+lib/*/security/*.so
+usr/share/man/*/pam_pwquality.*
+debian/pam-config/pwquality	usr/share/pam-configs
