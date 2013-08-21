@@ -1,0 +1,9 @@
+#! /bin/sh -e
+
+invoke_failure() {
+    # invoke-rc.d failed
+    return
+}
+
+#DEBHELPER#
+

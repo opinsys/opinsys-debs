@@ -1,0 +1,2 @@
+usr/lib/*/sssd/libsss_proxy.so
+usr/lib/*/sssd/proxy_child

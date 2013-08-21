@@ -24,8 +24,15 @@ remove_nss_entry() {
     ' /etc/nsswitch.conf
 }
 
-action="$1"
+case "$1" in
+    remove|purge)
+        remove_nss_entry
+    ;;
+    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+    ;;
 
-if [ "$action" = remove ]; then
-    remove_nss_entry
-fi
+    *)
+        echo "postrm called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
