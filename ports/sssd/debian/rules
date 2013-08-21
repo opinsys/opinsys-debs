@@ -33,7 +33,6 @@ override_dh_auto_configure:
 	--enable-pammoddir=/lib/$(DEB_HOST_MULTIARCH)/security \
 	--disable-static \
 	--disable-rpath \
-	--with-semanage=no \
 	--with-autofs \
 	--with-ssh \
 	--with-sudo
@@ -45,12 +44,10 @@ override_dh_install:
 	mkdir -p $(CURDIR)/debian/libpam-sss/usr/share/pam-configs
 	install -m644 debian/libpam-sss.pam-auth-update \
 		$(CURDIR)/debian/libpam-sss/usr/share/pam-configs/sss
-	install -m644 debian/libpam-sss.pam-auth-update-password \
-		$(CURDIR)/debian/libpam-sss/usr/share/pam-configs/sss-password
 	install -m644 -D $(CURDIR)/debian/apparmor-profile \
-		$(CURDIR)/debian/sssd/etc/apparmor.d/usr.sbin.sssd
+		$(CURDIR)/debian/sssd-common/etc/apparmor.d/usr.sbin.sssd
 
-	cat $(CURDIR)/debian/sssd.$(INIT).in > $(CURDIR)/debian/sssd.$(INIT)
+	cat $(CURDIR)/debian/sssd-common.sssd.$(INIT).in > $(CURDIR)/debian/sssd-common.sssd.$(INIT)
 
 	# remove files we don't want to install
 	find $(CURDIR)/debian/tmp/ -name '*.la' -exec rm '{}' ';'
@@ -66,12 +63,12 @@ override_dh_python2:
 	dh_python2 --no-guessing-versions
 
 override_dh_installinit:
-	dh_apparmor -psssd --profile-name=usr.sbin.sssd
-	dh_installinit --error-handler=invoke_failure
+	dh_apparmor -psssd-common --profile-name=usr.sbin.sssd
+	dh_installinit --name sssd --error-handler=invoke_failure
 
 override_dh_auto_clean:
 	dh_auto_clean
-	rm -f $(CURDIR)/debian/sssd.$(INIT)
+	rm -f $(CURDIR)/debian/sssd-common.$(INIT)
 	rm -f $(CURDIR)/po/*.gmo
 	rm -f $(CURDIR)/src/config/*.pyc
 	rm -f $(CURDIR)/po/stamp-po

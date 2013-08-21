@@ -12,7 +12,8 @@ Build-Depends: debhelper (>= 9), quilt, dh-autoreconf, autopoint, lsb-release,
  libkeyutils-dev,
  libldap2-dev,
  libpam-dev,
- libnl-dev,
+ libnl-3-dev,
+ libnl-route-3-dev,
  libnss3-dev,
  libnspr4-dev,
  libpcre3-dev,
@@ -31,10 +32,11 @@ Build-Depends: debhelper (>= 9), quilt, dh-autoreconf, autopoint, lsb-release,
  libkrb5-dev,
  libc-ares-dev,
  python-dev (>= 2.6.6-3~),
+ libsemanage1-dev,
  libdhash-dev,
  libcollection-dev,
  libini-config-dev,
- check,
+# check,
  dh-apparmor,
  libglib2.0-dev,
  libndr-dev,
@@ -42,41 +44,162 @@ Build-Depends: debhelper (>= 9), quilt, dh-autoreconf, autopoint, lsb-release,
  libsamba-util-dev,
  samba4-dev,
  libdcerpc-dev,
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 Vcs-Git: git://git.debian.org/git/pkg-sssd/sssd
 Vcs-Browser: http://git.debian.org/?p=pkg-sssd/sssd.git
 Homepage: https://fedorahosted.org/sssd/
 
 Package: sssd
+Section: metapackages
 Architecture: any
-Multi-Arch: foreign
-Depends: ${shlibs:Depends}, ${misc:Depends}, python,
- python-sss,
- libipa-hbac0 (= ${binary:Version}),
- libsss-idmap0 (= ${binary:Version}),
-Pre-Depends: ${misc:Pre-Depends}
-Recommends: ldap-utils,
- bind9-host,
- libnss-sss,
- libpam-sss,
- libsasl2-modules-gssapi-mit | libsasl2-modules-gssapi-heimdal,
- libsasl2-modules-ldap,
-Suggests:
- apparmor,
- sssd-tools,
-Description: System Security Services Daemon 
+Depends: ${misc:Depends},
+ sssd-common (= ${binary:Version}),
+ sssd-ad (= ${binary:Version}),
+ sssd-ipa (= ${binary:Version}),
+ sssd-krb5 (= ${binary:Version}),
+ sssd-ldap (= ${binary:Version}),
+ sssd-proxy (= ${binary:Version}),
+ python-sss (= ${binary:Version}),
+Description: System Security Services Daemon -- metapackage
  Provides a set of daemons to manage access to remote directories and
  authentication mechanisms. It provides an NSS and PAM interface toward
  the system and a pluggable backend system to connect to multiple different
  account sources. It is also the basis to provide client auditing and policy
  services for projects like FreeIPA.
  .
- This package provides the daemon.
+ This package is a metapackage which installs the daemon and existing
+ authentication back ends.
+
+Package: sssd-common
+Architecture: any
+Multi-Arch: foreign
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ python,
+ python-sss,
+Pre-Depends: ${misc:Pre-Depends}
+Recommends:
+ bind9-host,
+ libnss-sss,
+ libpam-sss,
+ libsss-sudo,
+Suggests:
+ apparmor,
+ sssd-tools
+Breaks: sssd (<< 1.10.0~beta2-1),
+Replaces: sssd (<< 1.10.0~beta2-1),
+Description: System Security Services Daemon -- common files
+ Provides a set of daemons to manage access to remote directories and
+ authentication mechanisms. It provides an NSS and PAM interface toward
+ the system and a pluggable backend system to connect to multiple different
+ account sources. It is also the basis to provide client auditing and policy
+ services for projects like FreeIPA.
+ .
+ This package provides the daemon and other common files needed by the
+ authentication back ends.
+
+Package: sssd-ad
+Architecture: any
+Multi-Arch: foreign
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ sssd-common (= ${binary:Version}),
+ sssd-ad-common (= ${binary:Version}),
+ sssd-krb5-common (= ${binary:Version}),
+ libsss-idmap0 (= ${binary:Version}),
+Breaks: sssd (<< 1.10.0~beta2-1),
+Replaces: sssd (<< 1.10.0~beta2-1),
+Description: System Security Services Daemon -- Active Directory back end
+ Provides the Active Directory back end that the SSSD can utilize to fetch
+ identity data from and authenticate against an Active Directory server.
+
+Package: sssd-ad-common
+Architecture: any
+Multi-Arch: foreign
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ sssd-common (= ${binary:Version}),
+Breaks: sssd (<< 1.10.0~beta2-1),
+Replaces: sssd (<< 1.10.0~beta2-1),
+Description: System Security Services Daemon -- PAC responder
+ Provides the PAC responder that the AD and IPA backends can use for
+ fetching additional attributes from the kerberos ticket.
+
+Package: sssd-ipa
+Architecture: any
+Multi-Arch: foreign
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ sssd-common (= ${binary:Version}),
+ sssd-ad-common (= ${binary:Version}),
+ sssd-krb5-common (= ${binary:Version}),
+ libipa-hbac0 (= ${binary:Version}),
+ libsss-idmap0 (= ${binary:Version}),
+Breaks: sssd (<< 1.10.0~beta2-1),
+Replaces: sssd (<< 1.10.0~beta2-1),
+Description: System Security Services Daemon -- IPA back end
+ Provides the IPA back end that the SSSD can utilize to fetch identity data
+ from and authenticate against an IPA server.
+
+Package: sssd-krb5
+Architecture: any
+Multi-Arch: foreign
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ sssd-common (= ${binary:Version}),
+ sssd-krb5-common (= ${binary:Version}),
+Breaks: sssd (<< 1.10.0~beta2-1),
+Replaces: sssd (<< 1.10.0~beta2-1),
+Description: System Security Services Daemon -- Kerberos back end
+ Provides the Kerberos back end that the SSSD can utilize authenticate
+ against a Kerberos server.
+
+Package: sssd-krb5-common
+Architecture: any
+Multi-Arch: foreign
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ sssd-common (= ${binary:Version}),
+Recommends:
+ libsasl2-modules-gssapi-mit | libsasl2-modules-gssapi-heimdal,
+Breaks: sssd (<< 1.10.0~beta2-1),
+Replaces: sssd (<< 1.10.0~beta2-1),
+Description: System Security Services Daemon -- Kerberos helpers
+ Provides helper processes that the LDAP and Kerberos back ends can use for
+ Kerberos user or host authentication.
+
+Package: sssd-ldap
+Architecture: any
+Multi-Arch: foreign
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ sssd-common (= ${binary:Version}),
+ sssd-krb5-common (= ${binary:Version}),
+ libsss-idmap0 (= ${binary:Version}),
+Recommends:
+ ldap-utils,
+ libsasl2-modules-ldap,
+Breaks: sssd (<< 1.10.0~beta2-1),
+Replaces: sssd (<< 1.10.0~beta2-1),
+Description: System Security Services Daemon -- LDAP back end
+ Provides the LDAP back end that the SSSD can utilize to fetch identity data
+ from and authenticate against an LDAP server.
+
+Package: sssd-proxy
+Architecture: any
+Multi-Arch: foreign
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ sssd-common (= ${binary:Version}),
+Breaks: sssd (<< 1.10.0~beta2-1),
+Replaces: sssd (<< 1.10.0~beta2-1),
+Description: System Security Services Daemon -- proxy back end
+ Provides the proxy back end which can be used to wrap an existing NSS and/or
+ PAM modules to leverage SSSD caching.
 
 Package: sssd-tools
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
- sssd (= ${binary:Version}),
+ sssd-common (= ${binary:Version}),
  python,
 Breaks: sssd (<< 1.8.0~beta3-1)
 Replaces: sssd (<< 1.8.0~beta3-1)
@@ -107,7 +230,8 @@ Description: Nss library for the System Security Services Daemon
 
 Package: libpam-sss
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, libpam-runtime (>= 1.0.1-6)
+Depends: ${shlibs:Depends}, ${misc:Depends}, libpam-runtime (>= 1.0.1-6),
+ libpam-pwquality (>= 1.2.2-1),
 Recommends: sssd
 Multi-Arch: same
 Breaks: sssd (<< 1.8.0~beta3-1)
@@ -163,6 +287,27 @@ Description: ID mapping library for SSSD -- development files
  This package contains header files and symlinks to develop programs which will
  use the libsss-idmap library.
 
+Package: libsss-nss-idmap0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+Pre-Depends: multiarch-support
+Multi-Arch: same
+Description: SID based lookups library for SSSD
+ Utility library for SID based lookups.
+
+Package: libsss-nss-idmap-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends}, libsss-nss-idmap0 (= ${binary:Version})
+Pre-Depends: multiarch-support
+Multi-Arch: same
+Description: SID based lookups library for SSSD -- development files
+ Utility library for SID based lookups.
+ .
+ This package contains header files and symlinks to develop programs which will
+ use the libsss-nss-idmap library.
+
 Package: libsss-sudo
 Section: libs
 Architecture: any
@@ -174,17 +319,6 @@ Description: Communicator library for sudo
  Utility library to allow communication between sudo and SSSD for caching
  sudo rules by SSSD.
 
-Package: libsss-sudo-dev
-Section: libdevel
-Architecture: any
-Depends: ${misc:Depends}, libsss-sudo (= ${binary:Version})
-Description: Communicator library for sudo -- development files
- Utility library to allow communication between sudo and SSSD for caching
- sudo rules by SSSD.
- .
- This package contains the header file to develop programs which will use the
- libsss-sudo library.
-
 Package: python-libipa-hbac
 Section: python
 Architecture: any
@@ -195,6 +329,15 @@ Replaces: python-sss (<< 1.5.15)
 Description: Python bindings for the FreeIPA HBAC Evaluator library
  The libipa_hbac-python contains the bindings so that libipa_hbac can be
  used by Python applications.
+
+Package: python-libsss-nss-idmap
+Section: python
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends},
+ libsss-nss-idmap0 (= ${binary:Version})
+Description: Python bindings for the SID lookups library
+ This package contains the bindings for libnss_sss_idmap to be used by
+ Python applications.
 
 Package: python-sss
 Section: python

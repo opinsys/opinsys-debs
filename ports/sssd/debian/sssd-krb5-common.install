@@ -1,0 +1,3 @@
+usr/lib/*/sssd/libsss_krb5_common.so
+usr/lib/*/sssd/ldap_child
+usr/lib/*/sssd/krb5_child

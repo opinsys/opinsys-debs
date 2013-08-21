@@ -1,4 +1,4 @@
 #git=git://git.fedorahosted.org/sssd.git
 version=3
-
+opts="uversionmangle=s/alpha/~alpha/;s/beta/~beta/" \
 https://fedorahosted.org/released/sssd/sssd-(.*)\.tar\.gz

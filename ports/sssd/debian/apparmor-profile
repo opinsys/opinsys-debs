@@ -23,7 +23,7 @@
 
   /usr/sbin/sssd rmix,
   /usr/lib/@{multiarch}/ldb/modules/ldb/* m,
-  /usr/lib/sssd/sssd/* rix,
+  /usr/lib/@{multiarch}/sssd/* rix,
 
   /tmp/{,.}krb5cc_* rwk,
 

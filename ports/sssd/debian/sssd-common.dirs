@@ -1,0 +1,8 @@
+etc/sssd
+var/lib/sss
+var/lib/sss/db
+var/lib/sss/mc
+var/lib/sss/pipes
+var/lib/sss/pipes/private
+var/lib/sss/pubconf
+var/log/sssd
