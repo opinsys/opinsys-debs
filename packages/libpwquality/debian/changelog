@@ -1,0 +1,55 @@
+libpwquality (1.2.2-1) unstable; urgency=low
+
+  [ Timo Aaltonen ]
+  * libpam-pwquality: Add a config file for pam-auth-update.
+    (Closes: #703817, LP: #1191990)
+
+  [ Michael Biebl ]
+  * New upstream release.
+
+ -- Michael Biebl <biebl@debian.org>  Sat, 29 Jun 2013 05:25:51 +0200
+
+libpwquality (1.2.1-1) unstable; urgency=low
+
+  [ Iain Lane ]
+  * Pass python version correctly 
+
+  [ Michael Biebl ]
+  * Upload to unstable.
+  * New upstream release.
+  * Use uploaders.mk to substitute @GNOME_TEAM@ in control.in.
+  * Split off the man page and configuration file from libpwquality1 into a new
+    binary package named libpwquality-common and make libpwquality1 depend on
+    it.
+  * With those files split off, mark the packages as multi-arch enabled.
+  * Bump Standards-Version to 3.9.4. No further changes.
+
+ -- Michael Biebl <biebl@debian.org>  Sat, 25 May 2013 08:04:37 +0200
+
+libpwquality (1.1.1-1) experimental; urgency=low
+
+  * Upload to Debian (Closes: #678938).
+  * Add Homepage field.
+  * Install into multiarch paths, but do not enable Multi-Arch itself in
+    debian/control as cracklib2 is not yet converted.
+  * Improve package descriptions.
+  * Install python module into proper directory.
+  * Add myself as Uploader and team as Maintainer.
+
+ -- Iain Lane <laney@debian.org>  Mon, 25 Jun 2012 09:46:44 +0100
+
+libpwquality (1.1.1-0ubuntu1) quantal; urgency=low
+
+  * New upstream release
+  * debian/control:
+    - Build-depend on debhelper >= 9
+    - Build-depend on libpam0g-dev
+    - Improve descriptions
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Fri, 22 Jun 2012 14:01:58 +1200
+
+libpwquality (1.1.0-0ubuntu1) quantal; urgency=low
+
+  * Initial Release.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Mon, 18 Jun 2012 16:07:46 +1200
