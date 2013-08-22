@@ -1,7 +1,7 @@
 Source: #DRIVERSRCNAME#
 Section: restricted/misc
 Priority: optional
-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Maintainer: Ubuntu Core Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Build-Depends: debhelper (>= 6.0.7~), sed (>> 3.0), libxext6, bzip2,
  xserver-xorg-dev (>= 2:1.4), execstack, cdbs, libc6, libxvmc1,
  dh-modaliases, libxv1
@@ -12,17 +12,12 @@ Vcs-Browser: http://github.com/tseliot/nvidia-graphics-drivers
 Package: #DRIVERNAME#
 Architecture: i386 amd64 lpia
 Depends: x11-common (>= 1:7.0.0), make, sed (>> 3.0), dkms, linux-libc-dev, libc6-dev,
- linux-headers-generic | linux-headers, patch, acpid, ${shlibs:Depends},
- ${xviddriver:Depends}
-Recommends: nvidia-settings
-Provides: nvidia-current-updates, nvidia-experimental-304, nvidia-173,
- nvidia-173-updates, nvidia-96, nvidia-96-updates, ${xviddriver:Provides}
-Conflicts: nvidia-current-modaliases, nvidia-180-modaliases, nvidia-185-modaliases,
- nvidia-experimental-304, nvidia-current-updates, nvidia-173, nvidia-173-updates,
- nvidia-96, nvidia-96-updates
-Replaces: nvidia-current-modaliases, nvidia-180-modaliases, nvidia-185-modaliases,
- nvidia-experimental-304, nvidia-current-updates, nvidia-173, nvidia-173-updates,
- nvidia-96, nvidia-96-updates
+ patch, acpid, ${shlibs:Depends}, ${misc:Depends}, ${xviddriver:Depends}
+Recommends: nvidia-settings-#FLAVOUR#
+Provides: xorg-driver-binary, nvidia-driver-binary, libcuda-5.0-1,
+ libopencl1, opencl-icd, ${xviddriver:Provides}
+Conflicts: xorg-driver-binary, libopencl1
+Replaces: xorg-driver-binary, libopencl1
 XB-Modaliases: ${modaliases}
 Description: NVIDIA binary Xorg driver, kernel module and VDPAU library
  The binary driver provide optimized hardware acceleration of OpenGL
@@ -36,17 +31,33 @@ Description: NVIDIA binary Xorg driver, kernel module and VDPAU library
  .
  GPUs such as GeForce series 6 or newer are supported.
  .
- See /usr/share/doc/#DRIVERNAME#/README.txt.gz for a complete list
- of supported GPUs and PCIIDs
+ Release Notes and supported GPUs:
+ #RELEASENOTES#
  .
 
 Package: #DRIVERDEVNAME#
 Architecture: i386 amd64 lpia
-Depends: #DRIVERNAME# (>= #VERSION#)
+Depends: ${misc:Depends}, #DRIVERNAME# (>= #VERSION#)
 Description: NVIDIA binary Xorg driver development files
  This package contains the NVIDIA binary Xorg driver
  development files.
  .
  For more information on this source package visit NVIDIA's homepage
  at http://www.nvidia.com/ .
+
+Package: nvidia-current
+Architecture: i386 amd64 lpia
+Depends: #DRIVERNAME#
+Description: Transitional package for nvidia-current
+ This is a transitional package for nvidia-current, and can be
+ safely removed after the installation is complete.
+ .
+
+Package: nvidia-current-dev
+Architecture: i386 amd64 lpia
+Depends: #DRIVERDEVNAME#
+Description: Transitional package for nvidia-current-dev
+ This is a transitional package for nvidia-current-dev, and can be
+ safely removed after the installation is complete.
+ .
 
