@@ -1,3 +1,10 @@
+nvidia-graphics-drivers-304 (304.88-0ubuntu8+opinsys1) quantal; urgency=low
+
+  * Do not conflict/replace/provice xorg-driver-binary to let
+    nvidia-304 and fglrx install side-by-side
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Thu, 22 Aug 2013 11:38:47 +0300
+
 nvidia-graphics-drivers-304 (304.88-0ubuntu8) saucy; urgency=low
 
   * debian/dkms.conf.in,
