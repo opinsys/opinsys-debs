@@ -1,8 +1,55 @@
-fglrx-installer (2:9.010-0ubuntu3+opinsys1) quantal; urgency=low
+fglrx-installer (2:13.101-0ubuntu3) saucy; urgency=low
 
-  * Import new version 2:9.010-0ubuntu3 from raring
+  * debian/dkms.conf.in:
+    - Add support for Linux 3.11.
 
- -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Tue, 07 May 2013 16:26:30 +0300
+ -- Alberto Milone <alberto.milone@canonical.com>  Tue, 06 Aug 2013 14:08:43 +0200
+
+fglrx-installer (2:13.101-0ubuntu2) saucy; urgency=low
+
+  * debian/fglrx.dirs.in:
+    - Do not install the xorg modules directory.
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Thu, 27 Jun 2013 14:39:29 +0200
+
+fglrx-installer (2:13.101-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    - Add support for AMD A10, A8, A6, and A4 Series APUs.
+    - Add GLX_EXT_buffer_age extension support.
+    - Add Xserver 1.14 Support.
+    - [371937] Fix black screen while entering Team
+      Fortress 2  under cinnamon desktop environment.
+    - [366812] Fix tearing for some OpenGL applications
+      with VSYNC on or off.
+    - [373575] Fix taskbar missing after UVD playback
+      on Ubuntu 12.04.
+    - [370955] Fix corruption in Team Fortress 2 when
+      running Dustbowl map.
+    - [377199] Fix the error for APL initialization
+      failure.
+    - [378086] Fix screen corruption when kill X on
+      Ubuntu 13.04.
+    - [374657] Fix some WebGL conformance test
+      failures.
+    - [377379] Fix the regression of performance drop
+      with XBMC for UVD playback.
+  * debian/dkms.conf.in,
+    debian/dkms/patches/replace_old_procfs_calls.patch:
+    - Add support for Linux 3.10.
+  * debian/substvars:
+    - Add support for X ABI 14.
+  * debian/rules:
+    - Sign the driver to remove the watermark.
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Fri, 21 Jun 2013 12:37:08 +0200
+
+fglrx-installer (2:9.010-0ubuntu4) saucy; urgency=low
+
+  * debian/dkms.conf.in:
+    - Add support for Linux 3.9 (LP: #1185285).
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Fri, 14 Jun 2013 17:02:58 +0200
 
 fglrx-installer (2:9.010-0ubuntu3) raring; urgency=low
 
