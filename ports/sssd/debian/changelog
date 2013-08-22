@@ -1,3 +1,9 @@
+sssd (1.10.1-1opinsys1) saucy; urgency=low
+
+  * Update to new upstream version.
+
+ -- Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>  Thu, 22 Aug 2013 15:02:11 +0300
+
 sssd (1.10.0-1ubuntu1) saucy; urgency=low
 
   * Sync from debian unstable git.
