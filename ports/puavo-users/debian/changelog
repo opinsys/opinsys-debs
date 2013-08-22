@@ -1,3 +1,9 @@
+puavo-users (0.3.9-0+opinsys2) precise; urgency=low
+
+  * puavo-rest must depend on libsasl2-modules-gssapi-mit for krb support
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 19 Aug 2013 13:34:45 +0300
+
 puavo-users (0.3.9-0+opinsys1) precise; urgency=low
 
   * https://github.com/opinsys/puavo-users/compare/0.3.7...0.3.9
