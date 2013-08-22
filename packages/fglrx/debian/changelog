@@ -1,3 +1,10 @@
+fglrx-installer (2:13.101-0ubuntu3+opinsys1) quantal; urgency=low
+
+  * Do not conflict/replace/provide xorg-binary-driver
+    to let flgrx and nvidia-304 install side-by-side
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Thu, 22 Aug 2013 12:41:50 +0300
+
 fglrx-installer (2:13.101-0ubuntu3) saucy; urgency=low
 
   * debian/dkms.conf.in:
