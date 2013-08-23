@@ -1,0 +1,12 @@
+debian/install/usr/bin/kompozer          usr/bin
+
+debian/install/usr/lib/kompozer/lib*           usr/lib/kompozer
+debian/install/usr/lib/kompozer/TestGtkEmbed   usr/lib/kompozer
+debian/install/usr/lib/kompozer/mozilla*       usr/lib/kompozer
+debian/install/usr/lib/kompozer/reg*           usr/lib/kompozer
+debian/install/usr/lib/kompozer/xp*            usr/lib/kompozer
+debian/install/usr/lib/kompozer/kompozer-bin   usr/lib/kompozer
+debian/install/usr/lib/kompozer/run-mozilla.sh usr/lib/kompozer
+debian/install/usr/lib/kompozer/components     usr/lib/kompozer
+debian/extensions                              usr/lib/kompozer
+debian/kompozer.desktop                   usr/share/applications

@@ -1,0 +1,112 @@
+.TH KOMPOZER 1 "August 27, 2007" KompoZer "Linux User's Manual"
+.SH NAME
+KompoZer - an HTML editor for X11 derived from the Mozilla composer
+
+.SH SYNOPSIS
+.B kompozer
+[\fIOPTIONS\fR] [\fIURL\fR]
+
+.B /usr/lib/kompozer/kompozer\-bin
+[\fIOPTIONS\fR] [\fIURL\fR]
+
+.SH DESCRIPTION
+\fBKompoZer\fR is an open-source HTML editor, designed for
+standards compliance, performance and portability.
+
+.SH USAGE
+\fBkompozer\fR is a simple shell script that will set up the
+environment for the actual executable, \fBkompozer\-bin\fR.
+
+.SH OPTIONS
+A summary of the options supported by \fBkompozer\fR is included below.
+
+.SS "X11 options"
+.TP
+.BI \-\-display= DISPLAY
+X display to use
+.TP
+.B \-\-sync
+Make X calls synchronous
+.TP
+.B \-\-no\-xshm
+Don't use X shared memory extension
+.TP
+.BI \-\-xim\-preedit= STYLE
+.TP
+.BI \-\-xim\-status= STYLE
+.TP
+.B \-\-g\-fatal\-warnings
+Make all warnings fatal
+
+.SS "Mozilla options"
+.TP
+\fB\-height\fR \fIvalue\fR
+Set height of startup window to \fIvalue\fR pixels.
+.TP
+.B \-h, \-help
+Show summary of options.
+.TP
+\fB\-width\fR \fIvalue\fR
+Set width of startup window to \fIvalue\fR pixels.
+.TP
+.B \-v, \-version
+Print KompoZer version.
+.TP
+.B \-no\-remote
+Don't connect to a running KompoZer instance.
+.TP
+\fB\-CreateProfile\fR \fIprofile\fR
+Create \fIprofile\fR.
+Implies \fB\-a kompozer\-\-\fR\fIprofile\fR, or \fB\-a default\fR
+if \fIprofile\fR is \fBdefault\fR.
+.TP
+\fB\-P\fR \fIprofile\fR
+Start with \fIprofile\fR.
+Implies \fB\-a kompozer\-\-\fR\fIprofile\fR, or \fB\-a default\fR
+if \fIprofile\fR is \fBdefault\fR.
+.TP
+.B \-ProfileManager
+Start with profile manager.
+Implies \fB\-a\fR with a fresh unique \fIapplication\-id\fR.
+.TP
+\fB\-UILocale\fR \fIlocale\fR
+Start with \fIlocale\fR resources as User Interface locale. By default, it is
+guessed from environment and available locales for KompoZer.
+.TP
+\fB\-contentLocale\fR \fIlocale\fR
+Start with \fIlocale\fR resources as content locale. By default, it is
+guessed from environment and available locales for KompoZer.
+.TP
+.B \-jsconsole
+Start with Javascript Console
+.TP
+\fB\-chrome\fR \fIurl\fR
+Load the specified chrome.
+.TP
+.B \-safe\-mode
+Starts KompoZer in safe mode, that is disabling all extensions and
+showing a bit more debugging messages.
+
+.SS "Debugger options"
+.TP
+.B \-g, \-debug
+Starts KompoZer through a debugger (gdb by default).
+.TP
+\fB\-\-debugger\fR \fIprogram\fR
+Use \fIprogram\fR as a debugger for KompoZer. Implies \fB\-debug\fR.
+
+.SH FILES
+\fI/usr/bin/kompozer\fR - shell script wrapping
+\fBkompozer\-bin\fR
+.br
+
+\fI/usr/lib/kompozer/kompozer\-bin\fR - \fBkompozer\fR
+executable
+
+.SH BUGS
+To report a bug, please visit \fIhttp://sourceforge.net/tracker/?group_id=170132&atid=853122\fR
+
+.SH AUTHOR
+.TP
+.B Fabien Cazenave
+.I http://kompozer.sourceforge.net/

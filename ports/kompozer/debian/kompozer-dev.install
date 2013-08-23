@@ -1,0 +1,4 @@
+debian/install/usr/include/kompozer   usr/include
+debian/install/usr/share/idl/kompozer usr/share/idl
+debian/install/usr/lib/pkgconfig/*.pc usr/lib/pkgconfig
+debian/install/usr/bin/*-config          usr/bin

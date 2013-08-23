@@ -1,0 +1,22 @@
+Patch from Martin Michlmayr for mips64 builds. bz#330626
+--- a/mozilla/security/coreconf/Linux.mk
++++ b/mozilla/security/coreconf/Linux.mk
+@@ -90,6 +90,9 @@ else
+ ifeq ($(OS_TEST),parisc64)
+ 	CPU_ARCH        = hppa
+ else
++ifeq ($(OS_TEST),mips64)
++	CPU_ARCH        = mips
++else
+ ifeq (,$(filter-out i686 i586 i486 i386,$(OS_TEST)))
+ 	OS_REL_CFLAGS	+= -Di386
+ 	CPU_ARCH	= x86
+@@ -101,7 +104,7 @@ endif
+ endif
+ endif
+ endif
+-
++endif
+ 
+ LIBC_TAG		= _glibc
+ 

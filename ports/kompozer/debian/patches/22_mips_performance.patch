@@ -1,0 +1,30 @@
+Patch from Thiemo Seufer to increase stability and performance on mips.
+--- a/mozilla/config/rules.mk
++++ b/mozilla/config/rules.mk
+@@ -456,15 +456,6 @@ endif
+ endif
+ endif
+ 
+-ifeq ($(OS_ARCH),Linux)
+-ifneq (,$(filter mips mipsel,$(OS_TEST)))
+-ifeq ($(MODULE),layout)
+-OS_CFLAGS += -Wa,-xgot
+-OS_CXXFLAGS += -Wa,-xgot
+-endif
+-endif
+-endif
+-
+ #
+ # HP-UX specific section: for COMPONENTS only, add -Bsymbolic flag
+ # which uses internal symbols first
+--- a/mozilla/configure.in
++++ b/mozilla/configure.in
+@@ -1685,8 +1685,6 @@ case "$target" in
+         MOZ_ENABLE_OLD_ABI_COMPAT_WRAPPERS=1
+     ;;
+     mips*)
+-        CFLAGS="$CFLAGS -Wa,-xgot"
+-        CXXFLAGS="$CXXFLAGS -Wa,-xgot"
+     ;;
+     esac
+     ;;

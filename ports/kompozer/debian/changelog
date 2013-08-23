@@ -1,0 +1,220 @@
+kompozer (1:0.8~b3.dfsg.1-0.1ubuntu2) precise; urgency=low
+
+  * Add -Wa,-mimplicit-it=thumb on ARM to work around lack of IT
+    instructions in inline assembly (LP: #935214).
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Tue, 24 Apr 2012 14:37:56 +0100
+
+kompozer (1:0.8~b3.dfsg.1-0.1ubuntu1) oneiric; urgency=low
+
+  * Add 25_uninitialized_const.patch to fix FTBFS. (LP: #770836)
+    (Closes: #624923)
+  * Refresh 99_configure.patch to handle new multiarch lib path.
+
+ -- Daniel T Chen <crimsun@ubuntu.com>  Tue, 20 Sep 2011 17:16:43 -0400
+
+kompozer (1:0.8~b3.dfsg.1-0.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Remove some files of dubios origin found by Mike Hommey
+   (Closes: #567922)
+
+ -- Alexander Reichle-Schmehl <tolimar@debian.org>  Fri, 23 Apr 2010 13:35:48 +0200
+
+kompozer (1:0.8~b3-2) unstable; urgency=low
+
+  * [1ae27b7] Revert "Support parallel builds"
+
+ -- Giuseppe Iuculano <iuculano@debian.org>  Sun, 07 Mar 2010 10:05:11 +0100
+
+kompozer (1:0.8~b3-1) unstable; urgency=low
+
+  * [d96ad32] Imported Upstream version 0.8~b3
+  * [b4de246] Bump standard-version, addedd ${misc:Depends} in Depends
+  * [4424b3a] Updated watch file
+  * [785a393] Support parallel builds
+  * [cda0453] Refreshed patches
+
+ -- Giuseppe Iuculano <iuculano@debian.org>  Sat, 06 Mar 2010 14:00:43 +0100
+
+kompozer (1:0.8~b1-2) unstable; urgency=medium
+
+  * [99fdf46] Fixed CVE-2009-3720, expat dos
+
+ -- Giuseppe Iuculano <iuculano@debian.org>  Wed, 04 Nov 2009 21:50:22 +0100
+
+kompozer (1:0.8~b1-1) unstable; urgency=low
+
+  * [278f67a] Imported Upstream version 0.8~b1 (LP: #453079)
+    - FTP support now is complete. (Closes: #535549, #538729) (LP: #428125)
+  * [0199bc6] Removed 90_CVE-2009-0776.patch, it was merged in upstream
+  * [0a67dcc] Updated 99_configure.patch
+  * [5bcde30] Updated Standards-Version to 3.8.3 (no changes needed)
+  * [83515d1] Updated my email address and removed DM-Upload-Allowed
+    control field
+  * [44f616b] Do not call dh_desktop in debian/rules, it is deprecated.
+
+ -- Giuseppe Iuculano <iuculano@debian.org>  Tue, 20 Oct 2009 22:24:58 +0200
+
+kompozer (1:0.8~alpha4+dfsg+svn163-2) unstable; urgency=low
+
+  * [dde68e3] debian/patches/23_x11-session.patch: Support X11 session
+    management.
+  * [d8dc5d5] debian/rules: Added -fPIC in CFLAGS and try to fix FTBFS
+    on mipsel.
+  * [65af948] debian/mozconfig.debian: enabled Xinerama support.
+
+ -- Giuseppe Iuculano <giuseppe@iuculano.it>  Sun, 14 Jun 2009 12:06:36 +0200
+
+kompozer (1:0.8~alpha4+dfsg+svn163-1) unstable; urgency=low
+
+  * [595ebe6] Imported Upstream version 0.8~alpha4+dfsg+svn163
+    - Fix some regressions in css style (LP: #373986)
+  * [e571e12] Fix a typo in 20_mips64_build.patch
+  * [a3414fc] Removed patches merged in upstream: 01_r153.patch
+    19_gcc4.4.patch 90_CVE-2009-1311.patch
+  * [6fba093] Refreshde 90_CVE-2009-0776.patch
+  * [bcf5973] debian/kompozer.desktop: remove php from MimeType,
+    kompozer currently can't open php files. (LP: #375506)
+
+ -- Giuseppe Iuculano <giuseppe@iuculano.it>  Sat, 16 May 2009 14:48:31 +0200
+
+kompozer (1:0.8~alpha3+dfsg+svn152-1) unstable; urgency=low
+
+  * [23957fd] Imported Upstream version 0.8~alpha3+dfsg+svn152
+    - Now the help menu works.(Closes: #525891)
+  * [eee96d0] Updated files in debian/conf/ needed by clean target
+  * [de5e181] 01_add_lfontocnfig.patch, 02_fix_overflow.patch,
+    03_add_lfontconfig.patch, 04_fix_path.patch,
+    05_remove_nonfree.patch, 06_syspref_folder_support.patch,
+    07_cairo_xlib.patch, 08_security.patch,
+    09_add_missing_tab_indentation.patch, 90_CVE-2009-1044.patch, are
+    now in upstream, deleted.
+  * [2609c1e] debian/patches/01_r153.patch: Fixed a chrome registration
+    problem related to the "help" window.
+
+ -- Giuseppe Iuculano <giuseppe@iuculano.it>  Tue, 05 May 2009 18:57:59 +0200
+
+kompozer (1:0.8~alpha2+dfsg+svn129-3) UNRELEASED; urgency=low
+
+  * [92f61aa] debian/patches/19_gcc4.4.patch: Fix FTBFS with GCC 4.4.
+    (no longer allows #elif without an expression) (Closes: #526161)
+  * [6c824b4] debian/patches/90_CVE-2009-1044.patch: Fix Arbitrary code
+    execution via XUL tree element (CVE-2009-1044)
+  * [27275e6] debian/patches/90_CVE-2009-1311.patch: Fix POST data sent
+    to wrong site when saving web page with embedded frame (CVE-2009-1311)
+    (MFSA 2009-21)
+  * [3b1eb19] debian/patches/90_CVE-2009-0776.patch: Updated fix for 
+    CVE-2009-0776, previous fix was incomplete. (MFSA 2009-09)
+  * [8feadce] debian/patches/20_mips64_build.patch: Patch from Martin
+    Michlmayr for mips64 builds. bz#330626
+    debian/patches/21_mips_xpcom.patch: Patch from Thiemo Seufer to fix
+    mips. bz#258429
+    debian/patches/22_mips_performance.patch: Patch from Thiemo Seufer to
+    increase stability and performance on mips.
+  * [e7add6a] debian/rules: Fix get-orig-source target for working also
+    with epoch in version
+
+ -- Giuseppe Iuculano <giuseppe@iuculano.it>  Mon, 04 May 2009 18:20:21 +0200
+
+kompozer (1:0.8~alpha2+dfsg+svn129-2) unstable; urgency=low
+
+  * [5577bd3] Build with "-O2 -fno-strict-aliasing -g", hopefully it
+    fixes FTBFS in s390
+  * [ebcecc1] debian/kompozer.desktop: Added Network in Categories
+  * [32daadd] debian/patches/13_kbsd.patch: GNU/kFreeBSD support.
+    bz#356011
+  * [db6d79f] debian/patches/14_distclean.patch: Make distclean cleaner.
+    bz#333308.
+  * [dd57bbd] debian/patches/15_system_libs.patch: Make sure we won't be
+    bitten by upstream changing libjpeg, libpng or zlib internal
+    version, which makes system library not used even though --with-
+    system-* argument is given to configure.
+  * [a59f082] debian/patches/16_uname.patch: Use ${host_*} variables
+    instead of uname in configure.in. This is a minimalist patch to
+    solve the particular bad assembler choice issue. It would need a
+    much greater work to actually do something totally clean, but the
+    current patch should be enough for Linux builds. Also incorporates
+    fix for bz#363263.
+  * [c39c0c3] debian/patches/17_locale.patch: use OS locale. bz#331779
+  * [f62a517] Refreshed debian/patches/99_configure.patch
+  * [c2aec04] debian/patches/18_crmf.patch: Put the crmf library before
+    the NSS libraries.
+
+ -- Giuseppe Iuculano <giuseppe@iuculano.it>  Sun, 26 Apr 2009 11:26:28 +0200
+
+kompozer (1:0.8~alpha2+dfsg+svn129-1) unstable; urgency=low
+
+  * New upstream svn version. This fixes a lot of Ubuntu bugs:
+    (LP: #347779) (LP: #260021) (LP: #276290) (LP: #152516) (LP: #263441)
+    (LP: #244227) (LP: #365163)
+  * Bump epoch to avoid delta between Ubuntu and Debian.
+  * [2b0d5d2] debian/mozconfig.debian: Added --enable-canvas --disable-
+    elf-dynstr-gc --disable-gtktest --disable-strip --disable-strip-lib
+    --disable-updater --enable-official-branding
+  * [58bc5ec] debian/patches/06_syspref_folder_support.patch: Patch to
+    load preferences from defaults/syspref
+  * [5db111f] debian/kompozer.desktop: added MimeType
+  * [88a4ab1] debian/kompozer.desktop: Added the generic name
+  * [9e38c8e] debian/kompozer.menu: ship debian menu entry
+  * [17831bb] debian/kompozer.js: ship the Debian specific preferences
+    file for KompoZer, now  with this file and all files present in the
+    /etc/kompozer/pref directory, user can override any preference that
+    is present in /usr/share/kompozer/defaults/pref directory.
+  * [642e966] debian/mozconfig.debian: Remove official branding
+  * [8b67607] debian/patches/07_cairo_xlib.patch: Properly get cairo lib
+    dependencies and don't rely on GTK bringing them, which just don't
+    happen anymore.
+  * [ea87e1a] debian/patches/99_configure.patch: update configure with
+    autoconf2.13
+  * [0c62141] debian/kompozer.js: Added editor browser pref
+  * [f0273c2] debian/patches/05_remove_nonfree.patch: do not remove
+    content/editor/about-footer.png, is free
+  * [235ef5c] debian/rules: Improved
+  * [4940a7f] debian/kompozer.menu: Use kompozer.xpm as icon
+  * [f62877e] debian/kompozer.desktop: Added some common mimetypes for a
+    web editor. (LP: #175563)
+  * [d808b87] debian/kompozer.desktop: Moved to Development category in
+    desktop file. (LP: #148935)
+  * [5ce3f81] debian/kompozer.desktop: Added Spanish comment
+    translation, thanks to Surfaz Gemon Meme
+  * [e1c2a9b] debian/kompozer.desktop: Added Italian comment
+    translation.
+  * [d92bc8b] Enabling xpfe components
+  * [c3c3a6f] debian/control: Add a conflict to support upgrade from old
+    ubuntu package
+  * [2adf6d7] Backport some security fix from Seamonkey:
+    - MFSA 2009-12 XSL Transformation vulnerability (CVE-2009-1169)
+    - MFSA 2009-10 Upgrade PNG library to fix memory safety hazards
+      (CVE-2009-0040)
+    - MFSA 2009-09 XML data theft via RDFXMLDataSource and cross-domain
+      redirect (CVE-2009-0776)
+    - MFSA 2009-07 Crashes with evidence of memory corruption (CVE-2009-0771)
+    - MFSA 2009-05 XMLHttpRequest allows reading HTTPOnly cookies
+      (CVE-2009-0357)
+    - MFSA 2009-01 Crashes with evidence of memory corruption (CVE-2009-0352)
+  * [5f9097d] debian/patches/09_add_missing_tab_indentation.patch:
+    Makefiles require tabs, otherwise it fails (already committed in
+    upstream svn r130)
+  * [1766bbc] debian/kompozer.desktop: Fix a typo
+  * [0a7846b] Updated to standards version 3.8.1 (No changes needed)
+  * [4b15157] Add a description in 99_configure.patch and make lintian
+    happy
+  * [6e2f116] debian/patches/10_arch-detect.patch: Fix FTBFS in s390,
+    pass host arch information to configure and trust the supplied
+    architecture information. Thanks to Bastian Blank.
+  * [dcf3281] debian/patches/11_arm_xpcom_unused_attribute.patch: Patch
+    from Steve Langasek to fix unused vs. used gcc attribute on arm.
+  * [a2409fd] debian/patches/12_arm_xpcom_optim.patch: Patch from Antti
+    P Miettinen to fix small optimization problem with newer gcc's on
+    arm.
+
+ -- Giuseppe Iuculano <giuseppe@iuculano.it>  Sat, 25 Apr 2009 17:43:01 +0200
+
+kompozer (0.7.10+dfsg+svn117-1) unstable; urgency=low
+
+  * Initial release. (Closes: #406553)
+  * Packaged based on on work done by Anthony Yarusso <tonyyarusso@ubuntu.com>
+    in Ubuntu
+
+ -- Giuseppe Iuculano <giuseppe@iuculano.it>  Sat, 07 Feb 2009 11:59:49 +0100

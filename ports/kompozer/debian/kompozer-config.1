@@ -1,0 +1,45 @@
+.TH KompoZer 1 "24 February 2009"
+.SH NAME
+kompozer-config - script to get information about the installed version of KompoZer
+.SH SYNOPSIS
+.B kompozer-config
+[\-\-prefix\fI[=DIR]\fP] [\-\-exec\-prefix\fI[=DIR]\fP] [\-\-version] [\-\-libs] [\-\-cflags]
+.SH DESCRIPTION
+.PP
+\fIkompozer-config\fP is a tool that is used to configure to determine
+the compiler and linker flags that should be used to compile
+and link plugins/add-ons for \fIKompoZer\fP. 
+.
+.SH OPTIONS
+\fIkompozer-config\fP accepts the following options:
+.TP 8
+.B  \-\-version
+Print the currently installed version of \fIKompoZer\fP on the standard output.
+.TP 8
+.B  \-\-libs [libraries]
+Print the linker flags that are necessary to link a \fIKompoZer\fP program.
+.TP 8
+.B  \-\-cflags [components]
+Print the compiler flags that are necessary to compile a \fIKompoZer\fP program.
+.TP 8
+.B  \-\-prefix=PREFIX
+If specified, use PREFIX instead of the installation prefix that \fIKompoZer\fP
+was built with when computing the output for the \-\-cflags and
+\-\-libs options. This option is also used for the exec prefix
+if \-\-exec\-prefix was not specified. This option must be specified
+before any \-\-libs or \-\-cflags options.
+.TP 8
+.B  \-\-exec\-prefix=PREFIX
+If specified, use PREFIX instead of the installation exec prefix that
+\fIKompoZer\fP was built with when computing the output for the \-\-cflags
+and \-\-libs options.  This option must be specified before any
+\-\-libs or \-\-cflags options.
+.B  \-\-idlflags
+Additional flags to be passed to the
+idl-compiler.
+.SH COPYRIGHT
+Upstream Author: Fabien Cazenave <kaze@kompozer.net>
+
+Copyright: 1998-2007, Contributors
+
+License: MPL 1.1 / GPL 2.0 or subsequent / LGPL 2.1 or subsequent

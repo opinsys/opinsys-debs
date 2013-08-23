@@ -1,0 +1,8 @@
+debian/install/usr/lib/kompozer/defaults/pref  usr/share/kompozer/defaults
+debian/install/usr/lib/kompozer/defaults/profile etc/kompozer/
+debian/install/usr/lib/kompozer/greprefs  usr/share/kompozer
+debian/install/usr/lib/kompozer/icons     usr/share/kompozer
+debian/install/usr/lib/kompozer/res       usr/share/kompozer
+debian/install/usr/lib/kompozer/chrome    usr/share/kompozer
+
+debian/kompozer.js	etc/kompozer/pref

@@ -1,0 +1,3 @@
+version=3
+opts="uversionmangle=s/dfsg//;s/07/0\.7\./,dversionmangle=s/.dfsg.svn...//;s/~//" \
+http://sf.net/kompozer/kompozer-([0-9].*)-src\.tar\.bz2

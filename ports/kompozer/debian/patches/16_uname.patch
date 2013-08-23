@@ -1,0 +1,50 @@
+Use ${host_*} variables instead of uname in configure.in.
+This is a minimalist patch to solve the particular bad assembler
+choice issue. It would need a much greater work to actually do
+something totally clean, but the current patch should be enough
+for Linux builds.
+Also incorporates fix for bz#363263.
+--- a/mozilla/configure.in
++++ b/mozilla/configure.in
+@@ -880,7 +880,7 @@ if test -n "$CROSS_COMPILE"; then
+     OS_RELEASE=
+     OS_TEST="${target_cpu}"
+     case "${target_os}" in
+-        linux*)       OS_ARCH=Linux ;;
++        linux*)       OS_ARCH=Linux OS_TARGET=Linux;;
+         kfreebsd*-gnu) OS_ARCH=GNU_kFreeBSD ;;
+         solaris*)     OS_ARCH=SunOS OS_RELEASE=5 ;;
+         mingw*)       OS_ARCH=WINNT ;;
+@@ -888,10 +888,18 @@ if test -n "$CROSS_COMPILE"; then
+         darwin*)      OS_ARCH=Darwin OS_TARGET=Darwin ;;
+     esac
+ else
+-    OS_TARGET=`uname -s`
+-    OS_ARCH=`uname -s | sed -e 's|/|_|g'`
++    OS_TARGET="${host_os}"
++    OS_ARCH=`echo $host_os | sed -e 's|/|_|g'`
+     OS_RELEASE=`uname -r`
+-    OS_TEST=`uname -m`
++    OS_TEST="${host_cpu}"
++    case "${host_os}" in
++        linux*)       OS_ARCH=Linux OS_TARGET=Linux;;
++        kfreebsd*-gnu) OS_ARCH=GNU_kFreeBSD ;;
++        solaris*)     OS_ARCH=SunOS OS_RELEASE=5 ;;
++        mingw*)       OS_ARCH=WINNT ;;
++        wince*)       OS_ARCH=WINCE ;;
++        darwin*)      OS_ARCH=Darwin OS_TARGET=Darwin ;;
++    esac
+ fi
+ 
+ if test -n "$FORCE_USE_HOST_OS"; then
+--- a/mozilla/xpcom/reflect/xptcall/src/md/unix/Makefile.in
++++ b/mozilla/xpcom/reflect/xptcall/src/md/unix/Makefile.in
+@@ -295,7 +295,7 @@ endif
+ #
+ # Linux/PPC
+ #
+-ifeq ($(OS_ARCH)$(OS_TEST),Linuxppc)
++ifeq ($(OS_ARCH)$(OS_TEST),Linuxpowerpc)
+ CPPSRCS		:= xptcinvoke_ppc_linux.cpp xptcstubs_ppc_linux.cpp
+ ASFILES		:= xptcinvoke_asm_ppc_linux.s xptcstubs_asm_ppc_linux.s
+ AS		:= $(CC) -c -x assembler-with-cpp

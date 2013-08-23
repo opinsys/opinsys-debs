@@ -1,0 +1,12 @@
+Put the crmf library before the NSS libraries
+--- a/mozilla/configure.in
++++ b/mozilla/configure.in
+@@ -3772,7 +3772,7 @@ if test -n "$_USE_SYSTEM_NSS"; then
+ fi
+ 
+ if test -n "$MOZ_NATIVE_NSS"; then
+-   NSS_LIBS="$NSS_LIBS -lcrmf"
++   NSS_LIBS=`echo $NSS_LIBS | sed 's/-l/-lcrmf &/'`
+ else
+    NSS_CFLAGS='-I$(DIST)/public/nss'
+    NSS_DEP_LIBS='\\\

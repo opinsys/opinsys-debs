@@ -1,0 +1,126 @@
+Make distclean cleaner. bz#333308.
+--- a/mozilla/Makefile.in
++++ b/mozilla/Makefile.in
+@@ -448,6 +448,7 @@ GARBAGE_DIRS += dist
+ DIST_GARBAGE = config.cache config.log config.status config-defs.h \
+    dependencies.beos config/autoconf.mk config/myrules.mk config/myconfig.mk \
+    unallmakefiles mozilla-config.h \
++   gfx/gfx-config.h netwerk/necko-config.h xpcom/xpcom-config.h xpcom/xpcom-private.h \
+    $(topsrcdir)/.mozconfig.mk $(topsrcdir)/.mozconfig.out 
+ 
+ # Build pseudo-external modules first when export is explicitly called
+--- a/mozilla/build/unix/Makefile.in
++++ b/mozilla/build/unix/Makefile.in
+@@ -71,7 +71,7 @@ pkg_config_files=$(MOZ_APP_NAME)-nspr.pc
+ 	$(MOZ_APP_NAME)-js.pc $(MOZ_APP_NAME)-gtkmozembed.pc \
+ 	$(MOZ_APP_NAME)-nss.pc $(MOZ_APP_NAME)-plugin.pc
+ 
+-GARBAGE	= $(pkg_config_files) mozilla-config
++GARBAGE	= $(pkg_config_files) $(MOZ_APP_NAME)-config
+ 
+ $(MOZ_APP_NAME)-config:: mozilla-config.in Makefile.in Makefile $(DEPTH)/config/autoconf.mk
+ 	cat $< | sed \
+--- a/mozilla/db/sqlite3/src/Makefile.in
++++ b/mozilla/db/sqlite3/src/Makefile.in
+@@ -113,3 +113,5 @@ sqlite-shell.$(OBJ_SUFFIX): shell.c
+ 
+ # next line allows use of MOZ_OBJDIR in .mozconfig with older gcc on BeOS, maybe others
+ LOCAL_INCLUDES += -I$(srcdir)
++
++DIST_GARBAGE += sqlite3.h
+--- a/mozilla/directory/c-sdk/Makefile.in
++++ b/mozilla/directory/c-sdk/Makefile.in
+@@ -19,3 +19,5 @@ depend:
+ 
+ FORCE:
+ 
++distclean::
++	rm -f config/autoconf.mk
+--- a/mozilla/directory/c-sdk/ldap/build/Makefile.in
++++ b/mozilla/directory/c-sdk/ldap/build/Makefile.in
+@@ -55,3 +55,4 @@ export:: $(PROGRAM)
+ clean::
+ 	-rm -rf $(filter-out . ..,$(OBJDIR_NAME))
+ 
++GARBAGE += $(PROGRAM)
+--- a/mozilla/directory/c-sdk/ldap/libraries/libssldap/Makefile.in
++++ b/mozilla/directory/c-sdk/ldap/libraries/libssldap/Makefile.in
+@@ -91,7 +91,7 @@ endif
+ 
+ # variable definitions for exported symbols
+ ifeq ($(OS_ARCH), WINNT)
+-        SSLDAP_EXPORT_DEFS= $(win_srcdir)/../msdos/winsock/nsldapssl32.def
++        SSLDAP_EXPORT_DEFS= $(srcdir)/../msdos/winsock/nsldapssl32.def
+ else
+         SSLDAP_EXPORT_DEFS= $(SSLOBJDEST)/libldap_ssl.exp
+ endif
+--- a/mozilla/extensions/p3p/Makefile.in
++++ b/mozilla/extensions/p3p/Makefile.in
+@@ -51,6 +51,8 @@ PP = $(PERL) -I$(topsrcdir)/config $(top
+ 
+ include $(topsrcdir)/config/rules.mk
+ 
++GARBAGE += $(CHROME_DEPS)
++
+ # Use the XUL preprocessor to adjust the stylesheet template to the slightly
+ # varying needs of the supported versions of the p3p specification.
+ 
+--- a/mozilla/extensions/pref/system-pref/src/gconf/Makefile.in
++++ b/mozilla/extensions/pref/system-pref/src/gconf/Makefile.in
+@@ -87,3 +87,5 @@ LOCAL_INCLUDES = -I$(srcdir)/..
+ 
+ export::
+ 	$(INSTALL) $(srcdir)/../nsSystemPrefFactory.cpp .
++
++GARBAGE += nsSystemPrefFactory.cpp
+--- a/mozilla/profile/dirserviceprovider/standalone/Makefile.in
++++ b/mozilla/profile/dirserviceprovider/standalone/Makefile.in
+@@ -65,3 +65,5 @@ LOCAL_INCLUDES = -I$(srcdir)/../src
+ 
+ export:: $(MODULES_PROFILEDIRSERVICE_SRC_CSRCS)
+ 	$(INSTALL) $^ .
++
++GARBAGE += $(notdir $(MODULES_PROFILEDIRSERVICE_SRC_CSRCS))
+--- a/mozilla/security/manager/Makefile.in
++++ b/mozilla/security/manager/Makefile.in
+@@ -226,6 +226,8 @@ endif
+ 	touch $@
+ endif
+ 
++GARBAGE += .nss.cleaned
++
+ .nss.checkout:
+ ifndef MOZ_NATIVE_NSS
+ 	touch $(srcdir)/$@
+--- a/mozilla/xpcom/build/Makefile.in
++++ b/mozilla/xpcom/build/Makefile.in
+@@ -151,7 +151,7 @@ endif
+ # UNIX98 iconv support
+ OS_LIBS += $(LIBICONV)
+ 
+-GARBAGE         += $(XPCOM_GLUE_SRC_LCSRCS) $(XPCOM_GLUENS_SRC_LCSRCS) $(wildcard *.$(OBJ_SUFFIX))
++GARBAGE         += $(XPCOM_GLUE_SRC_LCSRCS) $(XPCOM_GLUE_SRC_LCPPSRCS) $(XPCOM_GLUENS_SRC_LCPPSRCS) $(wildcard *.$(OBJ_SUFFIX))
+ 
+ include $(topsrcdir)/config/rules.mk
+ 
+--- a/mozilla/xpcom/glue/standalone/Makefile.in
++++ b/mozilla/xpcom/glue/standalone/Makefile.in
+@@ -96,7 +96,7 @@ FORCE_STATIC_LIB = 1
+ # Force use of PIC
+ FORCE_USE_PIC	= 1
+ 
+-GARBAGE         += $(XPCOM_GLUE_SRC_LCSRCS) $(wildcard *.$(OBJ_SUFFIX))
++GARBAGE         += $(XPCOM_GLUE_SRC_LCSRCS) $(XPCOM_GLUE_SRC_LCPPSRCS) $(wildcard *.$(OBJ_SUFFIX))
+ 
+ SRCS_IN_OBJDIR	= 1
+ 
+--- a/mozilla/xpfe/components/filepicker/src/Makefile.in
++++ b/mozilla/xpfe/components/filepicker/src/Makefile.in
+@@ -69,6 +69,7 @@ CPPSRCS		= \
+ 		$(NULL)
+ 
+ EXTRA_COMPONENTS = nsFilePicker.js
++GARBAGE += nsFilePicker.js
+ 
+ include $(topsrcdir)/config/rules.mk
+ 

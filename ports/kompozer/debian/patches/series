@@ -1,0 +1,16 @@
+09_xre.patch
+10_arch-detect.patch
+11_arm_xpcom_unused_attribute.patch
+12_arm_xpcom_optim.patch
+13_kbsd.patch
+14_distclean.patch
+15_system_libs.patch
+16_uname.patch
+17_locale.patch
+18_crmf.patch
+20_mips64_build.patch
+21_mips_xpcom.patch
+22_mips_performance.patch
+23_x11-session.patch
+99_configure.patch
+25_uninitialized_const.patch

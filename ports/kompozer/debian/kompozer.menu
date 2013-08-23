@@ -1,0 +1,4 @@
+?package(kompozer):needs="x11" section="Applications/Web Development" \
+	title="KompoZer" \
+	icon="/usr/share/pixmaps/kompozer.xpm" \
+	command="/usr/bin/kompozer"

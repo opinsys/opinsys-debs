@@ -1,0 +1,58 @@
+Source: kompozer
+Section: web
+Priority: optional
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: Giuseppe Iuculano <iuculano@debian.org>
+Build-Depends: debhelper (>= 7.0), zip , libgtk2.0-dev , libidl-dev , libxt-dev , autotools-dev, quilt, libgnomevfs2-dev, libxft-dev, libnspr4-dev, libnss3-dev
+Standards-Version: 3.8.4
+Homepage: http://kompozer.sourceforge.net/
+Vcs-git: git://git.debian.org/git/users/derevko-guest/kompozer.git
+Vcs-Browser: http://git.debian.org/?p=users/derevko-guest/kompozer.git
+
+Package: kompozer
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, kompozer-data
+Description: complete Web Authoring System
+ KompoZer is a complete Web Authoring System that
+ combines web file management and easy-to-use WYSIWYG
+ (What You See Is What You Get) web page editing.
+ .
+ KompoZer is designed to be extremely easy to use,
+ making it ideal for non-technical computer users
+ who want to create an attractive, professional-looking
+ web site without needing to know HTML or web coding.
+
+Package: kompozer-dev
+Section: devel
+Architecture: all
+Depends: kompozer (>= ${source:Version}), ${misc:Depends}
+Conflicts: libnspr-dev
+Description: KompoZer development files
+ KompoZer is a complete Web Authoring System that
+ combines web file management and easy-to-use WYSIWYG
+ (What You See Is What You Get) web page editing.
+ .
+ KompoZer is designed to be extremely easy to use,
+ making it ideal for non-technical computer users
+ who want to create an attractive, professional-looking
+ web site without needing to know HTML or web coding.
+ .
+ This package contains the files needed to build 
+ plugins/add-ons for KompoZer.
+
+Package: kompozer-data
+Architecture: all
+Depends: ${misc:Depends}
+Recommends: kompozer
+Conflicts: kompozer (<= 1:0.7.10)
+Description: kompozer data files
+ KompoZer is a complete Web Authoring System that
+ combines web file management and easy-to-use WYSIWYG
+ (What You See Is What You Get) web page editing.
+ .
+ KompoZer is designed to be extremely easy to use,
+ making it ideal for non-technical computer users
+ who want to create an attractive, professional-looking
+ web site without needing to know HTML or web coding.
+ .
+ This package install kompozer data files.
