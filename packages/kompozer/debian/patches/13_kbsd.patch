@@ -1,0 +1,518 @@
+GNU/kFreeBSD support. bz#356011
+--- a/mozilla/directory/c-sdk/config/nsinstall.c
++++ b/mozilla/directory/c-sdk/config/nsinstall.c
+@@ -109,7 +109,7 @@ my_getcwd (char *buf, size_t size)
+ }
+ #endif /* NEXTSTEP */
+ 
+-#ifdef LINUX
++#if defined(LINUX) || defined(__GLIBC__) || defined(__GNU__)
+ #include <getopt.h>
+ #endif
+ 
+--- a/mozilla/configure.in
++++ b/mozilla/configure.in
+@@ -881,6 +881,7 @@ if test -n "$CROSS_COMPILE"; then
+     OS_TEST="${target_cpu}"
+     case "${target_os}" in
+         linux*)       OS_ARCH=Linux ;;
++        kfreebsd*-gnu) OS_ARCH=GNU_kFreeBSD ;;
+         solaris*)     OS_ARCH=SunOS OS_RELEASE=5 ;;
+         mingw*)       OS_ARCH=WINNT ;;
+         wince*)       OS_ARCH=WINCE ;;
+@@ -1398,7 +1399,7 @@ case "$host" in
+     LIBXUL_LIBS='$(XPCOM_FROZEN_LDOPTS) $(DIST)/bin/XUL -lobjc'
+     ;;
+ 
+-*-linux*)
++*-linux*|*-kfreebsd*-gnu)
+     HOST_CFLAGS="$HOST_CFLAGS -DXP_UNIX"
+     HOST_NSPR_MDCPUCFG='\"md/_linux.cfg\"'
+     HOST_OPTIMIZE_FLAGS="${HOST_OPTIMIZE_FLAGS=-O3}"
+@@ -2365,7 +2366,7 @@ dnl ====================================
+ dnl = Flags to strip unused symbols from .so components
+ dnl ========================================================
+ case "$target" in
+-    *-linux*)
++    *-linux*|*-kfreebsd*-gnu)
+         MOZ_COMPONENTS_VERSION_SCRIPT_LDFLAGS='-Wl,--version-script -Wl,$(BUILD_TOOLS)/gnu-ld-scripts/components-version-script'
+         ;;
+     *-solaris*)
+@@ -2982,7 +2983,7 @@ then
+ 			fi
+ 			;;
+ 
+-	    *-*-linux*) 
++	    *-*-linux*|*-*-kfreebsd*-gnu)
+ 			AC_DEFINE(_REENTRANT) 
+ 			;;
+ 
+--- a/mozilla/directory/c-sdk/configure
++++ b/mozilla/directory/c-sdk/configure
+@@ -2753,6 +2753,7 @@ if test -n "$CROSS_COMPILE"; then
+     OS_TEST="${target_cpu}"
+     case "${target_os}" in
+         linux*)       OS_ARCH=Linux ;;
++        kfreebsd*-gnu) OS_ARCH=GNU_kFreeBSD ;;
+         solaris*)     OS_ARCH=SunOS OS_RELEASE=5 ;;
+         mingw*)     OS_ARCH=WINNT ;;
+         darwin*)    OS_ARCH=Darwin ;;
+@@ -3766,7 +3767,7 @@ EOF
+ 	esac
+     ;;
+ 
+-*-linux*)
++*-linux*|*-kfreebsd*-gnu)
+     if test -z "$USE_NSPR_THREADS"; then
+         USE_PTHREADS=1
+         IMPL_STRATEGY=_PTH
+@@ -3795,14 +3796,18 @@ EOF
+ #define HAVE_FCNTL_FILE_LOCKING 1
+ EOF
+ 
+-    cat >> confdefs.h <<\EOF
++    case "${target_os}" in
++     linux*)
++        cat >> confdefs.h <<\EOF
+ #define LINUX 1
+ EOF
+ 
+-    cat >> confdefs.h <<\EOF
++        cat >> confdefs.h <<\EOF
+ #define linux 1
+ EOF
+ 
++        ;;
++    esac
+     LD='$(CC)'
+     CFLAGS="$CFLAGS -ansi -Wall"
+     CXXFLAGS="$CXXFLAGS -ansi -Wall"
+@@ -5281,7 +5286,7 @@ EOF
+ 	        _PTHREAD_LDFLAGS=
+ 	    fi
+ 	    ;;
+-    *-linux*)
++    *-linux*|*-kfreebsd*-gnu)
+         cat >> confdefs.h <<\EOF
+ #define _REENTRANT 1
+ EOF
+@@ -5404,7 +5409,7 @@ EOF
+         fi
+     fi
+     ;;
+-*-linux*)
++*-linux*|*-kfreebsd*-gnu)
+     if test -n "$USE_NSPR_THREADS"; then
+         cat >> confdefs.h <<\EOF
+ #define _PR_LOCAL_THREADS_ONLY 1
+--- a/mozilla/directory/c-sdk/configure.in
++++ b/mozilla/directory/c-sdk/configure.in
+@@ -564,6 +564,7 @@ if test -n "$CROSS_COMPILE"; then
+     OS_TEST="${target_cpu}"
+     case "${target_os}" in
+         linux*)       OS_ARCH=Linux ;;
++        kfreebsd*-gnu) OS_ARCH=GNU_kFreeBSD ;;
+         solaris*)     OS_ARCH=SunOS OS_RELEASE=5 ;;
+         mingw*)     OS_ARCH=WINNT ;;
+         darwin*)    OS_ARCH=Darwin ;;
+@@ -1264,7 +1265,7 @@ tools are selected during the Xcode/Deve
+ 	esac
+     ;;
+ 
+-*-linux*)
++*-linux*|*-kfreebsd*-gnu)
+     if test -z "$USE_NSPR_THREADS"; then
+         USE_PTHREADS=1
+         IMPL_STRATEGY=_PTH
+@@ -1275,8 +1276,12 @@ tools are selected during the Xcode/Deve
+     AC_DEFINE(_SVID_SOURCE)
+     AC_DEFINE(_LARGEFILE64_SOURCE)
+     AC_DEFINE(HAVE_FCNTL_FILE_LOCKING)
+-    AC_DEFINE(LINUX)
+-    AC_DEFINE(linux)
++    case "${target_os}" in
++     linux*)
++        AC_DEFINE(LINUX)
++        AC_DEFINE(linux)
++        ;;
++    esac
+     LD='$(CC)'
+     CFLAGS="$CFLAGS -ansi -Wall"
+     CXXFLAGS="$CXXFLAGS -ansi -Wall"
+@@ -2187,7 +2192,7 @@ if test -n "$USE_PTHREADS"; then
+ 	        _PTHREAD_LDFLAGS=
+ 	    fi
+ 	    ;;
+-    *-linux*)
++    *-linux*|*-kfreebsd*-gnu)
+         AC_DEFINE(_REENTRANT)
+         ;;
+     esac
+@@ -2263,7 +2268,7 @@ case "$target" in
+         fi
+     fi
+     ;;
+-*-linux*)
++*-linux*|*-kfreebsd*-gnu)
+     if test -n "$USE_NSPR_THREADS"; then
+         AC_DEFINE(_PR_LOCAL_THREADS_ONLY)
+     fi
+--- a/mozilla/directory/c-sdk/ldap/include/portable.h
++++ b/mozilla/directory/c-sdk/ldap/include/portable.h
+@@ -131,7 +131,7 @@
+  * some systems don't have the BSD re_comp and re_exec routines
+  */
+ #ifndef NEED_BSDREGEX
+-#if ( defined( SYSV ) || defined( NETBSD ) || defined( freebsd ) || defined( linux ) || defined( DARWIN )) && !defined(sgi)
++#if ( defined( SYSV ) || defined( NETBSD ) || defined( freebsd ) || defined( linux ) || defined(__GNU__) || defined(__GLIBC__) || defined( DARWIN )) && !defined(sgi)
+ #define NEED_BSDREGEX
+ #endif
+ #endif
+@@ -160,7 +160,7 @@
+  * Is snprintf() part of the standard C runtime library?
+  */
+ #if !defined(HAVE_SNPRINTF)
+-#if defined(SOLARIS) || defined(LINUX) || defined(HPUX)
++#if defined(SOLARIS) || defined(LINUX) || defined(__GNU__) || defined(__GLIBC__) || defined(HPUX)
+ #define HAVE_SNPRINTF
+ #endif
+ #endif
+@@ -180,7 +180,7 @@
+  * for select()
+  */
+ #if !defined(WINSOCK) && !defined(_WINDOWS) && !defined(macintosh) && !defined(XP_OS2)
+-#if defined(hpux) || defined(LINUX) || defined(SUNOS4) || defined(XP_BEOS)
++#if defined(hpux) || defined(LINUX) || defined(__GNU__) || defined(__GLIBC__) || defined(SUNOS4) || defined(XP_BEOS)
+ #include <sys/time.h>
+ #else
+ #include <sys/select.h>
+@@ -267,15 +267,14 @@
+ #define HAVE_GETGRNAM_R
+ #endif
+ 
+-#if defined(SNI) || defined(LINUX1_2)
++#if defined(SNI) || defined(LINUX1_2) || defined(__GNU__) || defined(__GLIBC__)
+ int strcasecmp(const char *, const char *);
+ #ifdef SNI
+ int strncasecmp(const char *, const char *, int);
+-#endif /* SNI */
+-#ifdef LINUX1_2
++#else /* SNI */
+ int strncasecmp(const char *, const char *, size_t);
+-#endif /* LINUX1_2 */
+-#endif /* SNI || LINUX1_2 */
++#endif
++#endif /* SNI || LINUX1_2 || __GNU__ || __GLIBC__ */
+ 
+ #if defined(_WINDOWS) || defined(macintosh) || defined(XP_OS2) || defined(DARWIN)
+ #define GETHOSTBYNAME( n, r, b, l, e )  gethostbyname( n )
+@@ -291,7 +290,7 @@ int strncasecmp(const char *, const char
+     defined(UNIXWARE) || defined(SUNOS4) || defined(SNI) || defined(BSDI) || \
+     defined(NCR) || defined(OSF1) || defined(NEC) || defined(VMS) || \
+     ( defined(HPUX10) && !defined(_REENTRANT)) || defined(HPUX11) || \
+-    defined(UnixWare) || defined(LINUX) || defined(NETBSD) || \
++    defined(UnixWare) || defined(LINUX) || defined(__GNU__) || defined(__GLIBC__) || defined(NETBSD) || \
+     defined(FREEBSD) || defined(OPENBSD) || \
+     (defined(AIX) && !defined(USE_REENTRANT_LIBC))
+ #define GETHOSTBYNAME( n, r, b, l, e )  gethostbyname( n )
+@@ -315,7 +314,7 @@ typedef char GETHOSTBYNAME_buf_t [BUFSIZ
+ #define GETHOSTBYNAME( n, r, b, l, e )  gethostbyname_r( n, r, b, l, e )
+ #endif
+ #if defined(HPUX9) || defined(LINUX1_2) || defined(LINUX2_0) || \
+-    defined(LINUX2_1) || defined(SUNOS4) || defined(SNI) || \
++    defined(LINUX2_1) || defined(__GNU__) || defined(__GLIBC__) || defined(SUNOS4) || defined(SNI) || \
+     defined(SCOOS) || defined(BSDI) || defined(NCR) || \
+     defined(NEC) || ( defined(HPUX10) && !defined(_REENTRANT)) || \
+     (defined(AIX) && !defined(USE_REENTRANT_LIBC))
+@@ -335,7 +334,7 @@ typedef char GETHOSTBYNAME_buf_t [BUFSIZ
+ #endif
+ #if defined(hpux9) || defined(LINUX1_2) || defined(SUNOS4) || defined(SNI) || \
+     defined(SCOOS) || defined(BSDI) || defined(NCR) || defined(VMS) || \
+-    defined(NEC) || defined(LINUX) || (defined(AIX) && !defined(USE_REENTRANT_LIBC))
++    defined(NEC) || defined(LINUX) || defined(__GNU__) || defined(__GLIBC__) || (defined(AIX) && !defined(USE_REENTRANT_LIBC))
+ #define STRTOK( s1, s2, l )		strtok( s1, s2 )
+ #else
+ #define HAVE_STRTOK_R
+--- a/mozilla/directory/c-sdk/ldap/libraries/libldap/Makefile.client
++++ b/mozilla/directory/c-sdk/ldap/libraries/libldap/Makefile.client
+@@ -177,7 +177,7 @@ EXTRA_LIBS = -L$(NSCP_DISTDIR)/$(OBJDIR_
+ EXTRA_LIBS += -L$(NSCP_DISTDIR)/lib
+ endif
+ 
+-ifeq ($(OS_ARCH), Linux)
++ifneq (,$(filter Linux GNU GNU_%, $(OS_ARCH)))
+ EXTRA_LIBS = -L$(NSCP_DISTDIR)/$(OBJDIR_NAME)/lib -l$(LBER_LIBNAME)
+ EXTRA_LIBS += -L$(NSCP_DISTDIR)/lib
+ endif
+@@ -253,7 +253,7 @@ endif
+ ifeq ($(OS_ARCH), AIX)
+ 	$(LINK_LIB) ../liblber/$(OBJDIR_NAME)/*.a
+ else
+-ifeq ($(OS_ARCH), Linux)
++ifneq (,$(filter Linux GNU GNU_%, $(OS_ARCH)))
+ 	$(LINK_LIB) ../liblber/$(OBJDIR_NAME)/*.a
+ else
+ 	$(LINK_LIB) $(EXTRA_LIBS)
+--- a/mozilla/directory/c-sdk/ldap/libraries/libldap/Makefile.in
++++ b/mozilla/directory/c-sdk/ldap/libraries/libldap/Makefile.in
+@@ -184,7 +184,7 @@ ifeq ($(OS_ARCH), IRIX)
+ EXTRA_LIBS = -L$(dist_libdir) -l$(LBER_LIBNAME) $(OS_LIBS) -lc
+ endif
+ 
+-ifeq ($(OS_ARCH), Linux)
++ifneq (,$(filter Linux GNU GNU_%, $(OS_ARCH)))
+ EXTRA_LIBS = -L$(dist_libdir) -l$(LBER_LIBNAME)
+ endif
+ 
+@@ -302,7 +302,7 @@ $(LIBLDAP): $(OBJS) $(LIBDIR) $(LDAP_EXP
+ ifdef SO_FILES_TO_REMOVE
+ 	-$(RM) $(SO_FILES_TO_REMOVE)
+ endif
+-ifneq (,$(filter AIX Linux HP-UX Darwin BeOS QNX NetBSD OSF1 OpenBSD, $(OS_ARCH)))
++ifneq (,$(filter AIX Linux GNU GNU_% HP-UX Darwin BeOS QNX NetBSD OSF1 OpenBSD, $(OS_ARCH)))
+ 	$(LINK_LIB) ../liblber/$(OBJDIR_NAME)/*.a
+ else
+ ifeq ($(OS_ARCH),OS2)
+--- a/mozilla/directory/c-sdk/ldap/libraries/libprldap/ldappr-error.c
++++ b/mozilla/directory/c-sdk/ldap/libraries/libprldap/ldappr-error.c
+@@ -233,7 +233,7 @@ struct prldap_errormap_entry {
+ 
+ #if defined(__hpux) || defined(_AIX) || defined(OSF1) || defined(DARWIN) || \
+   defined(BEOS) || defined(FREEBSD) || defined(BSDI) || defined(VMS) || \
+-  defined(OPENBSD) || defined(NETBSD)
++  defined(OPENBSD) || defined(NETBSD) || defined(__FreeBSD_kernel__)
+ #define EDEADLOCK       -1
+ #endif
+ 
+--- a/mozilla/security/coreconf/Linux.mk
++++ b/mozilla/security/coreconf/Linux.mk
+@@ -52,72 +52,46 @@ RANLIB			= ranlib
+ 
+ DEFAULT_COMPILER = gcc
+ 
+-ifeq ($(OS_TEST),m68k)
+-	OS_REL_CFLAGS	= -DLINUX1_2 -D_XOPEN_SOURCE
+-	CPU_ARCH	= m68k
++CPU_ARCH		= $(OS_TEST)
++
++ifeq ($(KERNEL),linux)
++	OS_REL_CFLAGS	= -D_XOPEN_SOURCE -DLINUX1_2
++	ARCH		= linux
+ else
++	OS_REL_CFLAGS	= -D_XOPEN_SOURCE
++	ARCH		= gnu
++endif
++
+ ifeq ($(OS_TEST),ppc64)
+-	OS_REL_CFLAGS	= -DLINUX1_2 -D_XOPEN_SOURCE
+ 	CPU_ARCH	= ppc
+ ifeq ($(USE_64),1)
+ 	ARCHFLAG	= -m64
+ endif
+ else
+-ifeq ($(OS_TEST),ppc)
+-	OS_REL_CFLAGS	= -DLINUX1_2 -D_XOPEN_SOURCE
+-	CPU_ARCH	= ppc
+-else
+ ifeq ($(OS_TEST),alpha)
+-        OS_REL_CFLAGS   = -D_ALPHA_ -DLINUX1_2 -D_XOPEN_SOURCE
+-	CPU_ARCH	= alpha
+-else
+-ifeq ($(OS_TEST),ia64)
+-	OS_REL_CFLAGS	= -DLINUX1_2 -D_XOPEN_SOURCE
+-	CPU_ARCH	= ia64
++        OS_REL_CFLAGS   += -D_ALPHA_
+ else
+ ifeq ($(OS_TEST),x86_64)
+-ifeq ($(USE_64),1)
+-	OS_REL_CFLAGS	= -DLINUX1_2 -D_XOPEN_SOURCE
+-	CPU_ARCH	= x86_64
+-else
+-	OS_REL_CFLAGS	= -DLINUX1_2 -Di386 -D_XOPEN_SOURCE
++ifneq ($(USE_64),1)
++	OS_REL_CFLAGS	+= -Di386
+ 	CPU_ARCH	= x86
+ 	ARCHFLAG	= -m32
+ endif
+ else
+-ifeq ($(OS_TEST),sparc)
+-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
+-	CPU_ARCH        = sparc
+-else
+ ifeq ($(OS_TEST),sparc64)
+-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
+ 	CPU_ARCH        = sparc
+ else
+ ifeq (,$(filter-out arm% sa110,$(OS_TEST)))
+-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
+ 	CPU_ARCH        = arm
+ else
+ ifeq ($(OS_TEST),parisc)
+-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
+ 	CPU_ARCH        = hppa
+ else
+ ifeq ($(OS_TEST),parisc64)
+-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
+ 	CPU_ARCH        = hppa
+ else
+-ifeq ($(OS_TEST),s390)
+-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
+-	CPU_ARCH        = s390
+-else
+-ifeq ($(OS_TEST),s390x)
+-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
+-	CPU_ARCH        = s390x
+-else
+-ifeq ($(OS_TEST),mips)
+-	OS_REL_CFLAGS   = -DLINUX1_2 -D_XOPEN_SOURCE
+-	CPU_ARCH        = mips
+-else
+-	OS_REL_CFLAGS	= -DLINUX1_2 -Di386 -D_XOPEN_SOURCE
++ifeq (,$(filter-out i686 i586 i486 i386,$(OS_TEST)))
++	OS_REL_CFLAGS	+= -Di386
+ 	CPU_ARCH	= x86
+ endif
+ endif
+@@ -127,17 +101,11 @@ endif
+ endif
+ endif
+ endif
+-endif
+-endif
+-endif
+-endif
+-endif
+-endif
+ 
+ 
+ LIBC_TAG		= _glibc
+ 
+-ifeq ($(OS_RELEASE),2.0)
++ifeq ($(KERNEL)-$(OS_RELEASE),linux-2.0)
+ 	OS_REL_CFLAGS	+= -DLINUX2_0
+ 	MKSHLIB		= $(CC) -shared -Wl,-soname -Wl,$(@:$(OBJDIR)/%.so=%.so)
+ 	ifdef MAPFILE
+@@ -155,21 +123,22 @@ ifeq ($(USE_PTHREADS),1)
+ OS_PTHREAD = -lpthread 
+ endif
+ 
+-OS_CFLAGS		= $(DSO_CFLAGS) $(OS_REL_CFLAGS) $(ARCHFLAG) -ansi -Wall -pipe -DLINUX -Dlinux -D_POSIX_SOURCE -D_BSD_SOURCE -DHAVE_STRERROR
++OS_CFLAGS		= $(DSO_CFLAGS) $(OS_REL_CFLAGS) $(ARCHFLAG) -ansi -Wall -pipe -D_POSIX_SOURCE -D_BSD_SOURCE -DHAVE_STRERROR
++ifeq ($(KERNEL),linux)
++OS_CFLAGS		+= -DLINUX -Dlinux
++endif
+ OS_LIBS			= $(OS_PTHREAD) -ldl -lc
+ 
+ ifdef USE_PTHREADS
+ 	DEFINES		+= -D_REENTRANT
+ endif
+ 
+-ARCH			= linux
+-
+ DSO_CFLAGS		= -fPIC
+ DSO_LDOPTS		= -shared $(ARCHFLAG)
+ DSO_LDFLAGS		=
+ LDFLAGS			+= $(ARCHFLAG)
+ 
+-# INCLUDES += -I/usr/include -Y/usr/include/linux
++# INCLUDES += -I/usr/include
+ G++INCLUDES		= -I/usr/include/g++
+ 
+ #
+--- a/mozilla/security/coreconf/Linux2.6.mk
++++ b/mozilla/security/coreconf/Linux2.6.mk
+@@ -39,7 +39,10 @@ include $(CORE_DEPTH)/coreconf/Linux.mk
+ 
+ DSO_LDOPTS      += -Wl,-z,defs
+ 
++ifeq ($(KERNEL), linux)
+ OS_REL_CFLAGS   += -DLINUX2_1
++endif
++
+ MKSHLIB         = $(CC) $(DSO_LDOPTS) -Wl,-soname -Wl,$(@:$(OBJDIR)/%.so=%.so)
+ 
+ ifdef MAPFILE
+--- a/mozilla/security/coreconf/arch.mk
++++ b/mozilla/security/coreconf/arch.mk
+@@ -155,6 +155,14 @@ ifeq ($(OS_ARCH),Linux)
+     ifneq ($(words $(OS_RELEASE)),1)
+ 	OS_RELEASE := $(word 1,$(OS_RELEASE)).$(word 2,$(OS_RELEASE))
+     endif
++    KERNEL = linux
++endif
++
++# This check must be last.  Since all uses of OS_ARCH that follow affect only
++# userland, we can merge other Glibc systems with Linux here.
++ifneq (, $(filter GNU GNU_%, $(OS_ARCH)))
++OS_ARCH = Linux
++OS_RELEASE = 2.6
+ endif
+ 
+ #
+--- a/mozilla/security/coreconf/config.mk
++++ b/mozilla/security/coreconf/config.mk
+@@ -63,7 +63,7 @@ endif
+ #######################################################################
+ 
+ TARGET_OSES = FreeBSD BSD_OS NetBSD OpenUNIX OS2 QNX Darwin BeOS OpenBSD \
+-              OpenVMS AIX
++              OpenVMS AIX GNU GNU_%
+ 
+ ifeq (,$(filter-out $(TARGET_OSES),$(OS_TARGET)))
+ include $(CORE_DEPTH)/coreconf/$(OS_TARGET).mk
+--- a/mozilla/security/nss/lib/freebl/unix_rand.c
++++ b/mozilla/security/nss/lib/freebl/unix_rand.c
+@@ -185,7 +185,8 @@ static SECStatus RNG_kstat(PRUint32* fed
+ #endif
+ 
+ #if defined(SCO) || defined(UNIXWARE) || defined(BSDI) || defined(FREEBSD) \
+-    || defined(NETBSD) || defined(NTO) || defined(DARWIN) || defined(OPENBSD)
++    || defined(NETBSD) || defined(NTO) || defined(DARWIN) || defined(OPENBSD) \
++    || defined(__FreeBSD_kernel__) || defined(__NetBSD_kernel__)
+ #include <sys/times.h>
+ 
+ #define getdtablesize() sysconf(_SC_OPEN_MAX)
+--- a/mozilla/security/nss/lib/ssl/sslmutex.c
++++ b/mozilla/security/nss/lib/ssl/sslmutex.c
+@@ -89,7 +89,7 @@ static SECStatus single_process_sslMutex
+     return SECSuccess;
+ }
+ 
+-#if defined(LINUX) || defined(AIX) || defined(VMS) || defined(BEOS) || defined(BSDI) || defined(NETBSD) || defined(OPENBSD)
++#if defined(LINUX) || defined(AIX) || defined(VMS) || defined(BEOS) || defined(BSDI) || defined(NETBSD) || defined(OPENBSD) || defined(__GLIBC__)
+ 
+ #include <unistd.h>
+ #include <fcntl.h>
+--- a/mozilla/security/nss/lib/ssl/sslmutex.h
++++ b/mozilla/security/nss/lib/ssl/sslmutex.h
+@@ -79,7 +79,7 @@ typedef struct 
+ 
+ typedef int    sslPID;
+ 
+-#elif defined(LINUX) || defined(AIX) || defined(VMS) || defined(BEOS) || defined(BSDI) || defined(NETBSD) || defined(OPENBSD)
++#elif defined(LINUX) || defined(AIX) || defined(VMS) || defined(BEOS) || defined(BSDI) || defined(NETBSD) || defined(OPENBSD) || defined(__GLIBC__)
+ 
+ #include <sys/types.h>
+ #include "prtypes.h"
+--- a/mozilla/xpcom/reflect/xptcall/src/md/unix/Makefile.in
++++ b/mozilla/xpcom/reflect/xptcall/src/md/unix/Makefile.in
+@@ -77,7 +77,7 @@ endif
+ # New code for Linux, et. al., with gcc
+ # Migrate other platforms here after testing
+ #
+-ifneq (,$(filter Linux,$(OS_ARCH)))
++ifneq (,$(filter Linux GNU_%,$(OS_ARCH)))
+ # Linux/x86-64
+ ifeq (x86_64,$(OS_TEST))
+ CPPSRCS		:= xptcinvoke_x86_64_linux.cpp xptcstubs_x86_64_linux.cpp
+--- a/mozilla/xpcom/reflect/xptcall/src/md/unix/xptc_platforms_unixish_x86.h
++++ b/mozilla/xpcom/reflect/xptcall/src/md/unix/xptc_platforms_unixish_x86.h
+@@ -67,7 +67,7 @@
+ *
+ */
+ 
+-#if defined(LINUX)
++#if defined(LINUX) || (defined(__GLIBC__) && defined(__FreeBSD_kernel__))
+ 
+ #if (__GNUC__ == 2) && (__GNUC_MINOR__ <= 7)
+ /* Old gcc 2.7.x.x.  What does gcc 2.8.x do?? */

@@ -1,0 +1,26 @@
+Fix FTBFS in s390, pass host arch information to configure and trust the supplied
+architecture information. Thanks to Bastian Blank.
+--- a/mozilla/configure.in
++++ b/mozilla/configure.in
+@@ -892,6 +892,21 @@ else
+     OS_RELEASE=`uname -r`
+     OS_TEST=`uname -m`
+ fi
++
++if test -n "$FORCE_USE_HOST_OS"; then
++	OS_TARGET="${host_os}"
++	OS_ARCH=`echo $host_os | sed -e 's|/|_|g'`
++	OS_RELEASE=
++	OS_TEST="${host_cpu}"
++	case "${host_os}" in
++	    linux*)       OS_ARCH=Linux ;;
++	    solaris*)     OS_ARCH=SunOS OS_RELEASE=5 ;;
++	    mingw*)       OS_ARCH=WINNT ;;
++	    wince*)       OS_ARCH=WINCE ;;
++	    darwin*)      OS_ARCH=Darwin OS_TARGET=Darwin ;;
++	esac
++fi
++
+ _COMPILER_PREFIX=
+ 
+ HOST_OS_ARCH=`echo $host_os | sed -e 's|/|_|g'`

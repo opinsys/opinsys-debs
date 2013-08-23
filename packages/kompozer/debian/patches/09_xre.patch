@@ -1,0 +1,11 @@
+--- kompozer-0.8~b3.dfsg.1.orig/mozilla/toolkit/xre/nsAppRunner.cpp
++++ kompozer-0.8~b3.dfsg.1/mozilla/toolkit/xre/nsAppRunner.cpp
+@@ -703,7 +703,7 @@
+ }
+ #endif
+ 
+-static const nsXULAppInfo kAppInfo;
++static const nsXULAppInfo kAppInfo = nsXULAppInfo();
+ static NS_METHOD AppInfoConstructor(nsISupports* aOuter,
+                                     REFNSIID aIID, void **aResult)
+ {

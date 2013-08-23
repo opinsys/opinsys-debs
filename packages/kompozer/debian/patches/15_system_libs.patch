@@ -1,0 +1,31 @@
+Make sure we won't be bitten by upstream changing libjpeg, libpng, or zlib internal version, which makes system library not used even
+though --with-system-* argument is given to configure
+--- a/mozilla/configure.in
++++ b/mozilla/configure.in
+@@ -3807,7 +3807,7 @@ else
+     AC_CHECK_LIB(jpeg, jpeg_destroy_compress, [SYSTEM_JPEG=1 JPEG_LIBS="-ljpeg $JPEG_LIBS"], SYSTEM_JPEG=, $JPEG_LIBS)
+ fi
+ 
+-if test "$SYSTEM_JPEG" = 1; then
++if test "$SYSTEM_JPEG" = 0; then
+     LIBS="$JPEG_LIBS $LIBS"
+     AC_TRY_RUN( 
+ 	#include <stdio.h>
+@@ -3852,7 +3852,7 @@ else
+     AC_CHECK_LIB(z, gzread, [SYSTEM_ZLIB=1 ZLIB_LIBS="-lz $ZLIB_LIBS"], 
+ 	[SYSTEM_ZLIB= ZLIB_CFLAGS= ZLIB_LIBS=], $ZLIB_LIBS)
+ fi
+-if test "$SYSTEM_ZLIB" = 1; then
++if test "$SYSTEM_ZLIB" = 0; then
+     LIBS="$ZLIB_LIBS $LIBS"
+     AC_TRY_RUN([
+     #include <stdio.h>
+@@ -3905,7 +3905,7 @@ else
+     AC_CHECK_LIB(png, png_get_valid, [SYSTEM_PNG=1 PNG_LIBS="-lpng $PNG_LIBS"],
+                  SYSTEM_PNG=, $PNG_LIBS)
+ fi
+-if test "$SYSTEM_PNG" = 1; then
++if test "$SYSTEM_PNG" = 0; then
+     LIBS="$PNG_LIBS $LIBS"
+     AC_TRY_RUN(
+ 	#include <stdio.h>

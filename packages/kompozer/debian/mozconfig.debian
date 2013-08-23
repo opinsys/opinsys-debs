@@ -1,0 +1,79 @@
+# .mozconfig file for Ubuntu 
+# successfully tested on Dapper Drake (6.06.2) and Hardy Heron (8.04.1)
+#
+# main dependancies:
+#   libgtk2.0-dev     : installs atk, cairo, pango if needed
+#   libgnomevfs2-dev  : installs avahi, bonobo, idl, gconf, orbit if needed
+#   autoconf2.13      : other versions will *not* work
+#
+
+# build in a separate directory (optional)
+#mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/../obj-@CONFIG_GUESS@
+
+export MOZILLA_OFFICIAL=1
+export BUILD_OFFICIAL=1
+
+export MOZ_STANDALONE_COMPOSER=1
+mk_add_options MOZ_STANDALONE_COMPOSER=1
+
+# if you want don't want to use gcc and g or want to use
+# a specific version of the compilers, specify it in the
+# two following lines and uncomment them
+#export CC="gcc-3.0"
+#export CXX="g-3.0"
+
+# Uncomment the 3 following lines on Debian (this includes
+# Linspire)
+export OS_LIBS="-lc -lpthread"
+#export CFLAGS="-DDEBIAN"
+#export CXXFLAGS="-DDEBIAN"
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/../obj-kompozer
+
+# build the standalone composer, obviously
+mk_add_options MOZ_CO_PROJECT=composer
+ac_add_options --enable-application=composer
+
+# change these two line to build in debug mode
+#ac_add_options --enable-optimize 
+#ac_add_options --disable-debug
+
+# adapt the following lines according to your distribution
+
+ac_add_options --prefix=/usr
+ac_add_options --disable-tests
+ac_add_options --enable-necko-protocols=http,ftp,file,jar,viewsource,res,data
+
+ac_add_options --enable-default-toolkit=gtk2
+ac_add_options --enable-xft
+ac_add_options --enable-pango
+ac_add_options --enable-postscript
+ac_add_options --disable-xprint
+
+ac_add_options --enable-mathml
+ac_add_options --enable-svg
+ac_add_options --enable-svg-renderer=cairo
+ac_add_options --enable-system-cairo
+ac_add_options --enable-canvas
+
+ac_add_options --with-system-png=/usr
+ac_add_options --with-system-jpeg=/usr
+ac_add_options --with-system-zlib=/usr
+
+ac_add_options --enable-gnomevfs
+ac_add_options --enable-single-profile
+ac_add_options --disable-profilesharing
+ac_add_options --enable-system-myspell
+
+ac_add_options --disable-installer
+ac_add_options --enable-xpfe-components
+ac_add_options --with-default-mozilla-five-home=/usr/lib/kompozer
+ac_add_options --with-distribution-id=org.debian
+ac_add_options --with-system-nspr
+ac_add_options --with-system-nss
+
+ac_add_options --disable-elf-dynstr-gc
+ac_add_options --disable-gtktest
+ac_add_options --disable-strip
+ac_add_options --disable-strip-lib
+ac_add_options --disable-updater
+ac_add_options --enable-xinerama

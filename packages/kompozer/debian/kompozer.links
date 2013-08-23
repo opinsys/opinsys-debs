@@ -1,0 +1,11 @@
+usr/share/kompozer/chrome   usr/lib/kompozer/chrome
+usr/share/kompozer/defaults usr/lib/kompozer/defaults
+usr/share/kompozer/greprefs usr/lib/kompozer/greprefs
+usr/share/kompozer/icons    usr/lib/kompozer/icons
+usr/share/kompozer/res      usr/lib/kompozer/res
+
+usr/share/myspell/dicts     usr/lib/kompozer/components/myspell
+
+usr/share/kompozer/icons/mozicon50.xpm  usr/share/pixmaps/kompozer.xpm
+usr/share/kompozer/icons/mozicon256.png usr/share/pixmaps/kompozer.png 
+

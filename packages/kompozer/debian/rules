@@ -1,0 +1,151 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+ndir=$(CURDIR)/debian/install
+
+include /usr/share/quilt/quilt.make
+
+PACKAGE = kompozer
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)-.*/\1/p'| cut -d':' -f2)
+SVN_REVISION := $(shell echo $(SRC_VERSION) | awk -F"+" '{ print $$3 }' | sed 's/svn//' )
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+
+DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+DEB_HOST_ARCH   ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+DEB_BUILD_ARCH  ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
+
+DEBIAN_VERSION := $(shell dpkg-parsechangelog | sed -n 's/^Version: *\(.*\)$$/\1/ p')
+DEBIAN_REV_CODE := $(shell echo $(DEBIAN_VERSION) | sed 's/^.*-\([0-9]*\)[^-]*$$/0\1/ ; s/^.*\(..\)$$/\1/')
+
+BUILD_DATE=$(shell perl -e '($$s,$$m,$$h,$$d,$$M,$$y) = gmtime((stat("mozilla/client.mk"))[9]); printf "%04d%02d%02d\n",$$y + 1900,$$M + 1,$$d;')
+export MOZ_BUILD_DATE=$(BUILD_DATE)$(DEBIAN_REV_CODE)
+
+CFLAGS += -Wall -pipe -DDEBIAN -fPIC
+CXXFLAGS += -DDEBIAN
+
+CONFIGURE_OPTIONS = ac_add_options --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE)
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CONFIGURE_OPTIONS += --disable-optimize
+else
+	CONFIGURE_OPTIONS += --enable-optimize=\"-O2 -fno-strict-aliasing -g\"
+endif
+
+ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
+	CONFIGURE_OPTIONS += --enable-debug
+else
+	CONFIGURE_OPTIONS += --disable-debug
+endif
+
+ifneq (,$(filter armel armhf,$(DEB_HOST_ARCH)))
+	CFLAGS += -Wa,-mimplicit-it=thumb
+	CXXFLAGS += -Wa,-mimplicit-it=thumb
+endif
+
+
+
+get-orig-source:
+	rm -rf get-orig-source $(TARBALL)
+	mkdir get-orig-source
+	svn export -r $(SVN_REVISION) https://kompozer.svn.sourceforge.net/svnroot/kompozer/trunk get-orig-source/$(PACKAGE)-$(SRC_VERSION).orig
+	rm -rf get-orig-source/$(PACKAGE)-$(SRC_VERSION).orig/debian
+	cd get-orig-source/$(PACKAGE)-$(SRC_VERSION).orig/ ; sh ../../debian/remove-nonfree.sh
+	GZIP=--best tar czf $(TARBALL) -C get-orig-source $(PACKAGE)-$(SRC_VERSION).orig
+	rm -rf get-orig-source
+	echo "  "$(TARBALL)" created; move it to the right destination to build the package"
+
+
+
+
+build: $(QUILT_STAMPFN) build-stamp  
+
+build-stamp:  
+	dh_testdir
+	cp debian/mozconfig.debian mozilla/.mozconfig
+	echo $(CONFIGURE_OPTIONS) >> mozilla/.mozconfig
+ifneq "$(wildcard /usr/share/misc/config.sub)" ""
+	cp -f /usr/share/misc/config.sub mozilla/build/autoconf/config.sub
+endif
+ifneq "$(wildcard /usr/share/misc/config.guess)" ""
+	cp -f /usr/share/misc/config.guess mozilla/build/autoconf/config.guess
+endif
+	cd mozilla && \
+		LDFLAGS="-Wl,--as-needed" \
+		CFLAGS="$(CFLAGS)" \
+		CXXFLAGS="$(CXXFLAGS)"\
+		$(MAKE) -f client.mk build_all
+	touch build-stamp
+
+clean: unpatch
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+	rm -rf $(ndir)
+	rm -f mozilla/config.status
+	rm -f mozilla/config.log
+	rm -f mozilla/nsprpub/config.status
+	rm -f mozilla/nsprpub/config.log
+	rm -f mozilla/.mozconfig
+	rm -f mozilla/build/autoconf/config.guess
+	rm -f mozilla/build/autoconf/config.sub 
+	cp -a debian/conf/.mozconfig.mk debian/conf/.mozconfig.out mozilla/
+	rm -rf obj-kompozer
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	cd obj-kompozer/xpfe/components && $(MAKE)
+	cd obj-kompozer && $(MAKE) install DESTDIR=$(ndir)
+	# Remove all empty directories.
+	perl -MFile::Find -e"finddepth(sub{rmdir},'$(ndir)')"
+	# Remove internal myspell directory and myspell dicts.
+	# dh_install symlinks it to /usr/share/myspell where all myspell-* dicts place their stuff
+	rm -rf $(ndir)/usr/lib/kompozer/components/myspell
+	# Remove exec bit from .js files to prevent lintian warnings.
+	chmod -x $(ndir)/usr/lib/kompozer/components/*.js
+	# Copy and symlink files to debian/kompozer.
+	dh_installdirs
+	dh_install
+	dh_link
+	
+binary-indep: build install
+	dh_testdir -i
+	dh_testroot -i
+	dh_installchangelogs -i 
+	dh_installdocs -i
+	dh_installman -i
+	dh_compress -i
+	dh_fixperms -i
+	dh_makeshlibs -i
+	dh_shlibdeps -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir -a
+	dh_testroot -a
+	dh_installchangelogs -a
+	dh_installdocs -a
+	dh_installexamples -a
+	dh_installmenu -a
+	dh_installman -a
+	dh_link -a
+	dh_strip -a
+	dh_compress -a
+	dh_fixperms -a
+	dh_makeshlibs -a
+	export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:debian/kompozer/usr/lib/kompozer" && dh_shlibdeps -a
+	dh_installdeb -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

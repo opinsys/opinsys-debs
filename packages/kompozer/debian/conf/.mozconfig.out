@@ -1,0 +1,2 @@
+Adding client.mk options from /home/kaze/Documents/KompoZer/svn/trunk/mozilla/.mozconfig:
+    MOZ_OBJDIR=$(TOPSRCDIR)/../obj-$(CONFIG_GUESS)
