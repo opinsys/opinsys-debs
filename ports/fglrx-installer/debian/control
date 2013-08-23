@@ -28,9 +28,9 @@ Recommends: fglrx-amdcccle
 Depends: ${shlibs:Depends}, ${misc:Depends},
  lib32gcc1 [amd64], libc6-i386 [amd64], dkms, make, linux-libc-dev,
  ${xviddriver:Depends}
-Provides: fglrx-driver, ${xviddriver:Provides}
-Conflicts: fglrx-driver
-Replaces: fglrx-driver
+Provides: fglrx-driver, xorg-driver-binary, ${xviddriver:Provides}
+Conflicts: fglrx-driver, xorg-driver-binary
+Replaces: fglrx-driver, xorg-driver-binary
 XB-Modaliases: ${modaliases}
 Description: Video driver for the AMD graphics accelerators
  Video driver for the AMD Radeon and FireGL graphics accelerators.
