@@ -1,4 +1,4 @@
-sssd (1.10.1-1opinsys1) saucy; urgency=low
+sssd (1.10.1-0+opinsys1) saucy; urgency=low
 
   * Update to new upstream version.
 
