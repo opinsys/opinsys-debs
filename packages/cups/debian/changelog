@@ -1,3 +1,10 @@
+cups (1.6.3-1+opinsys1) precise; urgency=low
+
+  * Remove the usage block_suspend cap from the apparmor profile
+  * Disable tests
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Mon, 26 Aug 2013 15:26:34 +0300
+
 cups (1.6.3-1) unstable; urgency=low
 
   * New 1.6.3 upstream release:
