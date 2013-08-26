@@ -1,8 +1,97 @@
-cups (1.6.2-7+opinsys1) precise; urgency=low
+cups (1.6.3-1) unstable; urgency=low
 
-  * Backport to Precise
+  * New 1.6.3 upstream release:
+    - The lp, lpq, lpr, and lpstat now display an error message advising the
+      use of the /version=1.1 ServerName option (<rdar://problem/14290628>)
+    - Added documentation about the /version=1.1 option to ServerName in
+      client.conf (<rdar://problem/14216262>)
+    - httpStatus(HTTP_ERROR) did not return a useful error message
+      (Closes: #645436)
+    - The lp, lpq, lpr, and lpstat commands incorrectly ignored the default
+      printer set in the lpoptions file (Closes: #711848)
+    - The USB backend could crash on libusb-based systems if USB was
+      disabled in the BIOS (LP: #1108719).
+    - Added more USB quirks for the libusb-based backend
+    - The scheduler no longer tries to do Kerberos authentication over the
+      loopback interface. (Closes: #640939).
 
- -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Wed, 29 May 2013 11:39:06 +0300
+  [ Didier Raboud ]
+  * Refresh patches for 1.6.3:
+    - usb-backend-more-quirk-rules: Shrink to only Lexmark E238 that
+      missed 1.6.3 merge window
+    - usb-backend-do-not-crash-if-usb-disabled-in-bios: Shrink to only
+      keep the error counting exception.
+    - remove-unreal-printers: Drop, was from upstream.
+    - more-verbose-http-error-message: Drop, was from upstream.
+    - mention-ipp-version-specifier-in-man-and-ref: Drop, differently
+      included upstream. (Closes: #711848)
+  * Invert symlink handling in cups-client's preinst to cope with the
+    symlink-to-directory migration for /usr/share/doc. (Closes: #716867)
+  * Update usb backend quirks to fix Lexmark E238 printer (Closes: #716843)
+  * Get dpkg-maintscript-helper to delete /e/c/acroread.conf and
+    /e/c/pdftops.conf again in 1.6.2-9~ to cleanup upgrades from cups
+    1.5. (Closes: #711136)
+  * Update debian/watch to cope with the new cups.org layout
+
+  [ Brian Potkin ]
+  * Rewrite README.Debian for Jessie (>= 1.6) (Closes: #714852)
+
+ -- Didier Raboud <odyx@debian.org>  Thu, 18 Jul 2013 21:45:15 +0200
+
+cups (1.6.2-10) unstable; urgency=low
+
+  [ Didier Raboud ]
+  * Mark the cups-client NEWS as released and make sure it can be
+    installed by dropping the /usr/share/doc/cups-client symlink.
+    Thanks to Evgeni Golov (Closes: #704238)
+  * Backport upstream patch to remove unreal printers from the potential
+    printers' list to avoid jobs to go to unexpected printers
+    (Closes: #711848)
+  * Backport upstream patch to enhance the HTTP_ERROR handling
+    (Closes: #645436)
+  * Bump Standards-Version to 3.9.4 without changes needed
+  * Source package cleanup:
+    - Drop outdated and not-applied cups-avahi.patch
+    - Drop unused bzr-builddep configuration files
+    - Add gitignore file to ignore .pc/ directory
+
+  [ Helge Kreutzmann ]
+  * Update German manpages translation.
+
+ -- Didier Raboud <odyx@debian.org>  Wed, 26 Jun 2013 13:51:10 +0200
+
+cups (1.6.2-9) unstable; urgency=low
+
+  [ Helge Kreutzmann ]
+  * Update German manpages translation.
+  * In ipptoolfile manpage, mention that possible attribute-name are
+    defined in RFC2911, for clarity. (Closes: #711709)
+
+  [ Didier Raboud ]
+  * Add a cups-client.NEWS notice, a cups-client manpage patch and amend
+    the client.conf example file to inform about IPP default version
+    change to 2.0 and circumvention measures. (Closes: #704238, #711192)
+    - thanks to Brian Potkin
+  * Reorder patches to have the manpages translation patch higher on the
+    patch queue
+  * Fix hyphen-correction typo
+  * Update manpage translations with the recent changes
+  * Drop outdated and not-applied colord-support patch.
+
+  [ Alexey Galakhov ]
+  * Add patch to fix printer icc profiles registration in colord
+    (Closes: #711868)
+
+ -- Didier Raboud <odyx@debian.org>  Sun, 16 Jun 2013 15:32:29 +0200
+
+cups (1.6.2-8) unstable; urgency=low
+
+  * Upload to unstable.
+
+  [ Helge Kreutzmann ]
+  * Update German manpages translation.
+
+ -- Didier Raboud <odyx@debian.org>  Tue, 04 Jun 2013 14:17:42 +0200
 
 cups (1.6.2-7) experimental; urgency=low
 

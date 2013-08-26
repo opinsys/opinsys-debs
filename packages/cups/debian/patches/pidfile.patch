@@ -31,7 +31,7 @@ Last-Update: 2012-11-29
 +             !_cups_strcasecmp(line, "PidFile") ||
  	     !_cups_strcasecmp(line, "User"))
      {
-       cupsdLogMessage(CUPSD_LOG_WARN,
+       cupsdLogMessage(CUPSD_LOG_INFO,
 --- a/scheduler/conf.h
 +++ b/scheduler/conf.h
 @@ -244,6 +244,8 @@

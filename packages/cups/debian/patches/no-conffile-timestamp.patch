@@ -16,7 +16,7 @@ Bug-Debian: http://bugs.debian.org/549673
   /*
 --- a/scheduler/job.c
 +++ b/scheduler/job.c
-@@ -2133,7 +2133,7 @@
+@@ -2157,7 +2157,7 @@
    strftime(temp, sizeof(temp) - 1, "%Y-%m-%d %H:%M", curdate);
  
    cupsFilePuts(fp, "# Job cache file for " CUPS_SVERSION "\n");
