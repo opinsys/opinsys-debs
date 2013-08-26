@@ -1,16 +1,5 @@
 Author: till.kamppeter@gmail.com
 
---- a/scheduler/client.c
-+++ b/scheduler/client.c
-@@ -406,7 +406,7 @@
-   {
-     if (httpAddrLocalhost(&temp))
-       strlcpy(con->servername, "localhost", sizeof(con->servername));
--    else if (HostNameLookups || RemotePort)
-+    else if (HostNameLookups)
-       httpAddrLookup(&temp, con->servername, sizeof(con->servername));
-     else
-       httpAddrString(&temp, con->servername, sizeof(con->servername));
 --- a/scheduler/conf.c
 +++ b/scheduler/conf.c
 @@ -884,7 +884,7 @@

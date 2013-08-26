@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-03-19 12:55+0100\n"
+"POT-Creation-Date: 2013-06-09 19:51+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -186,13 +186,13 @@ msgid "http://localhost:631/help"
 msgstr ""
 
 #. type: SH
-#: cupsaccept.man:75 backend.man:168 cancel.man:71 classes.conf.man:106 client.conf.man.in:55 cupsaddsmb.man.in:210 cups-config.man:113 cupsctl.man:93 cupsd.conf.man.in:521 cups-files.conf.man.in:142 cups-deviced.man.in:40 cupsd.man.in:68 cups-driverd.man.in:118 cupsenable.man:88 cupsfilter.man:105 cups-lpd.man.in:120 cups-snmp.conf.man:74 cupstestdsc.man:46 cupstestppd.man:161 filter.man:234 ipptool.man:139 ipptoolfile.man:570 lpadmin.man:223 lpc.man:67 lpinfo.man:111 lp.man:248 lpmove.man:62 lpoptions.man.in:131 lppasswd.man:64 lpq.man:68 lpr.man:118 lprm.man:61 lpstat.man:139 mailto.conf.man:56 mime.convs.man:42 mime.types.man:111 printers.conf.man:120 subscriptions.conf.man:85
+#: cupsaccept.man:75 backend.man:168 cancel.man:71 classes.conf.man:106 client.conf.man.in:55 cupsaddsmb.man.in:210 cups-config.man:113 cupsctl.man:93 cupsd.conf.man.in:521 cups-files.conf.man.in:142 cups-deviced.man.in:40 cupsd.man.in:68 cups-driverd.man.in:118 cupsenable.man:88 cupsfilter.man:105 cups-lpd.man.in:120 cups-snmp.conf.man:74 cupstestdsc.man:46 cupstestppd.man:161 filter.man:234 ipptool.man:139 ipptoolfile.man:572 lpadmin.man:223 lpc.man:67 lpinfo.man:111 lp.man:248 lpmove.man:62 lpoptions.man.in:131 lppasswd.man:64 lpq.man:68 lpr.man:118 lprm.man:61 lpstat.man:139 mailto.conf.man:56 mime.convs.man:42 mime.types.man:111 printers.conf.man:120 subscriptions.conf.man:85
 #, no-wrap
 msgid "COPYRIGHT"
 msgstr ""
 
 #. type: Plain text
-#: cupsaccept.man:76 backend.man:169 cancel.man:72 classes.conf.man:107 client.conf.man.in:56 cupsaddsmb.man.in:211 cups-config.man:114 cupsctl.man:94 cupsd.conf.man.in:522 cups-files.conf.man.in:143 cups-deviced.man.in:41 cupsd.man.in:69 cups-driverd.man.in:119 cupsenable.man:90 cupsfilter.man:106 cups-lpd.man.in:121 cups-snmp.conf.man:75 cupstestdsc.man:47 cupstestppd.man:162 filter.man:235 ipptool.man:140 ipptoolfile.man:571 lpadmin.man:224 lpc.man:68 lpinfo.man:112 lp.man:249 lpmove.man:63 lpoptions.man.in:132 lppasswd.man:65 lpq.man:69 lpr.man:119 lprm.man:62 lpstat.man:140 mailto.conf.man:57 mime.convs.man:43 mime.types.man:112 printers.conf.man:121 subscriptions.conf.man:86
+#: cupsaccept.man:76 backend.man:169 cancel.man:72 classes.conf.man:107 client.conf.man.in:56 cupsaddsmb.man.in:211 cups-config.man:114 cupsctl.man:94 cupsd.conf.man.in:522 cups-files.conf.man.in:143 cups-deviced.man.in:41 cupsd.man.in:69 cups-driverd.man.in:119 cupsenable.man:90 cupsfilter.man:106 cups-lpd.man.in:121 cups-snmp.conf.man:75 cupstestdsc.man:47 cupstestppd.man:162 filter.man:235 ipptool.man:140 ipptoolfile.man:573 lpadmin.man:224 lpc.man:68 lpinfo.man:112 lp.man:249 lpmove.man:63 lpoptions.man.in:132 lppasswd.man:65 lpq.man:69 lpr.man:119 lprm.man:62 lpstat.man:140 mailto.conf.man:57 mime.convs.man:43 mime.types.man:112 printers.conf.man:121 subscriptions.conf.man:86
 msgid "Copyright 2007-2013 by Apple Inc."
 msgstr ""
 
@@ -959,7 +959,7 @@ msgstr ""
 #. type: TP
 #: client.conf.man.in:42
 #, no-wrap
-msgid "ServerName hostname-or-ip-address[:port]"
+msgid "ServerName hostname-or-ip-address[:port][/version=1.1]"
 msgstr ""
 
 #. type: TP
@@ -972,7 +972,8 @@ msgstr ""
 #: client.conf.man.in:49
 msgid ""
 "Specifies the address and optionally the port to use when connecting to the "
-"server. B<Note: Not supported on OS X 10.7 or later.>"
+"server. The IPP version (2.0 by default, can be 1.1 or 1.0) can be specified "
+"to access older servers. B<Note: Not supported on OS X 10.7 or later.>"
 msgstr ""
 
 #. type: TP
@@ -5969,12 +5970,12 @@ msgstr ""
 msgid "ATTR tag attribute-name value(s)"
 msgstr ""
 
-#.  character.
 #. type: Plain text
 #: ipptoolfile.man:148
 msgid ""
 "Adds an attribute to the test request. Values are separated by the comma "
-"(\",\")  character - escape commas using the \""
+"(\",\")  character - escape commas using the \"\\e\" character. Possible "
+"attribute-name are defined in RFC2911."
 msgstr ""
 
 #. type: TP
@@ -6927,6 +6928,11 @@ msgstr ""
 #. type: Plain text
 #: ipptoolfile.man:567
 msgid "I<ipptool(1)>,"
+msgstr ""
+
+#. type: Plain text
+#: ipptoolfile.man:571
+msgid "RFC2911 http://tools.ietf.org/html/rfc2911"
 msgstr ""
 
 #. type: TH

@@ -135,7 +135,7 @@ override_dh_fixperms:
 	dh_fixperms -Xusr/lib/cups/backend-available
 
 override_dh_auto_test:
-#	make check
+	make check
 
 ifeq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 override_dh_makeshlibs:
@@ -162,7 +162,6 @@ override_dh_auto_clean:
 override_dh_installdocs:
 	dh_installdocs -plibcupsimage2-dev --link-doc=libcupsimage2
 	dh_installdocs -pcups-bsd --link-doc=libcups2
-	dh_installdocs -pcups-client --link-doc=libcups2
 	dh_installdocs --remaining-packages
 
 	rm -f debian/libcups2-dev/usr/share/doc/libcups2-dev/examples/scripting/php/*.o

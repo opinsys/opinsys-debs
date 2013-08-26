@@ -1,14 +1,12 @@
 # patches accepted and committed upstream:
-usb-backend-more-quirk-rules.patch
 
 # patches sent upstream
+usb-backend-more-quirk-rules.patch
 cupsd-no-crash-on-avahi-threaded-poll-shutdown.patch
 get-ppd-file-for-statically-configured-ipp-shared-queues.patch
 pidfile.patch
 ppd-poll-with-client-conf.patch
 manpage-hyphen-minus.patch
-# no answer yet, po4a might not be appropriate
-manpage-translations.patch
 rootbackends-worldreadable.patch
 cups-dbus-utf8.patch
 usb-backend-do-not-crash-if-usb-disabled-in-bios.patch
@@ -25,6 +23,8 @@ do-not-broadcast-with-hostnames.patch
 cups-deviced-allow-device-ids-with-newline.patch
 cups-snmp-oids-device-id-hp-ricoh.patch
 configure-default-browse-protocols.patch
+mention-rfc2911-in-ipptoolfile-for-clarity.patch
+colord-add-profile-fix.patch
 # Fix tests, should probably go upstream
 tests-ignore-warnings.patch
 tests-ignore-usb-crash.patch
@@ -32,6 +32,11 @@ test-i18n-nonlinux.patch
 tests-wait-on-unfinished-jobs-everytime.patch
 tests-fix-ppdLocalize-on-unclean-env.patch
 tests-use-cupsfilters.patch
+
+# This one has been submitted upstream but no answer has been given yet,
+# po4a might not be appropriate. It also needs to be high on the patch
+# queue to catch all Debian-specific changes
+manpage-translations.patch
 
 # Debian patches
 add-ipp-backend-of-cups-1.4.patch

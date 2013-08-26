@@ -16,8 +16,8 @@ case "$1" in
     ;;
 
     upgrade)
-	if [ ! -L /usr/share/doc/cups-client ]; then
-	    rm -rf /usr/share/doc/cups-client
+	if [ -L /usr/share/doc/cups-client ]; then
+	    rm /usr/share/doc/cups-client
 	fi
     ;;
 
