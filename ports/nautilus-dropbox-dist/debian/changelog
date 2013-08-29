@@ -1,3 +1,9 @@
+nautilus-dropbox-dist (2.2.13-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Thu, 29 Aug 2013 14:50:54 +0300
+
 nautilus-dropbox-dist (2.0.5-0+opinsys2) quantal; urgency=low
 
   * Fix packaging.
