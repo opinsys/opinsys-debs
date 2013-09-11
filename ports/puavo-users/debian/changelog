@@ -1,3 +1,15 @@
+puavo-users (0.4.1-0+opinsys5) precise; urgency=low
+
+  * Yet another deps fix
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 11 Sep 2013 18:14:59 +0300
+
+puavo-users (0.4.1-0+opinsys4) precise; urgency=low
+
+  * Fix puavo-web dependencies
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 11 Sep 2013 17:57:38 +0300
+
 puavo-users (0.4.1-0+opinsys3) precise; urgency=low
 
   * Add override_dh_shlibdeps
