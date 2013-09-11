@@ -9,6 +9,9 @@
 
 override_dh_auto_test:
 
+# Disable. Adds weird libmagickcore5 dependcy which in not installable on precise
+override_dh_shlibdeps:
+
 override_dh_auto_build:
 	# puavo-rest
 	$(MAKE) -C rest

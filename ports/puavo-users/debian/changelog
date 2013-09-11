@@ -1,3 +1,9 @@
+puavo-users (0.4.1-0+opinsys3) precise; urgency=low
+
+  * Add override_dh_shlibdeps
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 11 Sep 2013 17:44:28 +0300
+
 puavo-users (0.4.1-0+opinsys2) precise; urgency=low
 
   * Remove duplicate dependencies
