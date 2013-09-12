@@ -1,3 +1,21 @@
+puavo-users (0.4.4-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.4.3...0.4.4
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Thu, 12 Sep 2013 11:36:01 +0300
+
+puavo-users (0.4.3-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.4.2...0.4.3
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Thu, 12 Sep 2013 10:47:19 +0300
+
+puavo-users (0.4.2-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.4.1...0.4.2
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Thu, 12 Sep 2013 10:38:42 +0300
+
 puavo-users (0.4.1-0+opinsys5) precise; urgency=low
 
   * Yet another deps fix
