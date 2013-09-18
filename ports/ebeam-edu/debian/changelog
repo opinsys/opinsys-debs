@@ -1,0 +1,7 @@
+ebeam-edu (1.0-0+opinsys1) quantal; urgency=low
+
+  * Initial package.
+    - upstream source is obtained from: http://www.e-beam.com/portal/download-software.html
+    - debian/patches/opinsys-add-makefile.patch
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Wed, 18 Sep 2013 13:00:34 +0300

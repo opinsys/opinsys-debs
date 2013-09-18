@@ -1,0 +1,21 @@
+Source: ebeam-edu
+Section: misc
+Priority: optional
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+Homepage: http://www.e-beam.com/home.html
+
+Package: ebeam-edu
+Architecture: i386
+Depends: ${misc:Depends}
+Description: eBeam Education Suite
+ The Education Suite gives you the tools to enhance lessons with
+ interactivity.
+ .
+ Bring together multimedia and digital content to create cohesive and
+ dynamic compositions. Engage students with participatory lessons that
+ reinforce skills with multi-sensory and collaborative learning
+ experiences. Build your collection with digital efficiency, refining
+ content as you go and exploring concepts as they emerge.
+ .

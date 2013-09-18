@@ -1,0 +1,9 @@
+--- /dev/null
++++ ebeam-edu-1.0/Makefile
+@@ -0,0 +1,6 @@
++all:
++
++install:
++	cp -ar opt $(DESTDIR)
++
++clean:
