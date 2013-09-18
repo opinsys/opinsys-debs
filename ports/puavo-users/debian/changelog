@@ -1,3 +1,63 @@
+puavo-users (0.4.30-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.4.29...0.4.30
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 18 Sep 2013 18:31:37 +0300
+
+puavo-users (0.4.29-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.4.28...0.4.29
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 18 Sep 2013 13:51:58 +0300
+
+puavo-users (0.4.28-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.4.27...0.4.28
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 18 Sep 2013 13:09:48 +0300
+
+puavo-users (0.4.27-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.4.26...0.4.27
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 17 Sep 2013 17:35:11 +0300
+
+puavo-users (0.4.26-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.4.25...0.4.26
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 17 Sep 2013 16:49:46 +0300
+
+puavo-users (0.4.25-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.4.24...0.4.25
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 17 Sep 2013 16:28:17 +0300
+
+puavo-users (0.4.24-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.4.23...0.4.24
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 17 Sep 2013 15:59:07 +0300
+
+puavo-users (0.4.23-0+opinsys1) precise; urgency=low
+
+  * Re-release 0.4.17
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 17 Sep 2013 15:43:01 +0300
+
+puavo-users (0.4.22-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.4.21...0.4.22
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 17 Sep 2013 15:27:53 +0300
+
+puavo-users (0.4.21-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.4.20...0.4.21
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 17 Sep 2013 15:19:53 +0300
+
 puavo-users (0.4.20-0+opinsys1) precise; urgency=low
 
   * https://github.com/opinsys/puavo-users/compare/0.4.19...0.4.20
