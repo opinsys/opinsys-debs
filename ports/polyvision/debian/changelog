@@ -1,0 +1,7 @@
+polyvision (2.2.2-0+opinsys1) quantal; urgency=low
+
+  * Initial package.
+    - upstream source obtained from: http://techsupport.steelcase.com/home/downloads
+    - debian/patches/opinsys-add-makefile.patch
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Wed, 18 Sep 2013 16:27:29 +0300

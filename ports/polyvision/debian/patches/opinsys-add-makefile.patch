@@ -1,0 +1,11 @@
+--- /dev/null
++++ polyvision-2.2.2/Makefile
+@@ -0,0 +1,8 @@
++all:
++
++install:
++	cp -ar etc $(DESTDIR)
++	cp -ar opt $(DESTDIR)
++	cp -ar usr $(DESTDIR)
++
++clean:
