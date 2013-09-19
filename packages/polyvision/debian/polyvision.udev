@@ -1,0 +1,6 @@
+KERNEL=="event*",ATTRS{name}=="multitouch",SYMLINK="input/multitouch"
+KERNEL=="MT_EVENT_DEV", MODE="0777"
+KERNEL=="ttyS[0-9]*", MODE="0777"
+KERNEL=="hidraw[0-9]*", MODE="0777"
+SUBSYSTEM=="usb", ACTION=="add", ATTR{idVendor}=="1501", MODE="0777"
+SUBSYSTEM=="usb", ACTION=="add", ATTR{idVendor}=="11d5", MODE="0777"

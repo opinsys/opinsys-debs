@@ -1,0 +1,16 @@
+Source: polyvision
+Section: misc
+Priority: optional
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+Homepage: http://techsupport.steelcase.com/home/downloads
+
+Package: polyvision
+Architecture: i386
+Depends: ${misc:Depends}
+Description: PolyVision interactive device driver
+ PolyVision Driver enables you to control, mark up, and save information
+ on your computer from any PolyVision interactive devices that connect
+ to your computer.
+ .
