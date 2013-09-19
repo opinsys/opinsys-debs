@@ -1,3 +1,9 @@
+puavo-wlan (0.5.0-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Thu, 19 Sep 2013 10:47:57 +0300
+
 puavo-wlan (0.4.2-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
