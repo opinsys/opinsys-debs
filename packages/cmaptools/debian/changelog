@@ -1,3 +1,9 @@
+cmaptools (5.05.08-0+opinsys2) quantal; urgency=low
+
+  * Use cmaptools's own logo as its desktop icon.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Fri, 20 Sep 2013 15:33:42 +0300
+
 cmaptools (5.05.08-0+opinsys1) quantal; urgency=low
 
   * Import packaging from Lucid to Quantal.
