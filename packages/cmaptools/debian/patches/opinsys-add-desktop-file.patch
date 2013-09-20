@@ -1,7 +1,7 @@
 Index: cmaptools/cmaptools.desktop
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ cmaptools/cmaptools.desktop	2013-04-23 09:18:23.000000000 +0300
++++ cmaptools/cmaptools.desktop	2013-09-20 15:24:33.000000000 +0300
 @@ -0,0 +1,14 @@
 +[Desktop Entry]
 +Type=Application
@@ -13,7 +13,7 @@ Index: cmaptools/cmaptools.desktop
 +Comment[en]=Create mind maps alone or in groups
 +Comment[fi]=Luo käsitekarttoja yksin tai ryhmässä
 +Comment[sv]=Skapa tankekartor ensammt eller i gruppen
-+Icon=/usr/share/icons/oxygen/64x64/mimetypes/application-x-designer.png
++Icon=/opt/cmaptools/share/cmaptools.png
 +Exec=/opt/cmaptools/bin/CmapTools
 +Categories=Education;
 +StartupNotify=true
