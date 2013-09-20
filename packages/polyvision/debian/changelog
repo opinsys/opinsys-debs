@@ -1,3 +1,11 @@
+polyvision (2.2.2-0+opinsys2) quantal; urgency=low
+
+  * Do not strip binaries
+     - PolyVisionDrivers seems to check its own size and fail if does
+       not match the hard-coded value.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Fri, 20 Sep 2013 09:24:57 +0300
+
 polyvision (2.2.2-0+opinsys1) quantal; urgency=low
 
   * Initial package.
