@@ -1,3 +1,10 @@
+puavo-users (0.4.32-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.4.31...0.4.32
+  * Fix nginx config in puavo-rest-nginx
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 23 Sep 2013 17:36:40 +0300
+
 puavo-users (0.4.31-0+opinsys1) precise; urgency=low
 
   * https://github.com/opinsys/puavo-users/compare/0.4.30...0.4.31
