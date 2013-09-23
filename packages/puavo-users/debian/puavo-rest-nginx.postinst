@@ -1,3 +1,4 @@
+
 #!/bin/sh
 
 set -e
@@ -8,7 +9,8 @@ set -e
 
 case "$1" in
   configure)
-      adduser --no-create-home --disabled-password --disabled-login --system --group puavo
+      service nginx start || true
+      service nginx reload || true
     ;;
   abort-upgrade)
     ;;
