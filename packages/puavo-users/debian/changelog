@@ -1,3 +1,9 @@
+puavo-users (0.4.32-0+opinsys3) precise; urgency=low
+
+  * Installation fix for puavo-rest-bootserver
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 24 Sep 2013 11:00:55 +0300
+
 puavo-users (0.4.32-0+opinsys2) precise; urgency=low
 
   * Rename puavo-rest-nginx -> puavo-rest-bootserver
