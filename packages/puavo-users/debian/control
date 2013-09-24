@@ -12,17 +12,18 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, make, ruby1.9.1, ruby-bundler (>= 1
 Description: puavo-rest
  JSON-REST Adapter for LDAP
 
-Package: puavo-rest-nginx
+Package: puavo-rest-bootserver
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, make, nginx, puavo-rest (>= 0.3.8)
-Description: puavo-rest-bootserver
- Nginx server configuration for puavo-rest
+Replaces: puavo-rest-nginx
+Description: puavo-rest for bootservers
+ Metapackage for bootservers. Installs nginx, puavo-rest and required configuration files.
 
 Package: puavo-load-balancer
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, curl, dnsutils
 Description: puavo-load-balancer
- Load balancer client for LTSP server
+ Load balancer client for LTSP servers.
 
 Package: puavo-web
 Architecture: any
