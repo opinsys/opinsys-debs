@@ -1,3 +1,11 @@
+puavo-users (0.4.32-0+opinsys4) precise; urgency=low
+
+  * Break and replace puavo-rest-nginx (<< 0.4.32-0+opinsys4)
+  * Do not build-depend on build-essential
+    - http://www.debian.org/doc/debian-policy/ch-relationships.html#s-sourcebinarydeps
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 24 Sep 2013 21:33:15 +0300
+
 puavo-users (0.4.32-0+opinsys3) precise; urgency=low
 
   * Installation fix for puavo-rest-bootserver
