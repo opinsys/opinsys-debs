@@ -15,6 +15,9 @@ override_dh_shlibdeps:
 # Only a script - no need to build anything
 override_dh_auto_build:
 
+# Disable auto install too. We only install manually the script
+override_dh_auto_install:
+
 override_dh_install:
 	$(MAKE) -C rest install-client prefix=/usr sysconfdir=/etc DESTDIR=$(CURDIR)/debian/puavo-load-reporter
 	ln -s ./puavo-load-reporter $(CURDIR)/debian/puavo-load-reporter/usr/sbin/puavo-post-ltsp-server-load
