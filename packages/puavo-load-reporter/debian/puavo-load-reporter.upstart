@@ -1,0 +1,8 @@
+description "puavo-load-reporter"
+
+start on runlevel [23]
+stop on shutdown
+
+exec /usr/sbin/puavo-load-reporter
+
+respawn
