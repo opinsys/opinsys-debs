@@ -1,4 +1,4 @@
-Source: puavo-users
+Source: puavo-load-reporter
 Section: admin
 Priority: extra
 Maintainer: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
@@ -8,8 +8,8 @@ Homepage: https://github.com/opinsys/puavo-users/
 
 Package: puavo-load-reporter
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, curl, puavo-client (>= 1.3.17)
+Depends: ${shlibs:Depends}, ${misc:Depends}, curl, puavo-client (>= 1.3.18)
 Replaces: puavo-load-balancer
-Breaks: puavo-load-balancer
+Conflicts: puavo-load-balancer
 Description: puavo-load-reporter
  Load balancer client for LTSP servers.
