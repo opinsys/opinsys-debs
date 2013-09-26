@@ -7,7 +7,7 @@ Standards-Version: 3.9.3
 Homepage: http://github.com/opinsys/opinsys-linux-firmware/
 
 Package: opinsys-linux-firmware
-Architecture: all
+Architecture: i386
 Depends: ${misc:Depends}
 Description: Firmware binaries for modules in Opinsys kernels
  Contains various firmware binaries for modules in Opinsys kernels:
