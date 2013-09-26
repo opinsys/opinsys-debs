@@ -1,3 +1,14 @@
+node-webkit (0.7.5-0+opinsys1) precise; urgency=low
+
+  * 0.7.5 https://groups.google.com/forum/#!msg/node-webkit/4VBQuHO2H0c/UAdc2O1ZiBwJ
+  * 0.7.4 https://groups.google.com/forum/#!msg/node-webkit/Knc_cweH0As/bY-5ac9ZIbIJ
+  * 0.7.3 https://groups.google.com/forum/#!msg/node-webkit/QKLiSHSwRFw/kNq3ZQZmFYUJ
+  * 0.7.2 https://groups.google.com/forum/#!msg/node-webkit/ZzEfEBAp0NU/SXfRRTGcMDcJ
+  * 0.7.1 https://groups.google.com/forum/#!msg/node-webkit/lT9M8vlIL78/GlWvjuUUh3cJ
+  * 0.7.0 https://groups.google.com/forum/#!msg/node-webkit/_QD7g-Dnb28/yMZlihDk-C0J
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Thu, 26 Sep 2013 14:31:37 +0300
+
 node-webkit (0.6.3-0+opinsys1ubuntu1) precise; urgency=low
 
   * Release 0.6.3
