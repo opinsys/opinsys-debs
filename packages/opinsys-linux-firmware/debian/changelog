@@ -1,3 +1,12 @@
+opinsys-linux-firmware (0.2.0-0+opinsys1) quantal; urgency=low
+
+  * New upstream release
+    - Miscellaneous HP printer firmware
+  * Upstream host changed
+  * Architecture set to i386
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Thu, 26 Sep 2013 13:21:03 +0300
+
 opinsys-linux-firmware (0.1.0-0+opinsys1) quantal; urgency=low
 
   * Initial release
