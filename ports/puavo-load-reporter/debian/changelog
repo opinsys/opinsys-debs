@@ -1,3 +1,9 @@
+puavo-load-reporter (0.4.33-0+opinsys1) quantal; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.4.32...0.4.33
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Fri, 27 Sep 2013 12:01:07 +0300
+
 puavo-load-reporter (0.4.32-0+opinsys1) quantal; urgency=low
 
   * Initial release.
