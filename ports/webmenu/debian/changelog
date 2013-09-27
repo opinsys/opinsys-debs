@@ -1,3 +1,9 @@
+webmenu (0.5.7-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/webmenu/compare/0.5.6...0.5.7
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Fri, 27 Sep 2013 16:07:34 +0300
+
 webmenu (0.5.6-0+opinsys2) precise; urgency=low
 
   * Explicitly depend on the last published version of node-webkit
