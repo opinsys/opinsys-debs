@@ -17,7 +17,7 @@ Description: host tunneled WLAN accesspoint
 
 Package: puavo-wlanap-dnsproxy
 Architecture: all
-Depends: ${misc:Depends}, dnsmasq-base, debianutils
+Depends: ${misc:Depends}, dnsmasq-base, debianutils, daemon
 Recommends: puavo-wlanap
 Description: DNS proxy responding to service list queries from WLAN networks
  puavo-wlanap-dnsmasq glues together puavo-wlanap, dnsmasq and iptables
