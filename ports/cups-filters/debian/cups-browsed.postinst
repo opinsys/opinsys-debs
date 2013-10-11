@@ -32,7 +32,7 @@ if [ "$1" = "configure" ]; then
   # Do this only on the initial introduction of cups-browsed or on the update
   # from any version older than 1.0.32 to 1.0.32 or newer (to avoid doing this
   # more than once on the same system)
-  if dpkg --compare-versions "$2" lt "1.0.32~"; then
+  if dpkg --compare-versions "$2" lt "1.0.32~" && [ -r /etc/cups/cupsd.conf ]; then
       ECHO=/bin/echo
       linesadded=0
       tempfiles=

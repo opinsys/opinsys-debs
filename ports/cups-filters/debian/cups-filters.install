@@ -5,3 +5,6 @@ usr/lib/cups/filter/*
 usr/share/cups/*
 usr/share/ppd/*
 ../*.ppd-updater usr/share/cups/ppd-updaters/
+# Install files deprecated by CUPS
+../../filter/escp.h	usr/share/cups/ppdc/
+../../filter/pcl.h	usr/share/cups/ppdc/

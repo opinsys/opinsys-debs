@@ -14,6 +14,7 @@ libcupsfilters.so.1 libcupsfilters1 #MINVER#
  _cupsImageZoomDelete@Base 1.0~b1
  _cupsImageZoomFill@Base 1.0~b1
  _cupsImageZoomNew@Base 1.0~b1
+ _strlcpy@Base 1.0.36-1
  cupsCMYKDelete@Base 1.0~b1
  cupsCMYKDoBlack@Base 1.0~b1
  cupsCMYKDoCMYK@Base 1.0~b1
@@ -74,6 +75,7 @@ libcupsfilters.so.1 libcupsfilters1 #MINVER#
  cupsRGBDoRGB@Base 1.0~b1
  cupsRGBLoad@Base 1.0~b1
  cupsRGBNew@Base 1.0~b1
+ cupsRasterParseIPPOptions@Base 1.0.36-1
  cups_scmy_lut@Base 1.0~b1
  cups_srgb_lut@Base 1.0~b1
  sgiClose@Base 1.0~b1
