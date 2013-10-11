@@ -9,7 +9,7 @@ start on (filesystem
 stop on runlevel [016]
 
 respawn
-respawn limit 3 12
+respawn limit 3 240
 
 pre-start script
     [ -x /usr/sbin/cups-browsed ]

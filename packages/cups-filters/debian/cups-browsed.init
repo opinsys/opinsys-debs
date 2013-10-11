@@ -1,8 +1,8 @@
 #! /bin/sh
 ### BEGIN INIT INFO
 # Provides:          cups-browsed
-# Required-Start:    $syslog $remote_fs $network $named $time avahi cups
-# Required-Stop:     $syslog $remote_fs $network $named $time avahi cups
+# Required-Start:    $syslog $remote_fs $network $named $time avahi
+# Required-Stop:     $syslog $remote_fs $network $named $time avahi
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: cups-browsed - Make remote CUPS printers available locally

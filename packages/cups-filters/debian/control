@@ -68,15 +68,15 @@ Depends: ${shlibs:Depends},
  ghostscript (>= 9.02~),
  fonts-freefont-ttf | fonts-liberation | ttf-dejavu
 Recommends: colord, 
- foomatic-filters (>= 4.0), 
- ghostscript-cups (>= 9.02~)
+ foomatic-filters (>= 4.0) 
 Suggests: foomatic-db-compressed-ppds | foomatic-db
+Conflicts: ghostscript-cups
 Replaces: cups (<< 1.5.0-16), 
  cups-common (<< 1.5.0-16),
- ghostscript-cups (<< 9.02~)
+ ghostscript-cups
 Breaks: cups (<< 1.5.0-16), 
- cups-common (<< 1.5.0-16),
- ghostscript-cups (<< 9.02~)
+ cups-common (<< 1.5.0-16)
+Provides: ghostscript-cups
 Description: OpenPrinting CUPS Filters
  This package provides additional CUPS filters which are not provided
  by the CUPS project itself. This includes filters for a PDF based
@@ -114,13 +114,22 @@ Package: cups-browsed
 Architecture: any
 Depends: ${shlibs:Depends}, 
  ${misc:Depends},
- cups
+ avahi-daemon
+Enhances: cups
 Description: OpenPrinting CUPS Filters - cups-browsed
  This package provides cups-browsed, a daemon which browses the Bonjour
  broadcasts of shared remote CUPS printers and makes the printers
  available locally, replacing the CUPS broadcasting/browsing which was
  dropped in CUPS 1.6.x. This way the old behavior of having the remote
  printers available automatically is now re-implemented with Bonjour.
+ .
+ cups-browsed is also useful with a CUPS >= 1.6 client to allow the
+ latter to browse the printer list of CUPS < 1.6 servers (by using the
+ old 'cups' protocol in BrowseRemoteProtocols).
+ .
+ cups-browsed is also useful with a CUPS >= 1.6 server to allow CUPS <
+ 1.6 clients to browse its printer list (by using the old 'cups'
+ protocol in BrowseLocalProtocols).
 
 #Package: cups-filters-dbg
 #Priority: extra

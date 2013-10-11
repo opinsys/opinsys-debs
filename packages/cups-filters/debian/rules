@@ -16,7 +16,7 @@ LDFLAGS += -Wl,--as-needed
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/autotools.mk
 
-DEB_CONFIGURE_EXTRA_FLAGS := --libdir=/usr/lib/$(DEB_HOST_MULTIARCH) --mandir=/usr/share/man --enable-static --with-browseremoteprotocols=dnssd
+DEB_CONFIGURE_EXTRA_FLAGS := --libdir=/usr/lib/$(DEB_HOST_MULTIARCH) --mandir=/usr/share/man --enable-static --with-pdftops=hybrid
 # Do not install /etc/rc?.d/* links, on Ubuntu we use Upstart and on Debian
 # we create the links on our own
 # DEB_CONFIGURE_EXTRA_FLAGS += --with-rcdir=/etc/init.d --with-rclevels=
