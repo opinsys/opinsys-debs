@@ -1,3 +1,9 @@
+node-webkit (0.6.3-0+opinsys2) precise; urgency=low
+
+  * Depend on libnss3
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 14 Oct 2013 10:21:50 +0300
+
 node-webkit (0.6.3-0+opinsys1ubuntu1) precise; urgency=low
 
   * Release 0.6.3
