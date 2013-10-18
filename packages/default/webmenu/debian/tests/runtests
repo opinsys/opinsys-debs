@@ -1,0 +1,8 @@
+#!/bin/sh
+
+echo "DEBIAN TESTS FOR WEBMENU"
+whoami
+pwd
+ls -la
+
+echo "END"
