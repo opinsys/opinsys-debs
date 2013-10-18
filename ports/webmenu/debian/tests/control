@@ -1,2 +1,2 @@
-Tests: build
+Tests: runtests
 Depends: xvfb
