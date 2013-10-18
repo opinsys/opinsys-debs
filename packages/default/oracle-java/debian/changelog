@@ -1,3 +1,9 @@
+oracle-java (1.7.45-0+opinsys2) precise; urgency=low
+
+  * Fix version numbers to postinst and prerm
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Fri, 18 Oct 2013 13:00:45 +0300
+
 oracle-java (1.7.45-0+opinsys1) precise; urgency=low
 
   * Update to Java 7u45
