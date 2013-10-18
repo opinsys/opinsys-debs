@@ -15,8 +15,8 @@
 override_dh_auto_install:
 	dh_auto_install -- prefix=/usr sysconfdir=/etc
 
-# Skip tests. We run these on travis-ci
-override_dh_auto_test:
+# Skip tests. We run these on travis-ci #RMJENKINS
+override_dh_auto_test: #RMJENKINS
 
 # Disable rules that break shit
 override_dh_shlibdeps:
