@@ -1,3 +1,9 @@
+puavo-users (0.5.2-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-users/compare/0.5.1...0.5.2
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Fri, 18 Oct 2013 11:48:17 +0300
+
 puavo-users (0.5.1-0+opinsys1) precise; urgency=low
 
   * https://github.com/opinsys/puavo-users/compare/0.5.0...0.5.1
