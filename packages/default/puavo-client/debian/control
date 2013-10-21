@@ -7,7 +7,7 @@ Standards-Version: 3.9.3
 Homepage: https://github.com/opinsys/puavo-client
 
 Package: puavo-client
-Architecture: all
+Architecture: any
 Depends: ${misc:Depends}, ruby1.9.1, ruby-ldap, dnsutils
 Replaces: puavo-register
 Conflicts: puavo-register
