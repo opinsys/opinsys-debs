@@ -1,3 +1,9 @@
+puavo-standalone (0.2.0-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-standalone/compare/0.1.5...0.2.0
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 21 Oct 2013 16:33:15 +0300
+
 puavo-standalone (0.1.5-0+opinsys1) precise; urgency=low
 
   * https://github.com/opinsys/puavo-standalone/compare/0.1.4...0.1.5
