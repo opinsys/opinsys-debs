@@ -1,3 +1,9 @@
+puavo-tftp (0.5.9-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-tftp/compare/0.5.8...0.5.9
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Fri, 18 Oct 2013 12:51:32 +0300
+
 puavo-tftp (0.5.8-0+opinsys1) precise; urgency=low
 
   * https://github.com/opinsys/puavo-tftp/compare/0.5.7...0.5.8
