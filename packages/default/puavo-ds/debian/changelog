@@ -1,3 +1,9 @@
+puavo-ds (0.2.10-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-ds/compare/0.2.9...0.2.10
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Wed, 30 Oct 2013 11:23:42 +0200
+
 puavo-ds (0.2.9-0+opinsys1) precise; urgency=low
 
   * https://github.com/opinsys/puavo-ds/compare/0.2.8...0.2.9
