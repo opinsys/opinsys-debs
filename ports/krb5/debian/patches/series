@@ -14,3 +14,4 @@ preauth-context.patch
 krb5-CVE-2012-1012.patch
 krb5-CVE-2012-1013.patch
 MITKRB5-SA-2012-001.patch
+opinsys-increase-max-number-of-realms
