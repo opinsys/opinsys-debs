@@ -1,0 +1,15 @@
+pwsafe for Debian
+-----------------
+
+The password database files used by this program are compatible with
+Password Safe (http://passwordsafe.sourceforge.net/) and as such there
+are various clients available for alternative platforms (Windows,
+Mac OS X, Solaris, PocketPC, Java, etc.).
+
+If you are satisfied with the security of this program and would like to
+use 'secure ram' (thereby locking the data in memory and preventing it being
+flushed to disk) you may like to run it setuid root:
+
+$ sudo dpkg-statoverride --update --add --force root root 4755 /usr/bin/pwsafe
+
+ -- Sam Johnston <samj@aos.net.au>, Sun, 23 Oct 2005 09:37:34 +1000

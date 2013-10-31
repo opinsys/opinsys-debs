@@ -1,0 +1,21 @@
+Source: pwsafe
+Section: utils
+Priority: optional
+Maintainer: Benjamin Mako Hill <mako@debian.org>
+Build-Depends: debhelper (>= 4.0.0), autotools-dev, libreadline-dev, libssl-dev, libxmu-dev, x11proto-core-dev, libx11-dev
+Standards-Version: 3.7.2.2
+
+Package: pwsafe
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: command line encrypted password database manager
+ pwsafe is a unix commandline program that manages encrypted password
+ databases.
+ .
+ Features:
+  - Pure command-line operation if desired (good for remote access over ssh)
+  - or can interact with X11 selection & clipboard.
+  - Portable, endianess-clean, misaligned-access-free C++.
+  - Compatible with CounterPane's PasswordSafe Win32 program versions 2.x
+    and 1.x. See http://passwordsafe.sourceforge.net/
+
