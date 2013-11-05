@@ -2,8 +2,8 @@ Source: pwsafe
 Section: utils
 Priority: optional
 Maintainer: Benjamin Mako Hill <mako@debian.org>
-Build-Depends: debhelper (>= 4.0.0), autotools-dev, libreadline-dev, libssl-dev, libxmu-dev, x11proto-core-dev, libx11-dev
-Standards-Version: 3.7.2.2
+Build-Depends: debhelper (>= 8), autotools-dev, libreadline-dev, libssl-dev, libxmu-dev, x11proto-core-dev, libx11-dev
+Standards-Version: 3.9.3
 
 Package: pwsafe
 Architecture: any
