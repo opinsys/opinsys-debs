@@ -6,6 +6,13 @@ Build-Depends: debhelper (>= 8), ruby1.9.3, ruby1.9.1-dev
 Standards-Version: 3.9.3
 Homepage: https://github.com/opinsys/puavo-ds/
 
+Package: puavo-ds-ext
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, ruby1.9.3, slapd, ldap-utils, krb5-kdc-ldap, libsasl2-modules-gssapi-mit
+Recommends: rng-tools
+Description: Puavo LDAP setup tool
+ Builds LDAP for Puavo
+
 Package: puavo-ds-master
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}, ruby1.9.3, slapd, slapd-smbkrb5pwd, ldap-utils, krb5-admin-server, krb5-kdc-ldap, libsasl2-modules-gssapi-mit, puavo-client (>= 1.0.2), ruby-activeldap
