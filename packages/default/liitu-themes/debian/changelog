@@ -1,3 +1,9 @@
+liitu-themes (0.2.7-0+opinsys1) precise; urgency=low
+
+  * New upstream relelase.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 06 Nov 2013 11:20:54 +0200
+
 liitu-themes (0.2.6-0+opinsys2) precise; urgency=low
 
   * Install opinmouth-text to text.plymouth alternatives.
