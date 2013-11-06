@@ -1,3 +1,9 @@
+ltsp-lightdm (0.3.9-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 06 Nov 2013 11:19:04 +0200
+
 ltsp-lightdm (0.3.8-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
