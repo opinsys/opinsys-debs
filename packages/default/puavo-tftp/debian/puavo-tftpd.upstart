@@ -1,1 +1,9 @@
-../upstart/puavo-tftpd.conf
+
+description "puavo-tftpd"
+ 
+start on runlevel [23]
+stop on shutdown
+ 
+exec /usr/sbin/puavo-tftpd -r /var/lib/tftpboot/ --user puavo --group puavo
+ 
+respawn
