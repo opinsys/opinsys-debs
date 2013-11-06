@@ -1,7 +1,7 @@
 Source: puavo-tftp
 Section: utils
 Priority: extra
-Maintainer: Tuomas Jorma Juhani Räsänen <tuomasjjrasanen@opinsys.fi>
+Maintainer: Opinsys Developers <dev@opinsys.fi>
 Build-Depends: debhelper (>= 8.0.0), ruby1.9.3, ruby-minitest, ruby-eventmachine
 Standards-Version: 3.9.3
 Homepage: http://github.com/opinsys/puavo-tftp/
