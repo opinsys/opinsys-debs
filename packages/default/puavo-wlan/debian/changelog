@@ -1,3 +1,9 @@
+puavo-wlan (0.6.1-0+opinsys1) precise; urgency=low
+
+  * New upstream release.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 06 Nov 2013 11:16:22 +0200
+
 puavo-wlan (0.6.0-0+opinsys1) precise; urgency=low
 
   * New upstream release.
