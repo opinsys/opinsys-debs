@@ -1,3 +1,9 @@
+puavo-tftp (0.5.10-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-tftp/compare/0.5.9...0.5.10
+
+ -- Jouni Korhonen <jouni.korhonen@opinsys.fi>  Mon, 11 Nov 2013 14:35:37 +0200
+
 puavo-tftp (0.5.9-0+opinsys2) precise; urgency=low
 
   * puavo-tftpd-hooks depend on curl
