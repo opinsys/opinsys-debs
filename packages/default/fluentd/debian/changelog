@@ -1,0 +1,5 @@
+fluentd (0.10.40-1+opinsys1) precise; urgency=low
+
+  * Package for fluentd
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 12 Nov 2013 15:08:52 +0200
