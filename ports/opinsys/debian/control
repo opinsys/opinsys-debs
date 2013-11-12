@@ -8,7 +8,7 @@ Homepage: https://github.com/opinsys/opinsys
 
 Package: opinsys-bootserver
 Architecture: all
-Depends: ${misc:Depends}, puppet, nagios-nrpe-server, puavo-ltsp-bootserver, linux-image-3.10.9-031009-generic, linux-headers-3.10.9-031009, linux-headers-3.10.9-031009-generic, vlan, wsmancli, dmcache-utils, ipmitool
+Depends: ${misc:Depends}, puppet, nagios-nrpe-server, puavo-ltsp-bootserver, linux-image-3.10.9-031009-generic, linux-headers-3.10.9-031009, linux-headers-3.10.9-031009-generic, vlan, wsmancli, dmcache-utils, ipmitool, pwgen
 Recommends: puavo-devscripts
 Description: Opinsys-specific configurations for (Puavo) bootservers
  This package contains some Opinsys-specific configurations
