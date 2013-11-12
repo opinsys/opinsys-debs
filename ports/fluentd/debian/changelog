@@ -1,4 +1,4 @@
-fluentd (0.10.40-1+opinsys1) precise; urgency=low
+fluentd (0.10.40-2+opinsys1) precise; urgency=low
 
   * Package for fluentd
 
