@@ -7,7 +7,7 @@ Standards-Version: 3.9.3
 
 Package: fluentd
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ruby1.9.1
+Depends: ${shlibs:Depends}, ${misc:Depends}, ruby1.9.1, fluent-plugin-puavo
 Description:  tool to collect events and logs
  "Fluentd" is an open-source tool to collect events and logs. 150+ plugins
  instantly enables you to store the massive data for Log Search (like
