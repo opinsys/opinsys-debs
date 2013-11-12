@@ -1,0 +1,10 @@
+description "debbox"
+
+start on runlevel [23]
+stop on shutdown
+
+setuid puavo
+env GEM_HOME=/usr/lib/fluentd-gem
+exec /usr/lib/fluentd-gem/bin/fluentd
+
+respawn
