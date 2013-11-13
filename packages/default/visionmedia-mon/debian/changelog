@@ -1,0 +1,7 @@
+visionmedia-mon (1.2.2-1+opinsys1) precise; urgency=low
+
+  * Package for mon
+  * https://github.com/visionmedia/mon
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 13 Nov 2013 16:45:33 +0200
+
