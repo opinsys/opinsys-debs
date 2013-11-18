@@ -1,3 +1,10 @@
+fluentd (0.10.40-4+opinsys1) precise; urgency=low
+
+  * Log debug.** to stdout
+  * Remove extra dot from puavo buffer files
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 18 Nov 2013 11:12:32 +0200
+
 fluentd (0.10.40-3+opinsys1) precise; urgency=low
 
   * Package for fluentd
