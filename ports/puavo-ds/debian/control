@@ -8,7 +8,7 @@ Homepage: https://github.com/opinsys/puavo-ds/
 
 Package: puavo-ds-ext
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, ruby1.9.3, slapd, ldap-utils, krb5-kdc-ldap, libsasl2-modules-gssapi-mit ruby-ldap
+Depends: ${shlibs:Depends}, ${misc:Depends}, ruby1.9.3, slapd, ldap-utils, krb5-kdc-ldap, libsasl2-modules-gssapi-mit, ruby-ldap
 Recommends: rng-tools
 Description: Puavo LDAP setup tool
  Builds LDAP for Puavo
