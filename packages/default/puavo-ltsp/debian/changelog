@@ -1,3 +1,9 @@
+puavo-ltsp (0.11.0-0+opinsys1) precise; urgency=low
+
+  * https://github.com/opinsys/puavo-ltsp/compare/0.10.0...0.11.0
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 20 Nov 2013 16:10:35 +0200
+
 puavo-ltsp (0.10.0-0+opinsys1) precise; urgency=low
 
   * https://github.com/opinsys/puavo-ltsp/compare/0.9.20...0.10.0
