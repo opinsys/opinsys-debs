@@ -1,9 +1,0 @@
-/var/app/puavo-ca-rails/log/*.log {
-  daily
-  missingok
-  rotate 7
-  compress
-  delaycompress
-  notifempty
-  copytruncate
-}
