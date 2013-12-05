@@ -18,10 +18,8 @@ override_dh_auto_configure:
 override_dh_auto_test:
 	echo noop
 
-PACKAGE = nodejs-bundle
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
-TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
 .PHONY: get-orig-source
 get-orig-source:
-	wget -c http://nodejs.org/dist/v$(SRC_VERSION)/node-v$(SRC_VERSION).tar.gz -O ../$(TARBALL)
-	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
+	uscan --download-current-version
+	tar -z -x -f ../nodejs-bundle_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
