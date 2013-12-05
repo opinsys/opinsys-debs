@@ -1,4 +1,5 @@
 version=3
 
-opts=filenamemangle=s/.*\/(.*)\.tar\.gz/puavo-tftp_$1.orig.tar.gz/ \
-    http://githubredir.debian.net/github/opinsys/puavo-tftp/(.+)\.tar\.gz
+opts=downloadurlmangle=s/.*v(.*)\//http\:\/\/nodejs\.org\/dist\/v$1\/node\-v$1\.tar\.gz/,\
+filenamemangle=s/.*v(.*)\/$/nodejs-bundle_$1\.orig\.tar\.gz/ \
+http://nodejs.org/dist v([0-9]+\.[0-9]+\.[0-9]+)/
