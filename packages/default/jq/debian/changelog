@@ -1,0 +1,20 @@
+jq (1.3-1) unstable; urgency=low
+
+  * New upstream release. (Closes: #725118)
+  * Add a new patch that enables the creation of the manpage.
+  * Add a new patch that disables valgrind on certain architectures
+    reported as failing (because of missing valgrind support) by buildd
+  * Remove a patch fixing destination directories (resolved by the
+    automake toolchain used in this release).
+  * Use github.com directly to check for new releases instead of the
+    githubredir.debian.net services (as stated in uscan(1)).
+  * Thanks to Faidon Liambotis and Michael Stapelberg for their extensive
+    reviews.
+
+ -- Simon Elsbrock <simon@iodev.org>  Wed, 02 Oct 2013 21:25:22 +0200
+
+jq (1.2-8) unstable; urgency=low
+
+  * Initial release (Closes: #696232)
+
+ -- Simon Elsbrock <simon@iodev.org>  Fri, 21 Dec 2012 23:28:59 +0100

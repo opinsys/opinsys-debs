@@ -1,0 +1,29 @@
+Description: patch Rakefile to allow for easier manpage generation
+ This patch disable some of the dependencies that are not
+ required to build the actual manpage.
+Author: Simon Elsbrock
+Forwarded: no
+---
+--- a/docs/Rakefile
++++ b/docs/Rakefile
+@@ -1,11 +1,6 @@
+ require 'yaml'
+-require 'bonsai'
+-require 'liquid'
+-require 'maruku'
+-require 'json'
+ require 'ronn'
+ require 'tempfile'
+-require 'yaml'
+ 
+ module ExtraFilters
+   def markdownify(input)
+@@ -26,7 +21,7 @@
+   end
+ end
+ 
+-Liquid::Template.register_filter(ExtraFilters)
++#Liquid::Template.register_filter(ExtraFilters)
+ 
+ 
+ task :serve do
