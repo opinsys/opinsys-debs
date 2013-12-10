@@ -13,3 +13,5 @@ override_dh_auto_install:
 	GEM_HOME=$(INSTALL_DIR) gem1.9.1 install --version $(SRC_VERSION) $(PACKAGE)
 
 
+# Just to not break the generic ci.sh on the root
+get-orig-source:
