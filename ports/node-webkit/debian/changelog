@@ -1,3 +1,10 @@
+node-webkit (0.8.2-0+opinsys1) quantal; urgency=low
+
+  * Release 0.8.2
+  * https://groups.google.com/forum/#!msg/node-webkit/LBLk6otGJ4Q/-3e0CT0HuJcJ
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Tue, 10 Dec 2013 12:58:55 +0200
+
 node-webkit (0.6.3-0+opinsys2) precise; urgency=low
 
   * Depend on libnss3
