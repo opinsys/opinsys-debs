@@ -10,8 +10,10 @@ ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
     MAKEFLAGS += -j$(NUMJOBS)
 endif
 
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 get-orig-source:
-	uscan --force-download --rename --destdir .
+	uscan --download-current-version --force-download --rename
+	tar -z -x -f ../jq_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
 
 override_dh_auto_build:
 	$(MAKE)
