@@ -15,3 +15,4 @@ override_dh_auto_install:
 
 # Just to not break the generic ci.sh on the root
 get-orig-source:
+	@echo using rubygems to get the source during install
