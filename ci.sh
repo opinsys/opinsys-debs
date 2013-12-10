@@ -9,6 +9,7 @@ sudo apt-get install -y --force-yes puavo-devscripts
 package=$1
 cd "packages/default/${package}"
 debian/rules get-orig-source
+puavo-dch
 sudo puavo-install-deps
 sudo dpkg-buildpackage -us -uc
 
