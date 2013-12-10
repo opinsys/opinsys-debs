@@ -1,0 +1,26 @@
+Description: AM_INIT_AUTOMAKE once only
+ fixes build with automake-1.14
+Origin: https://github.com/lipidity/jq/commit/f0d1c39b5bbb4ccc517773eb635ba7f38ec7da1a
+Forwarded: not-needed
+Applied-Upstream: 1cdaabf2dd41ea811c6b1e0cb2820052627bba89
+Reviewed-by: Stephen Dolan
+---
+--- a/configure.ac
++++ b/configure.ac
+@@ -4,7 +4,7 @@
+ dnl Created autoconf implementation thompson@dtosolutions, 26NOV12
+ AC_PREREQ([2.61])
+ AC_CONFIG_AUX_DIR([config])
+-AM_INIT_AUTOMAKE([parallel-tests foreign])
++AM_INIT_AUTOMAKE([parallel-tests foreign -Wall])
+ AM_SILENT_RULES([yes])
+ AC_PROG_CC
+ AC_PROG_CC_STDC
+@@ -59,7 +59,6 @@
+ 
+ dnl AC_CONFIG_MACRO_DIR([m4])
+ AC_CONFIG_HEADERS(config.h)
+-AM_INIT_AUTOMAKE([-Wall])
+ AC_CONFIG_FILES([Makefile])
+ AC_OUTPUT
+ 
