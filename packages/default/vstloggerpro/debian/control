@@ -1,0 +1,12 @@
+Source: vstloggerpro
+Section: science/restricted
+Priority: optional
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+
+Package: vstloggerpro
+Architecture: i386
+Depends: ${misc:Depends}, libgtkmm-2.4-1c2a, vstdrivers, libhal1
+Description: Hands-on data-collection and analysis with Vernier Software & Technology devices.
+ This package is re-packaged from upstream binary package by Opinsys.

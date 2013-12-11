@@ -1,0 +1,23 @@
+This package re-packages a binary package. It's ugly but necessary,
+because the original binary package does an unacceptable thing:
+  - it modified user home directories !!!!
+
+The upstream binary vendor is Vernier Software & Technology:
+http://www.vernier.com/downloads/logger-pro-linux/
+
+The binary package was obtained from
+http://www.vernier.com/files/downloads/LPL_3845_B2_32.tgz
+
+Files provided by the binary package were extracted and placed into a
+tarball.
+
+The process of the initial import was approximately as follows:
+
+wget http://www.vernier.com/files/downloads/LPL_3845_B2_32.tgz -O LPL_3845_B2_32.tgz
+tar zxf LPL_3845_B2_32.tgz
+dpkg -x vstloggerpro_3.8.4.5_i386.deb vstloggerpro-3.8.4.5
+tar zcf vstloggerpro_3.8.4.5.orig.tar.gz vstloggerpro-3.8.4.5
+dpkg -e vstloggerpro_3.8.4.5_i386.deb vstloggerpro-3.8.4.5-DEBIAN
+
+Then vstloggerpro/debian -directory was created based partly on the
+control files from the upstream binary package.
