@@ -28,24 +28,6 @@ case "$1" in
 	# configure app to run mime-type text/loggerpro
 	update-mime-database /usr/share/mime
     	update-desktop-database
-
-        # create the desktop icon
-        echo "#!/usr/bin/env xdg-open
-[Desktop Entry]
-Encoding=UTF-8
-Name=Logger Pro
-Comment=Measure. Analyze. Learn.
-Exec=loggerpro
-Icon=loggerpro
-MimeType=text/loggerpro
-Terminal=false
-Type=Application
-StartupNotify=true
-Categories=GNOME;GTK;Education
-" > "LoggerPro.desktop"
-        cp LoggerPro.desktop /home/*/Desktop
-        chmod 777 /home/*/Desktop/LoggerPro.desktop
-        rm LoggerPro.desktop
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
