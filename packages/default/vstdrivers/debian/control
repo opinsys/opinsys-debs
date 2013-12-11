@@ -1,0 +1,12 @@
+Source: vstdrivers
+Section: science/restricted
+Priority: optional
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+
+Package: vstdrivers
+Architecture: i386
+Depends: ${misc:Depends}, libusb-1.0-0
+Description: Device drivers for Vernier Software & Technology devices.
+ This package is re-packaged from upstream binary package by Opinsys.
