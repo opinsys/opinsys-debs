@@ -21,9 +21,9 @@ set -e
 case "$1" in
     configure)
 	# make sure our experiments & tmp folders can be read/written by everyone
-	chmod -R 777 /usr/local/share/LoggerPro/Experiments/*
-	chmod 777 /usr/local/share/LoggerPro/Linux/tmp
-	chmod 777 /usr/local/share/LoggerPro/Linux/VSTSupport
+	chmod -R 777 /usr/share/LoggerPro/Experiments/*
+	chmod 777 /usr/share/LoggerPro/Linux/tmp
+	chmod 777 /usr/share/LoggerPro/Linux/VSTSupport
 
 	# configure app to run mime-type text/loggerpro
 	update-mime-database /usr/share/mime
