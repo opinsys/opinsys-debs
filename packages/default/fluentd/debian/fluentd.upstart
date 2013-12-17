@@ -3,6 +3,11 @@ description "fluentd"
 start on runlevel [23]
 stop on shutdown
 
+pre-start script
+mkdir -p /state/fluentd-buffer
+chown -R puavo:puavo /state/fluentd-buffer
+end script
+
 setuid puavo
 env GEM_HOME=/usr/lib/fluentd-gem
 exec /usr/lib/fluentd-gem/bin/fluentd
