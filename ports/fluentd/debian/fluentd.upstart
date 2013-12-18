@@ -8,8 +8,7 @@ mkdir -p /state/fluentd-buffer
 chown -R puavo:puavo /state/fluentd-buffer
 end script
 
-setuid puavo
 env GEM_HOME=/usr/lib/fluentd-gem
-exec /usr/lib/fluentd-gem/bin/fluentd
+exec sudo -E -u puavo /usr/lib/fluentd-gem/bin/fluentd
 
 respawn
