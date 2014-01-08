@@ -72,3 +72,9 @@ override_dh_auto_clean:
 	rm -f $(CURDIR)/po/*.gmo
 	rm -f $(CURDIR)/src/config/*.pyc
 	rm -f $(CURDIR)/po/stamp-po
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+.PHONY: get-orig-source
+get-orig-source:
+	uscan --download-current-version
+	tar -z -x -f ../sssd_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
