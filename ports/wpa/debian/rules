@@ -130,5 +130,5 @@ get-orig-source:
 	wget -c http://hostap.epitest.fi/releases/wpa_supplicant-$(SRC_VERSION).tar.gz -O ../wpa_supplicant-$(SRC_VERSION).tar.gz
 	tar -z -x -f ../hostapd-$(SRC_VERSION).tar.gz --strip-components=1 -C ../wpa-$(SRC_VERSION)
 	tar -z -x -f ../wpa_supplicant-$(SRC_VERSION).tar.gz --strip-components=1 -C ../wpa-$(SRC_VERSION)
-	tar --exclude='debian*' -z -c -f ../wpa_$(SRC_VERSION).tar.gz ../wpa-$(SRC_VERSION)
-	tar -z -x -f ../wpa_$(SRC_VERSION).tar.gz --strip-components=1 -C .
+	tar --exclude='debian*' -z -c -f ../wpa_$(SRC_VERSION).orig.tar.gz ../wpa-$(SRC_VERSION)
+	tar -z -x -f ../wpa_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
