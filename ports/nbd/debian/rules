@@ -31,3 +31,9 @@ override_dh_auto_test:
 
 debian/po/templates.pot: debian/nbd-client.templates debian/nbd-server.templates
 	@debconf-updatepo
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+.PHONY: get-orig-source
+get-orig-source:
+	wget -c http://downloads.sourceforge.net/project/nbd/nbd/$(SRC_VERSION)/nbd-$(SRC_VERSION).tar.gz -O ../nbd_$(SRC_VERSION).orig.tar.gz
+	tar -z -x -f ../nbd_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
