@@ -17,3 +17,9 @@ override_dh_auto_configure:
 
 %:
 	dh $@ --with python2
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+.PHONY: get-orig-source
+get-orig-source:
+	uscan --download-current-version
+	tar -j -x -f ../libpwquality_$(SRC_VERSION).orig.tar.bz2 --strip-components=1 -C .
