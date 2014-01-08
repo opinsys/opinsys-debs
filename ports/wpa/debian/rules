@@ -122,7 +122,10 @@ override_dh_gencontrol:
 %:
 	dh $@
 
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+.PHONY: get-orig-source
 get-orig-source:
-	chmod +x $(CURDIR)/debian/get-orig-source
-	$(CURDIR)/debian/get-orig-source $(CURDIR)
-
+	wget -c http://hostap.epitest.fi/releases/hostapd-$(SRC_VERSION).tar.gz -O ../hostapd-$(SRC_VERSION).tar.gz
+	wget -c http://hostap.epitest.fi/releases/wpa_supplicant-$(SRC_VERSION).tar.gz -O ../wpa_supplicant-$(SRC_VERSION).tar.gz
+	tar -z -x -f ../hostapd-$(SRC_VERSION).tar.gz --strip-components=1 -C .
+	tar -z -x -f ../wpa_supplicant-$(SRC_VERSION).tar.gz --strip-components=1 -C .
