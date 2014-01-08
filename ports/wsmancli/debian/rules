@@ -14,3 +14,9 @@ override_dh_auto_configure:
 
 %:
 	dh $@ 
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+.PHONY: get-orig-source
+get-orig-source:
+	uscan --download-current-version
+	tar -z -x -f ../wsmancli_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
