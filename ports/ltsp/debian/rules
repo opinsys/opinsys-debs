@@ -91,3 +91,9 @@ override_dh_autoreconf:
 override_dh_gencontrol:
 	./debian/x-vendor-substvars $(LSB_RELEASE_ID)
 	dh_gencontrol
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+.PHONY: get-orig-source
+get-orig-source:
+	wget -c http://archive.ubuntu.com/ubuntu/pool/main/l/ltsp/ltsp_$(SRC_VERSION).orig.tar.gz -O ../ltsp_$(SRC_VERSION).orig.tar.gz
+	tar -z -x -f ../ltsp_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
