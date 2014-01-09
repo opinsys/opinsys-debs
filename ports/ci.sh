@@ -11,6 +11,6 @@ cd "packages/default/${package}"
 sudo puavo-install-deps
 debian/rules get-orig-source
 puavo-dch
-dpkg-buildpackage -us -uc
+dpkg-buildpackage -us -uc -sa
 
 aptirepo-upload -r "${APTIREPO_REMOTE}" -b "git-$(echo "${GIT_BRANCH}" | cut -d / -f 2)" ../${package}*.changes
