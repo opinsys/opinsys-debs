@@ -73,5 +73,5 @@ override_dh_auto_clean:
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 .PHONY: get-orig-source
 get-orig-source:
-	wget https://fedorahosted.org/released/sssd/sssd-$(SRC_VERSION).tar.gz -O ../sssd-$(SRC_VERSION).orig.tar.gz
+	wget https://fedorahosted.org/released/sssd/sssd-$(SRC_VERSION).tar.gz -O ../sssd_$(SRC_VERSION).orig.tar.gz
 	tar -z -x -f ../sssd_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
