@@ -1,7 +1,7 @@
 Source: sssd
 Section: utils
 Priority: extra
-Maintainer: Ubuntu Core Developers <ubuntu-devel@lists.ubuntu.com>
+Maintainer: Opinsys Developers <dev@opinsys.fi>
 XSBC-Original-Maintainer: Debian SSSD Team <pkg-sssd-devel@lists.alioth.debian.org>
 Uploaders: Timo Aaltonen <tjaalton@ubuntu.com>
 Build-Depends: debhelper (>= 9), quilt, dh-autoreconf, autopoint, lsb-release,
@@ -11,7 +11,7 @@ Build-Depends: debhelper (>= 9), quilt, dh-autoreconf, autopoint, lsb-release,
  libdbus-1-dev,
  libkeyutils-dev,
  libldap2-dev,
- libpam-dev,
+ libpam0g-dev | libpam-dev,
  libnl-3-dev,
  libnl-route-3-dev,
  libnss3-dev,
@@ -23,6 +23,7 @@ Build-Depends: debhelper (>= 9), quilt, dh-autoreconf, autopoint, lsb-release,
  libldb-dev,
  libtalloc-dev,
  libtdb-dev,
+ libltdl-dev,
  xml-core,
  docbook-xsl,
  docbook-xml,
@@ -39,12 +40,8 @@ Build-Depends: debhelper (>= 9), quilt, dh-autoreconf, autopoint, lsb-release,
 # check,
  dh-apparmor,
  libglib2.0-dev,
- libndr-dev,
- libndr-standard-dev,
- libsamba-util-dev,
- samba4-dev,
- libdcerpc-dev,
-Standards-Version: 3.9.4
+ samba-dev
+Standards-Version: 3.9.5
 Vcs-Git: git://git.debian.org/git/pkg-sssd/sssd
 Vcs-Browser: http://git.debian.org/?p=pkg-sssd/sssd.git
 Homepage: https://fedorahosted.org/sssd/
@@ -52,6 +49,8 @@ Homepage: https://fedorahosted.org/sssd/
 Package: sssd
 Section: metapackages
 Architecture: any
+Multi-Arch: foreign
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${misc:Depends},
  sssd-common (= ${binary:Version}),
  sssd-ad (= ${binary:Version}),
@@ -72,11 +71,9 @@ Description: System Security Services Daemon -- metapackage
 
 Package: sssd-common
 Architecture: any
-Multi-Arch: foreign
 Depends: ${shlibs:Depends}, ${misc:Depends},
  python,
  python-sss,
-Pre-Depends: ${misc:Pre-Depends}
 Recommends:
  bind9-host,
  libnss-sss,
@@ -99,8 +96,6 @@ Description: System Security Services Daemon -- common files
 
 Package: sssd-ad
 Architecture: any
-Multi-Arch: foreign
-Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends},
  sssd-common (= ${binary:Version}),
  sssd-ad-common (= ${binary:Version}),
@@ -114,8 +109,6 @@ Description: System Security Services Daemon -- Active Directory back end
 
 Package: sssd-ad-common
 Architecture: any
-Multi-Arch: foreign
-Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends},
  sssd-common (= ${binary:Version}),
 Breaks: sssd (<< 1.10.0~beta2-1),
@@ -126,8 +119,6 @@ Description: System Security Services Daemon -- PAC responder
 
 Package: sssd-ipa
 Architecture: any
-Multi-Arch: foreign
-Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends},
  sssd-common (= ${binary:Version}),
  sssd-ad-common (= ${binary:Version}),
@@ -142,8 +133,6 @@ Description: System Security Services Daemon -- IPA back end
 
 Package: sssd-krb5
 Architecture: any
-Multi-Arch: foreign
-Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends},
  sssd-common (= ${binary:Version}),
  sssd-krb5-common (= ${binary:Version}),
@@ -155,8 +144,6 @@ Description: System Security Services Daemon -- Kerberos back end
 
 Package: sssd-krb5-common
 Architecture: any
-Multi-Arch: foreign
-Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends},
  sssd-common (= ${binary:Version}),
 Recommends:
@@ -169,8 +156,6 @@ Description: System Security Services Daemon -- Kerberos helpers
 
 Package: sssd-ldap
 Architecture: any
-Multi-Arch: foreign
-Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends},
  sssd-common (= ${binary:Version}),
  sssd-krb5-common (= ${binary:Version}),
@@ -186,8 +171,6 @@ Description: System Security Services Daemon -- LDAP back end
 
 Package: sssd-proxy
 Architecture: any
-Multi-Arch: foreign
-Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends},
  sssd-common (= ${binary:Version}),
 Breaks: sssd (<< 1.10.0~beta2-1),
@@ -201,8 +184,6 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
  sssd-common (= ${binary:Version}),
  python,
-Breaks: sssd (<< 1.8.0~beta3-1)
-Replaces: sssd (<< 1.8.0~beta3-1)
 Description: System Security Services Daemon -- tools
  Provides a set of daemons to manage access to remote directories and
  authentication mechanisms. It provides an NSS and PAM interface toward
@@ -216,7 +197,7 @@ Description: System Security Services Daemon -- tools
 Package: libnss-sss
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Pre-Depends: multiarch-support
+Pre-Depends: ${misc:Pre-Depends}
 Recommends: sssd
 Multi-Arch: same
 Description: Nss library for the System Security Services Daemon 
@@ -234,8 +215,6 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, libpam-runtime (>= 1.0.1-6),
  libpam-pwquality (>= 1.2.2-1),
 Recommends: sssd
 Multi-Arch: same
-Breaks: sssd (<< 1.8.0~beta3-1)
-Replaces: sssd (<< 1.8.0~beta3-1)
 Description: Pam module for the System Security Services Daemon 
  Provides a set of daemons to manage access to remote directories and
  authentication mechanisms. It provides an NSS and PAM interface toward
@@ -249,10 +228,6 @@ Package: libipa-hbac0
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
-Pre-Depends: multiarch-support
-Conflicts: sssd (<< 1.5.15)
-Replaces: sssd (<< 1.5.15)
-Multi-Arch: same
 Description: FreeIPA HBAC Evaluator library
  Utility library to validate FreeIPA HBAC rules for authorization requests.
 
@@ -260,8 +235,6 @@ Package: libipa-hbac-dev
 Section: libdevel
 Architecture: any
 Depends: ${misc:Depends}, libipa-hbac0 (= ${binary:Version})
-Conflicts: sssd (<< 1.5.15)
-Replaces: sssd (<< 1.5.15)
 Description: FreeIPA HBAC Evaluator library
  Utility library to validate FreeIPA HBAC rules for authorization requests.
  .
@@ -272,8 +245,6 @@ Package: libsss-idmap0
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
-Pre-Depends: multiarch-support
-Multi-Arch: same
 Description: ID mapping library for SSSD
  Utility library to convert SIDs to Unix uids and gids.
 
@@ -291,8 +262,6 @@ Package: libsss-nss-idmap0
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
-Pre-Depends: multiarch-support
-Multi-Arch: same
 Description: SID based lookups library for SSSD
  Utility library for SID based lookups.
 
@@ -300,8 +269,6 @@ Package: libsss-nss-idmap-dev
 Section: libdevel
 Architecture: any
 Depends: ${misc:Depends}, libsss-nss-idmap0 (= ${binary:Version})
-Pre-Depends: multiarch-support
-Multi-Arch: same
 Description: SID based lookups library for SSSD -- development files
  Utility library for SID based lookups.
  .
@@ -312,9 +279,7 @@ Package: libsss-sudo
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
-Pre-Depends: multiarch-support
 Replaces: libsss-sudo-dev (<= 1.9.3)
-Multi-Arch: same
 Description: Communicator library for sudo
  Utility library to allow communication between sudo and SSSD for caching
  sudo rules by SSSD.
@@ -324,8 +289,6 @@ Section: python
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends},
  libipa-hbac0 (= ${binary:Version})
-Conflicts: python-sss (<< 1.5.15)
-Replaces: python-sss (<< 1.5.15)
 Description: Python bindings for the FreeIPA HBAC Evaluator library
  The libipa_hbac-python contains the bindings so that libipa_hbac can be
  used by Python applications.

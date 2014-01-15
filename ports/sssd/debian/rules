@@ -38,9 +38,6 @@ override_dh_auto_configure:
 	--with-sudo
 
 override_dh_install:
-	install -D -m755 $(CURDIR)/debian/generate-config \
-		$(CURDIR)/debian/tmp/usr/share/sssd/generate-config
-
 	mkdir -p $(CURDIR)/debian/libpam-sss/usr/share/pam-configs
 	install -m644 debian/libpam-sss.pam-auth-update \
 		$(CURDIR)/debian/libpam-sss/usr/share/pam-configs/sss

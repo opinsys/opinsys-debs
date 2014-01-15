@@ -1,3 +1,46 @@
+sssd (1.11.3-1+opinsys1) quantal; urgency=medium
+
+  * Import from Debian Sid.
+  * Disable parallel build.
+  * Remove systemd stuff.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 15 Jan 2014 23:06:50 +0200
+
+sssd (1.11.3-1) unstable; urgency=low
+
+  * New upstream release.
+  * control: Update policy to 3.9.5, no changes.
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Fri, 03 Jan 2014 00:01:29 +0200
+
+sssd (1.11.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * rules, sssd-common.install: Use the correct path for the systemd
+    service file.
+  * control: Build depend on libpam0g-dev | libpam-dev.
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Tue, 19 Nov 2013 15:22:27 +0200
+
+sssd (1.11.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * sssd-common.postinst, generate-config: Don't create a config on install,
+    drop generate-config. (Closes: #717587)
+  * sssd-common.postrm: Remove /etc/apparmor.d too, if empty.
+  * control, rules, sssd-common.install: Install the systemd service
+    file provided by upstream.
+  * control: Drop M-A: foreign from sssd-* and add back to sssd instead.
+  * control: Don't hardcode 'multiarch-support'.
+  * control: Drop unnecessary multiarch declarations.
+  * control: Drop obsolete Breaks/Conflicts.
+  * rules: Enable parallel build.
+  * control: Add libltdl-dev to build-depends.
+  * control: Prepare for new unified samba package, adjust build-
+    dependencies. Thanks, Ivo De Decker! (Closes: #725992)
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Tue, 06 Aug 2013 17:04:28 +0300
+
 sssd (1.10.1-0+opinsys1) saucy; urgency=low
 
   * Update to new upstream version.
