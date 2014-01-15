@@ -19,16 +19,6 @@ set -e
 
 case "$1" in
     configure)
-    # Try to autogenerate a configuration file on package install
-    if [ -z "$2" ] && [ ! -e /etc/sssd/sssd.conf ]; then
-        /usr/share/sssd/generate-config > /etc/sssd/sssd.conf.new
-	if [ ! -s /etc/sssd/sssd.conf.new ] ; then
-	    rm /etc/sssd/sssd.conf.new
-	else
-	    mv /etc/sssd/sssd.conf.new /etc/sssd/sssd.conf
-            chmod 0600 /etc/sssd/sssd.conf
-	fi
-    fi
     # Fix configuration file on package upgrade
     if dpkg --compare-versions "$2" lt-nl 1.0.2-0ubuntu1; then
         /usr/lib/sssd/sssd/upgrade_config.py

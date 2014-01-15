@@ -44,6 +44,7 @@ esac
 # work around buggy dh_apparmor which doesn't do this for us
 if [ "$1" = "purge" ]; then
     rmdir /etc/apparmor.d/force-complain 2>/dev/null || true
+    rmdir /etc/apparmor.d 2>/dev/null || true
 fi
 
 exit 0
