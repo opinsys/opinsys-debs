@@ -40,7 +40,7 @@ Build-Depends: debhelper (>= 9), quilt, dh-autoreconf, autopoint, lsb-release,
 # check,
  dh-apparmor,
  libglib2.0-dev,
- samba-dev
+ samba4-dev
 Standards-Version: 3.9.5
 Vcs-Git: git://git.debian.org/git/pkg-sssd/sssd
 Vcs-Browser: http://git.debian.org/?p=pkg-sssd/sssd.git
