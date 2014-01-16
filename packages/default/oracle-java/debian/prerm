@@ -4,7 +4,7 @@ set -e
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
-version=jdk1.7.0_45
+version=jdk1.7.0_51
 
 update-alternatives --remove \
   mozilla-javaplugin.so \
