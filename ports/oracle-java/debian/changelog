@@ -1,3 +1,9 @@
+oracle-java (1.7.51-0+opinsys1) precise; urgency=low
+
+  * Update to Java 7u51
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Thu, 16 Jan 2014 11:14:35 +0200
+
 oracle-java (1.7.45-0+opinsys2) precise; urgency=low
 
   * Fix version numbers to postinst and prerm
