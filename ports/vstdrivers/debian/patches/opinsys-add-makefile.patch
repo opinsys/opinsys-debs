@@ -1,11 +1,12 @@
 Index: vstdrivers/Makefile
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ vstdrivers/Makefile	2013-12-11 10:36:37.583846273 +0200
-@@ -0,0 +1,6 @@
++++ vstdrivers/Makefile	2014-01-17 00:16:16.902728990 +0200
+@@ -0,0 +1,7 @@
 +all:
 +
 +install:
-+	cp -ar usr $(DESTDIR)
++	mkdir -p $(DESTDIR)/usr/lib
++	cp -ar usr/lib/* $(DESTDIR)/usr/lib/
 +
 +clean:
