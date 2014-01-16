@@ -26,7 +26,7 @@ override_dh_strip:
 
 PACKAGE = xf86-input-wacom
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
-TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.bz2
 .PHONY: get-orig-source
 get-orig-source:
 	wget -c http://downloads.sourceforge.net/project/linuxwacom/xf86-input-wacom/xf86-input-wacom-$(SRC_VERSION).tar.bz2 -O ../$(TARBALL)
