@@ -13,5 +13,5 @@ TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
 
 .PHONY: get-orig-source
 get-orig-source:
-	wget http://repo.opinsys.fi/distfiles/$(TARBALL) -O ../$(TARBALL)
+	wget http://new-private-archive.opinsys.fi/.distfiles/nautilus-dropbox-dix/$(TARBALL) -O ../$(TARBALL)
 	tar -zxf ../$(TARBALL) --strip-components=1 -C .
