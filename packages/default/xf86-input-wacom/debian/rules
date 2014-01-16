@@ -23,3 +23,11 @@ override_dh_shlibdeps:
 # Debug package:
 override_dh_strip:
 	dh_strip --dbg-package=xserver-xorg-input-wacom-dbg
+
+PACKAGE = xf86-input-wacom
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+.PHONY: get-orig-source
+get-orig-source:
+	wget -c http://downloads.sourceforge.net/project/linuxwacom/xf86-input-wacom/xf86-input-wacom-$(SRC_VERSION).tar.bz2 -O ../$(TARBALL)
+	tar -j -x -f ../$(TARBALL) --strip-components=1 -C .
