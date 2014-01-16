@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am
+index 2293d88..75abd72 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -22,7 +22,7 @@
+ DISTCHECK_CONFIGURE_FLAGS = --with-sdkdir='$${includedir}/xorg' \
+ 			    --with-xorg-conf-dir='$${datadir}/X11/xorg.conf.d'
+ 
+-SUBDIRS = conf doc src man include tools test
++SUBDIRS = conf doc src man include tools
+ MAINTAINERCLEANFILES = ChangeLog INSTALL
+ 
+ pkgconfigdir = $(libdir)/pkgconfig

@@ -1,0 +1,44 @@
+Source: xf86-input-wacom
+Section: x11
+Priority: optional
+Maintainer: Ubuntu X-SWAT <ubuntu-x@lists.ubuntu.com>
+XSBC-Original-Maintainer: Ron Lee <ron@debian.org>
+Build-Depends: debhelper (>= 8),
+ dh-autoreconf,
+ pkg-config,
+ xutils-dev,
+ xserver-xorg-dev (>= 2:1.11),
+ libxi-dev,
+ libxrandr-dev,
+ quilt,
+ libudev-dev,
+ libxinerama-dev,
+Standards-Version: 3.9.3
+Homepage: http://linuxwacom.sf.net
+Vcs-Git: git://git.debian.org/users/tjaalton-guest/xf86-input-wacom.git
+Vcs-Browser: http://git.debian.org/?p=users/tjaalton-guest/xf86-input-wacom.git;a=summary
+
+Package: xserver-xorg-input-wacom
+Section: x11
+Architecture: any
+Depends: ${xinpdriver:Depends},
+ ${shlibs:Depends},
+ ${misc:Depends},
+Suggests: xinput
+Provides: ${xinpdriver:Provides}
+Replaces: wacom-tools (<< 0.10.0)
+Conflicts: wacom-tools (<< 0.10.0)
+Description: X.Org X server -- Wacom input driver
+ This package provides the X.Org driver for Wacom tablet devices.
+
+Package: xserver-xorg-input-wacom-dbg
+Architecture: linux-any
+Depends:
+ ${misc:Depends},
+ xserver-xorg-input-wacom (= ${binary:Version}),
+Section: debug
+Priority: extra
+Description: X.Org X server -- Wacom input driver
+ This package provides the X.Org driver for Wacom tablet devices.
+ .
+ This package provides debugging symbols for this Xorg X driver.
