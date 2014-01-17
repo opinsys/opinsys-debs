@@ -7,7 +7,14 @@ sudo apt-get update
 sudo apt-get install -y --force-yes puavo-devscripts libcrypt-ssleay-perl
 
 package=$1
-cd "packages/default/${package}"
+
+packagedir="packages/${CI_TARGET_DIST}/${package}"
+
+if [ ! -d "${packagedir}" ]; then
+    packagedir="packages/default/${package}"
+fi
+
+cd "${packagedir}"
 sudo puavo-install-deps
 debian/rules get-orig-source
 puavo-dch
