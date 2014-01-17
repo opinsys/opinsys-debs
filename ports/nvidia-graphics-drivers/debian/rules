@@ -339,3 +339,7 @@ clean:: regen-from-templates
 	rm -fr debian/temp
 	rm -f debian/$(PKG_driver).substvars
 
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+get-orig-source:
+	wget https://launchpad.net/ubuntu/+archive/primary/+files/nvidia-graphics-drivers_$(SRC_VERSION).orig.tar.gz -O ../nvidia-graphics-drivers_$(SRC_VERSION).orig.tar.gz
+	tar -z -x -f ../nvidia-graphics-drivers_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
