@@ -121,8 +121,11 @@ get-current-source:: $(if $(LOCAL_BRANCH),update-local-branch)
 	fi; \
 	$(call GET_SOURCE, $$git_version, "current")
 
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 get-orig-source:: $(if $(LOCAL_BRANCH),update-local-branch)
 	$(call GET_SOURCE, "HEAD", "orig")
+	mv network-manager-applet_$(SRC_VERSION).orig.tar.gz ../
+	tar -z -x -f ../network-manager-applet_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
 
 update-local-branch::
 	@echo "updating local branch ($(LOCAL_BRANCH))"
