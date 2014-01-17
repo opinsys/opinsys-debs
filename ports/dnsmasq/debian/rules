@@ -195,6 +195,9 @@ build-indep:
 checkroot:
 	test root = "`whoami`"
 
-.PHONY: binary binary-arch binary-indep clean checkroot
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -r -n -e 's/^Version: (([0-9]+):)?(.*)-.*/\3/p')
+get-orig-source:
+	uscan --download-current-version --rename
+	tar -z -x -f ../dnsmasq_$(SRC_VERSION).orig.tar.gz --strip-components=1
 
-
+.PHONY: binary binary-arch binary-indep clean checkroot get-orig-source
