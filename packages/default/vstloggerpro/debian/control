@@ -1,5 +1,5 @@
 Source: vstloggerpro
-Section: science/restricted
+Section: restricted/science
 Priority: optional
 Maintainer: Opinsys Developers <dev@opinsys.fi>
 Build-Depends: debhelper (>= 8)
