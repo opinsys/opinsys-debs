@@ -80,4 +80,11 @@ binary-arch: build
 	dh_builddeb
 
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+.PHONY: get-orig-source
+get-orig-source:
+	wget -c http://downloads.sourceforge.net/project/nfs/nfs-utils/$(SRC_VERSION)/nfs-utils-$(SRC_VERSION).tar.bz2 -O ../nfs-utils_$(SRC_VERSION).orig.tar.bz2
+	tar -j -x -f ../nfs-utils_$(SRC_VERSION).orig.tar.bz2 --strip-components=1 -C .
+
+.PHONY: build clean binary-indep binary-arch binary get-orig-source
