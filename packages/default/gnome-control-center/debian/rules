@@ -38,7 +38,8 @@ binary-post-install/gnome-control-center-data::
 
 common-binary-post-install-arch:: list-missing
 
+SRC_VER := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\([0-9]\.[0-9]\).*-.*/\3/p')
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 get-orig-source:
-	wget http://download.gnome.org/sources/gnome-control-center/$(SRC_VERSION)/gnome-control-center-$(SRC_VERSION).tar.xz -O ../gnome-control-center_$(SRC_VERSION).orig.tar.xz
+	wget http://download.gnome.org/sources/gnome-control-center/$(SRC_VER)/gnome-control-center-$(SRC_VERSION).tar.xz -O ../gnome-control-center_$(SRC_VERSION).orig.tar.xz
 	tar -J -x -f ../gnome-control-center_$(SRC_VERSION).orig.tar.xz --strip-components=1 -C .
