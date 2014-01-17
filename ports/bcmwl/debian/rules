@@ -34,3 +34,8 @@ override_dh_clean:
 	rm -f debian/dkms.conf \
 	debian/$(PKG_kernel_src).install \
 	rm -Rf $(CURDIR)/$(PKG_kernel_src)
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+get-orig-source:
+	wget https://launchpad.net/ubuntu/+archive/primary/+files/bcmwl_$(SRC_VERSION).orig.tar.gz -O ../bcmwl_$(SRC_VERSION).orig.tar.gz
+	tar -z -x -f ../bcmwl_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
