@@ -1,0 +1,13 @@
+Index: vstloggerpro/usr/local/share/applications/LoggerPro.desktop
+===================================================================
+--- vstloggerpro.orig/usr/local/share/applications/LoggerPro.desktop	2013-01-11 20:59:03.000000000 +0200
++++ vstloggerpro/usr/local/share/applications/LoggerPro.desktop	2014-01-20 15:04:14.950952538 +0200
+@@ -3,7 +3,7 @@
+ Name=Logger Pro
+ Comment=Measure. Analyze. Learn.
+ Exec=loggerpro
+-Icon=loggerpro
++Icon=/usr/local/share/icons/hicolor/48x48/apps/loggerpro.png
+ MimeType=text/loggerpro
+ Terminal=false
+ Type=Application
