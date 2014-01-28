@@ -1,0 +1,20 @@
+#!/bin/sh
+
+LICENSE_ACCEPTED=~/.vmware-view-client.license-accepted
+if [ ! -e $LICENSE_ACCEPTED ]; then
+   zenity --ok-label=Agree \
+          --title EULA \
+          --height 550 --width=500 \
+          --text-info \
+          --filename=/usr/share/doc/vmware-view-client/VMware-Horizon-View-Client-EULA-en.txt
+
+   res=$?
+   if [ $res -eq 0 ]; then
+      touch $LICENSE_ACCEPTED
+   else
+      exit 1
+   fi
+fi
+
+# run the real thing
+exec vmware-view.bin "$@"
