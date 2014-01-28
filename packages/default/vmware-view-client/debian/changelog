@@ -1,0 +1,80 @@
+vmware-view-client (2.1.0-0ubuntu0.12.10) quantal; urgency=low
+
+  * New upstream release (2.1.0 GA, build 1213173), repacking tarball:
+    - Move /usr/share/doc/* to /usr/share/doc/vmware-view-client
+    - Drop /usr/bin/vmware-flash-projector, uses ancient libexpat.so.0
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Fri, 23 Aug 2013 16:33:20 -0600
+
+vmware-view-client (2.0.0-0ubuntu0.12.10) quantal; urgency=low
+
+  * New upstream release (2.0.0 GA, build 1049726), repacking tarball:
+    - Move /usr/share/doc/* to /usr/share/doc/vmware-view-client
+  * Twiddle debian/vmware-view.wrapper to display the new EULA name.
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Fri, 26 Apr 2013 02:19:05 -0600
+
+vmware-view-client (1.7.0.0-0ubuntu0.12.10) quantal; urgency=low
+
+  * Repack 1.7.0 as 1.7.0.0 to revert private libssl removal,
+    as it's apparently dlopen()ed from the new USB utilities.
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Fri, 01 Feb 2013 15:13:01 -0700
+
+vmware-view-client (1.7.0-0ubuntu0.12.10) quantal; urgency=low
+
+  * New upstream release (1.7.0 GA, build 941674), repacking tarball:
+    - Move /usr/share/doc/vmware to /usr/share/doc/vmware-view-client
+    - Remove private copies of libssl0.9.8 and depend on it instead
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Fri, 01 Feb 2013 12:31:08 -0700
+
+vmware-view-client (1.6.0-0ubuntu0.12.10) quantal; urgency=low
+
+  * New upstream release (1.6.0 GA, build 844387)
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Mon, 01 Oct 2012 20:00:51 -0600
+
+vmware-view-client (1.5.0-0ubuntu0.12.10) quantal; urgency=low
+
+  * New upstream release (1.5.0 GA, build 710491)
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Wed, 16 May 2012 19:59:23 -0600
+
+vmware-view-client (1.4.0-0ubuntu2.0.12.04) precise; urgency=low
+
+  * debian/copyright: Adjust copyright dates and attributions to
+    match reality, both for upstream and the Ubuntu packaging.
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Thu, 15 Mar 2012 14:47:01 -0600
+
+vmware-view-client (1.4.0-0ubuntu1.0.12.04) precise; urgency=low
+
+  * New upstream release (1.4.0):
+    - Several upstream bugfixes over 1.3.0
+    - Addition of kiosk mode, including new CLI options for same
+  * Add a more verbose Comment field to the desktop file.
+  * Update package description to remove "Tech Preview" mentions.
+  * Display the upstream EULA instead of the Tech Preview EULA.
+  * Change maintainer to me, thanks for your work, Michael!
+  * Fix vmware-view's wrapper to pass arguments to vmware-view.bin.
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Wed, 14 Mar 2012 14:11:28 -0600
+
+vmware-view-client (1.3.0-0ubuntu1+lucid2) lucid; urgency=low
+
+  * debian/copyright:
+    - fix license to "Proprietary"
+  * debian/vmware-view.wrapper:
+    - show question after license text so that the user explicitely
+      has to accept it because lucid, maverick, natty does not
+      support "yes", "no" for --text-info yet
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Tue, 20 Dec 2011 09:43:11 +0100
+
+vmware-view-client (1.3.0-0ubuntu1+lucid1) lucid; urgency=low
+
+  * initial upload to archive.canonical.com
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Fri, 16 Dec 2011 20:41:51 +0100
+

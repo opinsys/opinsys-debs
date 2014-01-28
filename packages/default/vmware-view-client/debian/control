@@ -1,0 +1,22 @@
+Source: vmware-view-client
+Section: partner/net
+Priority: extra
+Maintainer: Adam Conrad <adconrad@ubuntu.com>
+Build-Depends: debhelper (>= 7.0.0), libpcsclite-dev, libxtst-dev,
+               libgtk2.0-dev, libpng12-dev, libpango1.0-dev, libx11-dev,
+               libatk1.0-dev, libxinerama-dev, libxrandr-dev, libxrender-dev,
+               libxi-dev, libxext-dev, libssl0.9.8
+Standards-Version: 3.9.2
+Homepage: http://www.vmware.com
+
+Package: vmware-view-client
+Architecture: i386
+Depends: ${shlibs:Depends}, ${misc:Depends}, zenity
+Conflicts: vmware-view-open-client, vmware-view-pcoip
+Replaces: vmware-view-pcoip
+Description: Deliver rich, personalized virtual desktops with VMware View 5
+ The VMware Horizon View Client for Linux, optimized for VMware View 5,
+ turns your Ubuntu PC into a thin client and connects you to your company's
+ Virtual Desktop Infrastructure. With VMware View 5 PCoIP capabilities you
+ can deliver a personalized high fidelity experience for end-users across
+ sessions, devices, operating systems, and legacy applications.

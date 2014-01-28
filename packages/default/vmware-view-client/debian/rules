@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_compress:
+	dh_compress -Xpdf -Xtxt
+
+override_dh_strip:
+	# do not strip
+
+override_dh_install:
+	dh_install
+	# reshuffle binaries for the wrapper
+	D=debian/vmware-view-client; \
+	 mv $$D/usr/bin/vmware-view $$D/usr/bin/vmware-view.bin; \
+	 mv $$D/usr/bin/vmware-view.wrapper $$D/usr/bin/vmware-view

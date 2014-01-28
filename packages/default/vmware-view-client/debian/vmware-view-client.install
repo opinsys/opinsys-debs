@@ -1,0 +1,7 @@
+# from upstream
+usr/
+# custom desktop file
+debian/vmware-view-client-vmware.png usr/share/pixmaps
+debian/vmware-view-client.desktop usr/share/applications
+# install binary as bin and add wrapper
+debian/vmware-view.wrapper usr/bin/
