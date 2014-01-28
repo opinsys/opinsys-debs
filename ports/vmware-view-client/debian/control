@@ -1,5 +1,5 @@
 Source: vmware-view-client
-Section: partner/net
+Section: net
 Priority: extra
 Maintainer: Adam Conrad <adconrad@ubuntu.com>
 Build-Depends: debhelper (>= 7.0.0), libpcsclite-dev, libxtst-dev,
