@@ -1,3 +1,11 @@
+node-webkit (0.8.4-0+opinsys1) quantal; urgency=low
+
+  * Release 0.8.4
+  * https://groups.google.com/forum/#!msg/node-webkit/ywebTZOA_cM/Aqv180nFYIcJ
+  * https://groups.google.com/forum/#!msg/node-webkit/bPjur7aFaQc/4TP6o3SM-8sJ
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 29 Jan 2014 12:39:38 +0000
+
 node-webkit (0.8.2-0+opinsys1) quantal; urgency=low
 
   * Release 0.8.2
