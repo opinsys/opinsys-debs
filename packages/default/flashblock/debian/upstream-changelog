@@ -1,0 +1,193 @@
+    2013-03-23: Flashblock 1.5.17 and Flashblock 1.3.20 released.
+        [fix] Bug 24896 Allow whitelist for some sites. Patch by Tommy Wu.
+        [fix]Re-enable whitelist integration with Adblock Plus and other content blockers.
+        [fix] Don't enable controls for HTML5 video/audio since some sites (Youtube) have their own video controls.
+        [new] Add option to enable/disable HTML5 video blocking.
+        [fix] Bug 25350 Flashblock on Firefox 21 is broken by mozilla Bug 834697 (Enable XBL Scopes).
+        Updated translations from Babelzilla. 
+    2012-06-18: Flashblock 1.5.16 and Flashblock 1.3.19 released.
+        [new] Preliminary support for blocking HTML5 Video.
+        [fix] Disabled whitelist integration with Adblock Plus and other content blockers since this prevents our whitelist from working on Firefox 13. 
+    2011-07-08: Flashblock 1.5.15 and Flashblock 1.3.18 released.
+        Updated locales from Babelzilla including: fi-FI, uk-UA, it-IT, de, fr, he-IL, da, ko-KR, ru-RU, zh-TW, ja-JP.
+        New locales: hy-AM, th, eo, hsb-DE.
+        [fix] no-NB locale should be nb-NO ( Norwegian bokmal).
+        [new] Add an option to Sync the whitelist using Weave/Firefox Sync.
+        New OS X placeholder images from: Bug 614485.
+        [fix] Bug 23456 Flashblock blocks all flash-based gadgets.
+        [fix] NS_ERROR_DOM_NOT_FOUND_ERR in flashblockShowFlash(). 
+    2010-10-06: Flashblock 1.5.14 and Flashblock 1.3.17 released.
+        [fix] Bug 18971 Please integrate nicely with content blockers (Adblock Plus).
+            Fix Firefox 2.0 regression caused by patch in Bug 18971.
+            Fix sIFR breakage caused by patch in Bug 18971. 
+        [fix] Bug 22683 "document.createEvent is undefined" error prevents Flashblock from working.
+        [fix] typo in install.js (Flashblock 1.3.17a only).
+        [fix] Camino Bug 573815 Flashblock does not display play button on Dailymotion videos.
+        Add <em:unpack>true</em:unpack> to the install.rdf to force Firefox4/SeaMonkey 2.1 to unpack the XPI. 
+    2010-03-15: Flashblock 1.5.13 and Flashblock 1.3.16 released.
+        [new] Options checkbox to control silverlight blocking.
+        [new] Dynamically change the toolbar button label depending on block state.
+        [new] es-AR and sr-RS locales from Babelzilla.
+        [fix] Bug 22168 "Node was not found" code: "8".
+        [fix] For the sIFR-alternate binding move the position: static style from the css into the XBL. This used to crash Firefox 1.0.7.
+        [new] Desupport Gecko 1.7 browsers (Flashblock 1.3 branch).
+    2009-12-16: Flashblock 1.5.12 and Flashblock 1.3.15 released.
+        [fix] Bug 20817 Make Flowplayer work with Flashblock instead of offering to download the .flv file. Includes a followup fix to include other formats offered for download including .MP4
+        Ongoing refactoring of Flashblock code.
+        Detect more broken flash and stealth flash objects.
+        Add ".*" to the end of the whitelist strings during compare so users don't have to do this manually.
+        Initial support for blocking Silverlight. Thanks to Sven Schneider for the silverlight buttons
+    2009-06-27: Flashblock 1.5.11 and Flashblock 1.3.14 released.
+        [new] Added vi-VN (Vietnamese) locale.
+        [new] Added no-NB (Norwegian Bokmål) locale.
+        [fix] Bug 16856 Whitelist doesn't allow the addition of subsites. e.g. foo.bar.com/somepage.html.
+        [fix] Fixed some height/width and display alignment problems with the placeholder.
+    2009-04-13: Flashblock 1.5.10 and Flashblock 1.3.13 released.
+        [fix] Bug 20747 Capability to suppress context menu items. Regression from workaround for mozilla bugs which prevented Flashblock from showing its context menu items
+    2009-03-25: Flashblock 1.5.9 and Flashblock 1.3.12 released.
+        [fix] Bug 19372 Allow keyboard users to activate flashblock placeholders.
+        [fix] Bug 20572 Options dialog: when pressing "enter" in whitelist 'add' textbox, dialog closes.
+        [fix] Mozilla Bug 482433 Sibelius Scorch scores don't display or play if Flashblock is active.
+        [fix] Bug 20678 (Flashblock broken on sevenload.com) Force visibility to visible. Also check for flash.style.display:block and use block instead of inline-block in our placeholder.
+        [fix] Bug 20678 (Flashblock broken on sevenload.com) Force visibility to visible. Also check for flash.style.display:block and use block instead of inline-block in our placeholder.
+        [enh] Bug 20722 Add API to allow other extensions to add sites to our whitelist.
+        [fix] Workaround for Mozilla Bug 482941 and Mozilla Bug 422851 which prevented Flashblock from showing its context menu items.
+    2009-02-05: Flashblock 1.5.8 and Flashblock 1.3.11 released.
+        [fix] Workaround for Bug 467659 (Permission denied ... to get property XPCComponents.utils) (Flashblock 1.5).
+        [fix] Bug 20277 The remove site buttons in the whitelist are un-discoverable unless the prefpanel is scrolled down (Flashblock 1.3).
+        Rearrange the options dialog and move the whitelist into a separate tab (Flashblock 1.5).
+        [fix] Bug 20394 WMP videos will not display (only audio) with Flashblock enabled.
+        [fix] Mozilla Bug 475842 Internet Archive Flash videos won't play with Flashblock installed.
+    2008-11-11: Flashblock 1.5.7 and Flashblock 1.3.10 released.
+        [fix] Bug 19435 Flash objects are not blocked on a XML/XSLT page.
+        [fix] Mozilla Bug 463839 Flashblock broken on trunk (again).
+        [new] Added pt-PT (Portuguese) locale.
+    2008-05-16: Flashblock 1.5.6 and Flashblock 1.3.9 released.
+        [new] Added te-IN (Telugu) locale.
+        [new] Added ca-ES (Catalan) locale.
+        [new] Added is-IS (Icelandic) locale.
+        [fixed] Bug 18316 [Regression] Flashblock 1.5.5 disables Microsoft Silverlight within Firefox 2.0.0.11
+        [fixed] Bug 18367 [Regression] FlashBlock doesn't show alternate content for sIFR text.
+        [fixed] Bug Bug 18415 Unblock fails. See also Mozilla Bug 418489 (Flash-based circular on OfficeDepot.com not displayed after clicking Flashblock placeholder).
+        [fixed] Bug Bug 18937 IETab object blocked by Flashblock.
+        [fixed] Bug 18965 no overlay image displayed (Workaround for Mozilla Bug 292789 : SCRIPT tags can access chrome).
+    2007-12-05: Flashblock 1.5.5 and Flashblock 1.3.8 released.
+        [new] Add targetApplication for Intel Midbrowser (Mobile Internet Devices)
+        [new] Added bg-BG locale.
+        [new] Added uk-UA locale.
+        [fixed] Bug 14394 FlashBlock breaks page design - placeholder too wide? (Only for Gecko 1.9a trunk builds)
+        [fixed] Bug 16872 Copy flash URI feature gives relative uris
+        [fixed] Bug 17430 Show version number in the options dialog with fallback to a hardcoded number in version.dtd
+        [fixed] Bug 17362 sort whitelist
+        [fixed] Bug 18180 Specific page on spiegel-online (http://www.spiegel.de) leads to 100% CPU
+        [fixed] Stop DDoSing flash heavy websites.
+    2007-07-09: Flashblock 1.5.4 and Flashblock 1.3.7 released.
+        [fixed] 17197 Flash not being unblocked properly on Gran Paradiso.
+        [fixed] Crashes and frame/iframe regressions in OS2 thanks to Steve Wendt.
+        [fixed] Bug 16953 Broken object detection blocks liveconnect (javascript -> Java applet) and silverlight objects from initializing properly.
+        [new] Added Thunderbird compatibility (1.3 series only).
+        [new] New extension icons by Julien Saurin.
+    2007-04-14: Flashblock 1.5.3 and Flashblock 1.3.6 released.
+        [fixed] Bug 12592 Flash runs for a while before placeholder appears.
+        [fixed] Bug 16324 Alignment issues: placeholder is to the left when it should be centered with no margins.
+        [fixed] Flashblock content menu items should only appear when over a Flashblock placeholder.
+        [fixed] Bug 15912 No way to whitelist a site with a port number in the URL (no colons allowed).
+        [fixed] Bug 13641 add 'Copy Flash Location' to the context menu.
+        [fixed] Bug 15867 Show the URI of the blocked flash in a tooltip - via the title attribute.
+        [fixed] Reparent only if a new parent is available.
+    2006-10-24: Flashblock 1.5.2 and Flashblock 1.3.5 released.
+        [new] Added el-GR locale.
+        [fixed] Bug 13860: Find the parent after the timeout, instead of before it.
+        [fixed] Bug 13978: RFE: Optionally allow the Flashblock toolbarbutton to refresh the current page when toggling Flashblock on/off.
+        [fixed] Bug 14013 memory leakage in Flashblock 1.5.1 .
+        [fixed] Bug 14486: redeclaration of const MODE_RDONLY.
+        [fixed] Bug 14578: Broken object detection.
+        [fixed] Flashblock 1.5.unstable stops working if userContent.css exists.
+        [fixed] Bug 14578 When looking for broken objects we should also check the child embed for flash signatures.
+        [fixed] Bug 15077: Incorrect size/position of placeholder when the size/position of the flash element is set via css.
+        [fixed] Bug 15170 Flashblock fails to block when a page javascript script redefines setTimeout() (Flashblock 1.5.2 only).
+    2006-10-04: Greek (el-GR) translation thanks to grk.comp.software et al.
+    2006-02-18: Turkish (tr-TR) translation thanks to Aycan Demirel.
+    2006-02-10: Polish translation updated by Maciej Å»Ã³Å‚towski.
+    2006-02-05: Flashblock 1.5.1 and Flashblock 1.3.4 released. New features:
+        [new] Bug 10004: Added "Remove this Flash" option to the context menu.
+        [new] Compatibility with Netscape 8.1 (Flashblock 1.3.4 only).
+        [fixed] Added css detection for malformed classid.
+        [fixed] Bug 12653: Javascript error: Expected color but found undefined (background property).
+        [fixed] Stop "Bad NPobject" error with Flash 8 from allowing Flash to slip through.
+        [fixed] Bug 12808: Load user stylesheet even if Flashblock is disabled on startup.
+        [fixed] checkmark for context menuitem "Allow Flash..." picking up wrong URL.
+    2005-11-30: Flashblock 1.5 released for Firefox 1.5, Firefox trunk, and Flock.
+    Flashblock 1.3.3 released for Firefox 1.0.x, Seamonkey 1.0a, Mozilla Suite 1.7.x, Netscape 7/8, and Flock.
+        New locales sv-SE, sk-SK, zh-TW.
+        Flashblock Toolbar button for Firefox, Netscape, Mozilla Suite and SeaMonkey.
+        Workaround for the Flashplayer 8 bug in Firefox 1.0.
+        Works with Yahoo Maps Beta.
+        The "Allow Flash from this site" menu item is now a on/off toggle
+        Compatibility with Firefox 1.5, Firefox 1.6a trunk builds, Seamonkey 1.0a, Seamonkey trunk builds, Netscape 8.0.x, and Flock.
+    2005-11-29: Traditional Chinese (zh-TW) translation thanks to Hung-je Chen.
+    2005-11-28: Slovak (sk-SK) translation thanks to Peter TÃ³th.
+    2005-11-25: Flashblock 1.3.3a1 supports Firefox 1.0 to 1.5RC3, as well as Mozilla Suite 1.7.x, Seamonkey 1.0a to 1.1a, Netscape 7/8, Flock 0.4+.
+    2005-11-06: Fixed problem with Yahoo Maps Beta site.
+    2005-11-04: The flashplayer 8 bug in the Firefox plugin handling code has been fixed for Firefox 1.5RC2 and on the trunk (Firefox 1.6a).
+    2005-11-02: Latest 1.3.3alpha now supports Firefox 1.5 RC1 and trunk (1.6a) builds; plus untested supported for Flock.
+    2005-09-22: If you have Adblock or Adblock Plus installed you may still not be able to see any flash content with flashplayer 8 unless you turn off Object-Tabs. See: Flash Player 8.0 does not work if you use Adblock with OBJ-TABS enabled.
+    2005-09-19: Flashblock 1.3.3a1 with workaround for the flashplayer 8 bug (bug 11513).
+    2005-09-18: Swedish (sv-SE) translation thanks to Jonnie Jansson.
+    2005-09-04: Flashblock 1.3.3a1 with experimental support for Firefox 1.5 Betas.
+    2005-07-13: Flashblock 1.3.2 released. New features:
+        New locales ja-JP, zh-CN, ar, fi-FI.
+        Compatibility with Firefox 1.0.6, Deer Park Alpha1, Netscape 8.0.x.
+        Blocks flash in frames, iframes and standalone flash.
+        Text fallback for sIFR flash now controlled by the whitelist.
+        Hidden preference to allow Flashblock to block flash in local html files.
+    2005-07-08: Finnish (fi-FI) translation thanks to Jani Mikkonen.
+    2005-06-20: Arabic (ar-*) translation thanks to http://www.mubarmeg.com (Arabic programming forum and learning center)
+    2005-05-21: Simplified Chinese (zh-CN) translation thanks to Qing Lei.
+    2005-05-02: Japanese (ja-JP) translation thanks to Yuji Okazawa.
+    2005-04-10: Flashblock 1.3.1 released. New features:
+        New locales es-ES, ru-RU, ro-RO, de-AT.
+        Support for nsIStylesheetService.
+        Allow port numbers in whitelist entries.
+        No flickering when inserting placeholders.
+        Catch additional broken flash objects.
+        Fix for sites that try to disable flashblock.
+        Experimental support for Netscape 8.0 (untested).
+        Fix compatibility problems with the diggler extension
+    2005-02-25: Bugs page opened. Users can now submit bugs using Bugzilla.
+    2005-02-23: Flashblock 1.3.0.1 released.
+    Fixes several regressions including:
+        Not blocking flash objects that previous versions blocked.
+        Flashblock placeholder was inserted but the actual flash was pushed down below the placeholder instead of being suppressed.
+        Now avoids triggering Gecko reflow bugs, or at least reduces the incidence.
+    2005-02-19: Spanish (es-ES) translation thanks to Marcelo Saavedra.
+    2005-02-14: Flashblock 1.3.0 released. Czech (cs-CZ) translation thanks to Mlok.
+    Now supports Mozilla Suite.
+    2005-02-07: Flashblock 1.2.9 released. Hungarian (hu-HU) localization thanks to KÃ³szÃ³ JÃ³zsef.
+    2005-01-14: Flashblock 1.3.0alpha for Mozilla released
+    2005-01-11: Flashblock 1.2.8 released. Danish (da-DK) localization thanks to Kim Ludvigsen.
+    2005-01-10: Flashblock 1.2.7 released. Fixed a bug in the whitelist.
+    Portuguese (pt-BR) localization thanks to Hugo Sena Ribeiro.
+    2004-12-27: Flashblock 1.2.6 released. Korean localization (thanks to Gomyoung Kim).
+    2004-12-15: Flashblock 1.2.5 released. Works with trunk builds too (e.g. FF post 1.0).
+    2004-12-14: Flashblock 1.2.4 released. All strings now localized. Polish localization thanks to Kornel Misiejuk.
+    2004-12-11: Flashblock 1.2.2 released. French localization (thanks to Vincent Blevin).
+    2004-12-10: Flashblock 1.2.1 released. German (de-DE, de-AT) localization (thanks to Albert Feller).
+    2004-12-08: Flashblock 1.2 released. Dutch and Italian localizations and support for * wildcards in whitelist entries.
+    2004-12-05: Flashblock 1.1 released. Now with whitelist and enable/disable support!
+    2004-12-05: Tjaard de Vries made a Dutch translation of Flashblock 1.0RC3, which iswas available at http://www.tjaard.nl/?page_id=8. Thanks Tjaard!
+    2004-09-19: Flashblock 1.0 RC3 released. Fixes compatibility bug with other extensions (e.g. TextZoom, ForecastFox).
+    2004-11-10: Flashblock 1.0 RC2 released. Options window properly disabled.
+    2004-11-09: Flashblock 1.0 RC released. Compatible with Firefox 1.0.
+    2004-10-18: Flashblock 0.9 PR released. Fixed a few bugs.
+    2004-09-30: Flashblock 0.9 RC released.
+        Firefox 0.9+ compatability.
+        No longer overwrites userContent.css.
+        Blocks Macromedia Authorware content.
+    2004-06-29: Flashblock 0.8.3 released. Fixes problem with flash files that are called by the browser directly.
+    2004-06-29: Flashblock 0.8.2 released. Several bugfixes. No Firefox 0.9 installer yet. :(
+    2004-03-01: Newly updated version with even more flash/shockwave blocking goodness.
+    2004-02-18: Added Shockwave support.
+    2004-02-09: Flashblock should now handle all embeds correctly. (Thanks Jesse!)
+    2004-02-06: New version of flashblock released.
+    2004-01-28: Initial version of flashblock released.

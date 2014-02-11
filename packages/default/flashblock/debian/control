@@ -1,0 +1,23 @@
+Source: flashblock
+Section: web
+Priority: optional
+Maintainer: Debian Mozilla Extension Maintainers <pkg-mozext-maintainers@lists.alioth.debian.org>
+Uploaders: Alexander GQ Gerasiov <gq@debian.org>, Philippe Coval <rzr@gna.org>, Fabrizio Regalli <fabreg@fabreg.it>
+Build-Depends: debhelper (>= 9), mozilla-devscripts
+Standards-Version: 3.9.4
+Homepage: http://flashblock.mozdev.org
+Vcs-Git: git://anonscm.debian.org/pkg-mozext/flashblock.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-mozext/flashblock.git
+
+Package: xul-ext-flashblock
+Architecture: all
+Depends: ${misc:Depends}
+Recommends: ${xpi:Recommends}
+Provides: ${xpi:Provides}
+Enhances: ${xpi:Enhances}
+Breaks: ${xpi:Breaks}
+Description: Mozilla extension to block Adobe Flash content
+ Flashblock is an extension for the Iceweasel/Firefox browser that takes a
+ pessimistic approach to dealing with Adobe Flash content on a webpage and
+ blocks ALL Flash content from loading. It then leaves placeholders on the
+ webpage that allow you to click to download and then view the Flash content.

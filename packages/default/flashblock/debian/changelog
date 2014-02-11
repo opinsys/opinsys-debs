@@ -1,0 +1,177 @@
+flashblock (1.5.17-1) unstable; urgency=low
+
+  * Team upload
+  * Imported Upstream version 1.5.17 (Closes: #660424, #686767)
+  * Bump compat to 9
+  * Convert to dh short rules
+  * Bump Standards-Version to 3.9.4
+  * Use canonical Vcs- fields
+  * Remove now useless Breaks and Replaces against flashblock
+  * Drop useless README.source
+  * Point Source to the actual sources
+  * Make copyright self contained
+  * Add upstream changelog
+
+ -- David Prévot <taffit@debian.org>  Mon, 15 Jul 2013 18:01:13 -0400
+
+flashblock (1.5.16-1) unstable; urgency=low
+
+  * debian/control: "mozilla" replaced with "Mozilla". (Closes: #648910)
+  * New upstream release 1.5.16
+  * Bump Standard's version: no changes needed.
+  * debian/copyright: Update to latest version of standard.
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Mon, 27 Aug 2012 01:49:01 +0400
+
+flashblock (1.5.15-1) unstable; urgency=medium
+
+  * New upstream release (Closes: #626755)
+  * Bump to 3.9.2 Standard-Version
+  * Added myself to Uploaders
+
+ -- Fabrizio Regalli <fabreg@fabreg.it>  Sat, 30 Jul 2011 21:40:33 +0200
+
+flashblock (1.5.14.2-1) unstable; urgency=low
+
+  * Imported Upstream version 1.5.14.2
+  * Bump Standard's version: no changes needed.
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Sun, 19 Dec 2010 13:32:40 +0300
+
+flashblock (1.5.13-1) unstable; urgency=low
+
+  [ Benjamin Drung ]
+  * Use Breaks instead of Conflicts for transition.
+
+  [ Alexander GQ Gerasiov ]
+  * New Upstream version 1.5.13
+  * debian/control: Bump Standards-Version, no changes needed.
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Tue, 04 May 2010 00:29:27 +0400
+
+flashblock (1.5.12-1) unstable; urgency=low
+
+  * New upstream release 1.5.12
+    - [fix] Make Flowplayer work with Flashblock instead of offering to download
+      the .flv file. Includes a followup fix to include other formats offered
+      for download including .MP4
+    - Ongoing refactoring of Flashblock code.
+    - Detect more broken flash and stealth flash objects.
+    - Add ".*" to the end of the whitelist strings during compare so users
+      don't have to do this manually.
+    - Initial support for blocking Silverlight. Thanks to Sven Schneider for
+      the silverlight buttons
+  * debian/README.source updated to current state.
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Fri, 29 Jan 2010 16:41:07 +0300
+
+flashblock (1.5.11-2) unstable; urgency=low
+
+  * Fixed typo in debian/copyright.
+  * Using new dpkg v3 format, it rocks.
+  * Package description updated (taken from extension's homepage).
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Mon, 30 Nov 2009 01:21:27 +0300
+
+flashblock (1.5.11-1) unstable; urgency=low
+
+  * Imported Upstream version 1.5.11
+  * med-xpi-unpack and original xpi used instead of import from cvs.
+  * Bring package under maintenance of Debian Mozilla Extension Maintainers.
+  * Bump Standard's version to 3.8.3
+  * Binary package renamed according to DebMozExtTeam. Old package's name left
+    in Conflicts/Replaces.
+  * debian/control updated to use mozilla-devscripts power.
+  * debian/rules reduced to drop all staff related to cvs import.
+  * debian/copyright replaced with machine-readable one.
+  * Finally upload to Debian (Closes: #469906).
+
+ -- Alexander GQ Gerasiov <gq@debian.org>  Mon, 23 Nov 2009 02:24:00 +0300
+
+flashblock (1.3.14~a2+snapshot20090627-0ubuntu1) karmic; urgency=low
+
+  * New upstream release
+
+ -- Philippe Coval <rzr@gna.org>  Fri, 03 Jul 2009 02:20:23 +0200
+
+flashblock (1.3.12~a1+snapshot20090326-0ubuntu1) jaunty; urgency=low
+
+  * New upstream release (LP: #309390)
+    - Set the same version : from install.js to install.rdf
+  * debian/rules:
+    - Read install.rdf instead of install.js to guess upstream version
+  * debian/control:
+    - Added ${misc:Depends}, as lintian suggested and prefer FF-3.5
+    - enhances flashplugin-nonfree
+
+ -- Philippe Coval <rzr@gna.org>  Fri, 03 Apr 2009 16:49:15 +0200
+
+flashblock (1.3.11f~snapshot20090206-0ubuntu1) jaunty; urgency=low
+
+  * New upstream release
+  * debian/*
+    - Updated my email (was bouncing)
+  * debian/watch:
+    - Renamed to watch.ex since it wont work on .xpi / cvs tree
+
+ -- Philippe Coval <rzr@gna.org>  Sun, 15 Feb 2009 12:13:58 +0100
+
+flashblock (1.3.11a~snapshot20081113-0ubuntu1) jaunty; urgency=low
+
+  * New upstream release
+  * debian/README.source:
+    - how to build upstream tarball
+  * debian/rules:
+    - Add get-orig-source to build upstream tarball from cvs
+
+  [ Alexander Sack <asac@ubuntu.com> ]
+  * fix bogus version in install.rdf to match APP_VERSION -> 1.3.11a
+    - update install.rdf
+
+ -- Philippe Coval <rzr@users.sf.net>  Mon, 15 Dec 2008 17:32:00 +0100
+
+flashblock (1.3.10a~snapshot20080611-0ubuntu3) jaunty; urgency=low
+
+  * debian/watch:
+     - Fix it.
+  * debian/rules:
+     - Clean up some unnecessary comments.
+  * debian/dirs:
+     - Remove it, as it's unnecessary.
+  * debian/control:
+     - Drop the firefox-2 alternative dependency (LP: #272959).
+     - Add alternative dependencies on midbrowser and seamonkey.
+     - Improve the long and short descriptions.
+     - Bump Standards Version to 3.8.0.
+  * debian/links:
+     - Change usr/lib/firefox/ to usr/lib/firefox-addons (Firefox 3).
+     - Add midbrower and seamonkey.
+
+ -- Siegfried-Angel Gevatter Pujals <rainct@ubuntu.com>  Fri, 07 Nov 2008 23:04:19 +0100
+
+flashblock (1.3.10a~snapshot20080611-0ubuntu2) intrepid; urgency=low
+
+  * fix LP: #272772: packages that Depend/Recommend/Suggest firefox
+    (meta-package) must alternatively Depend/Recommend/Suggest abrowser
+    - update debian/control
+
+ -- Fabien Tassin <fta@ubuntu.com>  Sun, 21 Sep 2008 22:08:48 +0200
+
+flashblock (1.3.10a~snapshot20080611-0ubuntu1) intrepid; urgency=low
+
+  [ Philippe Coval ]
+  * New upstream release (LP: #241597)
+
+ -- Philippe Coval <rzr@users.sf.net>  Fri, 20 Jun 2008 23:40:15 +0200
+
+flashblock (1.3.9a-0ubuntu1) hardy; urgency=low
+
+  * FIX: using mozilla-devscripts (LP: #211532)
+
+ -- Philippe Coval <rzr@users.sf.net>  Wed, 09 Apr 2008 13:10:00 +0200
+
+flashblock (1.3.9a-1) unstable; urgency=low
+
+  * Initial release from CVS checkout
+
+ -- Philippe Coval <rzr@users.sf.net>  Sun, 16 Mar 2008 14:17:35 +0100
