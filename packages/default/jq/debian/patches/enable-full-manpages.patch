@@ -5,11 +5,16 @@ Description: enable generation of full manpage
 Author: Simon Elsbrock
 Forwarded: no, manpage to be included in next release tarball
 ---
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -54,25 +54,14 @@
+Index: jq/Makefile.am
+===================================================================
+--- jq.orig/Makefile.am	2013-05-19 10:48:18.000000000 +0000
++++ jq/Makefile.am	2014-02-17 14:37:54.526939179 +0000
+@@ -52,27 +52,16 @@
+ # Thus, making "dist" depend on "real_docs" ensures that we never build a tarball with
+ # a stub manpage.
  
- man_MANS = jq.1
+-man_MANS = jq.1
++#man_MANS = jq.1
  .PHONY: real_docs
 -if ENABLE_DOCS
  jq.1: $(srcdir)/docs/content/3.manual/manual.yml
