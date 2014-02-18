@@ -12,3 +12,4 @@ env GEM_HOME=/usr/lib/fluentd-gem
 exec sudo -E -u puavo /usr/lib/fluentd-gem/bin/fluentd
 
 respawn
+respawn limit 5 10
