@@ -17,7 +17,6 @@ get-orig-source:
 
 override_dh_auto_build:
 	$(MAKE)
-	$(MAKE) real_docs
 
 %:
 	dh $@ --with autoreconf
