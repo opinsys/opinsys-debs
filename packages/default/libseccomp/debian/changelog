@@ -1,3 +1,9 @@
+libseccomp (2.1.0-1+opinsys1) unstable; urgency=low
+
+  * Change only version number to fix some builder problem for now
+
+ -- Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>  Fri, 21 Feb 2014 17:00:14 +0200
+
 libseccomp (2.1.0+dfsg-1) unstable; urgency=low
 
   * Rebuild source package without accidental binaries (Closes: 725617).
