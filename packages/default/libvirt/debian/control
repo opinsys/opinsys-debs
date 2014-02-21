@@ -27,8 +27,8 @@ Build-Depends: cdbs (>= 0.4.90~),
  libhal-dev [!linux-any],
  libpciaccess-dev,
  module-init-tools [linux-any],
- policykit-1 (>= 0.105-3ubuntu3),
- libpolkit-gobject-1-dev (>= 0.105-3ubuntu3),
+ policykit-1,
+ libpolkit-gobject-1-dev,
  libcap-ng-dev [linux-any],
  libnl-3-dev,
  libnl-route-3-dev,
@@ -73,7 +73,7 @@ Recommends:
  dmidecode,
  iproute,
  parted
-Suggests: policykit-1 (>= 0.105-3ubuntu3), apparmor, pm-utils, qemu-kvm | qemu (>= 0.9.1), radvd
+Suggests: policykit-1, apparmor, pm-utils, qemu-kvm | qemu (>= 0.9.1), radvd
 Description: programs for the libvirt library
  Libvirt is a C toolkit to interact with the virtualization capabilities
  of recent versions of Linux (and other OSes). The library aims at providing
