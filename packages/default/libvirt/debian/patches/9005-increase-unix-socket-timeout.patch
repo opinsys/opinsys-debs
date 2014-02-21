@@ -1,0 +1,16 @@
+Description: increase timeout for waiting on a Unix socket to avoid
+  'monitor socket did not show up.: No such file or directory' errors
+Author: Jamie Strandboge <jamie@ubuntu.com>
+Forwarded: no
+diff -Naurp libvirt-1.1.1.orig/src/qemu/qemu_monitor.c libvirt-1.1.1/src/qemu/qemu_monitor.c
+--- libvirt-1.1.1.orig/src/qemu/qemu_monitor.c	2013-07-30 07:21:31.000000000 +0000
++++ libvirt-1.1.1/src/qemu/qemu_monitor.c	2013-08-15 17:46:13.622736999 +0000
+@@ -261,7 +261,7 @@ qemuMonitorOpenUnix(const char *monitor,
+ {
+     struct sockaddr_un addr;
+     int monfd;
+-    int timeout = 3; /* In seconds */
++    int timeout = 30; /* In seconds */
+     int ret;
+     size_t i = 0;
+ 

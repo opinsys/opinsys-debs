@@ -1,0 +1,60 @@
+diff -Naurp libvirt-1.0.5.orig/tools/Makefile.am libvirt-1.0.5/tools/Makefile.am
+--- libvirt-1.0.5.orig/tools/Makefile.am	2013-04-22 19:30:47.000000000 -0500
++++ libvirt-1.0.5/tools/Makefile.am	2013-05-02 11:53:14.841771303 -0500
+@@ -6,7 +6,9 @@ INCLUDES = \
+ 	-I$(top_builddir)/gnulib/lib -I$(top_srcdir)/gnulib/lib	\
+ 	-I$(top_builddir)/src -I$(top_srcdir)/src		\
+ 	-I$(top_srcdir)/src/util				\
++	-I$(top_srcdir)/src/remote				\
+ 	-I$(top_srcdir)						\
++	-DLOCAL_STATE_DIR=\""$(localstatedir)"\"                \
+ 	$(GETTEXT_CPPFLAGS)
+ 
+ POD2MAN = pod2man -c "Virtualization Support" -r "$(PACKAGE)-$(VERSION)"
+diff -Naurp libvirt-1.0.5.orig/tools/Makefile.in libvirt-1.0.5/tools/Makefile.in
+--- libvirt-1.0.5.orig/tools/Makefile.in	2013-05-02 01:55:56.000000000 -0500
++++ libvirt-1.0.5/tools/Makefile.in	2013-05-02 11:53:14.845771303 -0500
+@@ -1854,7 +1854,9 @@ INCLUDES = \
+ 	-I$(top_builddir)/gnulib/lib -I$(top_srcdir)/gnulib/lib	\
+ 	-I$(top_builddir)/src -I$(top_srcdir)/src		\
+ 	-I$(top_srcdir)/src/util				\
++	-I$(top_srcdir)/src/remote				\
+ 	-I$(top_srcdir)						\
++	-DLOCAL_STATE_DIR=\""$(localstatedir)"\"                \
+ 	$(GETTEXT_CPPFLAGS)
+ 
+ POD2MAN = pod2man -c "Virtualization Support" -r "$(PACKAGE)-$(VERSION)"
+diff -Naurp libvirt-1.0.5.orig/tools/virsh.c libvirt-1.0.5/tools/virsh.c
+--- libvirt-1.0.5.orig/tools/virsh.c	2013-05-01 21:18:51.000000000 -0500
++++ libvirt-1.0.5/tools/virsh.c	2013-05-02 11:53:14.845771303 -0500
+@@ -84,6 +84,8 @@
+ #include "virsh-snapshot.h"
+ #include "virsh-volume.h"
+ 
++#include "remote_driver.h"
++
+ static char *progname;
+ 
+ static const vshCmdGrp cmdGroups[];
+@@ -3191,14 +3193,18 @@ main(int argc, char **argv)
+ 
+     if ((defaultConn = getenv("VIRSH_DEFAULT_CONNECT_URI"))) {
+         ctl->name = vshStrdup(ctl, defaultConn);
+-    }
++    } else if (!access(LIBVIRTD_PRIV_UNIX_SOCKET, W_OK)) {
++		ctl->name = vshStrdup(ctl, "qemu:///system");
++	} else {
++		ctl->name = vshStrdup(ctl, "qemu:///session");
++	}
+ 
+-    if (!vshInit(ctl)) {
++    if (!vshParseArgv(ctl, argc, argv)) {
+         vshDeinit(ctl);
+         exit(EXIT_FAILURE);
+     }
+ 
+-    if (!vshParseArgv(ctl, argc, argv)) {
++    if (!vshInit(ctl)) {
+         vshDeinit(ctl);
+         exit(EXIT_FAILURE);
+     }

@@ -1,0 +1,153 @@
+#!/usr/bin/make -f
+
+DEB_BUILD_PARALLEL = yes
+export VIR_TEST_DEBUG=1
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/class/python-distutils.mk
+
+DEB_AUTO_UPDATE_AUTOCONF := 2.69
+DEB_AUTO_UPDATE_AUTOHEADER := 2.69
+
+ifneq (,$(findstring $(DEB_HOST_ARCH), i386 amd64))
+  DEB_MAKE_CHECK_TARGET = check
+  WITH_XEN = --with-xen
+else
+  WITH_XEN = --without-xen
+endif
+
+ifneq (,$(findstring $(DEB_HOST_ARCH_OS), linux))
+  WITH_STORAGE_LVM    = --with-storage-lvm
+  WITH_STORAGE_ISCSI  = --with-storage-iscsi
+  WITH_STORAGE_DISK   =	--with-storage-disk
+  WITH_STORAGE_SHEEP  = --with-storage-sheepdog
+  WITH_UDEV           = --with-udev --without-hal
+  WITH_CAPNG          = --with-capng
+  WITH_POLKIT         = --with-polkit
+  WITH_MACVTAP        = --with-macvtap
+  WITH_NETWORK        = --with-network
+  WITH_QEMU           = --with-qemu
+  WITH_OPENVZ         = --with-openvz
+  WITH_NETCF          = --with-netcf
+  WITH_AUDIT          = --with-audit
+  WITH_CEPH			  = --with-storage-rbd
+  ifneq (,$(findstring $(DEB_HOST_ARCH), amd64 i386 ia64 mips mipsel powerpc))
+      WITH_NUMA       = --with-numactl
+  else
+      WITH_NUMA       = --without-numactl
+  endif
+  ifneq (,$(findstring $(DEB_HOST_ARCH), ia64))
+      WITH_LXC        = --without-lxc
+  else
+      WITH_LXC        = --with-lxc
+  endif
+else
+  WITH_STORAGE_LVM    = --without-storage-lvm
+  WITH_STORAGE_ISCSI  = --without-storage-iscsi
+  WITH_STORAGE_DISK   =	--without-storage-disk
+  WITH_STORAGE_SHEEP  = --without-storage-sheepdog
+  WITH_UDEV           = --without-udev --with-hal
+  WITH_CAPNG          = --without-capng
+  WITH_POLKIT         = --without-polkit
+  WITH_MACVTAP        = --without-macvtap
+  WITH_NETWORK        = --without-network
+  WITH_QEMU           = --without-qemu
+  WITH_LXC            = --without-lxc
+  WITH_NUMA           = --without-numactl
+  WITH_NETCF          = --without-netcf
+  WITH_AUDIT          = --without-audit
+endif
+
+DEB_BUILDDIR := $(CURDIR)/debian/build
+DEB_CONFIGURE_SCRIPT_ENV := COLLIE=/usr/sbin/collie
+DEB_CONFIGURE_EXTRA_FLAGS :=     \
+	--disable-rpath          \
+	$(WITH_QEMU)		 \
+	--with-qemu-user=libvirt-qemu  \
+	--with-qemu-group=kvm    \
+        $(WITH_OPENVZ)		 \
+	--with-avahi             \
+	--with-sasl              \
+	--with-yajl              \
+	$(WITH_POLKIT)		 \
+	$(WITH_UDEV)		 \
+	--with-storage-fs        \
+	$(WITH_STORAGE_LVM)	 \
+	$(WITH_STORAGE_ISCSI)	 \
+	$(WITH_STORAGE_DISK)	 \
+	$(WITH_STORAGE_SHEEP)	 \
+	--with-init-script=none  \
+	$(WITH_NUMA)             \
+	--without-selinux        \
+	--without-esx		 \
+	--without-libssh2	 \
+	$(WITH_CAPNG)		 \
+	--enable-debug		 \
+	$(WITH_MACVTAP)		 \
+	$(WITH_NETWORK)		 \
+	$(WITH_NETCF)		 \
+	$(WITH_XEN)		 \
+	$(WITH_LXC)		 \
+	$(WITH_AUDIT)		 \
+	--with-apparmor		 \
+	--with-vbox
+
+DEB_COMPRESS_EXCLUDE = .o event-test hellolibvirt info1 suspend
+DEB_PYTHON_SETUP_CMD = /dev/null
+DEB_DH_MAKESHLIBS_ARGS_libvirt0 += -V 'libvirt0 (>= 0.5.0)'
+DEB_DH_INSTALLINIT_ARGS = --upstart-only
+DEB_PYTHON_MODULE_PACKAGE = python-libvirt
+
+LOGROTATE = $(basename $(basename $(notdir $(wildcard daemon/libvirtd*.logrotate.in))))
+EXAMPLES_DIR = $(CURDIR)/debian/libvirt-doc/usr/share/doc/libvirt-doc/examples/
+
+include debian/python.mk
+
+binary-install/libvirt-bin::
+	#cp $(CURDIR)/tools/libvirt-guests.init.sh $(CURDIR)/debian/libvirt-bin.libvirt-guests.init
+	#cp $(CURDIR)/tools/libvirt-guests.sysconf $(CURDIR)/debian/libvirt-bin.libvirt-guests.default
+	#dh_installinit --name=libvirt-guests --no-restart-on-upgrade -- defaults 29 71
+	rm debian/libvirt-bin/usr/lib/libvirt/connection-driver/*.la
+
+	for l in $(LOGROTATE); do \
+		cp $(CURDIR)/debian/build/daemon/$$l.logrotate \
+                   debian/libvirt-bin.$$l.logrotate; \
+		dh_installlogrotate --name=$$l;     \
+	done
+
+build/libvirt-bin::
+	# Add empty dir so dh_install doesn't fail on kFreebsd until we have Polkit support
+	mkdir -p debian/tmp/usr/share/polkit-1
+
+build/libvirt-bin::
+	# Add empty dir so dh_install doesn't fail on kFreebsd until we have Polkit support
+	mkdir -p debian/tmp/usr/share/polkit-1
+	mkdir -p debian/tmp/etc/apparmor.d/abstractions debian/tmp/etc/apparmor.d/libvirt
+	mkdir -p debian/tmp/etc/apparmor.d/local
+	cp -f debian/apparmor/libvirt-qemu debian/tmp/etc/apparmor.d/abstractions
+	cp -f debian/apparmor/usr.lib.libvirt.virt-aa-helper debian/tmp/etc/apparmor.d
+	cp -f debian/apparmor/usr.sbin.libvirtd debian/tmp/etc/apparmor.d
+	cp -f debian/apparmor/local-usr.sbin.libvirtd debian/tmp/etc/apparmor.d/local/usr.sbin.libvirtd
+	cp -f debian/apparmor/TEMPLATE debian/tmp/etc/apparmor.d/libvirt
+	mkdir -p debian/tmp/usr/share/apport/package-hooks
+	cp -f debian/libvirt-bin.apport debian/tmp/usr/share/apport/package-hooks/source_libvirt.py
+	mkdir -p debian/tmp/usr/sbin
+	cp -f debian/libvirt-migrate-qemu-disks debian/tmp/usr/sbin
+	cp -f debian/libvirt-migrate-qemu-machinetype debian/tmp/usr/sbin
+	# copy dnsmasq configuration
+	mkdir -p debian/tmp/etc/dnsmasq.d-available
+	cp debian/libvirt-bin.dnsmasq debian/tmp/etc/dnsmasq.d-available/libvirt-bin
+
+binary-install/libvirt-doc::
+	find $(EXAMPLES_DIR) -name "*.o" -type f -delete -o -name .libs -type d -exec rm -rf {} \;
+	rm -f $(EXAMPLES_DIR)domain-events/events-c/event-test
+	rm -f $(EXAMPLES_DIR)dominfo/info1
+	rm -f $(EXAMPLES_DIR)domsuspend/suspend
+	rm -f $(EXAMPLES_DIR)hellolibvirt/hellolibvirt
+
+clean::
+	#rm -f $(CURDIR)/debian/libvirt-bin.libvirt-guests.init
+	#rm -f $(CURDIR)/debian/libvirt-bin.libvirt-guests.default
+	rm -f $(CURDIR)/debian/libvirt-bin.*.logrotate
+	rm -rf $(DEB_BUILDDIR)

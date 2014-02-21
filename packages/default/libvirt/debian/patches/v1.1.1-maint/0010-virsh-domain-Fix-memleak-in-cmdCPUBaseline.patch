@@ -1,0 +1,34 @@
+From c0bfe18b8fda445a796db62503873ecf32212f16 Mon Sep 17 00:00:00 2001
+From: Peter Krempa <pkrempa@redhat.com>
+Date: Fri, 16 Aug 2013 10:33:30 +0200
+Subject: [PATCH 10/11] virsh-domain: Fix memleak in cmdCPUBaseline
+
+https://bugzilla.redhat.com/show_bug.cgi?id=997765
+
+==1349431== 8 bytes in 1 blocks are definitely lost in loss record 11 of 760
+==1349431==    at 0x4C2A554: calloc (vg_replace_malloc.c:593)
+==1349431==    by 0x4E9AA3E: virAllocN (in /usr/lib64/libvirt.so.0.1001.1)
+==1349431==    by 0x4EF28C4: virXPathNodeSet (in /usr/lib64/libvirt.so.0.1001.1)
+==1349431==    by 0x130B83: cmdCPUBaseline (in /usr/bin/virsh)
+==1349431==    by 0x12C608: vshCommandRun (in /usr/bin/virsh)
+==1349431==    by 0x12889A: main (in /usr/bin/virsh)
+(cherry picked from commit f4ec8616410cea2b7dbe4c535c81cf70162a2939)
+---
+ tools/virsh-domain.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/virsh-domain.c b/tools/virsh-domain.c
+index 57065e4..b275119 100644
+--- a/tools/virsh-domain.c
++++ b/tools/virsh-domain.c
+@@ -6235,6 +6235,7 @@ cleanup:
+     }
+     VIR_FREE(list);
+     VIR_FREE(buffer);
++    VIR_FREE(node_list);
+ 
+     return ret;
+ 
+-- 
+1.8.3.2
+

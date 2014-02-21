@@ -1,0 +1,99 @@
+From a5cfeac2cd9be972277420606d631555ed8d2103 Mon Sep 17 00:00:00 2001
+From: Eric Blake <eblake@redhat.com>
+Date: Wed, 7 Aug 2013 10:34:08 -0600
+Subject: [PATCH 06/11] build: more workarounds for if_bridge.h
+
+This is a second attempt at fixing the problem first attempted
+in commit 2df8d99; basically undoing the fact that it was
+reverted in commit 43cee32f, plus fixing two more issues: the
+code in configure.ac has to EXACTLY match virnetdevbridge.c
+with regards to declaring in6 types before using if_bridge.h,
+and the fact that RHEL 5 has even more conflicts:
+
+In file included from util/virnetdevbridge.c:49:
+/usr/include/linux/in6.h:47: error: conflicting types for 'in6addr_any'
+/usr/include/netinet/in.h:206: error: previous declaration of 'in6addr_any' was here
+/usr/include/linux/in6.h:49: error: conflicting types for 'in6addr_loopback'
+/usr/include/netinet/in.h:207: error: previous declaration of 'in6addr_loopback' was here
+
+The rest of this commit message borrows from the original try
+of 2df8d99:
+
+A fresh checkout on a RHEL 6 machine with these packages:
+kernel-headers-2.6.32-405.el6.x86_64
+glibc-2.12-1.128.el6.x86_64
+failed to configure with this message:
+checking for linux/if_bridge.h... no
+configure: error: You must install kernel-headers in order to compile libvirt with QEMU or LXC support
+
+Digging in config.log, we see that the problem is identical to
+what we fixed earlier in commit d12c2811:
+
+configure:98831: checking for linux/if_bridge.h
+configure:98853: gcc -std=gnu99 -c -g -O2  conftest.c >&5
+In file included from /usr/include/linux/if_bridge.h:17,
+                 from conftest.c:559:
+/usr/include/linux/in6.h:31: error: redefinition of 'struct in6_addr'
+/usr/include/linux/in6.h:48: error: redefinition of 'struct sockaddr_in6'
+/usr/include/linux/in6.h:56: error: redefinition of 'struct ipv6_mreq'
+configure:98860: $? = 1
+
+I had not hit it earlier because I was using incremental builds,
+where config.cache had shielded me from the kernel-headers breakage.
+
+* configure.ac (if_bridge.h): Avoid conflicting type definitions.
+* src/util/virnetdevbridge.c (includes): Also sanitize for RHEL 5.
+
+Signed-off-by: Eric Blake <eblake@redhat.com>
+(cherry picked from commit 70024dc9192038575ab5217ac35080b038e5b13e)
+---
+ configure.ac               | 12 +++++++++++-
+ src/util/virnetdevbridge.c |  4 ++++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 35a5d76..9b3dbd4 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -997,7 +997,17 @@ if test "$with_linux" = "yes"; then
+   if test "$with_qemu" = "yes" || test "$with_lxc" = "yes" ; then
+     AC_CHECK_HEADERS([linux/param.h linux/sockios.h linux/if_bridge.h linux/if_tun.h],,
+       [AC_MSG_ERROR([You must install kernel-headers in order to compile libvirt with QEMU or LXC support])],
+-      [[#include <netinet/in.h>
++      [[/* The kernel folks broke their headers when used with particular
++         * glibc versions; although the structs are ABI compatible, the
++         * C type system doesn't like struct redefinitions.  We work around
++         * the problem here in the same manner as in virnetdevbridge.c.  */
++        #include <netinet/in.h>
++        #define in6_addr in6_addr_
++        #define sockaddr_in6 sockaddr_in6_
++        #define ipv6_mreq ipv6_mreq_
++        #define in6addr_any in6addr_any_
++        #define in6addr_loopback in6addr_loopback_
++        #include <linux/in6.h>
+       ]])
+   fi
+ fi
+diff --git a/src/util/virnetdevbridge.c b/src/util/virnetdevbridge.c
+index 5d52e23..e4daa27 100644
+--- a/src/util/virnetdevbridge.c
++++ b/src/util/virnetdevbridge.c
+@@ -46,11 +46,15 @@
+ # define in6_addr in6_addr_
+ # define sockaddr_in6 sockaddr_in6_
+ # define ipv6_mreq ipv6_mreq_
++# define in6addr_any in6addr_any_
++# define in6addr_loopback in6addr_loopback_
+ # include <linux/in6.h>
+ # include <linux/if_bridge.h> /* SYSFS_BRIDGE_ATTR  */
+ # undef in6_addr
+ # undef sockaddr_in6
+ # undef ipv6_mreq
++# undef in6addr_any
++# undef in6addr_loopback
+ 
+ # define JIFFIES_TO_MS(j) (((j)*1000)/HZ)
+ # define MS_TO_JIFFIES(ms) (((ms)*HZ)/1000)
+-- 
+1.8.3.2
+

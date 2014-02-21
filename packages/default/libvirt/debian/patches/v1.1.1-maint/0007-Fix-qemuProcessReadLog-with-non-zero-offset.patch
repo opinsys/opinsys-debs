@@ -1,0 +1,42 @@
+From 42f971b1b4c9c48aaa9b708e2e6cfff8c4427765 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?J=C3=A1n=20Tomko?= <jtomko@redhat.com>
+Date: Thu, 15 Aug 2013 15:05:29 +0200
+Subject: [PATCH 07/11] Fix qemuProcessReadLog with non-zero offset
+
+This restores the error message when QMP probing is not used.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=991334
+(cherry picked from commit 9ceaaa08e9b2281a5b58ac2f896761b2703d8791)
+---
+ src/qemu/qemu_process.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/src/qemu/qemu_process.c b/src/qemu/qemu_process.c
+index d631a6f..fad2fe8 100644
+--- a/src/qemu/qemu_process.c
++++ b/src/qemu/qemu_process.c
+@@ -1435,18 +1435,17 @@ qemuProcessReadLog(int fd, char *buf, int buflen, int off)
+     ssize_t bytes;
+     char *eol;
+ 
+-    buf[0] = '\0';
+-
+     while (off < buflen - 1) {
+         bytes = saferead(fd, buf + off, buflen - off - 1);
+         if (bytes < 0)
+             return -1;
+-        else if (bytes == 0)
+-            break;
+ 
+         off += bytes;
+         buf[off] = '\0';
+ 
++        if (bytes == 0)
++            break;
++
+         /* Filter out debug messages from intermediate libvirt process */
+         while ((eol = strchr(filter_next, '\n'))) {
+             *eol = '\0';
+-- 
+1.8.3.2
+

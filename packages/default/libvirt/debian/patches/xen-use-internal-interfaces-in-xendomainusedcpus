@@ -1,0 +1,238 @@
+commit d7a45bf22368161869963b92a0a1d5599590fdf5
+Author: Stefan Bader <stefan.bader@canonical.com>
+Date:   Tue Aug 6 12:28:58 2013 +0100
+
+    xen: Use internal interfaces in xenDomainUsedCpus
+    
+    Since commit 95e18efd most public interfaces (xenUnified...) obtain
+    a virDomainDefPtr via xenGetDomainDefFor...() which take the unified
+    lock.
+    This is already taken before calling xenDomainUsedCpus(), so we get
+    a deadlock for active guests. Avoid this by splitting up
+    xenUnifiedDomainGetVcpusFlags() and xenUnifiedDomainGetVcpus() into
+    public and private function calls (which get the virDomainDefPtr passed)
+    and use those in xenDomainUsedCpus().
+    
+        xenDomainUsedCpus
+          ...
+          nb_vcpu = xenUnifiedDomainGetMaxVcpus(dom);
+            return xenUnifiedDomainGetVcpusFlags(...)
+              ...
+              if (!(def = xenGetDomainDefForDom(dom)))
+                return xenGetDomainDefForUUID(dom->conn, dom->uuid);
+                  ...
+                  ret = xenHypervisorLookupDomainByUUID(conn, uuid);
+                    ...
+                    xenUnifiedLock(priv);
+                    name = xenStoreDomainGetName(conn, id);
+                    xenUnifiedUnlock(priv);
+          ...
+          if ((ncpus = xenUnifiedDomainGetVcpus(dom, cpuinfo, nb_vcpu,
+            ...
+            if (!(def = xenGetDomainDefForDom(dom)))
+              [again like above]
+    
+    Signed-off-by: Stefan Bader <stefan.bader@canonical.com>
+
+diff --git a/src/xen/xen_driver.c b/src/xen/xen_driver.c
+index 4ae38d3..cb64de6 100644
+--- a/src/xen/xen_driver.c
++++ b/src/xen/xen_driver.c
+@@ -73,12 +73,19 @@
+ 
+ static int
+ xenUnifiedNodeGetInfo(virConnectPtr conn, virNodeInfoPtr info);
++
+ static int
+-xenUnifiedDomainGetMaxVcpus(virDomainPtr dom);
++xenUnifiedDomainGetVcpusFlagsInternal(virDomainPtr dom,
++                                      virDomainDefPtr def,
++                                      unsigned int flags);
++
+ static int
+-xenUnifiedDomainGetVcpus(virDomainPtr dom,
+-                         virVcpuInfoPtr info, int maxinfo,
+-                         unsigned char *cpumaps, int maplen);
++xenUnifiedDomainGetVcpusInternal(virDomainPtr dom,
++                                 virDomainDefPtr def,
++                                 virVcpuInfoPtr info,
++                                 int maxinfo,
++                                 unsigned char *cpumaps,
++                                 int maplen);
+ 
+ 
+ static bool is_privileged = false;
+@@ -173,6 +180,7 @@ xenNumaInit(virConnectPtr conn) {
+ /**
+  * xenDomainUsedCpus:
+  * @dom: the domain
++ * @def: the domain definition
+  *
+  * Analyze which set of CPUs are used by the domain and
+  * return a string providing the ranges.
+@@ -181,7 +189,7 @@ xenNumaInit(virConnectPtr conn) {
+  *         NULL if the domain uses all CPU or in case of error.
+  */
+ char *
+-xenDomainUsedCpus(virDomainPtr dom)
++xenDomainUsedCpus(virDomainPtr dom, virDomainDefPtr def)
+ {
+     char *res = NULL;
+     int ncpus;
+@@ -202,7 +210,9 @@ xenDomainUsedCpus(virDomainPtr dom)
+ 
+     if (priv->nbNodeCpus <= 0)
+         return NULL;
+-    nb_vcpu = xenUnifiedDomainGetMaxVcpus(dom);
++    nb_vcpu = xenUnifiedDomainGetVcpusFlagsInternal(dom, def,
++                                                    (VIR_DOMAIN_VCPU_LIVE |
++                                                     VIR_DOMAIN_VCPU_MAXIMUM));
+     if (nb_vcpu <= 0)
+         return NULL;
+     if (xenUnifiedNodeGetInfo(dom->conn, &nodeinfo) < 0)
+@@ -217,8 +227,8 @@ xenDomainUsedCpus(virDomainPtr dom)
+         VIR_ALLOC_N(cpumap, nb_vcpu * cpumaplen) < 0)
+         goto done;
+ 
+-    if ((ncpus = xenUnifiedDomainGetVcpus(dom, cpuinfo, nb_vcpu,
+-                                          cpumap, cpumaplen)) >= 0) {
++    if ((ncpus = xenUnifiedDomainGetVcpusInternal(dom, def, cpuinfo, nb_vcpu,
++                                                  cpumap, cpumaplen)) >= 0) {
+         for (n = 0; n < ncpus; n++) {
+             for (m = 0; m < priv->nbNodeCpus; m++) {
+                 bool used;
+@@ -1416,54 +1426,62 @@ cleanup:
+ }
+ 
+ static int
+-xenUnifiedDomainGetVcpus(virDomainPtr dom,
+-                         virVcpuInfoPtr info, int maxinfo,
+-                         unsigned char *cpumaps, int maplen)
++xenUnifiedDomainGetVcpusInternal(virDomainPtr dom,
++                                 virDomainDefPtr def,
++                                 virVcpuInfoPtr info,
++                                 int maxinfo,
++                                 unsigned char *cpumaps,
++                                 int maplen)
+ {
+     xenUnifiedPrivatePtr priv = dom->conn->privateData;
+-    virDomainDefPtr def = NULL;
+     int ret = -1;
+ 
+-    if (!(def = xenGetDomainDefForDom(dom)))
+-        goto cleanup;
+-
+-    if (virDomainGetVcpusEnsureACL(dom->conn, def) < 0)
+-        goto cleanup;
+-
+     if (dom->id < 0) {
+         if (priv->xendConfigVersion < XEND_CONFIG_VERSION_3_0_4) {
+             virReportError(VIR_ERR_INTERNAL_ERROR, "%s",
+                            _("Cannot get VCPUs of inactive domain"));
+-            goto cleanup;
+         } else {
+-            ret = xenDaemonDomainGetVcpus(dom->conn, def, info, maxinfo, cpumaps, maplen);
++            ret = xenDaemonDomainGetVcpus(dom->conn, def, info, maxinfo,
++                                          cpumaps, maplen);
+         }
+     } else {
+-        ret = xenHypervisorGetVcpus(dom->conn, def, info, maxinfo, cpumaps, maplen);
++        ret = xenHypervisorGetVcpus(dom->conn, def, info, maxinfo, cpumaps,
++                                    maplen);
+     }
+ 
+-cleanup:
+-    virDomainDefFree(def);
+     return ret;
+ }
+ 
+ static int
+-xenUnifiedDomainGetVcpusFlags(virDomainPtr dom, unsigned int flags)
++xenUnifiedDomainGetVcpus(virDomainPtr dom,
++                         virVcpuInfoPtr info, int maxinfo,
++                         unsigned char *cpumaps, int maplen)
+ {
+-    xenUnifiedPrivatePtr priv = dom->conn->privateData;
+     virDomainDefPtr def = NULL;
+     int ret = -1;
+ 
+-    virCheckFlags(VIR_DOMAIN_VCPU_LIVE |
+-                  VIR_DOMAIN_VCPU_CONFIG |
+-                  VIR_DOMAIN_VCPU_MAXIMUM, -1);
+-
+     if (!(def = xenGetDomainDefForDom(dom)))
+         goto cleanup;
+ 
+-    if (virDomainGetVcpusFlagsEnsureACL(dom->conn, def) < 0)
++    if (virDomainGetVcpusEnsureACL(dom->conn, def) < 0)
+         goto cleanup;
+ 
++    ret = xenUnifiedDomainGetVcpusInternal(dom, def, info, maxinfo, cpumaps,
++                                           maplen);
++
++cleanup:
++    virDomainDefFree(def);
++    return ret;
++}
++
++static int
++xenUnifiedDomainGetVcpusFlagsInternal(virDomainPtr dom,
++                                      virDomainDefPtr def,
++                                      unsigned int flags)
++{
++    xenUnifiedPrivatePtr priv = dom->conn->privateData;
++    int ret = -1;
++
+     if (dom->id < 0) {
+         if (priv->xendConfigVersion < XEND_CONFIG_VERSION_3_0_4)
+             ret = xenXMDomainGetVcpusFlags(dom->conn, def, flags);
+@@ -1476,6 +1494,27 @@ xenUnifiedDomainGetVcpusFlags(virDomainPtr dom, unsigned int flags)
+             ret = xenDaemonDomainGetVcpusFlags(dom->conn, def, flags);
+     }
+ 
++   return ret;
++}
++
++static int
++xenUnifiedDomainGetVcpusFlags(virDomainPtr dom, unsigned int flags)
++{
++    virDomainDefPtr def = NULL;
++    int ret = -1;
++
++    virCheckFlags(VIR_DOMAIN_VCPU_LIVE |
++                  VIR_DOMAIN_VCPU_CONFIG |
++                  VIR_DOMAIN_VCPU_MAXIMUM, -1);
++
++    if (!(def = xenGetDomainDefForDom(dom)))
++        goto cleanup;
++
++    if (virDomainGetVcpusFlagsEnsureACL(dom->conn, def) < 0)
++        goto cleanup;
++
++    ret = xenUnifiedDomainGetVcpusFlagsInternal(dom, def, flags);
++
+ cleanup:
+     virDomainDefFree(def);
+     return ret;
+@@ -1507,7 +1546,7 @@ xenUnifiedDomainGetXMLDesc(virDomainPtr dom, unsigned int flags)
+     } else {
+         char *cpus;
+         xenUnifiedLock(priv);
+-        cpus = xenDomainUsedCpus(dom);
++        cpus = xenDomainUsedCpus(dom, minidef);
+         xenUnifiedUnlock(priv);
+         def = xenDaemonDomainGetXMLDesc(dom->conn, minidef, cpus);
+         VIR_FREE(cpus);
+diff --git a/src/xen/xen_driver.h b/src/xen/xen_driver.h
+index 3c7a8cd..a363161 100644
+--- a/src/xen/xen_driver.h
++++ b/src/xen/xen_driver.h
+@@ -187,7 +187,7 @@ struct _xenUnifiedPrivate {
+ 
+ typedef struct _xenUnifiedPrivate *xenUnifiedPrivatePtr;
+ 
+-char *xenDomainUsedCpus(virDomainPtr dom);
++char *xenDomainUsedCpus(virDomainPtr dom, virDomainDefPtr def);
+ 
+ virDomainXMLOptionPtr xenDomainXMLConfInit(void);
+ 

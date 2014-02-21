@@ -1,0 +1,189 @@
+Description: add security hook for permitting hugetlbfs access
+ When a qemu domain is backed by huge pages, apparmor needs to grant the domain
+ rw access to files under the hugetlbfs mount point.  Add a hook, called in
+ qemu_process.c, which ends up adding the read-write access through
+ virt-aa-helper.  Qemu will be creating a randomly named file under the
+ mountpoint and unlinking it as soon as it has mmap()d it, therefore we
+ cannot predict the full pathname, but for the same reason it is generally
+ safe to provide access to $path/**.
+Author: Serge Hallyn <serge.hallyn@ubuntu.com>
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/libvirt/+bug/646468
+Forwarded: yes
+
+Index: libvirt/src/qemu/qemu_process.c
+===================================================================
+--- libvirt.orig/src/qemu/qemu_process.c	2012-12-06 11:50:48.354763986 -0600
++++ libvirt/src/qemu/qemu_process.c	2012-12-06 11:57:58.234773649 -0600
+@@ -3475,6 +3475,15 @@
+     }
+     virDomainAuditSecurityLabel(vm, true);
+ 
++    if (driver->hugepage_path && vm->def->mem.hugepage_backed) {
++        if (virSecurityManagerSetHugepages(driver->securityManager,
++                    vm->def, driver->hugepage_path) < 0) {
++            virReportError(VIR_ERR_INTERNAL_ERROR,
++                    "%s", _("Unable to set huge path in security driver"));
++            goto cleanup;
++        }
++    }
++
+     /* Ensure no historical cgroup for this VM is lying around bogus
+      * settings */
+     VIR_DEBUG("Ensuring no historical cgroup is lying around");
+Index: libvirt/src/security/security_apparmor.c
+===================================================================
+--- libvirt.orig/src/security/security_apparmor.c	2012-12-06 11:50:48.354763986 -0600
++++ libvirt/src/security/security_apparmor.c	2012-12-06 11:58:23.286774213 -0600
+@@ -840,6 +840,31 @@
+ }
+ 
+ static int
++ApparmorSetHugepages(virSecurityManagerPtr mgr,
++                        virDomainDefPtr def,
++                        const char *path)
++{
++    const virSecurityLabelDefPtr secdef =
++        virDomainDefGetSecurityLabelDef(def, SECURITY_APPARMOR_NAME);
++    int ret = -1;
++    virBuffer buf = VIR_BUFFER_INITIALIZER;
++    char *newpath;
++
++    if (!secdef)
++        return -1;
++
++    if (secdef->imagelabel == NULL)
++        return 0;
++
++    virBufferAsprintf(&buf, "%s/**", path);
++    newpath = virBufferCurrentContent(&buf);
++    if (newpath)
++        ret = reload_profile(mgr, def, newpath, true);
++    virBufferFreeAndReset(&buf);
++    return ret;
++}
++
++static int
+ AppArmorSetFDLabel(virSecurityManagerPtr mgr,
+                         virDomainDefPtr def,
+                         int fd)
+@@ -908,4 +933,6 @@
+ 
+     .domainSetSecurityImageFDLabel      = AppArmorSetFDLabel,
+     .domainSetSecurityTapFDLabel        = AppArmorSetFDLabel,
++
++    .domainSetSecurityHugepages         = ApparmorSetHugepages,
+ };
+Index: libvirt/src/security/security_manager.c
+===================================================================
+--- libvirt.orig/src/security/security_manager.c	2012-12-06 11:50:48.354763986 -0600
++++ libvirt/src/security/security_manager.c	2012-12-06 11:57:58.238773649 -0600
+@@ -511,3 +511,13 @@
+     list[1] = NULL;
+     return list;
+ }
++
++int virSecurityManagerSetHugepages(virSecurityManagerPtr mgr,
++                                    virDomainDefPtr vm,
++                                    const char *path)
++{
++    if (mgr->drv->domainSetSecurityHugepages)
++        return mgr->drv->domainSetSecurityHugepages(mgr, vm, path);
++
++    return 0;
++}
+Index: libvirt/src/security/security_manager.h
+===================================================================
+--- libvirt.orig/src/security/security_manager.h	2012-12-06 11:50:48.354763986 -0600
++++ libvirt/src/security/security_manager.h	2012-12-06 11:57:58.238773649 -0600
+@@ -112,5 +112,8 @@
+                                               virDomainDefPtr vm);
+ virSecurityManagerPtr*
+ virSecurityManagerGetNested(virSecurityManagerPtr mgr);
++int virSecurityManagerSetHugepages(virSecurityManagerPtr mgr,
++                                  virDomainDefPtr sec,
++                                  const char *hugepages_path);
+ 
+ #endif /* VIR_SECURITY_MANAGER_H__ */
+Index: libvirt/src/security/security_driver.h
+===================================================================
+--- libvirt.orig/src/security/security_driver.h	2012-12-06 11:50:48.354763986 -0600
++++ libvirt/src/security/security_driver.h	2012-12-06 11:57:58.238773649 -0600
+@@ -100,6 +100,9 @@
+                                                int fd);
+ typedef char *(*virSecurityDomainGetMountOptions) (virSecurityManagerPtr mgr,
+                                                          virDomainDefPtr def);
++typedef int (*virSecurityDomainSetHugepages) (virSecurityManagerPtr mgr,
++                                                         virDomainDefPtr def,
++                                                         const char *path);
+ 
+ struct _virSecurityDriver {
+     size_t privateDataLen;
+@@ -140,6 +143,7 @@
+     virSecurityDomainSetTapFDLabel domainSetSecurityTapFDLabel;
+ 
+     virSecurityDomainGetMountOptions domainGetSecurityMountOptions;
++    virSecurityDomainSetHugepages domainSetSecurityHugepages;
+ };
+ 
+ virSecurityDriverPtr virSecurityDriverLookup(const char *name,
+Index: libvirt/src/libvirt_private.syms
+===================================================================
+--- libvirt.orig/src/libvirt_private.syms	2012-12-06 11:50:48.354763986 -0600
++++ libvirt/src/libvirt_private.syms	2012-12-06 11:57:58.238773649 -0600
+@@ -1052,6 +1052,7 @@
+ virSecurityManagerStackAddNested;
+ virSecurityManagerVerify;
+ virSecurityManagerGetMountOptions;
++virSecurityManagerSetHugepages;
+ 
+ # sexpr.h
+ sexpr_append;
+Index: libvirt/src/security/security_stack.c
+===================================================================
+--- libvirt.orig/src/security/security_stack.c	2012-12-06 11:50:48.354763986 -0600
++++ libvirt/src/security/security_stack.c	2012-12-06 11:57:58.238773649 -0600
+@@ -462,6 +462,23 @@
+     return rc;
+ }
+ 
++static int
++virSecurityStackSetHugepages(virSecurityManagerPtr mgr,
++                              virDomainDefPtr vm,
++                              const char *path)
++{
++    virSecurityStackDataPtr priv = virSecurityManagerGetPrivateData(mgr);
++    virSecurityStackItemPtr item = priv->itemsHead;
++    int rc = 0;
++
++    for (; item; item = item->next) {
++        if (virSecurityManagerSetHugepages(item->securityManager, vm, path) < 0)
++            rc = -1;
++    }
++
++    return rc;
++}
++
+ static char *virSecurityStackGetMountOptions(virSecurityManagerPtr mgr ATTRIBUTE_UNUSED,
+                                              virDomainDefPtr vm ATTRIBUTE_UNUSED) {
+     return NULL;
+@@ -529,4 +546,6 @@
+     .domainSetSecurityTapFDLabel        = virSecurityStackSetTapFDLabel,
+ 
+     .domainGetSecurityMountOptions      = virSecurityStackGetMountOptions,
++
++    .domainSetSecurityHugepages         = virSecurityStackSetHugepages,
+ };
+Index: libvirt/tests/virt-aa-helper-test
+===================================================================
+--- libvirt.orig/tests/virt-aa-helper-test	2012-12-05 16:37:34.027369000 -0600
++++ libvirt/tests/virt-aa-helper-test	2012-12-11 13:59:23.103803317 -0600
+@@ -316,6 +316,9 @@
+ sed -e "s,###UUID###,$uuid,g" -e "s,###DISK###,$disk1,g" -e "s,<graphics*,<graphics type='sdl' display=':0.0' xauth='/home/myself/.Xauthority'/>,g" "$template_xml" > "$test_xml"
+ testme "0" "sdl Xauthority" "-r -u $valid_uuid" "$test_xml"
+ 
++sed -e "s,###UUID###,$uuid,g" -e "s,###DISK###,$disk1,g" "$template_xml" > "$test_xml"
++testme "0" "hugepages" "-r -u $valid_uuid -F /run/hugepages/kvm/\*\*" "$test_xml"
++
+ testme "0" "help" "-h"
+ 
+ echo "" >$output

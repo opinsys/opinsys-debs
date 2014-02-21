@@ -1,0 +1,196 @@
+#!/bin/bash
+#
+# libvirt-migrate-qemu-machinetype
+#
+# Author: Jamie Strandboge <jamie@canonical.com>
+# Copyright 2010 Canonical Ltd.
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License version 3,
+#    as published by the Free Software Foundation.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# This script probes qemu VMs and migrates the machine type to pc-1.0 if
+# it is pc-0.12
+
+set -e
+
+debug() {
+    test "$debug" = "yes" && echo "DEBUG: $*" >&2 || true
+}
+
+help() {
+    cat << EOM
+USAGE:
+libvirt-migrate-qemu-machinetype -a [-o TYPE] [-t TYPE]
+libvirt-migrate-qemu-machinetype [-o TYPE] [-t TYPE] vm1 vm2...
+
+ -c		connect URI (defaults to qemu:///system)
+ -a		probe all domains and migrate if necessary
+ -o TYPE	migrate specified domains FROM machine type TYPE
+ -t TYPE	migrate specified domains to machine type TYPE
+
+Default old type is pc-0.12.
+Default new type is pc (which is aliased to the newest type).
+EOM
+}
+
+wait_for_libvirtd() {
+    # Used to make sure libvirtd is responding
+    virsh -c $connect capabilities >/dev/null 2>&1
+    rm -f "$1"
+}
+
+migrate_vm() {
+    dir="$1"        # stampdir
+    vm="$2"         # vm name
+    oldformat="$3"  # old machine type
+    newformat="$4"  # new machine type
+
+    migrate=""
+    found=
+    in_os=
+    fn="$dir/$vm.xml"
+
+    virsh -c $connect dumpxml "$vm" 2>/dev/null > $fn
+    sed -i "s@machine='$oldformat'@machine='$newformat'@" $fn
+    virsh -c $connect define "$fn" >/dev/null
+    rm -rf "$dir"
+}
+
+connect="qemu:///system"
+do_all=
+debug=
+oldtype="pc-0.12"
+type="pc"
+while getopts adc:o:t: f ; do
+    case "$f" in
+        a) do_all="yes";;
+        c) connect=$OPTARG;;
+        d) debug="yes";;
+        o) oldtype=$OPTARG;;
+        t) type=$OPTARG;;
+        \?) help; exit 1;;
+    esac
+done
+shift `expr $OPTIND - 1`
+
+type kvm 2>/dev/null > /dev/null
+if [ $? -ne 0 ]; then
+    echo "qemu-kvm is not installed"
+    exit 1
+fi
+mtypes=`kvm -M ? | tail -n +1 | awk '{ print $1 }'`
+
+mtypesp=`echo $mtypes | sed -e 's/ /|/g'`
+if [ -n "$type" ] && ! echo "$type" | egrep -q "^($mtypesp)$" ; then
+    echo "'$type' is not supported. See 'man qemu-img' for details." >&2
+    exit 1
+fi
+
+if [ "$connect" != "qemu:///system" ] && [ "$connect" != "qemu:///session" ]; then
+    echo "Only qemu:///system and qemu:///session is supported" >&2
+    exit 1
+fi
+
+xml_dir="/etc/libvirt/qemu"
+if [ "$connect" = "qemu:///session" ]; then
+    xml_dir="$HOME/.libvirt/qemu"
+fi
+
+vms=
+if [ "$do_all" = "yes" ]; then
+    # grab these from /etc/libvirt/qemu/*xml rather than virsh, since it
+    # is a) the qemu driver that changed and b) virsh could hang
+    cd "$xml_dir"
+    vms=`ls -1 *.xml 2>/dev/null | sed 's/\.xml$//'`
+    if [ -z "$vms" ]; then
+        debug "no VMs to migrate"
+        exit 0
+    fi
+    cd - >/dev/null
+else
+    vms="$*"
+fi
+
+if [ -z "$vms" ]; then
+    help
+    exit 1
+fi
+
+mypid="$$"
+script=`basename $0`
+
+# Alas, we need to make sure libvirtd is not only running, but responding to
+# requests, otherwise migrate_vm() will fail for the first few VMs.
+if [ "$connect" = "qemu:///system" ]; then
+    pidfile="/var/run/libvirtd.pid"
+
+    # Wait up to 10 seconds for libvirtd to come up before bailing.
+    echo "Waiting up to 10 seconds for libvirtd to start... "
+    count=0
+    while [ ! -e "$pidfile" ]; do
+        if [ $count -gt 100 ]; then
+            break
+        fi
+        sleep 0.1
+        count=$((count+1))
+    done
+    if [ ! -e "$pidfile" ]; then
+        echo "Aborting. '$pidfile' does not exist. Is libvirtd running?"
+        exit 1
+    fi
+
+    stamp=`mktemp`
+    wait_for_libvirtd "$stamp" &
+
+    # Wait up to 30 seconds for libvirtd to respond before bailing.
+    echo "Waiting up to 30 seconds for libvirtd to respond to requests... "
+    count=0
+    while [ -e "$stamp" ]; do
+        if [ $count -gt 300 ]; then
+            break
+        fi
+        sleep 0.1
+        count=$((count+1))
+    done
+    if [ -e "$stamp" ]; then
+        echo "libvirtd is not responding. Aborting"
+        kill `ps a | grep "/bin/sh .*libvirt-migrate-qemu-machinetype" | grep -v "$mypid" | awk '{print $1}'` 2>/dev/null || true
+        rm -f "$stamp"
+        exit 1
+    fi
+fi
+echo "Checking domains defined in $xml_dir... "
+
+for i in $vms ; do
+    debug "checking $i"
+    stampdir=`mktemp -d`
+
+    migrate_vm "$stampdir" "$i" "$oldtype" "$type" &
+
+    count=0
+    while [ -d "$stampdir" ]; do
+        debug $count
+        if [ $count -gt 100 ]; then
+            break
+        fi
+        sleep 0.1
+        count=$((count+1))
+    done
+    if [ -d "$stampdir" ]; then
+        echo "migrate_vm \"$i\" is not responding. Aborting"
+        kill `ps a | grep "/bin/sh .*libvirt-migrate-qemu-machinetype" | grep -v "$mypid" | awk '{print $1}'` 2>/dev/null || true
+        rm -rf "$stampdir"
+    fi
+done
+
+echo "Migration complete"

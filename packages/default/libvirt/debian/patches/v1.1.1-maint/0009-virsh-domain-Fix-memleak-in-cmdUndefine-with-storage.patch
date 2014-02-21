@@ -1,0 +1,48 @@
+From 522656bea15263ab90360eefe189dee655e37921 Mon Sep 17 00:00:00 2001
+From: Peter Krempa <pkrempa@redhat.com>
+Date: Mon, 12 Aug 2013 16:09:53 +0200
+Subject: [PATCH 09/11] virsh-domain: Fix memleak in cmdUndefine with storage
+
+When undefining a domain with storage when the volume isn't managed by
+libvirt the name and path strings weren't freed properly.
+
+Resolves: https://bugzilla.redhat.com/show_bug.cgi?id=996050
+(cherry picked from commit 5075248ac9e60dd73da3487f83be9aa188200688)
+---
+ tools/virsh-domain.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/tools/virsh-domain.c b/tools/virsh-domain.c
+index 8cafce4..57065e4 100644
+--- a/tools/virsh-domain.c
++++ b/tools/virsh-domain.c
+@@ -3048,6 +3048,8 @@ cmdUndefine(vshControl *ctl, const vshCmd *cmd)
+ 
+         for (i = 0; i < nvolumes; i++) {
+             ctxt->node = vol_nodes[i];
++            VIR_FREE(source);
++            VIR_FREE(target);
+ 
+             /* get volume source and target paths */
+             if (!(target = virXPathString("string(./target/@dev)", ctxt)))
+@@ -3090,6 +3092,8 @@ cmdUndefine(vshControl *ctl, const vshCmd *cmd)
+             }
+             vlist[nvols].source = source;
+             vlist[nvols].target = target;
++            source = NULL;
++            target = NULL;
+             nvols++;
+         }
+ 
+@@ -3189,6 +3193,8 @@ out:
+     }
+ 
+ cleanup:
++    VIR_FREE(source);
++    VIR_FREE(target);
+     for (i = 0; i < nvols; i++) {
+         VIR_FREE(vlist[i].source);
+         VIR_FREE(vlist[i].target);
+-- 
+1.8.3.2
+

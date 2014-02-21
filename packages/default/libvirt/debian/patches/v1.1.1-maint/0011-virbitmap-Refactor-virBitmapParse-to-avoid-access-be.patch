@@ -1,0 +1,126 @@
+From 02340c7f67c381395aeede4586bd3b1ff3f5d291 Mon Sep 17 00:00:00 2001
+From: Peter Krempa <pkrempa@redhat.com>
+Date: Fri, 16 Aug 2013 12:22:32 +0200
+Subject: [PATCH 11/11] virbitmap: Refactor virBitmapParse to avoid access
+ beyond bounds of array
+
+The virBitmapParse function was calling virBitmapIsSet() function that
+requires the caller to check the bounds of the bitmap without checking
+them. This resulted into crashes when parsing a bitmap string that was
+exceeding the bounds used as argument.
+
+This patch refactors the function to use virBitmapSetBit without
+checking if the bit is set (this function does the checks internally)
+and then counts the bits in the bitmap afterwards (instead of keeping
+track while parsing the string).
+
+This patch also changes the "parse_error" label to a more common
+"error".
+
+The refactor should also get rid of the need to call sa_assert on the
+returned variable as the callpath should allow coverity to infer the
+possible return values.
+
+Resolves: https://bugzilla.redhat.com/show_bug.cgi?id=997367
+
+Thanks to Alex Jia for tracking down the issue. This issue is introduced
+by commit 0fc8909.
+(cherry picked from commit 47b9127e883677a0d60d767030a147450e919a25)
+---
+ src/util/virbitmap.c | 38 +++++++++++++++-----------------------
+ 1 file changed, 15 insertions(+), 23 deletions(-)
+
+diff --git a/src/util/virbitmap.c b/src/util/virbitmap.c
+index 7e1cd02..47c678e 100644
+--- a/src/util/virbitmap.c
++++ b/src/util/virbitmap.c
+@@ -297,7 +297,6 @@ virBitmapParse(const char *str,
+                virBitmapPtr *bitmap,
+                size_t bitmapSize)
+ {
+-    int ret = 0;
+     bool neg = false;
+     const char *cur;
+     char *tmp;
+@@ -330,12 +329,12 @@ virBitmapParse(const char *str,
+         }
+ 
+         if (!c_isdigit(*cur))
+-            goto parse_error;
++            goto error;
+ 
+         if (virStrToLong_i(cur, &tmp, 10, &start) < 0)
+-            goto parse_error;
++            goto error;
+         if (start < 0)
+-            goto parse_error;
++            goto error;
+ 
+         cur = tmp;
+ 
+@@ -343,35 +342,29 @@ virBitmapParse(const char *str,
+ 
+         if (*cur == ',' || *cur == 0 || *cur == terminator) {
+             if (neg) {
+-                if (virBitmapIsSet(*bitmap, start)) {
+-                    ignore_value(virBitmapClearBit(*bitmap, start));
+-                    ret--;
+-                }
++                if (virBitmapClearBit(*bitmap, start) < 0)
++                    goto error;
+             } else {
+-                if (!virBitmapIsSet(*bitmap, start)) {
+-                    ignore_value(virBitmapSetBit(*bitmap, start));
+-                    ret++;
+-                }
++                if (virBitmapSetBit(*bitmap, start) < 0)
++                    goto error;
+             }
+         } else if (*cur == '-') {
+             if (neg)
+-                goto parse_error;
++                goto error;
+ 
+             cur++;
+             virSkipSpaces(&cur);
+ 
+             if (virStrToLong_i(cur, &tmp, 10, &last) < 0)
+-                goto parse_error;
++                goto error;
+             if (last < start)
+-                goto parse_error;
++                goto error;
+ 
+             cur = tmp;
+ 
+             for (i = start; i <= last; i++) {
+-                if (!virBitmapIsSet(*bitmap, i)) {
+-                    ignore_value(virBitmapSetBit(*bitmap, i));
+-                    ret++;
+-                }
++                if (virBitmapSetBit(*bitmap, i) < 0)
++                    goto error;
+             }
+ 
+             virSkipSpaces(&cur);
+@@ -384,14 +377,13 @@ virBitmapParse(const char *str,
+         } else if (*cur == 0 || *cur == terminator) {
+             break;
+         } else {
+-            goto parse_error;
++            goto error;
+         }
+     }
+ 
+-    sa_assert(ret >= 0);
+-    return ret;
++    return virBitmapCountBits(*bitmap);
+ 
+-parse_error:
++error:
+     virBitmapFree(*bitmap);
+     *bitmap = NULL;
+     return -1;
+-- 
+1.8.3.2
+

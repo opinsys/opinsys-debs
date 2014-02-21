@@ -1,0 +1,231 @@
+Description: Make hvmloader and qemu-dm paths relative
+ This is a refresh for the patch of the same name we were already
+ carrying but did just replace absolute paths by other absolute
+ ones which broke again.
+Forwarded: not-needed
+Origin: vendor, https://launchpadlibrarian.net/117536009/fix-ubuntu-xen-qemu-dm-path.patch
+Bug-Ubuntu: http://bugs.launchpad.net/bugs/914788
+Author: George Dunlap <george.dunlap@eu.citrix.com>
+Index: libvirt-1.0.2/src/xen/xen_hypervisor.c
+===================================================================
+--- libvirt-1.0.2.orig/src/xen/xen_hypervisor.c	2013-02-19 14:52:12.000000000 +0100
++++ libvirt-1.0.2/src/xen/xen_hypervisor.c	2013-02-19 14:57:30.945403666 +0100
+@@ -2360,10 +2360,10 @@ xenHypervisorBuildCapabilities(virConnec
+                                              guest_archs[i].hvm ? "hvm" : "xen",
+                                              guest_archs[i].arch,
+                                              (hostarch == VIR_ARCH_X86_64 ?
+-                                              "/usr/lib64/xen/bin/qemu-dm" :
+-                                              "/usr/lib/xen/bin/qemu-dm"),
++                                              "qemu-dm" :
++                                              "qemu-dm"),
+                                              (guest_archs[i].hvm ?
+-                                              "/usr/lib/xen-default/boot/hvmloader" :
++                                              "hvmloader" :
+                                               NULL),
+                                              1,
+                                              machines)) == NULL) {
+Index: libvirt-1.0.2/tests/xencapsdata/xen-x86_64-hvm.xml
+===================================================================
+--- libvirt-1.0.2.orig/tests/xencapsdata/xen-x86_64-hvm.xml	2013-02-19 14:52:12.000000000 +0100
++++ libvirt-1.0.2/tests/xencapsdata/xen-x86_64-hvm.xml	2013-02-19 14:55:43.404877927 +0100
+@@ -20,7 +20,7 @@
+     <os_type>xen</os_type>
+     <arch name='x86_64'>
+       <wordsize>64</wordsize>
+-      <emulator>/usr/lib64/xen/bin/qemu-dm</emulator>
++      <emulator>qemu-dm</emulator>
+       <machine>xenpv</machine>
+       <domain type='xen'>
+       </domain>
+@@ -31,8 +31,8 @@
+     <os_type>hvm</os_type>
+     <arch name='i686'>
+       <wordsize>32</wordsize>
+-      <emulator>/usr/lib64/xen/bin/qemu-dm</emulator>
+-      <loader>/usr/lib/xen-default/boot/hvmloader</loader>
++      <emulator>qemu-dm</emulator>
++      <loader>hvmloader</loader>
+       <machine>xenfv</machine>
+       <domain type='xen'>
+       </domain>
+@@ -49,8 +49,8 @@
+     <os_type>hvm</os_type>
+     <arch name='x86_64'>
+       <wordsize>64</wordsize>
+-      <emulator>/usr/lib64/xen/bin/qemu-dm</emulator>
+-      <loader>/usr/lib/xen-default/boot/hvmloader</loader>
++      <emulator>qemu-dm</emulator>
++      <loader>hvmloader</loader>
+       <machine>xenfv</machine>
+       <domain type='xen'>
+       </domain>
+Index: libvirt-1.0.2/tests/xencapsdata/xen-ia64-be-hvm.xml
+===================================================================
+--- libvirt-1.0.2.orig/tests/xencapsdata/xen-ia64-be-hvm.xml	2013-02-19 14:52:12.000000000 +0100
++++ libvirt-1.0.2/tests/xencapsdata/xen-ia64-be-hvm.xml	2013-02-19 14:55:43.404877927 +0100
+@@ -17,7 +17,7 @@
+     <os_type>xen</os_type>
+     <arch name='ia64'>
+       <wordsize>64</wordsize>
+-      <emulator>/usr/lib/xen/bin/qemu-dm</emulator>
++      <emulator>qemu-dm</emulator>
+       <machine>xenpv</machine>
+       <domain type='xen'>
+       </domain>
+@@ -31,8 +31,8 @@
+     <os_type>hvm</os_type>
+     <arch name='ia64'>
+       <wordsize>64</wordsize>
+-      <emulator>/usr/lib/xen/bin/qemu-dm</emulator>
+-      <loader>/usr/lib/xen-default/boot/hvmloader</loader>
++      <emulator>qemu-dm</emulator>
++      <loader>hvmloader</loader>
+       <machine>xenfv</machine>
+       <domain type='xen'>
+       </domain>
+Index: libvirt-1.0.2/tests/xencapsdata/xen-ia64-be.xml
+===================================================================
+--- libvirt-1.0.2.orig/tests/xencapsdata/xen-ia64-be.xml	2011-11-30 12:22:12.000000000 +0100
++++ libvirt-1.0.2/tests/xencapsdata/xen-ia64-be.xml	2013-02-19 14:55:43.404877927 +0100
+@@ -17,7 +17,7 @@
+     <os_type>xen</os_type>
+     <arch name='ia64'>
+       <wordsize>64</wordsize>
+-      <emulator>/usr/lib/xen/bin/qemu-dm</emulator>
++      <emulator>qemu-dm</emulator>
+       <machine>xenpv</machine>
+       <domain type='xen'>
+       </domain>
+Index: libvirt-1.0.2/tests/xencapsdata/xen-ia64.xml
+===================================================================
+--- libvirt-1.0.2.orig/tests/xencapsdata/xen-ia64.xml	2011-11-30 12:22:12.000000000 +0100
++++ libvirt-1.0.2/tests/xencapsdata/xen-ia64.xml	2013-02-19 14:55:43.404877927 +0100
+@@ -17,7 +17,7 @@
+     <os_type>xen</os_type>
+     <arch name='ia64'>
+       <wordsize>64</wordsize>
+-      <emulator>/usr/lib/xen/bin/qemu-dm</emulator>
++      <emulator>qemu-dm</emulator>
+       <machine>xenpv</machine>
+       <domain type='xen'>
+       </domain>
+Index: libvirt-1.0.2/tests/xencapsdata/xen-ppc64.xml
+===================================================================
+--- libvirt-1.0.2.orig/tests/xencapsdata/xen-ppc64.xml	2011-11-30 12:22:12.000000000 +0100
++++ libvirt-1.0.2/tests/xencapsdata/xen-ppc64.xml	2013-02-19 14:55:43.404877927 +0100
+@@ -17,7 +17,7 @@
+     <os_type>xen</os_type>
+     <arch name='ppc64'>
+       <wordsize>64</wordsize>
+-      <emulator>/usr/lib/xen/bin/qemu-dm</emulator>
++      <emulator>qemu-dm</emulator>
+       <machine>xenpv</machine>
+       <domain type='xen'>
+       </domain>
+Index: libvirt-1.0.2/tests/xencapsdata/xen-x86_64.xml
+===================================================================
+--- libvirt-1.0.2.orig/tests/xencapsdata/xen-x86_64.xml	2011-11-30 12:22:12.000000000 +0100
++++ libvirt-1.0.2/tests/xencapsdata/xen-x86_64.xml	2013-02-19 14:55:43.408877953 +0100
+@@ -20,7 +20,7 @@
+     <os_type>xen</os_type>
+     <arch name='x86_64'>
+       <wordsize>64</wordsize>
+-      <emulator>/usr/lib64/xen/bin/qemu-dm</emulator>
++      <emulator>qemu-dm</emulator>
+       <machine>xenpv</machine>
+       <domain type='xen'>
+       </domain>
+Index: libvirt-1.0.2/tests/xencapsdata/xen-i686-pae.xml
+===================================================================
+--- libvirt-1.0.2.orig/tests/xencapsdata/xen-i686-pae.xml	2011-11-30 12:22:12.000000000 +0100
++++ libvirt-1.0.2/tests/xencapsdata/xen-i686-pae.xml	2013-02-19 14:55:43.408877953 +0100
+@@ -20,7 +20,7 @@
+     <os_type>xen</os_type>
+     <arch name='i686'>
+       <wordsize>32</wordsize>
+-      <emulator>/usr/lib/xen/bin/qemu-dm</emulator>
++      <emulator>qemu-dm</emulator>
+       <machine>xenpv</machine>
+       <domain type='xen'>
+       </domain>
+Index: libvirt-1.0.2/tests/xencapsdata/xen-i686-pae-hvm.xml
+===================================================================
+--- libvirt-1.0.2.orig/tests/xencapsdata/xen-i686-pae-hvm.xml	2013-02-19 14:52:12.000000000 +0100
++++ libvirt-1.0.2/tests/xencapsdata/xen-i686-pae-hvm.xml	2013-02-19 14:55:43.412877966 +0100
+@@ -20,7 +20,7 @@
+     <os_type>xen</os_type>
+     <arch name='i686'>
+       <wordsize>32</wordsize>
+-      <emulator>/usr/lib/xen/bin/qemu-dm</emulator>
++      <emulator>qemu-dm</emulator>
+       <machine>xenpv</machine>
+       <domain type='xen'>
+       </domain>
+@@ -34,8 +34,8 @@
+     <os_type>hvm</os_type>
+     <arch name='i686'>
+       <wordsize>32</wordsize>
+-      <emulator>/usr/lib/xen/bin/qemu-dm</emulator>
+-      <loader>/usr/lib/xen-default/boot/hvmloader</loader>
++      <emulator>qemu-dm</emulator>
++      <loader>hvmloader</loader>
+       <machine>xenfv</machine>
+       <domain type='xen'>
+       </domain>
+Index: libvirt-1.0.2/tests/xencapsdata/xen-ia64-hvm.xml
+===================================================================
+--- libvirt-1.0.2.orig/tests/xencapsdata/xen-ia64-hvm.xml	2013-02-19 14:52:12.000000000 +0100
++++ libvirt-1.0.2/tests/xencapsdata/xen-ia64-hvm.xml	2013-02-19 14:55:43.412877966 +0100
+@@ -17,7 +17,7 @@
+     <os_type>xen</os_type>
+     <arch name='ia64'>
+       <wordsize>64</wordsize>
+-      <emulator>/usr/lib/xen/bin/qemu-dm</emulator>
++      <emulator>qemu-dm</emulator>
+       <machine>xenpv</machine>
+       <domain type='xen'>
+       </domain>
+@@ -28,8 +28,8 @@
+     <os_type>hvm</os_type>
+     <arch name='ia64'>
+       <wordsize>64</wordsize>
+-      <emulator>/usr/lib/xen/bin/qemu-dm</emulator>
+-      <loader>/usr/lib/xen-default/boot/hvmloader</loader>
++      <emulator>qemu-dm</emulator>
++      <loader>hvmloader</loader>
+       <machine>xenfv</machine>
+       <domain type='xen'>
+       </domain>
+Index: libvirt-1.0.2/tests/xencapsdata/xen-i686.xml
+===================================================================
+--- libvirt-1.0.2.orig/tests/xencapsdata/xen-i686.xml	2011-11-30 12:22:12.000000000 +0100
++++ libvirt-1.0.2/tests/xencapsdata/xen-i686.xml	2013-02-19 14:55:43.412877966 +0100
+@@ -17,7 +17,7 @@
+     <os_type>xen</os_type>
+     <arch name='i686'>
+       <wordsize>32</wordsize>
+-      <emulator>/usr/lib/xen/bin/qemu-dm</emulator>
++      <emulator>qemu-dm</emulator>
+       <machine>xenpv</machine>
+       <domain type='xen'>
+       </domain>
+Index: libvirt-1.0.2/docs/schemas/capability.rng
+===================================================================
+--- libvirt-1.0.2.orig/docs/schemas/capability.rng	2013-01-24 17:18:58.000000000 +0100
++++ libvirt-1.0.2/docs/schemas/capability.rng	2013-02-19 14:55:43.412877966 +0100
+@@ -253,13 +253,13 @@
+ 
+   <define name='emulator'>
+     <element name='emulator'>
+-      <ref name='absFilePath'/>
++      <ref name='filePath'/>
+     </element>
+   </define>
+ 
+   <define name='loader'>
+     <element name='loader'>
+-      <ref name='absFilePath'/>
++      <ref name='filePath'/>
+     </element>
+   </define>
+ 

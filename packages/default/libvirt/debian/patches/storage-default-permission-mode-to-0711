@@ -1,0 +1,18 @@
+Description: use 0711, not 0755, as the default perms for storage dirs
+ That is what we want for /var/lib/libvirt/images.
+Author: Serge Hallyn <serge.hallyn@ubuntu.com>
+Forwarded: no
+
+Index: libvirt-1.0.1/src/conf/storage_conf.c
+===================================================================
+--- libvirt-1.0.1.orig/src/conf/storage_conf.c	2013-01-22 10:43:05.784737327 -0600
++++ libvirt-1.0.1/src/conf/storage_conf.c	2013-01-22 10:43:05.780737327 -0600
+@@ -47,7 +47,7 @@
+ 
+ #define VIR_FROM_THIS VIR_FROM_STORAGE
+ 
+-#define DEFAULT_POOL_PERM_MODE 0755
++#define DEFAULT_POOL_PERM_MODE 0711
+ #define DEFAULT_VOL_PERM_MODE  0600
+ 
+ VIR_ENUM_IMPL(virStoragePool,

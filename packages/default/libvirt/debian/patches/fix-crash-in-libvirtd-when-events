@@ -1,0 +1,49 @@
+From: "Daniel P. Berrange" <berrange@redhat.com>
+Subject: [Libvirt-Security] [PATCH] Fix crash in libvirtd when events are
+	registered & ACLs active
+
+When a client disconnects from libvirtd, all event callbacks
+must be removed. This involves running the public API
+
+  virConnectDomainEventDeregisterAny
+
+This code does not run in normal API dispatch context, so no
+identity was set. The result was that the access control drivers
+denied the attempt to deregister callbacks. The callbacks thus
+continued to trigger after the client was free'd causing fairly
+predictable use of free memory & a crash.
+
+This can be triggered by any client with readonly access when
+the ACL drivers are active.
+
+Signed-off-by: Daniel P. Berrange <berrange@redhat.com>
+---
+ daemon/remote.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+Index: libvirt-1.1.1/daemon/remote.c
+===================================================================
+--- libvirt-1.1.1.orig/daemon/remote.c	2013-10-02 08:14:50.364968929 -0500
++++ libvirt-1.1.1/daemon/remote.c	2013-10-02 08:14:50.360968928 -0500
+@@ -666,8 +666,11 @@ void remoteClientFreeFunc(void *data)
+ 
+     /* Deregister event delivery callback */
+     if (priv->conn) {
++        virIdentityPtr sysident = virIdentityGetSystem();
+         size_t i;
+ 
++        virIdentitySetCurrent(sysident);
++
+         for (i = 0; i < VIR_DOMAIN_EVENT_ID_LAST; i++) {
+             if (priv->domainEventCallbackID[i] != -1) {
+                 VIR_DEBUG("Deregistering to relay remote events %zu", i);
+@@ -678,6 +681,9 @@ void remoteClientFreeFunc(void *data)
+         }
+ 
+         virConnectClose(priv->conn);
++
++        virIdentitySetCurrent(NULL);
++        virObjectUnref(sysident);
+     }
+ 
+     VIR_FREE(priv);

@@ -1,0 +1,77 @@
+.TH LIBVIRT-MIGRATE-QEMU-MACHINETYPE: "1" "" "June 2012" "June 2012"
+
+.SH NAME
+libvirt\-migrate\-qemu\-machinetype \- program for migrating machine types in domain definitions
+.PP
+.SH DESCRIPTION
+QEMU versions machine types by release.  The pc-0.12 machine type is meant
+to never change.  Newer features should come with the next pc-0.13 version.
+However, with 1.0, the pc-0.12 machine type appears to have several bugs.
+
+libvirt\-migrate\-qemu\-machinetype aids in transitioning virtual machine
+definitions to a new machine type.
+
+.SH USAGE
+.TP
+libvirt\-migrate\-qemu\-machinetype [\fB\-c URI\fR] [\fB\-d\fR] \fB-a\fR
+.TP
+libvirt\-migrate\-qemu\-machinetype [\fB\-c URI\fR] [\fB\-d\fR] \fB-o TYPE\fR \fB-t TYPE\fR \fB<DOMAIN>\fR
+
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show help message and exit
+.TP
+\fB\-a\fR
+probe all domains and migrate if necessary
+.TP
+\fB\-c URI\fR
+connection URI to use. If one is not specified, will use qemu:///system. Only
+qemu:///system and qemu:///session is supported.
+.TP
+\fB\-o TYPE\fR
+migrate specified domains from machine type TYPE (default pc-0.12).
+.TP
+\fB\-t TYPE\fR
+migrate specified domains to machine type TYPE (default pc-1.0).
+.TP
+\fB\-d\fR
+debug output
+
+.SH EXAMPLES
+.PP
+To probe and migrate all exisiting domains:
+
+  # libvirt\-migrate\-qemu\-machinetype -a
+
+.PP
+To migrate all VMs which are pc-0.13 to pc-0.14:
+
+  # libvirt\-migrate\-qemu\-machinetype -a -o pc-0.13 -t pc-0.14
+
+.PP
+To migrate the 'vm1' and 'vm2' domains:
+
+  # libvirt\-migrate\-qemu\-machinetype -t pc-1.0 vm1 vm2
+
+.SH BUGS
+.PP
+In the event that libvirt\-migrate\-qemu\-machinetype is unable to migrate your
+VMs, virsh can be used directly. For example:
+
+  $ kvm -M ?
+  ... find the newest machine type ...
+  $ virsh dumpxml <domain-id> > domain.xml
+  ... edit domain.xml to use the newest machine type ...
+  $ virsh define domain.xml
+
+.SH SEE ALSO
+.PP
+\fBvirsh\fR(1)
+
+.SH AUTHOR
+.PP
+libvirt\-migrate\-qemu\-machinetype is Copyright 2012, Canonical Ltd.
+
+.PP
+libvirt\-migrate\-qemu\-machinetype by Serge Hallyn <serge.hallyn@canonical\&.com>.

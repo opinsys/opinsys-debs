@@ -1,0 +1,22 @@
+From: Stefan Bader <stefan.bader@canonical.com>
+Date: Tue, 30 Jul 2013 20:48:33 +0200
+Subject: xen: Avoid double free of virDomainDef in xenDaemonCreateXML
+
+The virDomainDef is allocated by the caller and also used after
+calling to xenDaemonCreateXML. So it must not get freed by the
+callee.
+
+Signed-off-by: Stefan Bader <stefan.bader@canonical.com>
+
+Index: libvirt-1.0.6/src/xen/xend_internal.c
+===================================================================
+--- libvirt-1.0.6.orig/src/xen/xend_internal.c	2013-05-27 14:54:08.000000000 +0200
++++ libvirt-1.0.6/src/xen/xend_internal.c	2013-07-30 20:46:09.102792737 +0200
+@@ -2184,7 +2184,6 @@ xenDaemonCreateXML(virConnectPtr conn, v
+     if (xenDaemonDomainResume(conn, def) < 0)
+         goto error;
+ 
+-    virDomainDefFree(def);
+     return 0;
+ 
+   error:

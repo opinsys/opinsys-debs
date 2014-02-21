@@ -1,0 +1,27 @@
+#!/bin/sh
+
+set -e
+
+case "${1}" in
+	upgrade)
+		# If the default network autostart symlink existed, then note
+		# that here so we can recreate it at postinst.
+		EXISTED="/etc/libvirt/qemu/networks/autostart/TMP_defaultexisted"
+		if [ -e /etc/libvirt/qemu/networks/autostart/default.xml ]; then
+			touch "$EXISTED"
+		fi
+		;;
+
+	install|abort-upgrade)
+
+			;;
+
+	*)
+		echo "preinst called with unknown argument \`${1}'" >&2
+		exit 1
+		;;
+esac
+
+#DEBHELPER#
+
+exit 0

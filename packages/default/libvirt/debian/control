@@ -1,0 +1,148 @@
+Source: libvirt
+Section: libs
+Priority: optional
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: Debian Libvirt Maintainers <pkg-libvirt-maintainers@lists.alioth.debian.org>
+Uploaders: Guido Günther <agx@sigxcpu.org>, Laurent Léonard <laurent@open-minds.org>
+Build-Depends: cdbs (>= 0.4.90~),
+ debhelper (>= 7),
+ libxml2-dev,
+ libncurses5-dev,
+ libreadline-dev,
+ zlib1g-dev,
+ libgnutls-dev,
+ libgcrypt11-dev,
+ python-all-dev (>= 2.6.6-3~),
+ libavahi-client-dev,
+ libsasl2-dev,
+ libxen-dev [i386 amd64],
+ lvm2 [linux-any],
+ open-iscsi-utils,
+ libgcrypt11-dev,
+ libparted0-dev (>= 2.2),
+ parted (>= 2.2),
+ libdevmapper-dev [linux-any],
+ uuid-dev,
+ libudev-dev [linux-any],
+ libhal-dev [!linux-any],
+ libpciaccess-dev,
+ module-init-tools [linux-any],
+ policykit-1 (>= 0.105-3ubuntu3),
+ libpolkit-gobject-1-dev (>= 0.105-3ubuntu3),
+ libcap-ng-dev [linux-any],
+ libnl-3-dev,
+ libnl-route-3-dev,
+ libyajl-dev,
+ libpcap0.8-dev,
+ libnuma-dev [amd64 i386 ia64 mips mipsel powerpc],
+ radvd [linux-any],
+ libnetcf-dev [linux-any],
+ libaudit-dev [linux-any],
+# For "make check"
+ dwarves,
+ libxml2-utils,
+ libapparmor-dev,
+ dnsmasq-base,
+ openssh-client,
+ netcat-openbsd,
+ librbd-dev
+Build-Conflicts: dpkg-dev (= 1.15.3)
+Homepage: http://libvirt.org
+Standards-Version: 3.9.4
+X-Python-Version: >= 2.7
+
+Package: libvirt-bin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ adduser,
+ bridge-utils,
+ cgroup-lite | cgroup-bin,
+ dnsmasq-base (>= 2.46-1),
+ dbus,
+ gettext-base,
+ iptables (>= 1.4.10),
+ libvirt0 (= ${binary:Version}),
+ logrotate,
+ netcat-openbsd
+Enhances: qemu, qemu-kvm, xen
+Section: admin
+Recommends:
+ libxml2-utils,
+ gawk,
+ ebtables,
+ dmidecode,
+ iproute,
+ parted
+Suggests: policykit-1 (>= 0.105-3ubuntu3), apparmor, pm-utils, qemu-kvm | qemu (>= 0.9.1), radvd
+Description: programs for the libvirt library
+ Libvirt is a C toolkit to interact with the virtualization capabilities
+ of recent versions of Linux (and other OSes). The library aims at providing
+ a long term stable C API for different virtualization mechanisms. It currently
+ supports QEMU, KVM, XEN, OpenVZ, LXC, and VirtualBox.
+ .
+ This package contains the supporting binaries to use with libvirt
+
+Package: libvirt0
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Suggests: lvm2 [linux-any]
+Description: library for interfacing with different virtualization systems
+ Libvirt is a C toolkit to interact with the virtualization capabilities
+ of recent versions of Linux (and other OSes). The library aims at providing
+ a long term stable C API for different virtualization mechanisms. It currently
+ supports QEMU, KVM, XEN, OpenVZ, LXC, and VirtualBox.
+
+Package: libvirt0-dbg
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libvirt0 (= ${binary:Version})
+Priority: extra
+Section: debug
+Description: library for interfacing with different virtualization systems
+ Libvirt is a C toolkit to interact with the virtualization capabilities
+ of recent versions of Linux (and other OSes). The library aims at providing
+ a long term stable C API for different virtualization mechanisms. It currently
+ supports QEMU, KVM, XEN, OpenVZ, LXC, and VirtualBox.
+ .
+ This package contains the debugging symbols.
+
+Package: libvirt-doc
+Architecture: all
+Section: doc
+Depends: ${misc:Depends}
+Suggests: devhelp
+Description: documentation for the libvirt library
+ Libvirt is a C toolkit to interact with the virtualization capabilities
+ of recent versions of Linux (and other OSes). The library aims at providing
+ a long term stable C API for different virtualization mechanisms. It currently
+ supports QEMU, KVM, XEN, OpenVZ, LXC, and VirtualBox.
+ .
+ This package contains the documentation.
+
+Package: libvirt-dev
+Architecture: any
+Section: libdevel
+Depends: ${misc:Depends}, libvirt0 (= ${binary:Version}), libxen-dev [i386 amd64]
+Recommends: pkg-config
+Description: development files for the libvirt library
+ Libvirt is a C toolkit to interact with the virtualization capabilities
+ of recent versions of Linux (and other OSes). The library aims at providing
+ a long term stable C API for different virtualization mechanisms. It currently
+ supports QEMU, KVM, XEN, OpenVZ, LXC, and VirtualBox.
+ .
+ This package contains the header files and static libraries which are
+ needed for developing the applications with libvirt.
+
+Package: python-libvirt
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}, libvirt0 (>= ${binary:Version})
+Provides: ${python:Provides}
+Recommends: libvirt-bin
+Section: python
+Description: libvirt Python bindings
+ Libvirt is a C toolkit to interact with the virtualization capabilities
+ of recent versions of Linux (and other OSes). The library aims at providing
+ a long term stable C API for different virtualization mechanisms. It currently
+ supports QEMU, KVM, XEN, OpenVZ, LXC, and VirtualBox.
+ .
+ This package contains Python bindings for the libvirt library
+

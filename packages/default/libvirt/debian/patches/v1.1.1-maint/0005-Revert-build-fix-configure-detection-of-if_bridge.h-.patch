@@ -1,0 +1,37 @@
+From 80d05b9a833b28a5bd1e1b1b71726ce972b4acc4 Mon Sep 17 00:00:00 2001
+From: "Daniel P. Berrange" <berrange@redhat.com>
+Date: Wed, 7 Aug 2013 11:23:54 +0100
+Subject: [PATCH 05/11] Revert "build: fix configure detection of if_bridge.h
+ on RHEL 6"
+
+This reverts commit 2df8d99138dc8396c7d46c3cceca8ce2e93b605a.
+
+The change breaks configure on any recent Fedora platform
+(cherry picked from commit 43cee32ff59faf3f2ba21f27676c0bc3e5513c83)
+---
+ configure.ac | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index df11f23..35a5d76 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -997,14 +997,7 @@ if test "$with_linux" = "yes"; then
+   if test "$with_qemu" = "yes" || test "$with_lxc" = "yes" ; then
+     AC_CHECK_HEADERS([linux/param.h linux/sockios.h linux/if_bridge.h linux/if_tun.h],,
+       [AC_MSG_ERROR([You must install kernel-headers in order to compile libvirt with QEMU or LXC support])],
+-      [[/* The kernel folks broke their headers when used with particular
+-         * glibc versions; although the structs are ABI compatible, the
+-         * C type system doesn't like struct redefinitions.  We work around
+-         * the problem here in the same manner as in virnetdevbridge.c.  */
+-        #include <netinet/in.h>
+-        #define in6_addr in6_addr_
+-        #define sockaddr_in6 sockaddr_in6_
+-        #define ipv6_mreq ipv6_mreq_
++      [[#include <netinet/in.h>
+       ]])
+   fi
+ fi
+-- 
+1.8.3.2
+

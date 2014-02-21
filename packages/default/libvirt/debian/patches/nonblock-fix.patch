@@ -1,0 +1,37 @@
+commit ceb31795af40f6127a541076b905935ff83e5b11
+Author: Michal Privoznik <mprivozn@redhat.com>
+Date:   Tue Mar 26 15:45:16 2013 +0100
+
+    qemu: Set migration FD blocking
+    
+    Since we switched from direct host migration scheme to the one,
+    where we connect to the destination and then just pass a FD to a
+    qemu, we have uncovered a qemu bug. Qemu expects migration FD to
+    block. However, we are passing a nonblocking one which results in
+    cryptic error messages like:
+    
+      qemu: warning: error while loading state section id 2
+      load of migration failed
+    
+    The bug is already known to Qemu folks, but we should workaround
+    already released Qemus. Patch has been originally proposed by Stefan
+    Hajnoczi <stefanha@gmail.com>
+
+Index: libvirt-1.0.2/src/qemu/qemu_migration.c
+===================================================================
+--- libvirt-1.0.2.orig/src/qemu/qemu_migration.c	2013-04-18 10:44:01.186392496 -0500
++++ libvirt-1.0.2/src/qemu/qemu_migration.c	2013-04-18 10:44:01.162392375 -0500
+@@ -2179,6 +2179,13 @@
+         spec->dest.fd.qemu == -1)
+         goto cleanup;
+ 
++    /* Migration expects a blocking FD */
++    if (virSetBlocking(spec->dest.fd.qemu, true) < 0) {
++        virReportSystemError(errno, _("Unable to set FD %d blocking"),
++                             spec->dest.fd.qemu);
++        goto cleanup;
++    }
++
+     ret = 0;
+ 
+ cleanup:

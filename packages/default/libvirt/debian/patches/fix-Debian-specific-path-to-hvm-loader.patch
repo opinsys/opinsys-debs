@@ -1,0 +1,88 @@
+From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+Date: Thu, 26 Feb 2009 14:29:58 +0100
+Subject: fix Debian specific path to hvm loader
+
+Closes: #517059
+
+---
+ src/xen/xen_hypervisor.c               |    2 +-
+ tests/xencapsdata/xen-i686-pae-hvm.xml |    2 +-
+ tests/xencapsdata/xen-ia64-be-hvm.xml  |    2 +-
+ tests/xencapsdata/xen-ia64-hvm.xml     |    2 +-
+ tests/xencapsdata/xen-x86_64-hvm.xml   |    4 ++--
+ 5 files changed, 6 insertions(+), 6 deletions(-)
+
+Index: libvirt-1.0.1/src/xen/xen_hypervisor.c
+===================================================================
+--- libvirt-1.0.1.orig/src/xen/xen_hypervisor.c	2013-01-22 10:43:02.276737386 -0600
++++ libvirt-1.0.1/src/xen/xen_hypervisor.c	2013-01-22 10:43:02.268737387 -0600
+@@ -2363,7 +2363,7 @@
+                                               "/usr/lib64/xen/bin/qemu-dm" :
+                                               "/usr/lib/xen/bin/qemu-dm"),
+                                              (guest_archs[i].hvm ?
+-                                              "/usr/lib/xen/boot/hvmloader" :
++                                              "/usr/lib/xen-default/boot/hvmloader" :
+                                               NULL),
+                                              1,
+                                              machines)) == NULL) {
+Index: libvirt-1.0.1/tests/xencapsdata/xen-i686-pae-hvm.xml
+===================================================================
+--- libvirt-1.0.1.orig/tests/xencapsdata/xen-i686-pae-hvm.xml	2013-01-22 10:43:02.276737386 -0600
++++ libvirt-1.0.1/tests/xencapsdata/xen-i686-pae-hvm.xml	2013-01-22 10:43:02.272737387 -0600
+@@ -35,7 +35,7 @@
+     <arch name='i686'>
+       <wordsize>32</wordsize>
+       <emulator>/usr/lib/xen/bin/qemu-dm</emulator>
+-      <loader>/usr/lib/xen/boot/hvmloader</loader>
++      <loader>/usr/lib/xen-default/boot/hvmloader</loader>
+       <machine>xenfv</machine>
+       <domain type='xen'>
+       </domain>
+Index: libvirt-1.0.1/tests/xencapsdata/xen-ia64-be-hvm.xml
+===================================================================
+--- libvirt-1.0.1.orig/tests/xencapsdata/xen-ia64-be-hvm.xml	2013-01-22 10:43:02.276737386 -0600
++++ libvirt-1.0.1/tests/xencapsdata/xen-ia64-be-hvm.xml	2013-01-22 10:43:02.272737387 -0600
+@@ -32,7 +32,7 @@
+     <arch name='ia64'>
+       <wordsize>64</wordsize>
+       <emulator>/usr/lib/xen/bin/qemu-dm</emulator>
+-      <loader>/usr/lib/xen/boot/hvmloader</loader>
++      <loader>/usr/lib/xen-default/boot/hvmloader</loader>
+       <machine>xenfv</machine>
+       <domain type='xen'>
+       </domain>
+Index: libvirt-1.0.1/tests/xencapsdata/xen-ia64-hvm.xml
+===================================================================
+--- libvirt-1.0.1.orig/tests/xencapsdata/xen-ia64-hvm.xml	2013-01-22 10:43:02.276737386 -0600
++++ libvirt-1.0.1/tests/xencapsdata/xen-ia64-hvm.xml	2013-01-22 10:43:02.272737387 -0600
+@@ -29,7 +29,7 @@
+     <arch name='ia64'>
+       <wordsize>64</wordsize>
+       <emulator>/usr/lib/xen/bin/qemu-dm</emulator>
+-      <loader>/usr/lib/xen/boot/hvmloader</loader>
++      <loader>/usr/lib/xen-default/boot/hvmloader</loader>
+       <machine>xenfv</machine>
+       <domain type='xen'>
+       </domain>
+Index: libvirt-1.0.1/tests/xencapsdata/xen-x86_64-hvm.xml
+===================================================================
+--- libvirt-1.0.1.orig/tests/xencapsdata/xen-x86_64-hvm.xml	2013-01-22 10:43:02.276737386 -0600
++++ libvirt-1.0.1/tests/xencapsdata/xen-x86_64-hvm.xml	2013-01-22 10:43:02.272737387 -0600
+@@ -32,7 +32,7 @@
+     <arch name='i686'>
+       <wordsize>32</wordsize>
+       <emulator>/usr/lib64/xen/bin/qemu-dm</emulator>
+-      <loader>/usr/lib/xen/boot/hvmloader</loader>
++      <loader>/usr/lib/xen-default/boot/hvmloader</loader>
+       <machine>xenfv</machine>
+       <domain type='xen'>
+       </domain>
+@@ -50,7 +50,7 @@
+     <arch name='x86_64'>
+       <wordsize>64</wordsize>
+       <emulator>/usr/lib64/xen/bin/qemu-dm</emulator>
+-      <loader>/usr/lib/xen/boot/hvmloader</loader>
++      <loader>/usr/lib/xen-default/boot/hvmloader</loader>
+       <machine>xenfv</machine>
+       <domain type='xen'>
+       </domain>

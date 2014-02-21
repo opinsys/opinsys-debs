@@ -1,0 +1,281 @@
+#!/bin/sh
+# postinst script for libvirt-bin
+#
+# see: dh_installdeb(1)
+
+set -e
+
+# summary of how this script can be called:
+#        * <postinst> `configure' <most-recently-configured-version>
+#        * <old-postinst> `abort-upgrade' <new version>
+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
+#          <new-version>
+#        * <postinst> `abort-remove'
+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
+#          <failed-install-package> <version> `removing'
+#          <conflicting-package> <version>
+# for details, see http://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+
+add_users_groups()
+{
+    if ! getent group libvirtd >/dev/null; then
+        addgroup --system libvirtd
+    fi
+
+    # Add each admin user to the libvirtd group - for systems installed
+    # before precise
+    for u in $(getent group admin | sed -e "s/^.*://" -e "s/,/ /g"); do
+        adduser "$u" libvirtd >/dev/null || true
+    done
+
+    # Add each sudo user to the libvirtd group
+    for u in $(getent group sudo | sed -e "s/^.*://" -e "s/,/ /g"); do
+        adduser "$u" libvirtd >/dev/null || true
+    done
+
+    # user and group libvirt runs qemu/kvm instances with
+    if ! getent group kvm >/dev/null; then
+        addgroup --quiet --system kvm
+    fi
+    if ! getent passwd libvirt-qemu >/dev/null; then
+        adduser --quiet \
+            --system \
+            --ingroup kvm \
+            --quiet \
+            --disabled-login \
+            --disabled-password \
+            --home /var/lib/libvirt \
+            --no-create-home \
+            -gecos "Libvirt Qemu" \
+            libvirt-qemu
+    fi
+    if ! getent passwd libvirt-dnsmasq >/dev/null; then
+        adduser --quiet \
+            --system \
+            --ingroup libvirtd \
+            --quiet \
+            --disabled-login \
+            --disabled-password \
+            --home /var/lib/libvirt/dnsmasq \
+            --no-create-home \
+            -gecos "Libvirt Dnsmasq" \
+            libvirt-dnsmasq
+    fi
+}
+
+includes_virbr0addr() {
+	viraddr="192.168.122.1"
+	a=$1
+	b=$2
+	for n in `seq 1 4`; do
+		aa=`echo $a | awk -F. '{ print $'$n' }'`
+		cc=`echo $viraddr | awk -F. '{ print $'$n' }'`
+		cmp=$((b/8))
+		if [ $cmp -ge $n ]; then
+			if [ $aa -ne $cc ]; then
+				echo "false"
+				return 
+			fi
+		elif [ $((cmp+1)) -ge $n ]; then
+			# do we bother comparing partial (i.e. /25)?
+			:
+		else
+			break
+		fi
+	done
+	echo "true"
+	return
+}
+
+set_autostart()
+{
+    if [ ! -e /etc/libvirt/qemu/networks/autostart/default.xml ]; then
+        ln -s /etc/libvirt/qemu/networks/default.xml \
+        /etc/libvirt/qemu/networks/autostart/
+    fi
+}
+
+# on first install, don't set default network to autostart if we already
+# have a 192.168.122.0 network.  Good for instance for nested libvirt.
+maybe_set_autostart()
+{
+    # don't autostart virbr0 if 192.168.122.1/24 already exists
+    found=0
+    for pair in `ip addr show | grep "inet\>" |awk '{ print $2 }'`; do
+        a=`echo $pair | awk -F/ '{ print $1}'`
+        m=`echo $pair | awk -F/ '{ print $2}'`
+        res=`includes_virbr0addr $a $m`
+        if [ $res = "true" ]; then
+            found=1
+        fi
+    done
+    if [ $found -eq 1 ]; then
+        return
+    fi
+    set_autostart
+}
+
+add_statoverrides()
+{
+    ROOT_DIRS="\
+        /var/lib/libvirt/images/ \
+        /var/lib/libvirt/boot/   \
+        /var/cache/libvirt/      \
+    "
+
+    QEMU_DIRS="\
+         /var/lib/libvirt/qemu/   \
+         /var/cache/libvirt/qemu/ \
+    "
+
+    SANLOCK_DIR="/var/lib/libvirt/sanlock"
+	QEMU_CONF="/etc/libvirt/qemu.conf"
+
+    for dir in ${ROOT_DIRS}; do
+        if ! dpkg-statoverride --list "${dir}" >/dev/null 2>&1; then
+            chown root:root "${dir}"
+            chmod 0711 "${dir}"
+        fi
+    done
+
+    for dir in ${QEMU_DIRS}; do
+        if ! dpkg-statoverride --list "${dir}" >/dev/null 2>&1; then
+            chown libvirt-qemu:kvm "${dir}"
+            chmod 0750 "${dir}"
+        fi
+    done
+
+    if ! dpkg-statoverride --list "${SANLOCK_DIR}" >/dev/null 2>&1; then
+        chown root:root "${SANLOCK_DIR}"
+        chmod 0700 "${SANLOCK_DIR}"
+    fi
+
+	if ! dpkg-statoverride --list "${QEMU_CONF}" >/dev/null 2>&1; then
+		chown root:root "${QEMU_CONF}"
+		chmod 0600 "${QEMU_CONF}"
+	fi
+}
+
+
+case "$1" in
+    configure)
+        add_users_groups
+        add_statoverrides
+
+	# libvirt from 0.6.0 on is safe to restart with running vms:
+	if [ -n "$2" ] &&  dpkg --compare-versions "$2" ge 0.6.0; then
+	    if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+                invoke-rc.d libvirt-bin stop
+            else
+                /etc/init.d/libvirt-bin stop
+            fi
+	    sleep 1
+	fi
+
+	if dpkg --compare-versions "$2" lt "0.6.1-2"; then
+	    if [ -e /etc/rc2.d/S20libvirt-bin ] && \
+	       [ -e /etc/rc3.d/S20libvirt-bin ] && \
+	       [ -e /etc/rc4.d/S20libvirt-bin ] && \
+	       [ -e /etc/rc5.d/S20libvirt-bin ] && \
+	       [ -e /etc/rc0.d/K20libvirt-bin ] && \
+	       [ -e /etc/rc1.d/K20libvirt-bin ] && \
+	       [ -e /etc/rc6.d/K20libvirt-bin ]; then
+		update-rc.d -f libvirt-bin remove >/dev/null
+	    fi
+	fi
+
+    for p in usr.sbin.libvirtd usr.lib.libvirt.virt-aa-helper ; do
+        profile="/etc/apparmor.d/$p"
+        if [ -f "$profile" ] && aa-status --enabled 2>/dev/null; then
+            apparmor_parser -r "$profile" || true
+        fi
+    done
+
+	# Make sure the directories don't get removed on package removal since
+	# logrotate chokes otherwise.
+	for dir in qemu uml lxc; do
+	    touch /var/log/libvirt/"${dir}"/.placeholder
+	done
+
+    # 1. On an initial package install, create the default network autostart
+    #    symlink.
+    # 2. If the default.xml existed before upgrade, make sure it is recreated.
+    #    This won't be a problem on most upgrades, but when upgrading from a
+    #    version where the symlink came with the package, it will.
+    # 3. If upgrading from one of the bad libvirt versions which deleted the
+    #    symlink wrongly, recreate it
+    EXISTED="/etc/libvirt/qemu/networks/autostart/TMP_defaultexisted"
+    if [ -z $2 ]; then
+    	maybe_set_autostart
+    elif [ -e "$EXISTED" ]; then
+        # on upgrade, if default network was previously autostarted,
+	# continue to do so.
+    	rm -f "$EXISTED"
+	set_autostart
+    fi
+
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+# dh_installdeb will replace this with shell code automatically
+# generated by other debhelper scripts.
+
+#DEBHELPER#
+
+# We need this after the debhelper generated code so that dpkg-maintscript
+# can do its renamming first.
+if [ "$1" = "configure" ]; then
+    # The dnsmasq hook has been introduced through SRU into Ubuntu 12.04
+    # and Ubuntu 12.10.
+    #
+    # This means that even though we version-guard the maintscripts entry
+    # it'll fire multiple times for users doing 12.04 => 12.10 => 13.04
+    # or even just 12.10 => 13.04.
+    #
+    # As there's unfortunately no way to specify per-series base versions
+    # for maintscripts hooks, we let it fire multiple times and then fix up
+    # the mess it creates.
+    #
+    # This migration code can be removed after Ubuntu 14.04 LTS is released.
+    if [ -L /etc/dnsmasq.d-available/libvirt-bin ] &&
+       [ "$(readlink /etc/dnsmasq.d-available/libvirt-bin)" = "/etc/dnsmasq.d-available/libvirt-bin" ] &&
+       [ -e /etc/dnsmasq.d-available/libvirt-bin.dpkg-new ]; then
+        echo "The dnsmasq configuration has been migrated twice, fixing it."
+        mv /etc/dnsmasq.d-available/libvirt-bin /etc/dnsmasq.d/libvirt-bin
+        mv /etc/dnsmasq.d-available/libvirt-bin.dpkg-new /etc/dnsmasq.d-available/libvirt-bin
+
+        # Try to restart a potential system wide dnsmasq
+        invoke-rc.d dnsmasq restart 2>/dev/null || true
+    fi
+
+    # Configure dnsmasq
+    if [ -f /etc/dnsmasq.d-available/libvirt-bin ]; then
+        echo "Setting up libvirt-bin dnsmasq configuration."
+        mkdir -p /etc/dnsmasq.d
+        if [ ! -e /etc/dnsmasq.d/libvirt-bin ]; then
+            ln -s /etc/dnsmasq.d-available/libvirt-bin /etc/dnsmasq.d/libvirt-bin
+        fi
+
+        # Try to restart a potential system wide dnsmasq
+        invoke-rc.d dnsmasq restart 2>/dev/null || true
+    fi
+fi
+# This must run after libvirt-bin has started
+if [ "$1" = "configure" ]; then
+    if dpkg --compare-versions "$2" lt-nl "0.8.3-1ubuntu1" ; then
+        libvirt-migrate-qemu-disks -a || true
+    fi
+fi
+
+exit 0
+
+

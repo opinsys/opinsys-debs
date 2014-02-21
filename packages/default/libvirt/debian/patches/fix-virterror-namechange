@@ -1,0 +1,29 @@
+Description: change virterror to virerror to complete recent variable
+ name change.  Otherwise virGetLastError wrapper does not get generated
+ in libvirt.py, causing calls to it to fail.
+Author: Serge Hallyn <serge.hallyn@ubuntu.comesc>
+Forwarded: yes
+
+diff -Naurp libvirt-1.0.2.orig/python/generator.py libvirt-1.0.2/python/generator.py
+--- libvirt-1.0.2.orig/python/generator.py	2013-01-28 05:52:40.000000000 -0600
++++ libvirt-1.0.2/python/generator.py	2013-02-01 13:09:30.401004625 -0600
+@@ -123,7 +123,8 @@ class docParser(xml.sax.handler.ContentH
+                     self.function_return_field = attrs['field']
+         elif tag == 'enum':
+             if (attrs['file'] == "libvirt" or
+-                attrs['file'] == "virterror"):
++                attrs['file'] == "virterror" or
++                attrs['file'] == "virerror"):
+                 enum(attrs['type'],attrs['name'],attrs['value'])
+             elif attrs['file'] == "libvirt-lxc":
+                 lxc_enum(attrs['type'],attrs['name'],attrs['value'])
+@@ -137,7 +138,8 @@ class docParser(xml.sax.handler.ContentH
+             if self.function != None:
+                 if (self.function_module == "libvirt" or
+                     self.function_module == "virevent" or
+-                    self.function_module == "virterror"):
++                    self.function_module == "virterror" or
++                    self.function_module == "virerror"):
+                     function(self.function, self.function_descr,
+                              self.function_return, self.function_args,
+                              self.function_file, self.function_module,

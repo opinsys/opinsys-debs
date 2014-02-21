@@ -1,0 +1,46 @@
+From 864bcb0ef98bc567a7de332cc3dd9410ba8b0531 Mon Sep 17 00:00:00 2001
+From: Michal Privoznik <mprivozn@redhat.com>
+Date: Mon, 5 Aug 2013 12:05:23 +0200
+Subject: [PATCH 02/11] qemu_migration: Don't error on tunelled migration with
+ --copy-storage
+
+https://bugzilla.redhat.com/show_bug.cgi?id=979477
+
+Since 1.0.3 we are using the new way to copy non shared storage during
+migration (the NBD way). However, whether the new or old way is used is
+not controllable by user but unconditionally turned on if both sides of
+migration support it. Moreover, the implementation is not complete: the
+combination for VIR_MIGRATE_TUNNELLED flag is missing (as we need to
+open new port on the destination) in which case we just error out. This
+is a deadly combination: not letting users choose their destiny and
+erroring out. We should not do that but VIR_WARN and turn the NBD off
+instead.
+(cherry picked from commit 5de58d87c863752fbcd24a9bd8c0900694b7e5a2)
+---
+ src/qemu/qemu_migration.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/src/qemu/qemu_migration.c b/src/qemu/qemu_migration.c
+index 3dedfe8..b905459 100644
+--- a/src/qemu/qemu_migration.c
++++ b/src/qemu/qemu_migration.c
+@@ -1996,12 +1996,11 @@ static char
+         virQEMUCapsGet(priv->qemuCaps, QEMU_CAPS_NBD_SERVER)) {
+         /* TODO support NBD for TUNNELLED migration */
+         if (flags & VIR_MIGRATE_TUNNELLED) {
+-            virReportError(VIR_ERR_ARGUMENT_UNSUPPORTED, "%s",
+-                _("NBD in tunnelled migration is currently not supported"));
+-            goto cleanup;
++            VIR_WARN("NBD in tunnelled migration is currently not supported");
++        } else {
++            cookieFlags |= QEMU_MIGRATION_COOKIE_NBD;
++            priv->nbdPort = 0;
+         }
+-        cookieFlags |= QEMU_MIGRATION_COOKIE_NBD;
+-        priv->nbdPort = 0;
+     }
+ 
+     if (!(mig = qemuMigrationEatCookie(driver, vm, NULL, 0, 0)))
+-- 
+1.8.3.2
+

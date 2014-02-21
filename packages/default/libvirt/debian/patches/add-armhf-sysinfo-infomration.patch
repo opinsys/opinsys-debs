@@ -1,0 +1,167 @@
+diff -Naurp libvirt-0.9.13.orig/src/util/sysinfo.c libvirt-0.9.13/src/util/sysinfo.c
+--- libvirt-0.9.13.orig/src/util/sysinfo.c	2012-06-26 20:44:39.000000000 -0500
++++ libvirt-0.9.13/src/util/sysinfo.c	2012-07-19 11:07:27.616440473 -0500
+@@ -242,6 +242,163 @@ no_memory:
+     return NULL;
+ }
+ 
++#elif defined(__arm__)
++static int
++virSysinfoParseSystem(const char *base, virSysinfoDefPtr ret)
++{
++   char *eol = NULL;
++   const char *cur;
++
++   if ((cur = strstr(base, "Hardware")) == NULL)
++       return 0;
++
++   base = cur;
++   /* Account for format 'Hardware      : XXXX'*/
++   cur = strchr(cur, ':') + 1;
++   eol = strchr(cur, '\n');
++   virSkipSpaces(&cur);
++   if (eol &&
++       ((ret->system_family = strndup(cur, eol - cur)) == NULL))
++	goto no_memory;
++
++   if ((cur= strstr(base, "Revision")) != NULL) {
++       cur = strchr(cur, ':') + 1;
++       eol = strchr(cur, '\n');
++       virSkipSpaces(&cur);
++       if (eol && ((ret->system_version = strndup(cur, eol - cur))
++							  == NULL))
++	   goto no_memory;
++   }
++
++   if ((cur = strstr(base, "Serial")) != NULL) {
++        cur = strchr(cur, ':') + 1;
++        eol = strchr(cur, '\n');
++        virSkipSpaces(&cur);
++        if (eol && ((ret->system_serial = strndup(cur, eol - cur))
++							   == NULL))
++	    goto no_memory;
++   }
++
++   return 0;
++
++no_memory:
++     return -1;
++}
++
++static int
++virSysinfoParseProcessor(const char *base, virSysinfoDefPtr ret)
++{
++   const char *cur;
++   char *eol, *tmp_base;
++   virSysinfoProcessorDefPtr processor;
++
++   while ((tmp_base = strstr(base, "Processor")) != NULL) {
++       base = tmp_base;
++       eol = strchr(base, '\n');
++       cur = strchr(base, ':') + 1;
++
++      if (VIR_EXPAND_N(ret->processor, ret->nprocessor, 1) < 0) {
++          goto no_memory;
++      }
++      processor = &ret->processor[ret->nprocessor - 1];
++
++      virSkipSpaces(&cur);
++      if (eol &&
++          ((processor->processor_socket_destination = strndup
++                                   (cur, eol - cur)) == NULL))
++          goto no_memory;
++
++      if ((cur = strstr(base, "CPU implementer")) != NULL) {
++          cur = strchr(cur, ':') + 1;
++          eol = strchr(cur, '\n');
++          virSkipSpaces(&cur);
++          if (eol && 
++              ((processor->processor_manufacturer = strndup(cur, eol - cur))
++                                                           == NULL))
++              goto no_memory;
++       }
++
++      if ((cur = strstr(base, "CPU architecture")) != NULL) {
++          cur = strchr(cur, ':') + 1;
++          eol = strchr(cur, '\n');
++          virSkipSpaces(&cur);
++          if (eol &&
++	       ((processor->processor_type = strndup(cur, eol - cur))
++			                           == NULL))
++               goto no_memory;
++      }
++
++      if ((cur = strstr(base, "CPU variant")) != NULL) {
++          cur = strchr(cur, ':') + 1;
++	  eol = strchr(cur, '\n');
++          virSkipSpaces(&cur);
++          if (eol &&
++                ((processor->processor_family = strndup(cur, eol - cur))
++                                                       == NULL))
++                goto no_memory;
++      }
++
++      if ((cur = strstr(base, "CPU part")) != NULL) {
++           cur = strchr(cur, ':') + 1;
++           eol = strchr(cur, '\n');
++           virSkipSpaces(&cur);
++           if (eol &&
++               ((processor->processor_part_number = strndup(cur, eol - cur))
++                                                                 == NULL))
++                 goto no_memory;
++      }
++
++      if ((cur = strstr(base, "CPU revision")) != NULL) {
++           cur = strchr(cur, ':') + 1;
++           eol = strchr(cur, '\n');
++           virSkipSpaces(&cur);
++           if (eol && 
++               ((processor->processor_version = strndup(cur, eol - cur))
++                                                             == NULL))
++                 goto no_memory;
++      }
++  
++      base = cur;
++   }
++
++   return 0;
++
++no_memory:
++     return -1;
++}
++
++/* virSysinfoRead for ARMHF
++ * Gathers sysinfo data from /proc/cpuinfo */
++virSysinfoDefPtr
++virSysinfoRead(void) {
++    virSysinfoDefPtr ret = NULL;
++    char *outbuf = NULL;
++
++    if (VIR_ALLOC(ret) < 0)
++        goto no_memory;
++
++    if (virFileReadAll(CPUINFO, 2048, &outbuf) < 0) {
++         virSmbiosReportError(VIR_ERR_INTERNAL_ERROR,
++  			     _("Failed to open %s"), CPUINFO);
++	 return NULL;
++    }
++
++    ret->nprocessor = 0;
++    ret->processor = NULL;
++    if (virSysinfoParseProcessor(outbuf, ret) < 0)
++	goto no_memory;
++
++    if (virSysinfoParseSystem(outbuf, ret) < 0)
++        goto no_memory;
++
++    return ret;
++
++no_memory:
++    VIR_FREE(outbuf);
++    return NULL;
++}
++
++
+ #elif defined(__s390__) || defined(__s390x__)
+ 
+ static int

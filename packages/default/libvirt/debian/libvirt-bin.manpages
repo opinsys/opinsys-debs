@@ -1,0 +1,3 @@
+tools/*.1
+debian/libvirt-migrate-qemu-disks.1
+debian/libvirt-migrate-qemu-machinetype.1

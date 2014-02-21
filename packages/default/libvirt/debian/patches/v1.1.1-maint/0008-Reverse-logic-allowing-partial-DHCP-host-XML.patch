@@ -1,0 +1,72 @@
+From b9bc69ba28437a2db9d58970e98ad6ab436c48a3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?J=C3=A1n=20Tomko?= <jtomko@redhat.com>
+Date: Wed, 31 Jul 2013 13:25:59 +0200
+Subject: [PATCH 08/11] Reverse logic allowing partial DHCP host XML
+
+Before, missing attributes were only OK when adding entries;
+modification and deletion required all of them.
+
+Now, only deletion works with missing attributes, as long as
+the host is uniquely identified.
+(cherry picked from commit cf602e7c597830a2d949017fe71f06b5f542c805)
+---
+ src/conf/network_conf.c | 21 +++++----------------
+ 1 file changed, 5 insertions(+), 16 deletions(-)
+
+diff --git a/src/conf/network_conf.c b/src/conf/network_conf.c
+index b903df9..b358393 100644
+--- a/src/conf/network_conf.c
++++ b/src/conf/network_conf.c
+@@ -3297,6 +3297,7 @@ virNetworkDefUpdateIPDHCPHost(virNetworkDefPtr def,
+     int ret = -1;
+     virNetworkIpDefPtr ipdef = virNetworkIpDefByIndex(def, parentIndex);
+     virNetworkDHCPHostDef host;
++    bool partialOkay = (command == VIR_NETWORK_UPDATE_COMMAND_DELETE);
+ 
+     memset(&host, 0, sizeof(host));
+ 
+@@ -3307,13 +3308,11 @@ virNetworkDefUpdateIPDHCPHost(virNetworkDefPtr def,
+     if (!ipdef)
+         goto cleanup;
+ 
+-    /* parse the xml into a virNetworkDHCPHostDef */
+-    if (command == VIR_NETWORK_UPDATE_COMMAND_MODIFY) {
++    if (virNetworkDHCPHostDefParseXML(def->name, ipdef, ctxt->node,
++                                      &host, partialOkay) < 0)
++        goto cleanup;
+ 
+-        if (virNetworkDHCPHostDefParseXML(def->name, ipdef,
+-                                          ctxt->node, &host, false) < 0) {
+-            goto cleanup;
+-        }
++    if (command == VIR_NETWORK_UPDATE_COMMAND_MODIFY) {
+ 
+         /* search for the entry with this (mac|name),
+          * and update the IP+(mac|name) */
+@@ -3345,11 +3344,6 @@ virNetworkDefUpdateIPDHCPHost(virNetworkDefPtr def,
+     } else if ((command == VIR_NETWORK_UPDATE_COMMAND_ADD_FIRST) ||
+                (command == VIR_NETWORK_UPDATE_COMMAND_ADD_LAST)) {
+ 
+-        if (virNetworkDHCPHostDefParseXML(def->name, ipdef,
+-                                          ctxt->node, &host, true) < 0) {
+-            goto cleanup;
+-        }
+-
+         /* log error if an entry with same name/address/ip already exists */
+         for (i = 0; i < ipdef->nhosts; i++) {
+             if ((host.mac &&
+@@ -3379,11 +3373,6 @@ virNetworkDefUpdateIPDHCPHost(virNetworkDefPtr def,
+             goto cleanup;
+     } else if (command == VIR_NETWORK_UPDATE_COMMAND_DELETE) {
+ 
+-        if (virNetworkDHCPHostDefParseXML(def->name, ipdef,
+-                                          ctxt->node, &host, false) < 0) {
+-            goto cleanup;
+-        }
+-
+         /* find matching entry - all specified attributes must match */
+         for (i = 0; i < ipdef->nhosts; i++) {
+             if ((!host.mac ||
+-- 
+1.8.3.2
+

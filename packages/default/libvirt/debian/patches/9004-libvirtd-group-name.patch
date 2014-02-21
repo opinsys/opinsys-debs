@@ -1,0 +1,17 @@
+Description: rename libvirt group name to 'libvirtd'
+Author: Soren Hansen <soren@ubuntu.com>
+Forwarded: no
+
+Index: libvirt-1.0.1/daemon/libvirtd.conf
+===================================================================
+--- libvirt-1.0.1.orig/daemon/libvirtd.conf	2013-01-22 10:43:04.092737356 -0600
++++ libvirt-1.0.1/daemon/libvirtd.conf	2013-01-22 10:43:04.084737356 -0600
+@@ -78,7 +78,7 @@
+ # without becoming root.
+ #
+ # This is restricted to 'root' by default.
+-unix_sock_group = "libvirt"
++unix_sock_group = "libvirtd"
+ 
+ # Set the UNIX socket permissions for the R/O socket. This is used
+ # for monitoring VM status only

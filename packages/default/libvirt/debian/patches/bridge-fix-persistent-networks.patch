@@ -1,0 +1,25 @@
+commit bb19491cf5e3b78f2d72bbcbcc06e985d29b7f4b
+Author: Peter Krempa <pkrempa@redhat.com>
+Date:   Fri Jan 11 11:10:34 2013 +0100
+
+    network: bridge: Fix regression when defining persistent networks
+    
+    Commit 0211fd6e04cdc402da20818df54299c6ded3d3cb introduced regression
+    where newly defined networks were not made persistent.
+    
+    This patch makes the network persistent on each successful definition.
+
+Index: libvirt-1.0.1/src/network/bridge_driver.c
+===================================================================
+--- libvirt-1.0.1.orig/src/network/bridge_driver.c	2013-01-23 10:32:42.798093957 -0600
++++ libvirt-1.0.1/src/network/bridge_driver.c	2013-01-23 10:32:42.794093957 -0600
+@@ -3114,6 +3114,9 @@
+             goto cleanup;
+     }
+ 
++    /* define makes the network persistent - always */
++    network->persistent = 1;
++
+     /* def was asigned */
+     freeDef = false;
+ 

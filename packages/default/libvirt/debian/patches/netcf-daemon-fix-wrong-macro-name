@@ -1,0 +1,44 @@
+commit 98518178a235532c280b4a18a85d7b1323d09c7f
+Author: Osier Yang <jyang@redhat.com>
+Date:   Fri Jul 20 22:25:17 2012 +0800
+
+    daemon: Fix the wrong macro name
+    
+    WITH_INTERFACE is not defined, it should be WITH_NETCF there to load
+    the interface driver.
+    
+    Eric posted patch weeks ago to resolve the problems in the whole
+    build system, but it's not finalised yet:
+    
+    https://www.redhat.com/archives/libvir-list/2012-June/msg01299.html
+    
+    I'm going to simply fix the wrong macro name here so that the
+    interface driver could loaded, and continue the work on the listing
+    API for interface driver.
+
+diff --git a/daemon/libvirtd.c b/daemon/libvirtd.c
+index a7bb9dd..ffbe067 100644
+--- a/daemon/libvirtd.c
++++ b/daemon/libvirtd.c
+@@ -378,7 +378,7 @@ static void daemonInitialize(void)
+ # ifdef WITH_NWFILTER
+     virDriverLoadModule("nwfilter");
+ # endif
+-# ifdef WITH_INTERFACE
++# ifdef WITH_NETCF
+     virDriverLoadModule("interface");
+ # endif
+ # ifdef WITH_QEMU
+diff --git a/tests/virdrivermoduletest.c b/tests/virdrivermoduletest.c
+index 8762de4..4d6e91e 100644
+--- a/tests/virdrivermoduletest.c
++++ b/tests/virdrivermoduletest.c
+@@ -79,7 +79,7 @@ mymain(void)
+ #ifdef WITH_NWFILTER
+     TEST("nwfilter", NULL);
+ #endif
+-#ifdef WITH_INTERFACE
++#ifdef WITH_NETCF
+     TEST("interface", NULL);
+ #endif
+ #ifdef WITH_QEMU

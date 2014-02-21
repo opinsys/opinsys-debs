@@ -1,0 +1,29 @@
+From: Stefan Bader <stefan.bader@canonical.com>
+Date: Mon, 15 Jul 2013 14:17:59 +0200
+Subject: libxl: Ommit full path for qemu and hvmloader
+
+Create xenlight configurations without full paths to the binaries.
+This allows the xen framework to figure it out itself. We already
+use the same approach for the xm stack.
+
+Signed-off-by: Stefan Bader <stefan.bader@canonical.com>
+ 
+Index: libvirt-1.0.6/src/libxl/libxl_conf.c
+===================================================================
+--- libvirt-1.0.6.orig/src/libxl/libxl_conf.c	2013-05-27 14:54:08.000000000 +0200
++++ libvirt-1.0.6/src/libxl/libxl_conf.c	2013-07-15 14:15:45.447524527 +0200
+@@ -91,12 +91,9 @@ libxlBuildCapabilities(virArch hostarch,
+         if ((guest = virCapabilitiesAddGuest(caps,
+                                              guest_archs[i].hvm ? "hvm" : "xen",
+                                              guest_archs[i].arch,
+-                                             ((hostarch == VIR_ARCH_X86_64) ?
+-                                              "/usr/lib64/xen/bin/qemu-dm" :
+-                                              "/usr/lib/xen/bin/qemu-dm"),
++                                              "qemu-dm",
+                                              (guest_archs[i].hvm ?
+-                                              "/usr/lib/xen/boot/hvmloader" :
+-                                              NULL),
++                                              "hvmloader" : NULL),
+                                              1,
+                                              machines)) == NULL) {
+             virCapabilitiesFreeMachines(machines, 1);

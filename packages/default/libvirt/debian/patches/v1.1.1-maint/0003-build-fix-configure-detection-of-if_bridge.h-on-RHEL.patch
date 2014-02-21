@@ -1,0 +1,58 @@
+From 083fe054ab6905047fc4b6f4086a8cddde53da8b Mon Sep 17 00:00:00 2001
+From: Eric Blake <eblake@redhat.com>
+Date: Tue, 6 Aug 2013 14:15:23 -0600
+Subject: [PATCH 03/11] build: fix configure detection of if_bridge.h on RHEL 6
+
+A fresh checkout on a RHEL 6 machine with these packages:
+kernel-headers-2.6.32-405.el6.x86_64
+glibc-2.12-1.128.el6.x86_64
+failed to configure with this message:
+checking for linux/if_bridge.h... no
+configure: error: You must install kernel-headers in order to compile libvirt with QEMU or LXC support
+
+Digging in config.log, we see that the problem is identical to
+what we fixed earlier in commit d12c2811:
+
+configure:98831: checking for linux/if_bridge.h
+configure:98853: gcc -std=gnu99 -c -g -O2  conftest.c >&5
+In file included from /usr/include/linux/if_bridge.h:17,
+                 from conftest.c:559:
+/usr/include/linux/in6.h:31: error: redefinition of 'struct in6_addr'
+/usr/include/linux/in6.h:48: error: redefinition of 'struct sockaddr_in6'
+/usr/include/linux/in6.h:56: error: redefinition of 'struct ipv6_mreq'
+configure:98860: $? = 1
+
+I had not hit it earlier because I was using incremental builds,
+where config.cache had shielded me from the kernel-headers breakage.
+
+* configure.ac (if_bridge.h): Avoid conflicting type definitions.
+
+Signed-off-by: Eric Blake <eblake@redhat.com>
+(cherry picked from commit 2df8d99138dc8396c7d46c3cceca8ce2e93b605a)
+---
+ configure.ac | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 35a5d76..df11f23 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -997,7 +997,14 @@ if test "$with_linux" = "yes"; then
+   if test "$with_qemu" = "yes" || test "$with_lxc" = "yes" ; then
+     AC_CHECK_HEADERS([linux/param.h linux/sockios.h linux/if_bridge.h linux/if_tun.h],,
+       [AC_MSG_ERROR([You must install kernel-headers in order to compile libvirt with QEMU or LXC support])],
+-      [[#include <netinet/in.h>
++      [[/* The kernel folks broke their headers when used with particular
++         * glibc versions; although the structs are ABI compatible, the
++         * C type system doesn't like struct redefinitions.  We work around
++         * the problem here in the same manner as in virnetdevbridge.c.  */
++        #include <netinet/in.h>
++        #define in6_addr in6_addr_
++        #define sockaddr_in6 sockaddr_in6_
++        #define ipv6_mreq ipv6_mreq_
+       ]])
+   fi
+ fi
+-- 
+1.8.3.2
+
