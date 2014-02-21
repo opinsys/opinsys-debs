@@ -1,0 +1,5 @@
+# See uscan(1) for format
+version=3
+opts=dversionmangle=s/\+dfsg// \
+http://sf.net/libseccomp/libseccomp-(.*)\.tar\.gz \
+    debian uupdate

@@ -1,0 +1,42 @@
+Description: LIBFLAGS are for libraries, LDFLAGS are for linker arguments.
+Author: Kees Cook <kees@debian.org>
+
+Index: libseccomp-2.1.0/macros.mk
+===================================================================
+--- libseccomp-2.1.0.orig/macros.mk	2013-08-13 00:55:29.615739819 -0700
++++ libseccomp-2.1.0/macros.mk	2013-08-13 01:00:12.123634186 -0700
+@@ -136,7 +136,7 @@
+ ifeq ($(V),0)
+ 	COMPILE_EXEC = @echo " CC $@";
+ endif
+-COMPILE_EXEC += $(GCC) $(CFLAGS) $(CPPFLAGS) -o $@ $< $(LDFLAGS);
++COMPILE_EXEC += $(GCC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) -o $@ $< $(LIBFLAGS);
+ 
+ ifeq ($(V),0)
+ 	ARCHIVE = @echo " AR $@";
+Index: libseccomp-2.1.0/tools/Makefile
+===================================================================
+--- libseccomp-2.1.0.orig/tools/Makefile	2013-05-29 11:46:02.000000000 -0700
++++ libseccomp-2.1.0/tools/Makefile	2013-08-13 00:58:11.025965101 -0700
+@@ -32,7 +32,7 @@
+ include $(TOPDIR)/configure.mk
+ include $(TOPDIR)/install.mk
+ 
+-LDFLAGS := ../src/libseccomp.a
++LIBFLAGS := ../src/libseccomp.a
+ 
+ TOOLS = scmp_bpf_disasm \
+ 	scmp_bpf_sim \
+Index: libseccomp-2.1.0/tests/Makefile
+===================================================================
+--- libseccomp-2.1.0.orig/tests/Makefile	2013-05-23 13:53:11.000000000 -0700
++++ libseccomp-2.1.0/tests/Makefile	2013-08-13 00:59:44.707256337 -0700
+@@ -34,7 +34,7 @@
+ 
+ OBJS = util.o
+ 
+-LDFLAGS := ../src/libseccomp.a $(OBJS)
++LIBFLAGS := ../src/libseccomp.a $(OBJS)
+ 
+ TEST_PRIVATE = 00-test
+ 

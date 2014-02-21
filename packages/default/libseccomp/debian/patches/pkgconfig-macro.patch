@@ -1,0 +1,26 @@
+Description: this bash trick doesn't work for some reason, so just replace
+ with the needed literal "libseccomp.pc" instead.
+Author: Kees Cook <kees@debian.org>
+
+Index: libseccomp-2.1.0/macros.mk
+===================================================================
+--- libseccomp-2.1.0.orig/macros.mk	2013-08-13 00:02:48.756235141 -0700
++++ libseccomp-2.1.0/macros.mk	2013-08-13 00:02:48.752235086 -0700
+@@ -185,15 +185,13 @@
+ 
+ ifeq ($(V),0)
+ 	INSTALL_PC_MACRO = \
+-	    @echo " INSTALL $$(cat /proc/$$$$/cmdline | awk '{print $$(NF)}')" \
+-		  " ($(INSTALL_LIB_DIR)/pkgconfig)";
++	    @echo " INSTALL libseccomp.pc ($(INSTALL_LIB_DIR)/pkgconfig)";
+ endif
+ INSTALL_PC_MACRO += \
+ 		$(INSTALL) -o $(INSTALL_OWNER) -g $(INSTALL_GROUP) \
+ 			-d "$(INSTALL_LIB_DIR)/pkgconfig"; \
+ 		$(INSTALL) -o $(INSTALL_OWNER) -g $(INSTALL_GROUP) -m 0644 \
+-			"$$(cat /proc/$$$$/cmdline | awk '{print $$(NF)}')" \
+-			"$(INSTALL_LIB_DIR)/pkgconfig"; \#
++			"libseccomp.pc" "$(INSTALL_LIB_DIR)/pkgconfig"; \#
+ 
+ ifeq ($(V),0)
+ 	INSTALL_INC_MACRO = @echo " INSTALL $^ ($(INSTALL_INC_DIR))";

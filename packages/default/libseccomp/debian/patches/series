@@ -1,0 +1,3 @@
+pkgconfig-macro.patch
+manpage-typo.patch
+build-ldflags.patch

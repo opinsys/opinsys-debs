@@ -1,0 +1,16 @@
+Description: fix typo in manpage, noticed by lintian.
+Author: Kees Cook <kees@debian.org>
+
+Index: libseccomp-2.1.0/doc/man/man1/scmp_sys_resolver.1
+===================================================================
+--- libseccomp-2.1.0.orig/doc/man/man1/scmp_sys_resolver.1	2013-05-29 11:46:16.000000000 -0700
++++ libseccomp-2.1.0/doc/man/man1/scmp_sys_resolver.1	2013-08-13 00:34:46.002565608 -0700
+@@ -37,7 +37,7 @@
+ values are "x86", "x86_64", "x32", and "arm".
+ .TP
+ .B \-t
+-If neccessary, translate the system call name to the proper system call number,
++If necessary, translate the system call name to the proper system call number,
+ even if the system call name is different, e.g. socket(2) on x86.
+ .TP
+ .B \-h
