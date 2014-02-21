@@ -24,3 +24,11 @@ ifeq (,$(findstring nocheck,$(DEB_BUILD_OPTIONS)))
 	cd tests && ./regression 2>&1 | tee regression.out && \
 	  grep -q "^ tests failed: 0" regression.out || true
 endif
+
+PACKAGE = libseccomp
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+.PHONY: get-orig-source
+get-orig-source:
+	wget -c http://heanet.dl.sourceforge.net/project/libseccomp/libseccomp-$(SRC_VERSION).tar.gz -O ../$(TARBALL)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
