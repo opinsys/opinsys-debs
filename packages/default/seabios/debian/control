@@ -1,0 +1,24 @@
+Source: seabios
+Section: misc
+Priority: extra
+Maintainer: Debian QEMU Team <pkg-qemu-devel@lists.alioth.debian.org>
+Uploaders: Aurelien Jarno <aurel32@debian.org>, Riku Voipio <riku.voipio@iki.fi>, Vagrant Cascadian <vagrant@debian.org>,
+	Michael Tokarev <mjt@tls.msk.ru>
+Build-Depends: debhelper (>= 7), python, iasl (<< 20130214)
+Standards-Version: 3.9.4
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-qemu/seabios.git
+Vcs-Git: git://anonscm.debian.org/pkg-qemu/seabios.git
+Homepage: http://www.seabios.org
+
+Package: seabios
+Architecture: all
+Multi-Arch: allowed
+Depends: ${misc:Depends}
+Breaks: qemu-system (<< 0.14.0), qemu-kvm (<< 0.14.0)
+Description: Legacy BIOS implementation
+ SeaBIOS is a legacy BIOS implementation, aimed at supporting not only
+ emulated hosts such as QEMU, but also real hardware.
+ .
+ Note, however, that SeaBIOS does not handle early initialization of core
+ chipsets, so don't even think of flashing it to your board (look at
+ Coreboot for that).
