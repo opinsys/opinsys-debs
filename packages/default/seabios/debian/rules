@@ -91,4 +91,11 @@ binary-indep: build install
 	dh_builddeb
 
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install
+.PHONY: build clean binary-indep binary-arch binary install get-orig-source
+
+PACKAGE = seabios
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+get-orig-source:
+	wget -c http://code.coreboot.org/p/seabios/downloads/get/seabios-$(SRC_VERSION).tar.gz -O ../$(TARBALL)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
