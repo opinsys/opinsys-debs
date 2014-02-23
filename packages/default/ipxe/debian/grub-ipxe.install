@@ -1,0 +1,2 @@
+debian/grub.d/25_ipxe etc/grub.d
+src/bin/ipxe.lkrn /boot

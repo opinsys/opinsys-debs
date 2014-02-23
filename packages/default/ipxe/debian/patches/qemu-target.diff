@@ -1,0 +1,14 @@
+--- a/src/Makefile.housekeeping
++++ b/src/Makefile.housekeeping
+@@ -1145,6 +1145,11 @@ $(BIN)/%.o : payload/%.img
+ 
+ BOBJS += $(patsubst payload/%.img,$(BIN)/%.o,$(wildcard payload/*.img))
+ 
++# Create qemu target for qemu package
++#
++QEMUS = 8086100e ne pcnet32 rtl8139 virtio-net
++allqemu : $(foreach ROM,$(QEMUS),$(BIN)/$(ROM).rom)
++
+ # Alias for ipxe.%
+ #
+ $(BIN)/etherboot.% : $(BIN)/ipxe.%

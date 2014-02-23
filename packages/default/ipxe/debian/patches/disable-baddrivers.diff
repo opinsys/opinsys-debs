@@ -1,0 +1,34 @@
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -96,6 +96,31 @@ SRCDIRS		+= config
+ #
+ NON_AUTO_SRCS	:=
+ NON_AUTO_SRCS	+= drivers/net/prism2.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_ani.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_ar5008_phy.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_ar9002_calib.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_ar9002_hw.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_ar9002_mac.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_ar9002_phy.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_ar9003_calib.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_ar9003_eeprom.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_ar9003_hw.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_ar9003_mac.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_ar9003_phy.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_calib.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_common.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_eeprom_4k.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_eeprom_9287.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_eeprom.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_eeprom_def.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_hw.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_init.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_mac.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_main.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_recv.c
++NON_AUTO_SRCS	+= drivers/net/ath/ath9k/ath9k_xmit.c
++
+ 
+ # INCDIRS lists the include path
+ #

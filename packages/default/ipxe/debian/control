@@ -1,0 +1,60 @@
+Source: ipxe
+Section: admin
+Priority: optional
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: Bastian Blank <waldi@debian.org>
+Build-Depends: debhelper (>= 7.0.50~),
+ genisoimage, syslinux
+Standards-Version: 3.9.2
+Homepage: http://ipxe.org/
+#Vcs-Git: git://git.debian.org/collab-maint/ipxe.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/ipxe.git;a=summary
+
+Package: ipxe
+Architecture: all
+Depends: ipxe-qemu, ${misc:Depends}
+Description: PXE boot firmware
+ iPXE is network boot firmware.  It supports a variety of network cards,
+ including some wireless cards, and variety of network protocols (traditional
+ DHCP, BOOTP and TFTP and also HTTP, iSCSI, SAN via FCoE and Infiniband). It
+ supports scripting.
+ .
+ It is possible to use iPXE as a PXE ROM in the network card or to
+ chainload it from other boot methods.
+ .
+ This package provides boot code for all supported network cards in one
+ binary, in several bootable formats, and also many boot ROMs to be
+ embedded in various network cards.
+
+Package: ipxe-qemu
+Architecture: all
+Depends: ${misc:Depends}
+Breaks: kvm-ipxe (<< 1.0.0+git-20130710.936134e-0ubuntu1)
+Replaces: kvm-ipxe (<< 1.0.0+git-20130710.936134e-0ubuntu1)
+Section: admin
+Description: Virtual package to support use of kvm-ipxe with qemu
+ iPXE is network boot firmware.  It supports a variety of network cards,
+ including some wireless cards, and variety of network protocols (traditional
+ DHCP, BOOTP and TFTP and also HTTP, iSCSI, SAN via FCoE and Infiniband). It
+ supports scripting.
+ .
+ This package contains PXE ROM's made especially to pxeboot kvm vm's.
+
+Package: kvm-ipxe
+Architecture: all
+Depends: ipxe-qemu, ${misc:Depends}
+Section: oldlibs
+Description: transitional dummy package
+ This is a transitional dummy package. It can safely be removed.
+
+Package: grub-ipxe
+Architecture: all
+Suggests: grub-pc (>= 1.96)
+Depends: ${misc:Depends}
+Description: Network booting from GRUB using iPXE
+ iPXE is network boot firmware.  It supports a variety of network cards,
+ including some wireless cards, and variety of network protocols (traditional
+ DHCP, BOOTP and TFTP and also HTTP, iSCSI, SAN via FCoE and Infiniband). It
+ supports scripting.
+ .
+ This package adds a menu entry to grub2 for network booting using iPXE.

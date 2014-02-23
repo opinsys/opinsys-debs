@@ -1,0 +1,38 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+%:
+	dh $@ 
+
+override_dh_auto_build:
+	make -C src V=1 NO_WERROR=1 all allroms allqemu bin/ipxe.pxe bin/ipxe.lkrn
+
+override_dh_auto_clean:
+	make -C src veryclean
+	rm -f src/config/local/*
+
+override_dh_auto_install:
+	mkdir -p $(CURDIR)/debian/ipxe-qemu/usr/share/qemu
+	mv src/bin/8086100e.rom      $(CURDIR)/debian/ipxe-qemu/usr/share/qemu/pxe-e1000.rom
+	mv src/bin/ne.rom            $(CURDIR)/debian/ipxe-qemu/usr/share/qemu/pxe-ne2k_isa.rom
+	mv src/bin/pcnet32.rom       $(CURDIR)/debian/ipxe-qemu/usr/share/qemu/pxe-pcnet32.rom
+	mv src/bin/rtl8139.rom       $(CURDIR)/debian/ipxe-qemu/usr/share/qemu/pxe-rtl8139.rom
+	mv src/bin/virtio-net.rom    $(CURDIR)/debian/ipxe-qemu/usr/share/qemu/pxe-virtio.rom
+
+# Stuff for get-orig-source.
+version_prefix := $(shell dpkg-parsechangelog | sed -ne 's/^Version.*git-\(.*\)\..*/\1/p')
+# Git short hash is prefixed with date of snapshot
+new_prefix := $(shell date +%Y%m%d)
+
+get-orig-source:
+	# Grab the latest snapshot of the upstream git repository
+	[ ! -d ipxe-snapshot ] || rm -rf ipxe-snapshot
+	git clone git://git.ipxe.org/ipxe.git ipxe-snapshot
+	cd ipxe-snapshot && \
+		commit=`git rev-parse --short HEAD` && \
+		git archive --format=tar --prefix=ipxe-1.0.0+git-$(new_prefix).$${commit}/ master |\
+			gzip -9 --no-name > ../../ipxe_1.0.0+git-$(new_prefix).$${commit}.orig.tar.gz
+	rm -rf ipxe-snapshot

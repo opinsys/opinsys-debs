@@ -1,0 +1,16 @@
+Description: Set rom banner timeout to 0
+Author: Serge Hallyn <serge.hallyn@ubuntu.com>
+Bug-Ubuntu: https://bugs.launchpad.net/ubuntu/+source/ipxe/+bug/921230
+Forwarded: no
+
+--- a/src/arch/i386/prefix/romprefix.S
++++ b/src/arch/i386/prefix/romprefix.S
+@@ -30,7 +30,7 @@ FILE_LICENCE ( GPL2_OR_LATER )
+  * doubled to allow for BIOSes that switch video modes immediately
+  * beforehand, so rendering the message almost invisible to the user.
+  */
+-#define ROM_BANNER_TIMEOUT ( 2 * ( 18 * BANNER_TIMEOUT ) / 10 )
++#define ROM_BANNER_TIMEOUT 0
+ 
+ /* Allow payload to be excluded from ROM size
+  */

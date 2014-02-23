@@ -1,0 +1,7 @@
+src/bin/*.rom usr/lib/ipxe
+src/bin/ipxe.iso usr/lib/ipxe
+src/bin/ipxe.lkrn usr/lib/ipxe
+src/bin/ipxe.pxe usr/lib/ipxe
+src/bin/ipxe.dsk usr/lib/ipxe
+src/bin/ipxe.usb usr/lib/ipxe
+src/bin/undionly.kpxe usr/lib/ipxe

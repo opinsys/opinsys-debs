@@ -1,0 +1,4 @@
+disable-baddrivers.diff
+qemu-target.diff
+rom-set-banner-timeout-0.diff
+enable-https.patch

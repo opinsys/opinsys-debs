@@ -1,0 +1,5 @@
+usr/share/qemu/pxe-virtio.rom usr/lib/ipxe/virtio-net.rom
+usr/share/qemu/pxe-rtl8139.rom usr/lib/ipxe/rtl8139.rom
+usr/share/qemu/pxe-pcnet32.rom usr/lib/ipxe/pcnet32.rom
+usr/share/qemu/pxe-ne2k_isa.rom usr/lib/ipxe/ne.rom
+usr/share/qemu/pxe-e1000.rom usr/lib/ipxe/8086100e.rom

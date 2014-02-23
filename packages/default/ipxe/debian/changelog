@@ -1,0 +1,145 @@
+ipxe (1.0.0+git-20130710.936134e-0ubuntu1) saucy; urgency=low
+
+  * New upstream snapshot:
+    - d/p/fix-bp-bug.patch: Dropped; included in snapshot.
+    - d/p/baseroms-target.diff: Dropped; no longer required.
+    - Refreshed all other patches.
+  * d/rules: Use date for snapshot prefix instead of increment.
+  * d/p/qemu-target-fix-names.diff: Consolidated into qemu-target.diff.
+  * d/p/*: Tidied redundant patches.
+  * d/control,rules: Move roms for use with qemu-kvm to ipxe-qemu, update
+    kvm-ipxe to be transitional.
+  * d/control: Drop Depends from grub-ipxe to ipxe as its not required.
+
+ -- James Page <james.page@ubuntu.com>  Wed, 10 Jul 2013 12:23:26 +0100
+
+ipxe (1.0.0+git-4.d6b0b76-0ubuntu3) saucy; urgency=low
+
+  * debian/patches/fix-bp-bug.patch: fixes FTBFS (LP: #1194914)
+
+ -- Yolanda Robla <yolanda.robla@canonical.com>  Thu, 27 Jun 2013 11:22:43 +0200
+
+ipxe (1.0.0+git-4.d6b0b76-0ubuntu2) raring; urgency=low
+
+  * d/control: Add ipxe-qemu virtual package for use with qemu.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 20 Nov 2012 16:08:21 -0600
+
+ipxe (1.0.0+git-4.d6b0b76-0ubuntu1) raring; urgency=low
+
+  * New upstream snapshot:
+    - d/p/iscsi*.patch: Dropped - included in snapshot.
+    - Refreshed all other patches.
+  * d/p/enable-https.patch: Enable HTTPS support (LP: #1025239).
+
+ -- James Page <james.page@ubuntu.com>  Wed, 14 Nov 2012 15:47:31 +0000
+
+ipxe (1.0.0+git-3.55f6c88-0ubuntu5) quantal; urgency=low
+
+  * Fix input/output errors when using ipxe to boot from iSCSI storage
+    (LP: #1045923).
+    - d/p/iscsi-{report-reponse,send-padding-inline}.patch: Cherry picked
+      patches from upstream VCS which resolve two issues with iSCSI protocol
+      handling.
+
+ -- James Page <james.page@ubuntu.com>  Thu, 06 Sep 2012 21:46:54 +0100
+
+ipxe (1.0.0+git-3.55f6c88-0ubuntu4) quantal; urgency=low
+
+  * debian/ipxe.install: add ipxe.dsk and ipxe.usb (LP: #1014005)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 21 Aug 2012 14:48:44 -0500
+
+ipxe (1.0.0+git-3.55f6c88-0ubuntu3) quantal; urgency=low
+
+  [ Serge Hallyn ]
+  * debian/patches/rom-set-banner-timeout-0.diff: set rom banner timeout
+    to 0.  (LP: #921230)
+  
+  [ Stefan Bader ]
+  * Modify the ROM names in of the allqemu target to use 8086100e instead
+    of e1000_82540 and ne instead of ne2k_isa (LP: #948323)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 28 May 2012 11:57:48 -0500
+
+ipxe (1.0.0+git-3.55f6c88-0ubuntu2) quantal; urgency=low
+
+  * debian/grub.d/25_ipxe: removed the space after "Found iPXE image"
+    to match other grub-update script fragments (LP: #990378).
+  * debian/control: fixed some Lintian warnings.
+    - TODO: lots of missing Copyright information.
+
+ -- Martin-Éric Racine <q-funk@ubuntu.com>  Sat, 28 Apr 2012 11:41:28 +0300
+
+ipxe (1.0.0+git-3.55f6c88-0ubuntu1) precise; urgency=low
+
+  [ Marc Cluet ]
+  * New upstream snapshot.
+  * Added rules for automatic git branch refresh.
+  * Changed rom target from allbaseroms to allroms.
+    - recommended behaviour by upstream, building all full roms is neither
+      recommended nor a desired user experience
+  * Added new target allqemu for qemu package.
+    - created new build target to build full rom drivers just for qemu
+      package purposes
+  * Cleaned lintian errors from debian package
+    - Removed brace extension in ipxe.install
+    - Updated standards to 3.9.2
+    - Fixed copyright file not machine readable
+
+  [ James Page ]
+  * Updated get-orig-source target to generate git snapshots inline
+    with upstream version numbering being used by this package. 
+
+ -- Marc Cluet <marc.cluet@ubuntu.com>  Fri, 10 Feb 2012 16:21:23 +0000
+
+ipxe (1.0.0+git-2.149b50-1ubuntu4) precise; urgency=low
+
+  * Add missing Breaks/Replaces for kvm-ipxe split in
+    1.0.0+git-2.149b50-1ubuntu3 (LP: #905099).
+
+ -- Robie Basak <robie.basak@ubuntu.com>  Fri, 16 Dec 2011 10:43:54 +0000
+
+ipxe (1.0.0+git-2.149b50-1ubuntu3) precise; urgency=low
+
+  * add new binary package, kvm-ipxe. The roms needed by kvm-ipxe are now only
+    provided by it, so
+    - make ipxe depend on kvm-ipxe.
+    - ipxe.links: reverse the links
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 25 Nov 2011 12:58:48 -0600
+
+ipxe (1.0.0+git-2.149b50-1ubuntu2) precise; urgency=low
+
+  * Provide a new binary package, grub-ipxe - for ipxe usage via grub.
+    - LP: #814038, Closes #626238
+
+ -- Ben Howard <ben.howard@canonical.com>  Thu, 25 Aug 2011 11:03:52 -0600
+
+ipxe (1.0.0+git-2.149b50-1ubuntu1) oneiric; urgency=low
+
+  * Link Roms into /usr/share/qemu for consumption by
+    qemu-kvm.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 18 Aug 2011 13:34:38 -0500
+
+ipxe (1.0.0+git-2.149b50-1) unstable; urgency=low
+
+  * New snapshot.
+
+ -- Bastian Blank <waldi@debian.org>  Sun, 31 Jul 2011 20:57:02 +0200
+
+ipxe (1.0.0+git-1.293e34-2) unstable; urgency=low
+
+  * Add some missing copyrights and licenses to the copyright files.
+
+ -- Bastian Blank <waldi@debian.org>  Mon, 11 Apr 2011 19:35:36 +0200
+
+ipxe (1.0.0+git-1.293e34-1) unstable; urgency=low
+
+  * Initial release (closes: #474034)
+  * Remove drivers with binary-only firmware:
+    - Remove bnx2 driver.
+    - Remove linda infiniband driver.
+
+ -- Bastian Blank <waldi@debian.org>  Sun, 03 Apr 2011 11:32:56 +0200
