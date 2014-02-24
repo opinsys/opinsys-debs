@@ -30,5 +30,5 @@ SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):
 TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
 .PHONY: get-orig-source
 get-orig-source:
-	wget -c http://heanet.dl.sourceforge.net/project/libseccomp/libseccomp-$(SRC_VERSION).tar.gz -O ../$(TARBALL)
+	wget -c http://ftp.de.debian.org/debian/pool/main/libs/libseccomp/$(TARBALL) -O ../$(TARBALL)
 	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
