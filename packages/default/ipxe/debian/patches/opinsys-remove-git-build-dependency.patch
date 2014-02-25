@@ -1,0 +1,13 @@
+--- ipxe-1.0.0+git-20130710.936134e.orig/src/Makefile.housekeeping
++++ ipxe-1.0.0+git-20130710.936134e/src/Makefile.housekeeping
+@@ -686,10 +686,6 @@ CFLAGS_version += -DVERSION_MAJOR=$(VERS
+ 		  -DVERSION_MINOR=$(VERSION_MINOR) \
+ 		  -DVERSION_PATCH=$(VERSION_PATCH) \
+ 		  -DVERSION="\"$(VERSION)\""
+-# Make sure the version number gets updated on every git checkout
+-ifneq ($(GITVERSION),)
+-$(BIN)/version.o : ../.git/index
+-endif
+ 
+ # We automatically generate rules for any file mentioned in AUTO_SRCS
+ # using the following set of templates.  We use $(eval ...) if
