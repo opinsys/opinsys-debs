@@ -69,5 +69,12 @@ binary-arch: build install
 	dh_md5sums
 	dh_builddeb
 
+PACKAGE = device-tree-compiler
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+get-orig-source:
+	wget -c http://ftp.de.debian.org/debian/pool/main/d/device-tree-compiler/$(TARBALL) -O ../$(TARBALL)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
+
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install
+.PHONY: build clean binary-indep binary-arch binary install get-orig-source
