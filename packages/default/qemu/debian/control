@@ -11,7 +11,7 @@ Build-Depends: debhelper (>= 9),
 # to qemu's configure script, -- optional features which depend
 # on build-dependencies.
 # pc-bios/*.dts => *.dtb (PPC firmware)
- device-tree-compiler,
+ device-tree-compiler (>= 1.4),
  texinfo,
  python,
 # --enable-linux-aio	linux-*
