@@ -7,8 +7,10 @@
 %:
 	dh $@ 
 
+git_commit := $(shell dpkg-parsechangelog | sed -r -n -e 's/^Version: .*\+git-[0-9]+\.(.*)-.*/\1/p')
+
 override_dh_auto_build:
-	make -C src V=1 NO_WERROR=1 all allroms allqemu bin/ipxe.pxe bin/ipxe.lkrn
+	make -C src V=1 NO_WERROR=1 GITVERSION=$(git_commit) all allroms allqemu bin/ipxe.pxe bin/ipxe.lkrn
 
 override_dh_auto_clean:
 	make -C src veryclean
@@ -24,7 +26,6 @@ override_dh_auto_install:
 
 # Stuff for get-orig-source.
 version_prefix := $(shell dpkg-parsechangelog | sed -ne 's/^Version.*git-\(.*\)\..*/\1/p')
-git_commit := $(shell dpkg-parsechangelog | sed -r -n -e 's/^Version: .*\+git-[0-9]+\.(.*)-.*/\1/p')
 
 get-orig-source:
 	# Grab the latest snapshot of the upstream git repository
