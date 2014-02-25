@@ -1,0 +1,17 @@
+--- a/configure
++++ b/configure
+@@ -2406,6 +2406,14 @@
+ #include <fcntl.h>
+ #include <sys/stat.h>
+ 
++#if defined __stub_futimens || defined __stub___futimens
++choke me
++#endif
++
++#if defined __stub_utimensat || defined __stub___utimensat
++choke me
++#endif
++
+ int main(void)
+ {
+     utimensat(AT_FDCWD, "foo", NULL, 0);

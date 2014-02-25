@@ -1,0 +1,6 @@
+02_kfreebsd.patch
+retry-pxe-after-efi.patch
+use-fixed-data-path.patch
+fix-smb-security-share.patch
+move-ncalrpc-dir-to-tmp.patch
+slirp-smb-redirect-port-445-too.patch

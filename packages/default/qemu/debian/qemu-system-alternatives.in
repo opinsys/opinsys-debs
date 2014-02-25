@@ -1,0 +1,26 @@
+# == begin update-alternatives maintscript fragment ==
+# This is a script fragment used in postinst, prerm and postrm maintscripts.
+# Set up /usr/bin/qemu alternative to be one the qemu-system emulators.
+# See #722914 for details about how it is done
+
+arches="@ARCH@" # our architectures
+
+case "$DPKG_MAINTSCRIPT_NAME:$1" in
+
+  postinst:configure )
+    for arch in $arches ; do
+      # Set i386 as highest priority,
+      # as it has been the default qemu for quite some time.
+      case $arch in i386) prio=20;; *) prio=10;; esac
+      update-alternatives --install /usr/bin/qemu qemu \
+              /usr/bin/qemu-system-$arch $prio
+    done;;
+
+  prerm:remove | postrm:disappear )
+    for arch in $arches ; do
+      update-alternatives --remove qemu /usr/bin/qemu-system-$arch
+    done;;
+
+esac
+
+# == end update-alternatives maintscript fragment ==

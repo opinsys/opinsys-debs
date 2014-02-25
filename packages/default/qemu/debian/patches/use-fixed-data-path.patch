@@ -1,0 +1,48 @@
+Subject: use fixed data dir instead of determining it at runtime
+From: Michael Tokarev <mjt@tls.msk.ru>
+Debian-specific: yes
+
+Since we install to a fixed location, use fixed data directory
+instead of deriving it at runtime from executable path.
+This way it is possible to move qemu binary to another directory
+and it will still work.
+
+diff --git a/os-posix.c b/os-posix.c
+index d39261d..ab6b9fd 100644
+--- a/os-posix.c
++++ b/os-posix.c
+@@ -79,6 +79,7 @@ void os_setup_signal_handling(void)
+     sigaction(SIGTERM, &act, NULL);
+ }
+ 
++#if 0 /* we use a fixed configured data path */
+ /* Find a likely location for support files using the location of the binary.
+    For installed binaries this will be "$bindir/../share/qemu".  When
+    running from the build tree this will be "$bindir/../pc-bios".  */
+@@ -141,6 +142,7 @@ char *os_find_datadir(const char *argv0)
+ }
+ #undef SHARE_SUFFIX
+ #undef BUILD_SUFFIX
++#endif
+ 
+ void os_set_proc_name(const char *s)
+ {
+diff --git a/vl.c b/vl.c
+index f422a1c..77bca6b 100644
+--- a/vl.c
++++ b/vl.c
+@@ -3939,14 +3939,6 @@ int main(int argc, char **argv, char **envp)
+         exit(1);
+     }
+ 
+-    /* If no data_dir is specified then try to find it relative to the
+-       executable path.  */
+-    if (data_dir_idx < ARRAY_SIZE(data_dir)) {
+-        data_dir[data_dir_idx] = os_find_datadir(argv[0]);
+-        if (data_dir[data_dir_idx] != NULL) {
+-            data_dir_idx++;
+-        }
+-    }
+     /* If all else fails use the install path specified when building. */
+     if (data_dir_idx < ARRAY_SIZE(data_dir)) {
+         data_dir[data_dir_idx++] = CONFIG_QEMU_DATADIR;
