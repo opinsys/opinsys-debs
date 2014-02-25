@@ -81,7 +81,7 @@ Build-Depends: debhelper (>= 9),
  zlib1g-dev,
 # other optional features we enable
 # --enable-vnc
-# --enable-vnc-jpeg
+## --enable-vnc-jpeg
 # --enable-vnc-png
 # --enable-kvm		linux-*
 # --enable-vhost-net	linux-*	# is it really linux-specific?
