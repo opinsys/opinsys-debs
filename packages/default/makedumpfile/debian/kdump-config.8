@@ -1,0 +1,229 @@
+.\"
+.TH "kdump-config" "8" "April 2007" "kdump-tools v1.1.3" "Linux System Administrator's Manual"
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.SH NAME
+kdump-config \- configure kdump, check status, or save a vmcore file
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.SH SYNOPSIS
+.HP 6
+.B kdump-config { help | test | show | status | load | unload | savecore }
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.SH DESCRIPTION
+.PP 
+
+.B kdump-config
+manages the kdump feature of the Linux kernel.  
+When a kdump enabled kernel panics, it immediately boots into a clean 
+kernel called the kdump kernel.  The memory image of the panicked kernel 
+will be presented in 
+.I /proc/vmcore
+while the kdump kernel (or "capture kernel") is running. 
+
+.B kdump-config 
+loads the kdump kernel into the current kernel
+and after a kdump, captures the vmcore image via kdump kernel.  
+.B kdump-config 
+can take advantage of the 
+.B linux-image-$(uname -r)-dbg
+package and will try to use 
+.B makedumpfile
+to capture the vmcore.  The 
+.B crash 
+tool can then be used to analyze the vmcore at a later time.
+
+.B kdump-config
+exits with 0 on success and 1 on failure.
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.SH COMMANDS
+.TP 
+.B help
+Print a usage summary.
+.TP 
+.B test
+Determine the parameters that would be used to load the kdump kernel,
+but do not load the kdump kernel.  Useful for evaluating your configuration
+settings.
+.TP 
+.B show
+Show current parameters and the saved kexec command from the last
+.BR "kdump-config load" .
+.TP 
+.B status
+Evaluate 
+.I /sys/kernel/kexec_crash_loaded
+ and print a corresponding message.
+.TP 
+.B load
+Load the kdump kernel.
+.TP 
+.B unload
+Unload the kdump kernel.
+.TP
+.B savecore
+If 
+.I /proc/vmcore
+exists, save it using makedumpfile.
+
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.SH FILES
+.TP 15
+.I /etc/init.d/kdump-tools
+init script to automatically load a kdump kernel, or save a vmcore and reboot.
+.TP 15
+.I /etc/default/kdump-tools
+configuration file
+.TP 15
+.I /var/crash/kernel_link
+a link to the current debug kernel
+.TP 15
+.I /var/crash/kexec_cmd
+the last kexec_cmd executed by 
+.B kdump-config
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.SH DIAGNOSTICS
+.TP
+.B USE_KDUMP is not set or zero
+The variable 
+.I USE_KDUMP 
+in the file 
+.I /etc/default/kdump-tools
+ is 0.  To use kdump, edit the file and change the value to 1.
+.\"
+.TP
+.B kdump is not supported by this kernel
+The file 
+.I /sys/kernel/kexec_crash_loaded 
+does not exist.  This means that the
+currently running kernel either was not configured to support kdump, or that
+a crashkernel= commandline parameter was not used when the currently running
+kernel booted.
+.\"
+.TP
+.B no crashkernel= parameter in the kernel cmdline
+a crashkernel= commandline parameter was not used when the currently 
+running kernel booted.  You will need to add a crashkernel= parameter
+to your 
+.IR /etc/lilo.conf , 
+.I /etc/elilo.conf 
+or grub 
+.I /boot/grub/menu.lst
+file and reboot, before kdump will work.  See installed READMEs for suggestions.
+.\"
+
+.RS 0
+.nf
+.B could not find an installed debug vmlinux image and
+.B DEBUG_KERNEL is not specified in /etc/default/kdump-tools
+.B Warning: makedumpfile will be limited to -d 1.
+.fi
+.RS 
+A debug version of the currently booted kernel could not be
+found.  
+.RE
+.RE
+.\"
+.TP
+.B KDUMP_KERNEL does not exist: $KDUMP_KERNEL
+A KDUMP_KERNEL was specified in 
+.IR /etc/default/kdump-tools ,
+but it cannot be found.
+.\"
+.TP
+.B KDUMP_INITRD does not exist: $KDUMP_INITRD
+A KDUMP_INITRD was specified in 
+.IR /etc/default/kdump-tools ,
+but it cannot be found.
+.\"
+
+.RS 0
+.nf
+.B no KDUMP_KERNEL in $KDUMP_DEFAULTS and
+.B can't find a kdump package directory in /usr/lib
+.fi
+.RS
+no kdump kernel could be found.
+.RE
+.RE
+
+.RS 0
+.nf
+.B found a linux-kdump package in $KDUMP_PKG_DIR
+.B but can't find a kdump kernel in $KDUMP_PKG_DIR
+.fi
+.RS
+this indicates a broken linux-kdump package installation.
+.RE
+.RE
+
+.RS 0
+.nf
+.B no kdump initrd image: $KDUMP_INITRD
+.B an initrd will not be used
+.fi
+.RS 
+this indicates that although a kdump kernel was found,
+a corresponding initrd was not found. 
+.RE
+.RE
+.\"
+.TP 
+.B kdump kernel relocation address does not match crashkernel= parameter
+For non-relocatable architectures, the kdump kernel must be built with
+a predetermined start address.  This message indicates that the start
+address of the kdump kernel and the start address in the crashkernel=
+parameter do not match.
+.\"
+.TP
+.B failed to load kdump kernel
+kexec reported that it could not load the kdump kernel.
+.\"
+.TP 
+.B failed to unload kdump kernel
+kexec reported that it could not unload the kdump kernel.
+Run 'kexec -u' directly for more detail.
+.\"
+.TP
+.B makedumpfile failed, falling back to 'cp'
+this message is printed if the 
+.B kdump-tools 
+init script attempts to save a 
+.I /proc/vmcore 
+file using makedumpfile and the save fails.
+.\"
+.TP
+.B failed to save vmcore in $KDUMP_STAMPDIR
+this message indicates that makedumpfile 
+and the fallback method of using cp has failed.  This usually occurs
+if pathnames are wrong or if the disk is full.
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.SH SEE ALSO
+.PP 
+.I /usr/share/doc/kdump-tools/README
+.br
+.I /usr/share/doc/kdump-tools/README.Debian
+.br
+.BR kdump-tools (5),
+.BR kexec (8),
+.BR crash (8),
+.BR gdb (1),
+.BR makedumpfile (8)
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.SH AUTHOR
+.PP 
+Terry Loftin <terry.loftin@hp.com>

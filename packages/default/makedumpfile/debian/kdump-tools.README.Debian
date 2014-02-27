@@ -1,0 +1,77 @@
+The kdump-tools package provides init scripts and configuration files to
+use kdump.
+
+It is as automated as can be at this point, but some manual configuration
+may still be required.  Specifically:
+
+1. Kernel Configuration
+    You must boot a kernel that was configured with:
+        CONFIG_KEXEC=y
+        CONFIG_CRASH_DUMP=y
+    For ia64, you also need:
+        CONFIG_SPARSEMEM=y
+    For the resulting dump to be useful, you probably also want:
+        CONFIG_DEBUG_INFO=y
+
+    If you use CONFIG_DISCONTIG, then you can only use makedumpfile level
+    1 (omit zero pages).
+
+2. Kdump Kernel
+    You must have a kdump kernel, which is either relocatable or built to
+    start at a non-default address (which you must also set in the kernel
+    command-line parameter, see below).  Linux on ia64 is always
+    relocatable; recent x86, x86_64, and powerpc kernels have an option
+    for this:
+        CONFIG_RELOCATABLE=y
+    If your architecture does not support this option, you must build it
+    with a non-default CONFIG_PHYSICAL_START option.
+
+    If your boot kernel is relocatable, kdump-config will use it as the
+    kdump kernel.  Otherwise, you will have to provide one.  Once you
+    have a relocatable crash kernel, set KDUMP_KERNEL and if necessary
+    KDUMP_INITRD in the /etc/default/kdump-tools file.
+
+    The kdump kernel needs to be configured with:
+        CONFIG_CRASH_DUMP=y
+
+3. Kernel Command line parameter
+    You must boot your kernel with a 'crashkernel=' command line parameter,
+    for example:
+
+      crashkernel=128M
+
+    That will reserve 128 MB of memory for the kdump kernel to use in case
+    of a crash.  See Documentation/kdump/kdump.txt in the Linux source for
+    more advanced crashkernel parameter syntax.
+
+    You may also want to add 'nmi_watchdog=1' on certain systems.
+
+4. Debug Kernel
+    You *should* have a debug kernel in order for makedumpfile to process
+    the vmcore file.  Without a debug kernel, the transfer process is
+    reduced to using "makedumpfile -d 1".   Options:
+        A)  If /usr/lib/debug/boot/vmlinux-$(uname -r) exists,
+	    kdump-tools will use that kernel.
+        B)  Explicitly set DEBUG_KERNEL in /etc/default/kdump-tools to
+            point to your debug kernel.
+        C)  None of the above.  makedumpfile will still work, but your
+            dumpfile will be larger and take longer to save to disk.
+
+5. Local Configuration
+   The /etc/default/kdump-tools file can be modified to reflect your 
+   setup, if automatic detection fails, or if you need specific
+   architectural settings.
+
+6. Architectural considerations
+   A) x86 && PAE && memory > 4 Gigabytes 
+      will need to use KDUMP_KEXEC_ARGS="--elf64-core-headers"
+
+   B) x86 and x86_64
+      Some systems can take advantage of the nmi watchdog.  Add 
+      nmi_watchdog=1 to the boot commandline to turn on the watchdog.
+      The nmi interrupt will call panic if activated.
+
+   C) ia64
+      some systems may need KDUMP_KEXEC_ARGS="--noio".  Use this
+      if the system hangs after a panic, but before the kdump kernel 
+      begins to boot.

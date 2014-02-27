@@ -1,0 +1,25 @@
+From 81adb602200fb35695b94be139f46ae2e26d863f Mon Sep 17 00:00:00 2001
+From: Louis Bouchard <louis.bouchard@ubuntu.com>
+Date: Wed, 9 May 2012 13:41:03 +0200
+Subject: [PATCH 1/2] Remove libebl linkage
+
+---
+ Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index a06b2db..3001792 100644
+--- a/Makefile
++++ b/Makefile
+@@ -45,7 +45,7 @@ OBJ_PART = print_info.o dwarf_info.o elf_info.o erase_info.o sadump_info.o
+ SRC_ARCH = arch/arm.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c
+ OBJ_ARCH = arch/arm.o arch/x86.o arch/x86_64.o arch/ia64.o arch/ppc64.o arch/s390x.o arch/ppc.o
+ 
+-LIBS = -ldw -lbz2 -lebl -ldl -lelf -lz
++LIBS = -ldw -lbz2 -ldl -lelf -lz
+ ifneq ($(LINKTYPE), dynamic)
+ LIBS := -static $(LIBS)
+ endif
+-- 
+1.7.9.5
+

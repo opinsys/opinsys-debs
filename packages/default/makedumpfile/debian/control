@@ -1,0 +1,31 @@
+Source: makedumpfile
+Section: devel
+Priority: optional
+Maintainer: John Wright <jsw@debian.org>
+Uploaders: Louis Bouchard <louis.bouchard@ubuntu.com>
+Standards-Version: 3.8.2
+Build-Depends: debhelper (>= 7.0.50), libelf-dev, libz-dev, libdw-dev (>= 0.141-2ubuntu1), libbz2-dev
+Vcs-Git: git://git.debian.org/collab-maint/makedumpfile.git
+Vcs-Browser: http://git.debian.org/?p=collab-maint/makedumpfile.git;a=summary
+
+Package: makedumpfile
+Architecture: i386 amd64 powerpc ia64 lpia
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}
+Recommends: crash, kexec-tools
+Replaces: kdump-tools (<< 1.3.4-1~)
+Description: VMcore extraction tool
+ This program is used to extract a subset of the memory available either
+ via /dev/mem or /proc/vmcore (for crashdumps). It is used to get memory
+ images without extra uneeded information (zero pages, userspace programs,
+ etc).
+
+Package: kdump-tools
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, makedumpfile, kexec-tools
+Description: scripts and tools for automating kdump (Linux crash dumps)
+ kdump-tools provides an init script and a configuration script for
+ automating the use of kdump.  It uses the makedumpfile utility to
+ reduce the size of the /proc/vmcore file based on user preferences.
+ .
+ After installing, please see /usr/share/doc/kdump-tools/README.Debian
+ for information on enabling and configuring kdump.

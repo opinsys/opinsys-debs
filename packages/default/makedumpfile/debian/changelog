@@ -1,0 +1,191 @@
+makedumpfile (1.4.4-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- John Wright <jsw@debian.org>  Mon, 16 Jul 2012 04:01:21 -0600
+
+makedumpfile (1.4.3-1) unstable; urgency=low
+
+  [ Louis Bouchard ]
+  * Update packaging for upstream version 1.4.3
+
+  [ John Wright ]
+  * Add Louis Bouchard to Uploaders.  Thanks!
+
+ -- John Wright <jsw@debian.org>  Sun, 10 Jun 2012 00:34:07 -0700
+
+makedumpfile (1.4.0-1) unstable; urgency=low
+
+  * New upstream version
+  * Drop makedumpfile-static package, since makedumpfile depends on
+    libebl, which is no longer available statically, and nobody is
+    depending on makedumpfile-static anyway
+
+ -- John Wright <jsw@debian.org>  Sun, 22 Jan 2012 16:49:51 -0800
+
+makedumpfile (1.3.7-2) unstable; urgency=low
+
+  * Cherry-pick upstream commits:
+    - [PATCH] BUGFIX: Avoid SIGSEGV when specifying -V option.
+      (5b8c2da75cbdb230019a3b956793fb768055b977)
+    - [PATCH] Copy correct nr_cpus info to dumpfile during re-filtering.
+      (c4f1c98a9827c1c0e41772c1954940fbf1b48048)
+  * kdump-tools.init: Don't exit with failure status except for bad
+    usage.  This way, even if /etc/default/kdump-tools has USE_KDUMP=1
+    but the kernel command line or debug kernels are not set up,
+    installation of a new version of the package will not leave it
+    unconfigured.  (Closes: #623470)
+
+ -- John Wright <jsw@debian.org>  Tue, 26 Apr 2011 20:05:16 -0700
+
+makedumpfile (1.3.7-1) unstable; urgency=low
+
+  [ John Wright ]
+  * New upstream version
+  * kdump-config: Clean up kernel command-line argument stripping
+  * kdump-tools.init: Remove a stray "$" in the usage statement
+    (Closes: #581116)
+
+  [ dave medberry ]
+  * kdump-config: Convert 3 log_failure_msg to a log_warning_msg
+    (Closes: #594411)
+
+ -- John Wright <jsw@debian.org>  Sun, 17 Apr 2011 21:03:04 -0700
+
+makedumpfile (1.3.5-1) unstable; urgency=low
+
+  * New upstream version
+  * Preserve upstream's original makedumpfile.8 in clean target
+  * kdump-config: Fix a typo
+  * Switch to the "3.0 (quilt)" source format
+    - Remove unneeded Build-Depends on quilt
+  * Update kdump-tools.README.Debian to reflect that recent kernels
+    don't need a crash kernel start address
+  * Apply patch from Petter Reinholdtsen to fix incorrect dependencies
+    in kdump-tools.init (Closes: #569685)
+  * Indicate support for Linux 2.6.32
+    - Although upstream hasn't updated its LATEST_VERSION macro, this
+      version works without modification on Linux 2.6.32.  Squelch a
+      warning that a 2.6.32 kernel is not supported.
+  * Backport upstream commit 4a16bd39866093f4949f8e9dc183fa2321bda22d
+    - Fix buffer overflow when writing dh->signature
+
+ -- John Wright <jsw@debian.org>  Wed, 03 Mar 2010 17:17:35 -0700
+
+makedumpfile (1.3.4-1) unstable; urgency=low
+
+  * New upstream version.
+    - Remove debian/patches/02-Add_x86_64_linux-2.6.31.patch - already
+      included upstream
+  * Upload to Debian. Changes from Ubuntu:
+    - Switch to quilt from dpatch
+    - Set myself as the maintainer
+    - Don't ignore make clean errors
+    - Update to debhelper compatibility level 7 and simplify the rules
+      file by using dh
+    - Install the manpage with maximum compression
+    - Update Standards-Version to 3.8.2, adding a README.source
+      explaining the quilt patch setup
+    - Add ${perl:Depends} to Depends, since we ship a perl script
+    - Add Vcs-Git and Vcs-Browser fields to debian/control
+    - Clarify the copyright description
+    - Provide a dynamically linked binary in the makedumpfile package,
+      and a static binary in the makedumpfile-static package
+      - Add lintian overrides relating to makedumpfile-static being
+        statically linked
+    - Remove unused Build-Depends on zip
+    - Build a kdump-tools package that includes an init script and tools
+      to configure kdump
+
+ -- John Wright <jsw@debian.org>  Thu, 12 Nov 2009 19:03:18 -0700
+
+makedumpfile (1.3.3-0ubuntu4) karmic; urgency=low
+
+  * debian/patches/02-Add_x86_64_linux-2.6.31.patch:
+    - apply patch by Ken'ichi Ohmichi to support 2.6.31 on
+      amd64 (kernel memory layout changed)
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Thu, 16 Jul 2009 09:18:33 +0200
+
+makedumpfile (1.3.3-0ubuntu3) karmic; urgency=low
+
+  * debian/rules, debian/control:
+    - add dpatch
+  * debian/patches/01_fix_makefile:
+    - fix make install target
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Tue, 23 Jun 2009 13:14:10 +0200
+
+makedumpfile (1.3.3-0ubuntu2) karmic; urgency=low
+
+  * fix FTBFS due to missing man dir
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Tue, 23 Jun 2009 09:21:08 +0200
+
+makedumpfile (1.3.3-0ubuntu1) karmic; urgency=low
+
+  * New upstream release
+  * depends on latest libdw-dev (the previous version does
+    not ship the required static lib)
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Mon, 22 Jun 2009 16:19:42 +0200
+
+makedumpfile (1.2.9-0ubuntu3) intrepid; urgency=low
+
+  * Add missing build dependency "zip" to fix FTBFS.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Wed, 08 Oct 2008 15:11:25 +0200
+
+makedumpfile (1.2.9-0ubuntu2) intrepid; urgency=low
+
+  * Corrected FTBFS caused by a mistake in the makefile
+
+ -- Michael Casadevall <sonicmctails@gmail.com>  Mon, 06 Oct 2008 02:01:26 -0400
+
+makedumpfile (1.2.9-0ubuntu1) intrepid; urgency=low
+
+  * New upstream version (LP: #271956)
+  * Support ia64 discontigmem kernels of linux-2.6.20+.
+  * Support x86_64 linux-2.6.27 kernel.
+  * Add "--vtop" option for debugging.
+  * Add the debugging message for ia64 pgtable.
+  * Get information from vmcoreinfo of /proc/vmcore even if -x/-i option.
+  * Add free() for error handling.
+  * Fix NOT_FOUND value of SIZE(nodemask_t).
+  * Use the terminal sizes of 80 for the IMPLEMENTATION file. (Bernhard Walle)
+  * Use static allocation instead of malloc().
+  * Add get_num_dumpable() function.
+  * Remove the unused pointer.
+  * Remove the unused code.
+  * Make the ELF methods simple.
+  * Merge the same code in write_elf_pages().
+  * Add "void" to some arguments.
+  * Separate the dependency code to machine and linux version.
+  * Cleanup vaddr_to_paddr() function.
+
+ -- Kevin Worth <kworth@gmail.com>  Thu, 18 Sep 2008 10:34:45 -0700
+
+makedumpfile (1.2.6-0ubuntu3) intrepid; urgency=low
+
+  * Added lpia to architectures.
+
+ -- Ben Collins <ben.collins@canonical.com>  Tue, 08 Jul 2008 10:51:37 -0400
+
+makedumpfile (1.2.6-0ubuntu2) intrepid; urgency=low
+
+  * Get rid of prerm and postinst from packaging, they were empty.
+  * Added copyright for packaging.
+  * Added copyright for ppc64.c to debian/copyright
+  * Check return value of read(), gets rid of warnings.
+
+ -- Ben Collins <ben.collins@canonical.com>  Wed, 02 Jul 2008 09:18:36 -0400
+
+makedumpfile (1.2.6-0ubuntu1) intrepid; urgency=low
+
+  * Initial release
+  * Use _LARGEFILE_SOURCE and _LARGEFILE64_SOURCE instead of
+    _FILE_OFFSET_BITS=64 for correct compilation.
+  * Added initramfs hook to install makedumpfile into initrd
+
+ -- Ben Collins <ben.collins@canonical.com>  Wed, 18 Jun 2008 18:15:32 -0400
+

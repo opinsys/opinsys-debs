@@ -1,0 +1,477 @@
+#!/bin/bash
+
+# kdump-config
+# Copyright (C) 2007-2009 Hewlett-Packard Development Company, L.P.
+# Written by Terry Loftin <terry.loftin@hp.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+# kdump-config
+# 	a shell script utility to manage:
+#	* loading a kdump kernel
+#	* unloading a kdump kernel
+#	* saving a vmcore kdump kernel
+#	* determining the status of kdump
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+NAME=${NAME:="kdump-config"}
+
+. /lib/lsb/init-functions
+. /lib/init/vars.sh
+
+# Global Setup
+KDUMP_DEFAULTS=/etc/default/kdump-tools
+[ -r $KDUMP_DEFAULTS ] && . $KDUMP_DEFAULTS
+
+KEXEC=/sbin/kexec
+[ -e $KEXEC ] || exit 1;
+
+KVER=`uname -r`
+ARCH=`uname -m`
+
+# Set up defaults
+KDUMP_SYSCTL=${KDUMP_SYSCTL:="kernel.panic_on_oops=1"}
+KDUMP_COREDIR=${KDUMP_COREDIR:=/var/crash}
+KDUMP_CMDLINE_APPEND=${KDUMP_CMDLINE_APPEND:="irqpoll maxcpus=1 nousb"}
+[ -d $KDUMP_COREDIR ] || mkdir -p $KDUMP_COREDIR ;
+
+IOMEM_ADDR=`grep -i "Crash kernel" /proc/iomem | sed "s/-..*//" | sed "s/^[ 0]*/0x/"`
+
+# Constants
+vmcore_file=/proc/vmcore
+sys_kexec_crash=/sys/kernel/kexec_crash_loaded
+kernel_link=$KDUMP_COREDIR/kernel_link
+systemmap_link=$KDUMP_COREDIR/system.map_link
+kconfig_link=$KDUMP_COREDIR/config_link
+kexec_cmd_file=$KDUMP_COREDIR/kexec_cmd
+
+# Utility Functions
+#
+function kdump_help()
+{
+cat <<EOHELP
+Usage:
+kdump-config {help|test|show|status|load|unload|savecore}"
+  help     - print this page
+  test     - Do a dry-run of the load command.  Show the kernels and
+             parameters that will be used and echo the kexec command.
+             The kexec command will not be executed.
+  show     - Show kdump status, kexec command, and any current parameters.
+  status   - evaluate /sys/kernel/kexec_crash_loaded and print a message
+  load     - Locate the kdump kernel, debug kernel, and establish links for
+             makedumpfile.  Then load the kdump kernel using kexec
+  unload   - unload the kdump kernel using kexec
+  savecore - use previously made links to save /proc/vmcore
+
+EOHELP
+}
+
+function kdump_show()
+{
+	echo "USE_KDUMP:        $USE_KDUMP"
+	echo "KDUMP_SYSCTL:     $KDUMP_SYSCTL"
+	echo "KDUMP_COREDIR:    $KDUMP_COREDIR"
+	echo "crashkernel addr: $IOMEM_ADDR"
+	if [ -e $sys_kexec_crash -a `cat $sys_kexec_crash` -eq 1 ] ; then
+		echo "current state:    ready to kdump";
+	else
+		echo "current state:    Not ready to kdump";
+	fi
+	echo
+	echo "kernel link: "
+	echo "  "`readlink -n -s $kernel_link`
+	echo
+	echo "kexec command:"
+	echo -n "  "
+	if [ -e $kexec_cmd_file ] ; then
+		cat $kexec_cmd_file ;
+	else
+		echo "no kexec command recorded"
+	fi
+}
+
+function kdump_test()
+{
+	echo "USE_KDUMP:         $USE_KDUMP"
+	echo "KDUMP_SYSCTL:      $KDUMP_SYSCTL"
+	echo "KDUMP_COREDIR:     $KDUMP_COREDIR"
+	echo "crashkernel addr:  $IOMEM_ADDR"
+	echo "kdump kernel addr: $KDUMP_ADDR"
+	echo "kdump kernel:"
+	echo "   $KDUMP_KERNEL"
+	echo "kdump initrd: "
+	echo "  $KDUMP_INITRD"
+	echo "debug kernel: "
+	echo "  $DEBUG_KERNEL"
+	echo "kexec command to be used:"
+	echo "  $KEXEC_CMD"
+}
+
+# check_kdump_support:  Other miscellaneous checks go here:
+# 1: if USE_KDUMP is 0, don't set up kdump.
+# 2: -e /sys/kernel/kexec_crash loaded indicates that this kernel
+#    thinks it supports kdump
+# 3: the current kernel should have booted with a crashkernel= command
+#    line parameter.
+#
+# Returns: none. prints warnings or exit
+function check_kdump_support()
+{
+	if [ -z "$USE_KDUMP" -o "$USE_KDUMP" == "0" ] ; then
+		log_failure_msg "$KDUMP_DEFAULTS: USE_KDUMP is not set or zero"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+	if [ ! -e $sys_kexec_crash ] ; then
+		log_failure_msg "kdump is not supported by this kernel"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+	CRASHKERNEL=`grep -i crashkernel= /proc/cmdline`;
+	if [ -z "$CRASHKERNEL" ] ; then
+		log_failure_msg "no crashkernel= parameter in the kernel cmdline"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+}
+
+# check_relocatable: check if the given kernel config is relocatable
+# Arguments:
+#   1: the config file to check
+# Returns: 0 if the given kernel config indicates a relocatable kernel.
+#          1 otherwise.
+function check_relocatable()
+{
+	if [ $ARCH = "ia64" ]; then
+		# Linux is always relocatable on ia64
+		return 0
+	elif grep -q 'CONFIG_RELOCATABLE=y' $1; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+# We need to find debug kernel for makedumpfile file to use when 
+# processing the vmcore file.  This will 
+#   A) speed up the vmcore copy and 
+#   B) make it much smaller (see A).
+# When the kdump kernel boots, we have no idea what kernel just 
+# dumped, so we should determine this info whenever a normal (non-kdump) 
+# kernel boots.
+#
+# Use the following priorites in determining the debug kernel:
+#	 1. An explicit Debug kernel in the defaults file overrides all
+#	 2. Look for an installed debug kernel matching the current `uname -r`
+# 	 3. Give up.  Note, that a debug kernel is optional.
+#
+# Returns: 0/1 (success/fail)
+# Sets:    MAKEDUMP_CONFIG, DEBUG_KERNEL, DEBUG_CONFIG, DEBUG_MAP
+function locate_debug_kernel()
+{
+	MAKEDUMP_CONFIG=$KDUMP_COREDIR/makedump-config-$KVER
+
+	# 1: Is there an Explicit DEBUG_KERNEL in the defaults file?
+	if [ -n "$DEBUG_KERNEL" ] ; then
+		if [ ! -e "$DEBUG_KERNEL" ] ; then
+			log_failure_msg "$KDUMP_DEFAULTS: DEBUG_KERNEL " \
+				"does not exist: $DEBUG_KERNEL"
+			logger -t $NAME "$KDUMP_DEFAULTS: DEBUG_KERNEL " \
+				"does not exist: $DEBUG_KERNEL"
+			return 1;
+		fi
+
+	# 2: Look for an installed debug kernel
+	elif [ -e /usr/lib/debug/boot/vmlinux-$KVER ] ; then
+		DEBUG_KERNEL=/usr/lib/debug/boot/vmlinux-$KVER
+		DEBUG_CONFIG=/boot/config-$KVER
+		DEBUG_MAP=/boot/System.map-$KVER
+	elif [ -e /usr/lib/debug/vmlinux-$KVER ] ; then
+		DEBUG_KERNEL=/usr/lib/debug/vmlinux-$KVER
+		DEBUG_CONFIG=/usr/lib/debug/config-$KVER
+		DEBUG_MAP=/usr/lib/debug/System.map-$KVER
+
+	# FIXME: Look for a vmcoreinfo file
+
+	# 3: give up :)
+	else
+		echo "Could not find an installed debug vmlinux image and"
+		echo "DEBUG_KERNEL is not specified in $KDUMP_DEFAULTS"
+		log_warning_msg "makedumpfile may be limited to -d 1"
+		return 1;
+	fi
+
+	if [ $DRY_RUN ] ; then return 0; fi
+
+	# Okay, now we know the name of the debug kernel and it exists...
+	if [ -e "$DEBUG_KERNEL" ] ; then
+
+		rm -f $kernel_link $systemmap_link $kconfig_link
+		# Create Links to the stuff to preserve what we found.
+		# The kdump kernel won't be able to determine this on its own.
+		[ -e "$DEBUG_KERNEL" ] && ln -s $DEBUG_KERNEL $kernel_link
+		[ -e "$DEBUG_MAP" ]    && ln -s $DEBUG_MAP    $systemmap_link
+		[ -e "$DEBUG_CONFIG" ] && ln -s $DEBUG_CONFIG $kconfig_link
+
+		return 0;
+	fi
+
+	# This can't actually be reached...
+	log_failure_msg "Warning: no debug kernel found"
+	return 1;
+}
+
+# Find the kexec/kdump kernel and possibly a corresponding initrd.
+# A kdump kernel does not need to match the `uname -r` of the booted kernel.
+#
+# Use the following priorites in determining the kdump kernel:
+#	 1. An explicit Kdump kernel in the defaults file overrides all
+#    2. Use the current running kernel if it is relocatable.
+#	 3. Give up.  Note, a kdump kernel is required.
+#
+# Returns: 0/1 (success/fail)
+# Returns: none. prints warnings or exit
+# Sets:    KDUMP_KERNEL, KDUMP_INITRD
+function locate_kdump_kernel()
+{
+	# 1:  User may have specified the KDUMP_KERNEL and KDUMP_INITRD 
+	#     explicitly.   Test for existance and either use it or fail.
+	if [ -n "$KDUMP_KERNEL" ] ; then
+		if [ ! -e "$KDUMP_KERNEL" ] ; then
+			log_failure_msg "$KDUMP_DEFAULTS: KDUMP_KERNEL does not exist: $KDUMP_KERNEL"
+			[ ! $DRY_RUN ] && exit 1;
+		elif [ -n "$KDUMP_INITRD" -a ! -e "$KDUMP_INITRD" ] ; then
+			log_failure_msg "$KDUMP_DEFAULTS: KDUMP_INITRD does not exist: $KDUMP_INITRD"
+			[ ! $DRY_RUN ] && exit 1;
+		fi
+		return 0;
+	fi
+
+	# 2: The currently running kernel may be relocatable.  If so, then
+	#    use the currently running kernel as the crash kernel.
+	if check_relocatable /boot/config-$KVER; then
+		KDUMP_KERNEL=/boot/vmlinuz-$KVER
+		if [ -f /boot/initrd.img-$KVER ]; then
+			KDUMP_INITRD=/boot/initrd.img-$KVER
+		else
+			KDUMP_INITRD=
+		fi
+		KDUMP_ADDR="relocatable"
+		return 0;
+	fi
+
+	# If the kdump kernel is not relocatable, we need to make sure it was
+	# built to start at the crashkernel= address.  IOMEM_ADDR is already
+	# set...
+	if [ -z "$KDUMP_CONFIG" ] ; then return 0 ; fi
+
+	if check_relocatable $KDUMP_CONFIG; then
+		KDUMP_ADDR="relocatable"
+	else
+		KDUMP_ADDR=`grep CONFIG_PHYSICAL_START $KDUMP_CONFIG | sed "s/CONFIG_PHYSICAL_START=//"`
+		# compare the two
+		if [ $KDUMP_ADDR != $IOMEM_ADDR ] ; then
+			log_failure_msg "kdump kernel relocation address does not match crashkernel parameter"
+	        [ ! $DRY_RUN ] && exit 1;
+			return 1;
+		fi
+	fi
+
+	return 0;
+}
+
+
+#
+# Load the already determined kdump kernel and kdump initrd using kexec
+# 	1: A KDUMP_CMDLINE in the defaults file overrides all.
+#	2: Use /proc/cmdline
+#			a. strip out the crashkernel= parameter.
+#			b. strip out the abm= parameter.
+#			c. append KDUMP_CMDLINE_APPEND from defaults file
+# Sets:    KEXEC_CMD
+# Returns: none. prints warnings or exit
+function kdump_load()
+{
+	# assemble the kexec command used to load the kdump kernel
+	KEXEC_CMD="$KEXEC -p"
+
+	# Different kernel types allow/require different options:
+	# The only special case here is that x86, x86_64 elf style
+	# binaries require the --args-linux argument.
+	if [ $ARCH != "ia64" ] ; then
+		ELF_TST=`file $KDUMP_KERNEL | grep ELF`
+		if [ -n "$ELF_TST" ] ; then
+			KEXEC_CMD="$KEXEC_CMD --args-linux"
+		fi
+	fi
+		
+	# KDUMP_KEXEC_ARGS, if non-empty, comes from the defaults file.
+	if [ -n "$KDUMP_KEXEC_ARGS" ] ; then
+		KEXEC_CMD="$KEXEC_CMD $KDUMP_KEXEC_ARGS"
+	fi
+
+	# Assemble the --commmand-line:
+	if [ -z "$KDUMP_CMDLINE" ] ; then
+		KDUMP_CMDLINE=`cat /proc/cmdline | \
+		sed -r -e 's/(^| )crashkernel=[^ ]*//g' \
+		       -e 's/(^| )abm=[^ ]*//g'`
+	fi
+	KDUMP_CMDLINE="$KDUMP_CMDLINE $KDUMP_CMDLINE_APPEND"
+	KEXEC_CMD="$KEXEC_CMD --command-line=\"$KDUMP_CMDLINE\""
+
+	# Assemble the --initrd:
+	if [ -e "$KDUMP_INITRD" ] ; then
+		KEXEC_CMD="$KEXEC_CMD --initrd=$KDUMP_INITRD"
+	fi
+
+	# Finally, add the kernel:
+	KEXEC_CMD="$KEXEC_CMD $KDUMP_KERNEL"
+
+	if [ $DRY_RUN ] ; then return 0; fi
+
+	eval $KEXEC_CMD
+
+	if [ $? == 0 ]; then
+		log_success_msg "loaded kdump kernel"
+		logger -t $NAME "$KEXEC_CMD"
+		logger -t $NAME "loaded kdump kernel"
+		echo "$KEXEC_CMD" >$kexec_cmd_file
+	else
+		log_failure_msg "failed to load kdump kernel"
+		logger -t $NAME "failed to load kdump kernel"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+
+	# Last step: make sure panic_on_oops is enabled
+	if [ -x /sbin/sysctl -a "$KDUMP_SYSCTL" != " " ] ; then
+		sysctl -w $KDUMP_SYSCTL >/dev/null
+	fi
+}
+
+# Returns: none. prints warnings or exit
+function kdump_unload()
+{
+	$KEXEC -p -u
+	if [ $? == 0 ]; then
+		log_success_msg "unloaded kdump kernel"
+		logger -t $NAME "unloaded kdump kernel"
+	else
+		log_failure_msg "failed to unload kdump kernel"
+		logger -t $NAME "failed to unload kdump kernel"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+}
+
+# Saving the vmcore:
+#	Our priorities are:
+#	  1. If the makedumpfile config link is valid, use that
+#	  2. else if the vmlinux link is valid, use that
+#	  3. else fallback to using:  makedumpfile -d 1 -c
+#	  4. else use cp
+#
+# TODO: implement different transport options other than
+# store to local disk
+#
+# Returns: 0/1 (success/fail)
+# Sets: KDUMP_STAMPDIR, KDUMP_COREFILE
+function kdump_save_core()
+{
+	KDUMP_STAMPDIR="$KDUMP_COREDIR/"`date +"%Y%m%d%H%M"`
+	KDUMP_CORETEMP="$KDUMP_STAMPDIR/dump-incomplete"
+	KDUMP_COREFILE="$KDUMP_STAMPDIR/dump."`date +"%Y%m%d%H%M"`
+
+	mkdir -p $KDUMP_STAMPDIR
+
+	DEBUG_KERNEL=`readlink -n -s $kernel_link`
+	if [ -e "$DEBUG_KERNEL" ] ; then
+		MAKEDUMP_ARGS=${MAKEDUMP_ARGS:="-c -d 31"}
+		MAKEDUMP_ARGS="$MAKEDUMP_ARGS -x $DEBUG_KERNEL"
+	else
+		MAKEDUMP_ARGS=${MAKEDUMP_ARGS:="-c -d 1"}
+	fi
+
+	# Move previously linked kernel particulars into dump directory.
+	[ -e $kernel_link ] && mv $kernel_link $KDUMP_STAMPDIR
+	[ -e $kconfig_link ] && mv $kconfig_link $KDUMP_STAMPDIR
+	[ -e $systemmap_link ] && mv $systemmap_link $KDUMP_STAMPDIR
+
+	log_action_msg "running makedumpfile $MAKEDUMP_ARGS $vmcore_file $KDUMP_CORETEMP"
+	makedumpfile $MAKEDUMP_ARGS $vmcore_file $KDUMP_CORETEMP
+	if [ $? -ne 0 ] ; then
+		log_failure_msg "$NAME: makedumpfile failed, falling back to 'cp'"
+		logger -t $NAME "makedumpfile failed, falling back to 'cp'"
+		KDUMP_CORETEMP="$KDUMP_STAMPDIR/vmcore-incomplete"
+		KDUMP_COREFILE="$KDUMP_STAMPDIR/vmcore."`date +"%Y%m%d%H%M"`
+		cp $vmcore_file $KDUMP_CORETEMP
+	fi
+
+	# did we succeed?
+	if [ $? == 0 ]; then
+		mv $KDUMP_CORETEMP $KDUMP_COREFILE
+		log_success_msg "$NAME: saved vmcore in $KDUMP_STAMPDIR"
+		logger -t $NAME "saved vmcore in $KDUMP_STAMPDIR"
+		return 0;
+	else
+		log_failure_msg "$NAME: failed to save vmcore in $KDUMP_STAMPDIR"
+		logger -t $NAME "failed to save vmcore in $KDUMP_STAMPDIR"
+		return 1;
+	fi
+}
+
+
+
+case "$1" in
+  test)
+	DRY_RUN="true"
+	check_kdump_support;
+	locate_debug_kernel;
+	locate_kdump_kernel;
+	kdump_load;
+	kdump_test
+	;;
+  show)
+	DRY_RUN="true"
+	check_kdump_support;
+	kdump_show
+	;;
+  load)
+	check_kdump_support;
+	locate_debug_kernel;
+	locate_kdump_kernel;
+	kdump_load;
+	;;
+  unload)
+	kdump_unload;
+	;;
+  status)
+	check_kdump_support;
+	if [ `cat $sys_kexec_crash` -eq 1 ] ; then
+		echo "current state   : ready to kdump";
+	else
+		echo "current state   : Not ready to kdump";
+	fi
+	exit 0;
+	;;
+  savecore)
+	kdump_save_core
+	exit $?
+	;;
+  help|-h*|--h*)
+	kdump_help
+	;;
+  *)
+	echo "Usage: $0 {help|test|show|status|load|unload|savecore}"
+	exit 1
+	;;
+esac
+
+exit 0

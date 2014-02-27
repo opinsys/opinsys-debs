@@ -1,0 +1,50 @@
+From ab9c2b8ea91acb2d51ee3d445789911bdadfb4b2 Mon Sep 17 00:00:00 2001
+From: Louis Bouchard <louis.bouchard@ubuntu.com>
+Date: Wed, 9 May 2012 13:43:06 +0200
+Subject: [PATCH 2/2] Use install instead of cp in Makefile
+
+This patch also removes the automatic man-page munging (if the date and
+version are incorrect in an upstream tarball, it's easier to patch it
+than to keep track of old versions to restore in the clean target).
+Finally, it changes the install target to copy the uncompressed man
+page, so that dh_compress can compress it according to policy.
+---
+ Makefile |   20 +++++++-------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 3001792..1ca8608 100644
+--- a/Makefile
++++ b/Makefile
+@@ -60,21 +60,15 @@ $(OBJ_ARCH): $(SRC_ARCH)
+ 
+ makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
+ 	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -o $@ $< $(LIBS)
+-	echo .TH MAKEDUMPFILE 8 \"$(DATE)\" \"makedumpfile v$(VERSION)\" \"Linux System Administrator\'s Manual\" > temp.8
+-	grep -v "^.TH MAKEDUMPFILE 8" makedumpfile.8 >> temp.8
+-	mv temp.8 makedumpfile.8
+-	gzip -c ./makedumpfile.8 > ./makedumpfile.8.gz
+-	echo .TH MAKEDUMPFILE.CONF 5 \"$(DATE)\" \"makedumpfile v$(VERSION)\" \"Linux System Administrator\'s Manual\" > temp.5
+-	grep -v "^.TH MAKEDUMPFILE.CONF 5" makedumpfile.conf.5 >> temp.5
+-	mv temp.5 makedumpfile.conf.5
+-	gzip -c ./makedumpfile.conf.5 > ./makedumpfile.conf.5.gz
+ 
+ clean:
+ 	rm -f $(OBJ) $(OBJ_PART) $(OBJ_ARCH) makedumpfile makedumpfile.8.gz makedumpfile.conf.5.gz
+ 
+ install:
+-	cp makedumpfile ${DESTDIR}/bin
+-	cp makedumpfile-R.pl ${DESTDIR}/bin
+-	cp makedumpfile.8.gz ${DESTDIR}/usr/share/man/man8
+-	cp makedumpfile.conf.5.gz ${DESTDIR}/usr/share/man/man5
+-	cp makedumpfile.conf ${DESTDIR}/etc/makedumpfile.conf.sample
++	install -D -m755 makedumpfile ${DESTDIR}/usr/bin/makedumpfile
++	install -D -m755 makedumpfile-R.pl ${DESTDIR}/usr/bin/makedumpfile-R.pl
++	install -D -m644 makedumpfile.8 \
++		${DESTDIR}/usr/share/man/man8/makedumpfile.8
++	install -D -m644 makedumpfile.conf.5 \
++		${DESTDIR}/usr/share/man/man5/makedumpfile.conf.5
++	install -D -m644 makedumpfile.conf ${DESTDIR}/etc/makedumpfile.conf
+-- 
+1.7.9.5
+
