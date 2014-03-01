@@ -84,3 +84,11 @@ endif
 override_dh_strip:
 	dh_strip -plibmtp$(SOVERSION) --dbg-package=libmtp-dbg
 	dh_strip --remaining-packages
+
+PACKAGE = libmtp
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+.PHONY: get-orig-source
+get-orig-source:
+	wget -c http://netcologne.dl.sourceforge.net/project/libmtp/libmtp/$(SRC_VERSION)/libmtp-$(SRC_VERSION).tar.gz -O ../$(TARBALL)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
