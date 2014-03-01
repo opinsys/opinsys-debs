@@ -1,0 +1,73 @@
+From 0309aa780e000bbd23b17aea497ef13827e89d53 Mon Sep 17 00:00:00 2001
+From: Simon McVittie <smcv@debian.org>
+Date: Thu, 18 Oct 2012 16:06:13 +0100
+Subject: [PATCH] Put common code for gvfsd-* in private libraries
+
+Patch originally by Josselin Mouette.
+
+Origin: vendor, Debian
+---
+ common/Makefile.am |    6 ++++--
+ daemon/Makefile.am |   14 +++++++++++---
+ 2 files changed, 15 insertions(+), 5 deletions(-)
+
+--- a/common/Makefile.am
++++ b/common/Makefile.am
+@@ -1,6 +1,8 @@
+ NULL =
+ 
+-lib_LTLIBRARIES=libgvfscommon.la
++privlibdir=$(libdir)/gvfs
++
++privlib_LTLIBRARIES=libgvfscommon.la
+ noinst_LTLIBRARIES = libgvfscommon-monitor.la
+ 
+ INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/gvfs \
+@@ -31,7 +33,7 @@
+ 	$(NULL)
+ 
+ # needed by cygwin (see bug #564003)
+-libgvfscommon_la_LDFLAGS = -no-undefined
++libgvfscommon_la_LDFLAGS = -no-undefined  -avoid-version
+ 
+ libgvfscommon_la_LIBADD =	\
+ 	$(GLIB_LIBS)		\
+--- a/daemon/Makefile.am
++++ b/daemon/Makefile.am
+@@ -18,10 +18,12 @@
+ 	-DMOUNTABLE_DIR=\"$(mountdir)/\" 	\
+ 	-DGVFS_LOCALEDIR=\""$(localedir)"\"
+ 
+-noinst_LTLIBRARIES=libdaemon.la
++privlibdir = $(libdir)/gvfs
++
++privlib_LTLIBRARIES=libgvfsdaemon.la
+ 
+ libraries =						\
+-	libdaemon.la					\
++	libgvfsdaemon.la				\
+ 	$(top_builddir)/common/libgvfscommon.la		\
+ 	$(GLIB_LIBS) $(KEYRING_LIBS)
+ 
+@@ -149,7 +151,7 @@
+ 	gvfsd-test			\
+ 	$(NULL)
+ 
+-libdaemon_la_SOURCES = \
++libgvfsdaemon_la_SOURCES = \
+ 	gvfsdaemon.c gvfsdaemon.h \
+ 	gvfsbackend.c gvfsbackend.h \
+ 	gvfschannel.c gvfschannel.h \
+@@ -197,6 +199,12 @@
+ 	gvfskeyring.h gvfskeyring.c \
+         $(NULL)
+ 
++libgvfsdaemon_la_LDFLAGS = -avoid-version
++
++libgvfsdaemon_la_LIBADD = \
++	$(top_builddir)/common/libgvfscommon.la		\
++	$(GLIB_LIBS) $(KEYRING_LIBS)
++
+ gvfsd_SOURCES = \
+ 	mount.c mount.h \
+ 	main.c

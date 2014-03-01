@@ -1,0 +1,58 @@
+--- a/metadata/meta-daemon.c
++++ b/metadata/meta-daemon.c
+@@ -25,6 +25,7 @@
+ #include <glib.h>
+ #include <glib/gi18n.h>
+ #include <glib/gstdio.h>
++#include <gio/gio.h>
+ #include <locale.h>
+ #include <stdlib.h>
+ #include "metatree.h"
+@@ -431,6 +432,34 @@
+ }
+ 
+ 
++static gboolean
++home_is_remote (void)
++{
++  GFile *homedir = g_file_new_for_path (g_get_home_dir ());
++  GFileInfo *info = g_file_query_filesystem_info (homedir,
++                                                  G_FILE_ATTRIBUTE_FILESYSTEM_TYPE,
++                                                  NULL, NULL);
++  gboolean retval = FALSE;
++
++  if (info)
++    {
++      const char *fstype = g_file_info_get_attribute_string (info,
++                                                             G_FILE_ATTRIBUTE_FILESYSTEM_TYPE);
++      if (fstype && (g_str_has_prefix (fstype, "nfs") ||
++                     g_str_has_prefix (fstype, "smb") ||
++                     g_str_equal (fstype, "cifs") ||
++                     g_str_equal (fstype, "9p") ||
++                     g_str_equal (fstype, "ceph") ||
++                     g_str_equal (fstype, "coda") ||
++                     g_str_has_prefix (fstype, "ocfs") ||
++                     g_str_has_prefix (fstype, "gfs")))
++        retval = TRUE;
++      g_object_unref (info);
++    }
++  g_object_unref (homedir);
++  return retval;
++}
++
+ int
+ main (int argc, char *argv[])
+ {
+@@ -479,6 +508,12 @@
+ 
+   g_option_context_free (context);
+ 
++  if (home_is_remote ())
++    {
++      g_printerr ("Remote filesystem detected, shutting down.\n");
++      return 1;
++    }
++
+   loop = g_main_loop_new (NULL, FALSE);
+ 
+   error = NULL;

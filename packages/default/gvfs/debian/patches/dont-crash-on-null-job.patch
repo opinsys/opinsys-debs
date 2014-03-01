@@ -1,0 +1,27 @@
+Description: Don't try to announce the finish of a NULL job.
+Origin: vendor, Ubuntu
+Bug-Ubuntu: LP #345754, #838464
+
+Index: gvfs-1.12.0/daemon/gvfschannel.c
+===================================================================
+--- gvfs-1.12.0.orig/daemon/gvfschannel.c	2012-04-11 16:56:44.000000000 -0400
++++ gvfs-1.12.0/daemon/gvfschannel.c	2012-04-12 13:12:35.621018364 -0400
+@@ -610,7 +610,8 @@
+ 
+   job = channel->priv->current_job;
+   channel->priv->current_job = NULL;
+-  g_vfs_job_emit_finished (job);
++  if (job)
++    g_vfs_job_emit_finished (job);
+ 
+   class = G_VFS_CHANNEL_GET_CLASS (channel);
+   
+@@ -631,7 +632,7 @@
+     }
+   /* Start queued request or readahead */
+   else if (!start_queued_request (channel) &&
+-	   class->readahead)
++	   class->readahead && job)
+     {
+       /* No queued requests, maybe we want to do a readahead call */
+       channel->priv->current_job = class->readahead (channel, job);

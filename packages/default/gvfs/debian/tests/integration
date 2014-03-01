@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+unset TMPDIR
+# this currently spits out some warnings, do not let them fail the tests
+test/gvfs-testbed test/gvfs-test 2>&1
