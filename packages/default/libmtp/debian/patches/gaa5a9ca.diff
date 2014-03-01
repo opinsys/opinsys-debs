@@ -1,0 +1,324 @@
+Description: Advance to git master.
+ .
+ libmtp (1.1.6-1) quantal; urgency=low
+ .
+   * Bump to 1.1.6.
+Author: Philip Langdale <philipl@overt.org>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- libmtp-1.1.6.orig/src/mtpz.c
++++ libmtp-1.1.6/src/mtpz.c
+@@ -238,7 +238,7 @@ unsigned int mtpz_aes_gb9[];
+ #define MTPZ_ENCRYPTIONBYTE2(val) (((val) >>  8) & 0xFF)
+ #define MTPZ_ENCRYPTIONBYTE3(val) (((val) >>  0) & 0xFF)
+ 
+-#define MTPZ_SWAP(x) __builtin_bswap32(x)
++#define MTPZ_SWAP(x) mtpz_bswap32(x)
+ 
+ void mtpz_encryption_cipher(unsigned char *data, unsigned int len, char encrypt);
+ void mtpz_encryption_cipher_advanced(unsigned char *key, unsigned int key_len, unsigned char *data, unsigned int data_len, char encrypt);
+@@ -250,6 +250,17 @@ void mtpz_encryption_encrypt_custom(unsi
+ void mtpz_encryption_encrypt_mac(unsigned char *hash, unsigned int hash_length, unsigned char *seed, unsigned int seed_len, unsigned char *out);
+ 
+ 
++static inline uint32_t mtpz_bswap32(uint32_t x)
++{
++#if defined __GNUC__ && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3)) || defined(__clang__)
++	return __builtin_bswap32(x);
++#else
++	return (x >> 24) |
++	       ((x >> 8) & 0x0000ff00) |
++	       ((x << 8) & 0x00ff0000) |
++	       (x << 24);
++#endif
++}
+ 
+ 
+ /* MTPZ RSA implementation */
+@@ -1576,11 +1587,11 @@ ptp_mtpz_validatehandshakeresponse (PTPP
+ 		mtpz_encryption_cipher_advanced((unsigned char *)hash_key, 16, act_msg, 832, 0);
+ 
+ 		act_reader++;
+-		unsigned int certs_length = __builtin_bswap32(*(unsigned int *)(act_reader));
++		unsigned int certs_length = MTPZ_SWAP(*(unsigned int *)(act_reader));
+ 		act_reader += 4;
+ 		act_reader += certs_length;
+ 
+-		unsigned int rand_length = __builtin_bswap32(*(unsigned short *)(act_reader) << 16);
++		unsigned int rand_length = MTPZ_SWAP(*(unsigned short *)(act_reader) << 16);
+ 		act_reader += 2;
+ 		unsigned char *rand_data = (unsigned char *)malloc(rand_length);
+ 		memcpy(rand_data, act_reader, rand_length);
+@@ -1592,19 +1603,19 @@ ptp_mtpz_validatehandshakeresponse (PTPP
+ 		free(rand_data);
+ 		act_reader += rand_length;
+ 
+-		unsigned int dev_rand_length = __builtin_bswap32(*(unsigned short *)(act_reader) << 16);
++		unsigned int dev_rand_length = MTPZ_SWAP(*(unsigned short *)(act_reader) << 16);
+ 		act_reader += 2;
+ 		act_reader += dev_rand_length;
+ 
+ 		act_reader++;
+ 
+-		unsigned int sig_length = __builtin_bswap32(*(unsigned short *)(act_reader) << 16);
++		unsigned int sig_length = MTPZ_SWAP(*(unsigned short *)(act_reader) << 16);
+ 		act_reader += 2;
+ 		act_reader += sig_length;
+ 
+ 		act_reader++;
+ 
+-		unsigned int machash_length = __builtin_bswap32(*(unsigned short *)(act_reader) << 16);
++		unsigned int machash_length = MTPZ_SWAP(*(unsigned short *)(act_reader) << 16);
+ 		act_reader += 2;
+ 		unsigned char *machash_data = (unsigned char *)malloc(machash_length);
+ 		memcpy(machash_data, act_reader, machash_length);
+@@ -1638,8 +1649,8 @@ ptp_mtpz_opensecuresyncsession (PTPParam
+ 	mtpz_encryption_encrypt_mac(hash, 16, (unsigned char *)(&macCount), 4, mch);
+ 
+ 	ret = ptp_mtpz_wmdrmpd_enabletrustedfilesoperations(params,
+-		__builtin_bswap32(hashparams[0]), __builtin_bswap32(hashparams[1]),
+-		__builtin_bswap32(hashparams[2]), __builtin_bswap32(hashparams[3]));
++		MTPZ_SWAP(hashparams[0]), MTPZ_SWAP(hashparams[1]),
++		MTPZ_SWAP(hashparams[2]), MTPZ_SWAP(hashparams[3]));
+ 	return ret;
+ };
+ 
+--- libmtp-1.1.6.orig/src/libusb1-glue.c
++++ libmtp-1.1.6/src/libusb1-glue.c
+@@ -1205,7 +1205,7 @@ ptp_usb_senddata (PTPParams* params, PTP
+ 	int wlen, datawlen;
+ 	unsigned long written;
+ 	PTPUSBBulkContainer usbdata;
+-	uint32_t bytes_left_to_transfer;
++	uint64_t bytes_left_to_transfer;
+ 	PTPDataHandler memhandler;
+ 
+ 
+--- libmtp-1.1.6.orig/src/libmtp.h.in
++++ libmtp-1.1.6/src/libmtp.h.in
+@@ -477,6 +477,16 @@ typedef uint16_t (* MTPDataPutFunc)	(voi
+ 					uint32_t sendlen, unsigned char *data, uint32_t *putlen);
+ 
+ /**
++ * Callback function for use when enumerating the contents of a folder.
++ * The callback will be called once for each enumerated file.
++ * @param file the enumerated file
++ * @param data a user-defined dereferencable pointer
++ * @return if anything else than 0 is returned, the current enumeration will be
++ *         cancelled.
++ */
++typedef int (* LIBMTP_enumeratefunc_t)  (LIBMTP_file_t *file, void const * const data);
++
++/**
+  * The return codes for the get/put functions
+  */
+ #define LIBMTP_HANDLER_RETURN_OK 0
+@@ -825,6 +835,7 @@ int LIBMTP_Get_Batterylevel(LIBMTP_mtpde
+ int LIBMTP_Get_Secure_Time(LIBMTP_mtpdevice_t *, char ** const);
+ int LIBMTP_Get_Device_Certificate(LIBMTP_mtpdevice_t *, char ** const);
+ int LIBMTP_Get_Supported_Filetypes(LIBMTP_mtpdevice_t *, uint16_t ** const, uint16_t * const);
++int LIBMTP_Is_Operation_Supported(LIBMTP_mtpdevice_t *, uint16_t);
+ LIBMTP_error_t *LIBMTP_Get_Errorstack(LIBMTP_mtpdevice_t*);
+ void LIBMTP_Clear_Errorstack(LIBMTP_mtpdevice_t*);
+ void LIBMTP_Dump_Errorstack(LIBMTP_mtpdevice_t*);
+@@ -878,6 +889,11 @@ LIBMTP_file_t *LIBMTP_Get_Filelisting_Wi
+ LIBMTP_file_t * LIBMTP_Get_Files_And_Folders(LIBMTP_mtpdevice_t *,
+ 					     uint32_t const,
+ 					     uint32_t const);
++LIBMTP_file_t * LIBMTP_Get_Files_And_Folders_With_Callback(LIBMTP_mtpdevice_t *,
++					     uint32_t const,
++					     uint32_t const,
++					     LIBMTP_enumeratefunc_t const,
++					     void const * const);
+ LIBMTP_file_t *LIBMTP_Get_Filemetadata(LIBMTP_mtpdevice_t *, uint32_t const);
+ int LIBMTP_Get_File_To_File(LIBMTP_mtpdevice_t*, uint32_t, char const * const,
+ 			LIBMTP_progressfunc_t const, void const * const);
+--- libmtp-1.1.6.orig/src/music-players.h
++++ libmtp-1.1.6/src/music-players.h
+@@ -1297,7 +1297,6 @@
+   /*
+    * LG Electronics
+    */
+-  // From anonymous SourceForge user
+   // Uncertain if this is really the MTP mode device ID...
+   { "LG Electronics Inc.", 0x043e, "T54", 0x7040,
+       DEVICE_FLAG_UNLOAD_DRIVER },
+@@ -1314,18 +1313,18 @@
+   { "LG Electronics Inc.", 0x1004, "GR-500 Music Player", 0x611b,
+       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+       DEVICE_FLAG_ALWAYS_PROBE_DESCRIPTOR },
+-  // Reported by anonymous sourceforge user
+   { "LG Electronics Inc.", 0x1004, "KM900", 0x6132,
+       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+       DEVICE_FLAG_UNLOAD_DRIVER },
+-  // Reported by anonymous sourceforge user
+   { "LG Electronics Inc.", 0x1004, "LG8575", 0x619a,
+       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+       DEVICE_FLAG_UNLOAD_DRIVER },
+-  // Reported by anonymous sourceforge user
+   { "LG Electronics Inc.", 0x1004, "V909 G-Slate", 0x61f9,
+       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+       DEVICE_FLAG_UNLOAD_DRIVER },
++  { "LG Electronics Inc.", 0x1004, "LG2 Optimus", 0x6225,
++      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
++      DEVICE_FLAG_UNLOAD_DRIVER },
+   // Reported by Brian J. Murrell
+   { "LG Electronics Inc.", 0x1004, "LG-E610/E612/E617G/E970/P700", 0x631c,
+       DEVICE_FLAGS_ANDROID_BUGS },
+@@ -1654,6 +1653,8 @@
+       DEVICE_FLAG_NONE },
+   { "SonyEricsson", 0x0fce, "MK16i Xperia MTP+ADB", 0x515a,
+       DEVICE_FLAG_NONE },
++  { "SonyEricsson", 0x0fce, "R800/R88i Xperia Play MTP+ADB", 0x515d,
++      DEVICE_FLAG_NONE },
+   { "SonyEricsson", 0x0fce, "ST18i Xperia Ray MTP+ADB", 0x5161,
+       DEVICE_FLAG_NONE },
+   { "SonyEricsson", 0x0fce, "SK17i Xperia Mini Pro MTP+ADB", 0x5166,
+@@ -2099,6 +2100,8 @@
+       DEVICE_FLAGS_ANDROID_BUGS },
+   { "HTC", 0x0bb4, "HTC One S (ID1)", 0x0cec,
+       DEVICE_FLAGS_ANDROID_BUGS },
++  { "HTC", 0x0bb4, "HTC Evo 4G LTE (ID1)", 0x0df5,
++      DEVICE_FLAGS_ANDROID_BUGS },
+   { "HTC", 0x0bb4, "HTC One S (ID2)", 0x0df9,
+       DEVICE_FLAGS_ANDROID_BUGS },
+   { "HTC", 0x0bb4, "HTC One X (ID1)", 0x0dfb,
+--- libmtp-1.1.6.orig/src/libusb-glue.c
++++ libmtp-1.1.6/src/libusb-glue.c
+@@ -1192,7 +1192,7 @@ ptp_usb_senddata (PTPParams* params, PTP
+ 	int wlen, datawlen;
+ 	unsigned long written;
+ 	PTPUSBBulkContainer usbdata;
+-	uint32_t bytes_left_to_transfer;
++	uint64_t bytes_left_to_transfer;
+ 	PTPDataHandler memhandler;
+ 
+ 
+--- libmtp-1.1.6.orig/src/libmtp.c
++++ libmtp-1.1.6/src/libmtp.c
+@@ -3863,6 +3863,18 @@ int LIBMTP_Get_Device_Certificate(LIBMTP
+ }
+ 
+ /**
++ * This function checks if a given operation is supported by the device.
++ * @param device a pointer to the device to check for support.
++ * @param the op code for the operation in question
++ * @return 1 on success, 0 on failure
++ */
++int
++LIBMTP_Is_Operation_Supported(LIBMTP_mtpdevice_t *device, uint16_t operation)
++{
++  return ptp_operation_issupported(device->params, operation);
++}
++
++/**
+  * This function retrieves a list of supported file types, i.e. the file
+  * types that this device claims it supports, e.g. audio file types that
+  * the device can play etc. This list is mitigated to
+@@ -4346,6 +4358,30 @@ LIBMTP_file_t * LIBMTP_Get_Files_And_Fol
+ 			     uint32_t const storage,
+ 			     uint32_t const parent)
+ {
++  return LIBMTP_Get_Files_And_Folders_With_Callback(device, storage, parent, NULL, NULL);
++}
++
++/**
++ * This function retrieves the contents of a certain folder
++ * with id parent on a certain storage on a certain device.
++ * The result contains both files and folders.
++ * The device used with this operations must have been opened with
++ * LIBMTP_Open_Raw_Device_Uncached() or it will fail.
++ *
++ * NOTE: the request will always perform I/O with the device.
++ * @param device a pointer to the MTP device to report info from.
++ * @param storage a storage on the device to report info from. If
++ *        0 is passed in, the files for the given parent will be
++ *        searched across all available storages.
++ * @param parent the parent folder id.
++ */
++LIBMTP_file_t * LIBMTP_Get_Files_And_Folders_With_Callback(
++                             LIBMTP_mtpdevice_t *device,
++			     uint32_t const storage,
++			     uint32_t const parent,
++			     LIBMTP_enumeratefunc_t const callback,
++			     void const * const data)
++{
+   PTPParams *params = (PTPParams *) device->params;
+   PTP_USB *ptp_usb = (PTP_USB*) device->usbinfo;
+   LIBMTP_file_t *retfiles = NULL;
+@@ -4410,6 +4446,19 @@ LIBMTP_file_t * LIBMTP_Get_Files_And_Fol
+       curfile->next = file;
+       curfile = file;
+     }
++
++    if (callback != NULL) {
++      int ret = callback(file, data);
++      if (ret != 0) {
++        while (retfiles != NULL) {
++          file = retfiles;
++          retfiles = retfiles->next;
++          LIBMTP_destroy_file_t(file);
++        }
++        add_error_to_errorstack(device, LIBMTP_ERROR_CANCELLED, "LIBMTP_Get_Files_And_Folders_With_Callback(): Cancelled.");
++        break;
++      }
++    }
+   }
+ 
+   free(currentHandles.Handler);
+@@ -6191,8 +6240,12 @@ static int send_file_object_info(LIBMTP_
+     if (FLAG_ONLY_7BIT_FILENAMES(ptp_usb)) {
+       strip_7bit_from_utf8(new_file.Filename);
+     }
+-    // We lose precision here.
+-    new_file.ObjectCompressedSize = (uint32_t) filedata->filesize;
++    if (filedata->filesize > 0xFFFFFFFFL) {
++      // This is a kludge in the MTP standard for large files.
++      new_file.ObjectCompressedSize = (uint32_t) 0xFFFFFFFF;
++    } else {
++      new_file.ObjectCompressedSize = (uint32_t) filedata->filesize;
++    }
+     new_file.ObjectFormat = of;
+     new_file.StorageID = store;
+     new_file.ParentObject = localph;
+--- libmtp-1.1.6.orig/src/libopenusb1-glue.c
++++ libmtp-1.1.6/src/libopenusb1-glue.c
+@@ -1202,7 +1202,7 @@ ptp_usb_senddata(PTPParams* params, PTPC
+     int wlen, datawlen;
+     unsigned long written;
+     PTPUSBBulkContainer usbdata;
+-    uint32_t bytes_left_to_transfer;
++    uint64_t bytes_left_to_transfer;
+     PTPDataHandler memhandler;
+ 
+     LIBMTP_USB_DEBUG("SEND DATA PHASE\n");
+--- libmtp-1.1.6.orig/src/libmtp.sym
++++ libmtp-1.1.6/src/libmtp.sym
+@@ -24,6 +24,7 @@ LIBMTP_Get_Batterylevel
+ LIBMTP_Get_Secure_Time
+ LIBMTP_Get_Device_Certificate
+ LIBMTP_Get_Supported_Filetypes
++LIBMTP_Is_Operation_Supported
+ LIBMTP_Get_Errorstack
+ LIBMTP_Clear_Errorstack
+ LIBMTP_Dump_Errorstack
+@@ -48,6 +49,7 @@ LIBMTP_Get_Filetype_Description
+ LIBMTP_Get_Filelisting
+ LIBMTP_Get_Filelisting_With_Callback
+ LIBMTP_Get_Files_And_Folders
++LIBMTP_Get_Files_And_Folders_With_Callback
+ LIBMTP_Get_Filemetadata
+ LIBMTP_Get_File_To_File
+ LIBMTP_Get_File_To_File_Descriptor
