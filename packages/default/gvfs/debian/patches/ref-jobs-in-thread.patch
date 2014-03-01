@@ -1,0 +1,65 @@
+Description: make sure to keep a ref to jobs while they run in a thread
+Origin: vendor, Ubuntu
+
+Index: gvfs-1.13.4/daemon/gvfsdaemon.c
+===================================================================
+--- gvfs-1.13.4.orig/daemon/gvfsdaemon.c	2012-07-31 17:12:28.000000000 +0200
++++ gvfs-1.13.4/daemon/gvfsdaemon.c	2012-08-02 10:10:13.133604023 +0200
+@@ -182,6 +182,7 @@
+   GVfsJob *job = G_VFS_JOB (data);
+ 
+   g_vfs_job_run (job);
++  g_object_unref (job);
+ }
+ 
+ static void
+@@ -574,7 +575,8 @@
+   if (!g_vfs_job_try (job))
+     {
+       /* Couldn't finish / run async, queue worker thread */
+-      g_thread_pool_push (daemon->thread_pool, job, NULL); /* TODO: Check error */
++      if (!g_thread_pool_push (daemon->thread_pool, g_object_ref (job), NULL)) /* TODO: Check error */
++        g_object_unref (job);
+     }
+ }
+ 
+@@ -1025,7 +1027,8 @@
+ g_vfs_daemon_run_job_in_thread (GVfsDaemon *daemon,
+ 				GVfsJob    *job)
+ {
+-  g_thread_pool_push (daemon->thread_pool, job, NULL); /* TODO: Check error */
++  if (!g_thread_pool_push (daemon->thread_pool, g_object_ref (job), NULL)) /* TODO: Check error */
++    g_object_unref (job);
+ }
+ 
+ void
+Index: gvfs-1.13.4/daemon/gvfschannel.c
+===================================================================
+--- gvfs-1.13.4.orig/daemon/gvfschannel.c	2012-08-02 10:10:09.797604049 +0200
++++ gvfs-1.13.4/daemon/gvfschannel.c	2012-08-02 10:10:13.133604023 +0200
+@@ -642,6 +642,7 @@
+     }
+ 
+   g_object_unref (job);
++  g_object_unref (channel);
+ }
+ 
+ /* Might be called on an i/o thread */
+@@ -665,7 +666,7 @@
+ 				   channel->priv->reply_buffer,
+ 				   G_VFS_DAEMON_SOCKET_PROTOCOL_REPLY_SIZE,
+ 				   0, NULL,
+-				   send_reply_cb, channel);  
++				   send_reply_cb, g_object_ref (channel));  
+     }
+   else
+     {
+@@ -674,7 +675,7 @@
+ 				   channel->priv->output_data,
+ 				   channel->priv->output_data_size,
+ 				   0, NULL,
+-				   send_reply_cb, channel);  
++				   send_reply_cb, g_object_ref (channel));  
+     }
+ }
+ 

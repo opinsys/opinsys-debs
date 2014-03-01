@@ -1,0 +1,2 @@
+rm_conffile /etc/bash_completion.d/gvfs-bash-completion.sh 1.13.4-0ubuntu2 gvfs-bin
+rm_conffile /etc/bash_completion.d/gvfs 1.13.4-0ubuntu2 gvfs-bin
