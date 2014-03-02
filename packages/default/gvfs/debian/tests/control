@@ -1,3 +1,0 @@
-Tests: integration
-Depends: @, python-twisted-core, dbus-x11, samba, apache2, apache2-prefork-dev
-Restrictions: needs-root
