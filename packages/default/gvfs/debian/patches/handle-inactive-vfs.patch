@@ -1,0 +1,13 @@
+Index: gvfs/client/gdaemonvfs.c
+===================================================================
+--- gvfs.orig/client/gdaemonvfs.c	2012-09-20 12:44:55.450666000 +0200
++++ gvfs/client/gdaemonvfs.c	2012-09-20 12:49:43.447854749 +0200
+@@ -1479,7 +1479,7 @@
+ GDBusConnection *
+ _g_daemon_vfs_get_async_bus (void)
+ {
+-  return the_vfs->async_bus;
++  return the_vfs ? the_vfs->async_bus : NULL;
+ }
+ 
+ static gboolean

@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+unset TMPDIR
+mydir=$(dirname $0)
+# this currently spits out some warnings, do not let them fail the tests
+$mydir/gvfs-testbed $mydir/gvfs-test 2>&1

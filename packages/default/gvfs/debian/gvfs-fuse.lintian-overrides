@@ -1,0 +1,1 @@
+gvfs-fuse: binary-or-shlib-defines-rpath usr/lib/gvfs/gvfsd-fuse /usr/lib/*/gvfs

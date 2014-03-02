@@ -1,0 +1,32 @@
+From 1148581b7306d9e2505cbf0241809428cf6e6cc8 Mon Sep 17 00:00:00 2001
+From: Christian Kellner <gicmo@gnome.org>
+Date: Wed, 4 Nov 2009 16:40:24 +0100
+Subject: [PATCH] Nuke the metadata file if magic blob is wrong
+
+---
+ metadata/metatree.c |   12 +++++++++++-
+ 1 files changed, 11 insertions(+), 1 deletions(-)
+
+Index: gvfs-1.12.0/metadata/metatree.c
+===================================================================
+--- gvfs-1.12.0.orig/metadata/metatree.c	2012-04-11 11:22:44.483902765 -0400
++++ gvfs-1.12.0/metadata/metatree.c	2012-04-11 11:22:59.619902925 -0400
+@@ -473,7 +473,17 @@
+   tree->header = (MetaFileHeader *)data;
+ 
+   if (memcmp (tree->header->magic, MAGIC, MAGIC_LEN) != 0)
+-    goto err;
++    {
++      if (!tree->for_write)
++        goto err;
++
++      meta_tree_clear (tree);
++
++      if (g_unlink (tree->filename) != 0)
++        goto err;
++
++      goto retry;
++    }
+ 
+   if (tree->header->major != MAJOR_VERSION)
+     goto err;

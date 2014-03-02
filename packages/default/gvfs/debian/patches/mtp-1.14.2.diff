@@ -1,0 +1,4461 @@
+Description: Add MTP Backend.
+ .
+ gvfs (1.14.2-0ubuntu0.1) quantal; urgency=low
+ .
+   * New upstream version:
+     - client: Don't disable exit_on_close on session bus (lp: #1072508)
+   * debian/patches/00git_music-player-mimetype.patch,
+     debian/patches/fix-fuse-unmount-crash.patch:
+     - dropped, the fixes are in the new version
+Author: Sebastien Bacher <seb128@ubuntu.com>
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/1072508
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Bug-Ubuntu: https://launchpad.net/bugs/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- /dev/null
++++ gvfs-1.14.2/configure.ac.orig
+@@ -0,0 +1,873 @@
++AC_PREREQ([2.64])
++
++AC_INIT([gvfs],[1.14.2],[http://bugzilla.gnome.org/enter_bug.cgi?product=gvfs])
++AM_INIT_AUTOMAKE([1.11.1 no-dist-gzip dist-xz tar-ustar])
++AM_CONFIG_HEADER(config.h)
++
++AM_SANITY_CHECK
++
++AC_C_CONST
++AC_ISC_POSIX
++AC_PROG_CC
++AC_PROG_CPP
++AC_PROG_INSTALL
++AC_PROG_LN_S
++AC_PROG_MAKE_SET
++AM_DISABLE_STATIC
++AM_PROG_LIBTOOL
++AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
++AC_PATH_PROG(GIO_QUERYMODULES, gio-querymodules, no)
++AM_PROG_CC_C_O
++AC_PROG_SED
++AC_ARG_ENABLE(documentation,
++              AC_HELP_STRING([--enable-documentation],
++                             [build documentation]),,
++              enable_documentation=yes)
++if test x$enable_documentation = xyes; then
++   AC_PATH_PROG([XSLTPROC], [xsltproc])
++   if test x$XSLTPROC = x; then
++      AC_MSG_ERROR([xsltproc is required to build documentation])
++   fi
++fi
++AM_CONDITIONAL(BUILD_DOCUMENTATION, test x$enable_documentation = xyes)
++
++m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
++
++AC_TYPE_PID_T
++AC_TYPE_SIGNAL
++AC_TYPE_SIZE_T
++AC_TYPE_UID_T
++
++GLIB_GSETTINGS
++
++AH_VERBATIM([_GNU_SOURCE],
++[/* Enable GNU extensions on systems that have them.  */
++#ifndef _GNU_SOURCE
++#  define _GNU_SOURCE
++#endif])
++	
++saved_CFLAGS=$CFLAGS
++AC_CHECK_MEMBERS([struct stat.st_mtimensec, struct stat.st_mtim.tv_nsec, struct stat.st_atimensec, struct stat.st_atim.tv_nsec, struct stat.st_ctimensec, struct stat.st_ctim.tv_nsec])
++CFLAGS=$saved_CFLAGS
++
++LIBTOOL_EXPORT_OPTIONS='-export-symbols-regex "^[[^_]].*"'
++AC_SUBST(LIBTOOL_EXPORT_OPTIONS)
++			
++GTK_DOC_CHECK
++DISTCHECK_CONFIGURE_FLAGS="--enable-gtk-doc"
++AC_SUBST(DISTCHECK_CONFIGURE_FLAGS)
++
++PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.33.12 gobject-2.0 gmodule-no-export-2.0 gio-unix-2.0 gio-2.0 )
++
++PKG_CHECK_MODULES(DBUS, dbus-1)
++
++AC_ARG_WITH(dbus_service_dir,
++		AS_HELP_STRING([--with-dbus-service-dir=PATH],[choose directory for dbus service files, [default=PREFIX/share/dbus-1/services]]),
++            with_dbus_service_dir="$withval", with_dbus_service_dir=$datadir/dbus-1/services)
++DBUS_SERVICE_DIR=$with_dbus_service_dir
++AC_SUBST(DBUS_SERVICE_DIR)
++
++giomodulesdir=$libdir/gio/modules
++AC_SUBST(giomodulesdir)
++
++dnl ****************************
++dnl *** Checks for intltool  ***
++dnl ****************************
++
++IT_PROG_INTLTOOL([0.35.0])
++GETTEXT_PACKAGE=gvfs
++
++AC_SUBST([GETTEXT_PACKAGE])
++AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE],["$GETTEXT_PACKAGE"],[The gettext domain name])
++AM_GLIB_GNU_GETTEXT
++
++dnl ****************************
++dnl *** Checks for gettext   ***
++dnl ****************************
++
++dnl *** disabled by now, using intltool ***
++dnl *** we'll revert when glib-gettexttize will be able
++dnl *** to manage [enconding: UTF-8] in POTIFILES.in
++
++dnl GETTEXT_PACKAGE=gvfs
++dnl AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [The gettext domain name])
++dnl AC_SUBST(GETTEXT_PACKAGE)
++
++dnl ALL_LINGUAS=""
++
++dnl AM_GLIB_GNU_GETTEXT
++
++dnl LIBS="$LIBS $INTLLIBS"
++
++dnl AM_GLIB_DEFINE_LOCALEDIR(GVFS_LOCALEDIR)
++
++dnl ****************************
++dnl *** Checks for ssh stuff ***
++dnl ****************************
++
++AC_PATH_PROG(SSH_PROGRAM, ssh, "ssh")
++
++dnl ****************************
++dnl *** Checks for pty stuff ***
++dnl ****************************
++
++AC_CHECK_HEADERS(sys/un.h stropts.h termios.h util.h utmp.h sys/uio.h sys/param.h)
++
++# Check for PTY handling functions.
++AC_CHECK_FUNCS(getpt posix_openpt grantpt unlockpt ptsname ptsname_r)
++
++# Pull in the right libraries for various functions which might not be
++# bundled into an exploded libc.
++AC_CHECK_FUNC(socketpair,[have_socketpair=1],AC_CHECK_LIB(socket,socketpair,[have_socketpair=1; LIBS="$LIBS -lsocket"]))
++AC_CHECK_FUNC(openpty,[have_openpty=1],AC_CHECK_LIB(util,openpty,[have_openpty=1; LIBS="$LIBS -lutil"]))
++if test x$have_socketpair = x1 ; then
++	AC_DEFINE(HAVE_SOCKETPAIR,1,[Define if you have the socketpair function.])
++fi
++if test x$have_openpty = x1 ; then
++	AC_DEFINE(HAVE_OPENPTY,1,[Define if you have the openpty function.])
++fi
++
++AC_SEARCH_LIBS(login_tty, util, [AC_DEFINE([HAVE_LOGIN_TTY],[],[Whether login_tty is available])])
++
++dnl **************************************************
++dnl *** Check if we should build with http backend ***
++dnl **************************************************
++AC_ARG_ENABLE(http, AS_HELP_STRING([--disable-http],[build without http/dav backend]))
++msg_http=no
++HTTP_CFLAGS=
++HTTP_LIBS=
++
++if test "x$enable_http" != "xno"; then
++  PKG_CHECK_EXISTS(libsoup-gnome-2.4 >= 2.26.0, msg_http=yes)
++
++  if test "x$msg_http" = "xyes"; then
++    PKG_CHECK_MODULES(HTTP, libsoup-gnome-2.4 libxml-2.0)
++    AC_DEFINE(HAVE_HTTP, 1, [Define to 1 if http/dav is going to be built])
++  fi
++fi
++
++AC_SUBST(HTTP_CFLAGS)
++AC_SUBST(HTTP_LIBS)
++AM_CONDITIONAL(HAVE_HTTP, [test "$msg_http" = "yes"])
++
++dnl **************************************************
++dnl *** Check if we should build with DNS-SD backend ***
++dnl **************************************************
++AM_CONDITIONAL(HAVE_AVAHI, false)
++			  
++AC_ARG_ENABLE(avahi, AS_HELP_STRING([--disable-avahi],[build without avahi support]))
++msg_avahi=no
++if test "x$enable_avahi" != "xno"; then
++	PKG_CHECK_MODULES(AVAHI, avahi-glib >= 0.6 avahi-client >= 0.6,
++		  	[AM_CONDITIONAL(HAVE_AVAHI, true)
++		   	AC_DEFINE(HAVE_AVAHI, [], [Set if we can use avahi])]
++                        msg_avahi=yes,
++	          	[AM_CONDITIONAL(HAVE_AVAHI, false)])
++	AC_SUBST(AVAHI_CFLAGS)
++	AC_SUBST(AVAHI_LIBS)
++fi
++
++dnl ************************
++dnl *** Check for libXML ***
++dnl ************************
++PKG_CHECK_MODULES(LIBXML, libxml-2.0,
++	[AM_CONDITIONAL(HAVE_LIBXML, true)
++	AC_DEFINE(HAVE_LIBXML, [], [Set if we have libxml])]
++	msg_libxml=yes,
++        [AM_CONDITIONAL(HAVE_LIBXML, false)])
++
++dnl *************************
++dnl *** Check for libudev ***
++dnl *************************
++AC_ARG_ENABLE(udev, AS_HELP_STRING([--disable-udev],[build without libudev]))
++msg_udev=no
++UDEV_CFLAGS=
++UDEV_LIBS=
++
++if test "x$enable_udev" != "xno"; then
++  PKG_CHECK_EXISTS(libudev >= 138, msg_udev=yes)
++
++  if test "x$msg_udev" = "xyes"; then
++    PKG_CHECK_MODULES(UDEV, libudev)
++    AC_DEFINE(HAVE_LIBUDEV, 1, [Define to 1 if libudev availible])
++  fi
++fi
++
++dnl **********************
++dnl *** Check for FUSE ***
++dnl **********************
++AC_ARG_ENABLE(fuse, AS_HELP_STRING([--disable-fuse],[build without FUSE support]))
++msg_fuse=no
++FUSE_LIBS=
++FUSE_CFLAGS=
++
++if test "x$enable_fuse" != "xno"; then
++  PKG_CHECK_EXISTS(fuse, msg_fuse=yes)
++
++  if test "x$msg_fuse" = "xyes"; then
++    PKG_CHECK_MODULES(FUSE, fuse >= 2.8.0)
++    AC_DEFINE(HAVE_FUSE, 1, [Define to 1 if FUSE is available])
++  fi
++fi
++
++AM_CONDITIONAL(USE_FUSE, [test "$msg_fuse" = "yes"])
++
++dnl ************************************
++dnl *** Check for gnome-disk-utility ***
++dnl ************************************
++
++AC_ARG_ENABLE(gdu, AS_HELP_STRING([--disable-gdu],[build without GDU volume monitor]))
++msg_gdu=no
++GDU_LIBS=
++GDU_CFLAGS=
++GDU_REQUIRED=3.0.2
++
++if test "x$enable_gdu" != "xno"; then
++  PKG_CHECK_EXISTS([gdu >= $GDU_REQUIRED], msg_gdu=yes)
++
++  if test "x$msg_gdu" = "xyes"; then
++    PKG_CHECK_MODULES([GDU],[gdu >= $GDU_REQUIRED])
++    AC_DEFINE(HAVE_GDU, 1, [Define to 1 if gnome-disk-utility is available])
++  fi
++fi
++
++AM_CONDITIONAL(USE_GDU, [test "$msg_gdu" = "yes"])
++
++dnl *************************
++dnl *** Check for udisks2 ***
++dnl *************************
++
++AC_ARG_ENABLE(udisks2, AS_HELP_STRING([--disable-udisks2],[build without libudisks2]))
++msg_udisks2=no
++UDISKS2_LIBS=
++UDISKS2_CFLAGS=
++UDISKS2_REQUIRED=1.97
++
++if test "x$enable_udisks2" != "xno"; then
++  PKG_CHECK_EXISTS([udisks2 >= $UDISKS2_REQUIRED], msg_udisks2=yes)
++
++  if test "x$msg_udisks2" = "xyes"; then
++    PKG_CHECK_MODULES([UDISKS2],[udisks2 >= $UDISKS2_REQUIRED])
++    AC_DEFINE(HAVE_UDISKS2, 1, [Define to 1 if libudisks2 is available])
++  fi
++fi
++
++AM_CONDITIONAL(USE_UDISKS2, [test "$msg_udisks2" = "yes"])
++
++dnl **********************************
++dnl *** Check for libsystemd-login ***
++dnl **********************************
++
++AC_ARG_ENABLE(libsystemd_login, AS_HELP_STRING([--disable-libsystemd-login],[build without liblibsystemd-login]))
++msg_libsystemd_login=no
++LIBSYSTEMD_LOGIN_LIBS=
++LIBSYSTEMD_LOGIN_CFLAGS=
++LIBSYSTEMD_LOGIN_REQUIRED=44
++
++if test "x$enable_libsystemd_login" != "xno"; then
++  PKG_CHECK_EXISTS([libsystemd-login >= $LIBSYSTEMD_LOGIN_REQUIRED], msg_libsystemd_login=yes)
++
++  if test "x$msg_libsystemd_login" = "xyes"; then
++    PKG_CHECK_MODULES([LIBSYSTEMD_LOGIN],[libsystemd-login >= $LIBSYSTEMD_LOGIN_REQUIRED])
++    AC_DEFINE(HAVE_LIBSYSTEMD_LOGIN, 1, [Define to 1 if liblibsystemd_login is available])
++  fi
++fi
++
++AM_CONDITIONAL(USE_LIBSYSTEMD_LOGIN, [test "$msg_libsystemd_login" = "yes"])
++
++dnl **********************
++dnl *** Check for HAL ***
++dnl **********************
++AC_ARG_ENABLE(hal, AS_HELP_STRING([--disable-hal],[build without HAL support]))
++msg_hal=no
++have_hal_fast_init=no
++HAL_LIBS=
++HAL_CFLAGS=
++HAL_REQUIRED=0.5.10
++
++if test "x$enable_hal" != "xno" && test "x$msg_gdu" = "xno"; then
++  PKG_CHECK_EXISTS([hal >= $HAL_REQUIRED], msg_hal=yes)
++
++  if test "x$msg_hal" = "xyes"; then
++    PKG_CHECK_MODULES([HAL],[hal >= $HAL_REQUIRED])
++    AC_DEFINE(HAVE_HAL, 1, [Define to 1 if HAL is available])
++    save_libs="$LIBS"
++    LIBS="$HAL_LIBS"
++    AC_CHECK_LIB(hal, libhal_get_all_devices_with_properties, have_hal_fast_init=yes)
++    if test "x$have_hal_fast_init" = "xyes"; then
++      AC_DEFINE(HAVE_HAL_FAST_INIT, 1, [Define to 1 if libhal_get_all_devices_with_properties is available])
++    fi
++    LIBS="$save_libs"
++  fi
++fi
++
++AM_CONDITIONAL(USE_HAL, [test "$msg_hal" = "yes"])
++
++dnl **********************
++dnl *** Check for gudev ***
++dnl **********************
++AC_ARG_ENABLE(gudev, AS_HELP_STRING([--disable-gudev],[build without gudev support]))
++msg_gudev=no
++GUDEV_REQUIRED=001
++
++if test "x$enable_gudev" != "xno"; then
++  PKG_CHECK_EXISTS([gudev-1.0 >= $GUDEV_REQUIRED], msg_gudev=yes)
++
++  if test "x$msg_gudev" = "xyes"; then
++    PKG_CHECK_MODULES(GUDEV, [gudev-1.0 >= $GUDEV_REQUIRED])
++    AC_DEFINE(HAVE_GUDEV, 1, [Define to 1 if gudev is available])
++  fi
++fi
++AM_CONDITIONAL(USE_GUDEV, [test "$msg_gudev" = "yes"])
++
++if test "x$msg_gudev" = "xyes"; then
++  msg_hotplug_backend="gudev"
++else 
++  if test "x$msg_hal" = "xyes"; then
++    msg_hotplug_backend="hal"
++  else
++    msg_hotplug_backend="none"
++  fi
++fi
++
++dnl **************************************************
++dnl *** Check if we should build with CDDA backend ***
++dnl **************************************************
++AC_ARG_ENABLE(cdda, AS_HELP_STRING([--disable-cdda],[build without CDDA backend]))
++msg_cdda=no
++CDDA_LIBS=
++CDDA_CFLAGS=
++
++if test "x$enable_cdda" != "xno" -a \( "x$msg_hal" = "xyes" -o "x$msg_gudev" = "xyes" \); then
++  PKG_CHECK_EXISTS(libcdio_paranoia >= 0.78.2, msg_cdda=yes)
++
++  if test "x$msg_cdda" = "xyes"; then
++    PKG_CHECK_MODULES(CDDA, libcdio_paranoia)
++    AC_DEFINE(HAVE_CDDA, 1, [Define to 1 if CDDA is going to be built])
++  fi
++fi
++
++AM_CONDITIONAL(USE_CDDA, [test "$msg_cdda" = "yes"])
++
++dnl *************************************************
++dnl *** Check if we should build with AFC backend ***
++dnl *************************************************
++AC_ARG_ENABLE(afc, AS_HELP_STRING([--disable-afc],[build without AFC backend]))
++msg_afc=no
++AFC_LIBS=
++AFC_CFLAGS=
++
++if test "x$enable_afc" != "xno" ; then
++  PKG_CHECK_EXISTS(libimobiledevice-1.0 >= 1.1.0 libplist >= 0.15, msg_afc=yes)
++
++  if test "x$msg_afc" = "xyes"; then
++    PKG_CHECK_MODULES(AFC, libimobiledevice-1.0 libplist)
++    AC_DEFINE(HAVE_AFC, 1, [Define to 1 if AFC is going to be built])
++    PKG_CHECK_EXISTS(libimobiledevice-1.0 >= 1.1.2,
++                     [AC_DEFINE(HAVE_LIBIMOBILEDEVICE_1_1_2, 1,
++                                [Define to 1 if libimobiledevice-1.1.2 found])])
++  fi
++fi
++
++AC_SUBST(AFC_LIBS)
++AC_SUBST(AFC_CFLAGS)
++
++AM_CONDITIONAL(USE_AFC, [test "$msg_afc" = "yes"])
++
++dnl *****************************************************
++dnl *** Check if we should build with obexftp backend ***
++dnl *****************************************************
++AC_ARG_ENABLE(obexftp, AS_HELP_STRING([--disable-obexftp],[build without ObexFTP backend]))
++msg_obexftp=no
++OBEXFTP_LIBS=
++OBEXFTP_CFLAGS=
++
++if test "x$enable_obexftp" != "xno";  then
++  PKG_CHECK_EXISTS(dbus-glib-1 bluez >= 4.0, msg_obexftp=yes)
++
++  dnl Make sure we have expat
++  AC_CHECK_LIB(expat, XML_ParserCreate_MM,
++               [ AC_CHECK_HEADERS(expat.h, have_expat=true, have_expat=false) ],
++               have_expat=false)
++
++  if test "x$msg_obexftp" = "xyes" -a "x$have_expat" = "xtrue"; then
++    PKG_CHECK_MODULES(OBEXFTP, dbus-glib-1 bluez >= 4.0)
++    AC_SUBST(OBEXFTP_LIBS)
++    AC_SUBST(OBEXFTP_CFLAGS)
++
++    msg_obexftp=yes
++    AC_DEFINE(HAVE_OBEXFTP, 1, [Define to 1 if ObexFTP is going to be built])
++    EXPAT_CFLAGS=""
++    EXPAT_LIBS="-lexpat"
++  else
++    msg_obexftp=no
++  fi
++fi
++
++AC_SUBST(EXPAT_CFLAGS)
++AC_SUBST(EXPAT_LIBS)
++AM_CONDITIONAL(USE_OBEXFTP, [test "$msg_obexftp" = "yes"])
++
++dnl *************************
++dnl *** Check for gphoto2 ***
++dnl *************************
++AC_ARG_ENABLE(gphoto2, AS_HELP_STRING([--disable-gphoto2],[build without gphoto2 support]))
++msg_gphoto2=no
++GPHOTO2_LIBS=
++GPHOTO2_CFLAGS=
++
++if test "x$enable_gphoto2" != "xno" -a \( "x$msg_hal" = "xyes" -o "x$msg_gudev" = "xyes" \); then
++  PKG_CHECK_MODULES(GPHOTO2, libgphoto2 >= 2.4.0, [msg_gphoto2=yes])
++
++  # Need OS tweaks in hal volume monitor backend
++  case "$host" in
++    *-linux* | *-freebsd* | *-kfreebsd*-gnu)
++      use_gphoto2=yes
++      ;;
++    *)
++      use_gphoto2=no
++      ;;
++  esac
++
++  if test "x$enable_gphoto2" = "xyes" -a "x$msg_gphoto2" != "xyes"; then
++    AC_MSG_ERROR([gphoto2 support requested but not available])
++  fi
++
++  if test "x$msg_gphoto2" = "xyes"; then
++    if test "x$use_gphoto2" = "xyes"; then
++      AC_DEFINE(HAVE_GPHOTO2, 1, [Define to 1 if gphoto2 is available])
++      PKG_CHECK_MODULES(GPHOTO25, libgphoto2 >= 2.5.0,
++         AC_DEFINE(HAVE_GPHOTO25, 1, [Define to 1 if libgphoto2 2.5 is available]),
++	 []
++      )
++    else
++      if test "x$enable_gphoto2" = "xyes"; then
++        AC_MSG_ERROR([Cannot build with gphoto2 support. Need OS tweaks in hal volume monitor.])
++      else
++        AC_MSG_WARN([Not building with gphoto2 support. Need OS tweaks in hal volume monitor.])
++      fi
++      msg_gphoto2=no
++    fi
++  fi
++fi
++
++AM_CONDITIONAL(USE_GPHOTO2, [test "$msg_gphoto2" = "yes"])
++
++dnl *******************************
++dnl *** Check for GNOME Keyring ***
++dnl *******************************
++AC_ARG_ENABLE(keyring, AS_HELP_STRING([--disable-keyring],[build without GNOME Keyring support]))
++msg_keyring=no
++KEYRING_LIBS=
++KEYRING_CFLAGS=
++
++if test "x$enable_keyring" != "xno"; then
++  PKG_CHECK_EXISTS(libsecret-unstable, msg_keyring=yes)
++
++  if test "x$msg_keyring" = "xyes"; then
++    PKG_CHECK_MODULES(KEYRING, libsecret-unstable)
++    AC_DEFINE(HAVE_KEYRING, 1, [Define to 1 if GNOME Keyring is available])
++  fi
++fi
++
++AM_CONDITIONAL(USE_KEYRING, [test "$msg_keyring" = "yes"])
++
++dnl ***********************************************
++dnl *** Check if we should build with libbluray ***
++dnl ***********************************************
++AC_ARG_ENABLE(bluray, AS_HELP_STRING([--disable-bluray],[build without bluray metadata support]))
++msg_bluray=no
++BLURAY_CFLAGS=
++BLURAY_LIBS=
++
++if test "x$enable_bluray" != "xno"; then
++  PKG_CHECK_EXISTS(libbluray, msg_bluray=yes)
++
++  if test "x$msg_bluray" = "xyes"; then
++    PKG_CHECK_MODULES(BLURAY, libbluray)
++    AC_DEFINE(HAVE_BLURAY, 1, [Define to 1 if bluray metadata is going to be built])
++  fi
++fi
++
++AC_SUBST(BLURAY_CFLAGS)
++AC_SUBST(BLURAY_LIBS)
++AM_CONDITIONAL(HAVE_BLURAY, [test "$msg_bluray" = "yes"])
++
++dnl ==========================================================================
++dnl Samba 3.0
++
++dnl Samba 4 ships a pc file and requires a non-default include subdir, so pick it up:
++PKG_CHECK_MODULES(SMBCLIENT, smbclient, samba_default_cflags="$SMBCLIENT_CFLAGS",samba_default_cflags=-I/usr/include)
++
++AC_ARG_ENABLE(samba, AS_HELP_STRING([--disable-samba],[build without samba support]))
++msg_samba="no"
++if test "x$enable_samba" != "xno"; then
++  AC_ARG_WITH(samba-includes, AS_HELP_STRING([--with-samba-includes=PREFIX],[Location of samba includes.]),
++	      with_samba_includes="-I$withval", with_samba_includes=${samba_default_cflags})
++  have_samba_includes="no"
++  if test "x${with_samba_includes}" != "x-Ino"; then
++	CPPFLAGS_save="$CPPFLAGS"
++
++	CPPFLAGS="$CPPFLAGS $with_samba_includes"
++	AC_CHECK_HEADER(libsmbclient.h, [ samba_includes="yes" ])
++	CPPFLAGS="$CPPFLAGS_save"
++	
++	if test "x{samba_includes}" != "xno" -a "x${samba_includes}" != "x"; then
++		have_samba_includes="yes"
++		if test "${with_samba_includes}" != "/usr/include" ; then
++			SAMBA_CFLAGS="$with_samba_includes"
++		else
++			SAMBA_CFLAGS=""
++		fi
++		
++		CPPFLAGS="$CPPFLAGS $with_samba_includes"
++		AC_CHECK_MEMBER(SMBCCTX.flags,
++				[AC_DEFINE(HAVE_SAMBA_FLAGS,, [Defined if flags available in SMBCCTXT])],,
++				[#include <libsmbclient.h>])
++		AC_CHECK_MEMBER(SMBCCTX.close,
++				[AC_DEFINE(HAVE_SAMBA_OLD_CLOSE, , [Defined if old close is available in SMBCCTXT])],,
++				[#include <libsmbclient.h>])
++		CPPFLAGS="$CPPFLAGS_save"
++	else
++		SAMBA_CFLAGS=""
++	fi
++  fi
++  AC_ARG_WITH(samba-libs, AS_HELP_STRING([--with-samba-libs=PREFIX],[Location of Samba libs.]),
++	      with_samba_libs="$withval", with_samba_libs="/usr/lib")
++  if test "x${with_samba_libs}" != "xno" -a "x${have_samba_includes}" != "xno"; then
++	LDFLAGS_save="$LDFLAGS"
++	
++	LDFLAGS="$LDFLAGS -L$with_samba_libs"
++	AC_CHECK_LIB(smbclient, smbc_option_get,samba_libs="yes", samba_libs="no")
++	LDFLAGS="$LDFLAGS_save"
++	if test "x${samba_libs}" != "xno"; then
++		AC_DEFINE(HAVE_SAMBA,, [Define to 1 if you have the samba 3.0 libraries])
++		msg_samba="yes"
++                if test x$with_samba_libs != x/usr/lib; then
++                        SAMBA_LIBS="-L$with_samba_libs -lsmbclient"
++                else
++                	SAMBA_LIBS="-lsmbclient"
++                fi
++                AC_CHECK_LIB(smbclient, smbc_getFunctionStatVFS, 
++                        AC_DEFINE(HAVE_SAMBA_STAT_VFS, , [Define to 1 if smbclient supports smbc_stat_fn]))
++	else
++		AC_CHECK_LIB(smbclient, smbc_new_context,samba_old_libs="yes", samba_old_libs="no")
++		if test "x${samba_old_libs}" != "xno"; then
++		   msg_samba="Too old, need at least samba 3.0.22"
++		fi
++		SAMBA_CFLAGS=""
++		SAMBA_LIBS=""
++	fi
++  fi
++  AC_MSG_CHECKING(for Samba 3.0 libraries)
++  AC_MSG_RESULT($msg_samba)
++fi
++AM_CONDITIONAL(HAVE_SAMBA, test "$msg_samba" = "yes")
++AC_SUBST(SAMBA_CFLAGS)
++AC_SUBST(SAMBA_LIBS)
++
++dnl ==========================================================================
++
++dnl ****************************
++dnl *** Check for GTK        ***
++dnl ****************************
++
++AC_ARG_ENABLE(gtk, AS_HELP_STRING([--disable-gtk],[build without GTK+]))
++msg_gtk=no
++GTK_LIBS=
++GTK_CFLAGS=
++GTK_REQUIRED=3.0
++
++if test "x$enable_gtk" != "xno"; then
++  PKG_CHECK_EXISTS([gtk+-3.0 >= $GTK_REQUIRED], msg_gtk=yes)
++
++  if test "x$msg_gtk" = "xyes"; then
++    PKG_CHECK_MODULES([GTK],[gtk+-3.0 >= $GTK_REQUIRED])
++    AC_DEFINE(HAVE_GTK, 1, [Define to 1 if GTK+ is available])
++  fi
++fi
++
++AM_CONDITIONAL(USE_GTK, [test "$msg_gtk" = "yes"])
++
++AC_SUBST(GTK_CFLAGS)
++AC_SUBST(GTK_LIBS)
++
++dnl ****************************
++dnl *** Check for libarchive ***
++dnl ****************************
++
++AC_ARG_ENABLE(archive, AS_HELP_STRING([--disable-archive],[build without archive support]))
++msg_archive="no"
++if test "x$enable_archive" != "xno"; then
++  AC_ARG_WITH(archive-includes, AS_HELP_STRING([--with-archive-includes=PREFIX],[Location of archive includes.]),
++	      with_archive_includes="$withval", with_archive_includes="/usr/include")
++  have_archive_includes="no"
++  if test "x${with_archive_includes}" != "xno"; then
++	CPPFLAGS_save="$CPPFLAGS"
++
++	CPPFLAGS="$CPPFLAGS -I$with_archive_includes"
++	AC_CHECK_HEADER(archive.h, [ archive_includes="yes" ])
++	CPPFLAGS="$CPPFLAGS_save"
++	
++	if test "x{archive_includes}" != "xno" -a "x${archive_includes}" != "x"; then
++		have_archive_includes="yes"
++		if test "${with_archive_includes}" != "/usr/include" ; then
++			ARCHIVE_CFLAGS="-I$with_archive_includes"
++		else
++			ARCHIVE_CFLAGS=""
++		fi
++	else
++		ARCHIVE_CFLAGS=""
++	fi
++  fi
++  AC_ARG_WITH(archive-libs, AS_HELP_STRING ([--with-archive-libs=PREFIX],[Location of Archive libs.]),
++	      with_archive_libs="$withval", with_archive_libs="/usr/lib")
++  if test "x${with_archive_libs}" != "xno" -a "x${have_archive_includes}" != "xno"; then
++	LDFLAGS_save="$LDFLAGS"
++	
++	LDFLAGS="$LDFLAGS -L$with_archive_libs"
++	AC_CHECK_LIB(archive, archive_entry_filetype, archive_libs="yes", archive_libs="no")
++	LDFLAGS="$LDFLAGS_save"
++	if test "x${archive_libs}" != "xno"; then
++		AC_DEFINE(HAVE_ARCHIVE,, [Define to 1 if you have the libarchive library])
++		msg_archive="yes"
++                if test x$with_archive_libs != x/usr/lib; then
++                        ARCHIVE_LIBS="-L$with_archive_libs -larchive"
++                else
++                	ARCHIVE_LIBS="-larchive"
++                fi
++	else
++		AC_CHECK_LIB(archive, archive_entry_filetype, archive_old_libs="yes", archive_old_libs="no")
++		if test "x${archive_old_libs}" != "xno"; then
++		   msg_archive="Too old, need at least archive 3.0.22"
++		fi
++		ARCHIVE_CFLAGS=""
++		ARCHIVE_LIBS=""
++	fi
++  fi
++  AC_MSG_CHECKING(for Archive 3.libraries)
++  AC_MSG_RESULT($msg_archive)
++fi
++AM_CONDITIONAL(HAVE_ARCHIVE, test "$msg_archive" = "yes")
++AC_SUBST(ARCHIVE_CFLAGS)
++AC_SUBST(ARCHIVE_LIBS)
++
++dnl ***************************
++dnl *** Check for libgcrypt ***
++dnl ***************************
++GCRYPT_VERSION=1.2.2
++GCRYPT_LIBVER=1
++
++AM_PATH_LIBGCRYPT($GCRYPT_LIBVER:$GCRYPT_VERSION, have_gcrypt="yes",
++	      have_gcrypt="no")
++
++if test "x$have_gcrypt" != "xno"; then
++  AC_DEFINE(HAVE_GCRYPT, 1, [Define to 1 if libgcrypt is available])
++fi
++AC_SUBST([LIBGCRYPT_CFLAGS])
++AC_SUBST([LIBGCRYPT_LIBS])
++
++dnl *******************
++dnl *** AFP backend ***
++dnl *******************
++AC_ARG_ENABLE(afp, AS_HELP_STRING([--disable-afp], [build without AFP support]))
++msg_afp="no"
++if test "x$enable_afp" != "xno"; then
++
++  if test "x$have_gcrypt" = "xyes"; then
++    msg_afp="yes"
++  else
++    msg_afp="partial (crypt support missing! Only anonymous logins)"
++  fi
++fi
++AM_CONDITIONAL(USE_AFP, test "x$enable_afp" != "xno")
++
++dnl Install bash-completion file?
++AC_ARG_ENABLE([bash-completion],
++	      AC_HELP_STRING([--disable-bash-completion],
++			     [build without bash-completion support]),
++	      msg_bash_completion=$enableval,
++	      msg_bash_completion=yes)
++if test "x$enable_bash_completion" != "xno"; then
++  msg_bash_completion=yes
++fi
++AM_CONDITIONAL(ENABLE_BASHCOMP, test "$msg_bash_completion" = "yes")
++
++AC_ARG_WITH([bash-completion-dir],
++	    AC_HELP_STRING([--with-bash-completion-dir=PATH],
++	    		   [choose directory for bash-completion file (default=DATADIR/bash-completion/completions)]),
++	    with_bashcomp_dir=$withval,
++	    with_bashcomp_dir=$datadir/bash-completion/completions)
++BASHCOMP_DIR=$with_bashcomp_dir
++AC_SUBST(BASHCOMP_DIR)
++
++dnl ==========================================================================
++	
++dnl Globally define_GNU_SOURCE and therefore enable the GNU extensions
++AC_DEFINE(_GNU_SOURCE, 1, [Enable GNU Extensions])
++
++dnl ==========================================================================
++	
++AC_DEFINE(_FILE_OFFSET_BITS, 64, [Enable LFS])
++		       
++dnl ==========================================================================
++
++AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
++
++dnl ==========================================================================
++dnl Look for various fs info getters
++
++AC_CHECK_HEADERS([sys/statfs.h sys/statvfs.h sys/vfs.h sys/mount.h sys/param.h])
++AC_CHECK_FUNCS(statvfs statfs)
++AC_CHECK_MEMBERS([struct statfs.f_fstypename, struct statfs.f_bavail],,, [#include <sys/types.h>
++#include <sys/stat.h>
++#include <unistd.h>
++#ifdef HAVE_SYS_STATFS_H
++#include <sys/statfs.h>
++#endif
++#ifdef HAVE_SYS_PARAM_H
++#include <sys/param.h>
++#endif
++#ifdef HAVE_SYS_MOUNT_H
++#include <sys/mount.h>
++#endif])
++# struct statvfs.f_basetype is available on Solaris but not for Linux. 
++AC_CHECK_MEMBERS([struct statvfs.f_basetype],,, [#include <sys/statvfs.h>])
++
++dnl
++dnl if statfs() takes 2 arguments (Posix) or 4 (Solaris)
++dnl
++if test "$ac_cv_func_statfs" = yes ; then
++  AC_MSG_CHECKING([number of arguments to statfs()])
++  AC_TRY_COMPILE([#include <unistd.h>
++  #ifdef HAVE_SYS_PARAM_H
++  #include <sys/param.h>
++  #endif
++  #ifdef HAVE_SYS_VFS_H
++  #include <sys/vfs.h>
++  #endif
++  #ifdef HAVE_SYS_MOUNT_H
++  #include <sys/mount.h>
++  #endif
++  #ifdef HAVE_SYS_STATFS_H
++  #include <sys/statfs.h>
++  #endif], [struct statfs st;
++  statfs(NULL, &st);],[
++    AC_MSG_RESULT([2])
++    AC_DEFINE(STATFS_ARGS, 2, [Number of arguments to statfs()])],[
++    AC_TRY_COMPILE([#include <unistd.h>
++  #ifdef HAVE_SYS_PARAM_H
++  #include <sys/param.h>
++  #endif
++  #ifdef HAVE_SYS_VFS_H
++  #include <sys/vfs.h>
++  #endif
++  #ifdef HAVE_SYS_MOUNT_H
++  #include <sys/mount.h>
++  #endif
++  #ifdef HAVE_SYS_STATFS_H
++  #include <sys/statfs.h>
++  #endif], [struct statfs st;
++  statfs(NULL, &st, sizeof (st), 0);],[
++      AC_MSG_RESULT([4])
++      AC_DEFINE(STATFS_ARGS, 4, [Number of arguments to statfs()])],[
++      AC_MSG_RESULT(unknown)
++      AC_MSG_ERROR([unable to determine number of arguments to statfs()])])])
++fi
++
++dnl ==========================================================================
++dnl Turn on the additional warnings last, so -Werror doesn't affect other tests.
++
++AC_ARG_ENABLE(more-warnings,
++AS_HELP_STRING([--enable-more-warnings],[Maximum compiler warnings]),
++set_more_warnings="$enableval",[
++if test -f $srcdir/.git; then
++	set_more_warnings=yes
++else
++	set_more_warnings=no
++fi
++])
++AC_MSG_CHECKING(for more warnings)
++if test "$GCC" = "yes" -a "$set_more_warnings" != "no"; then
++	AC_MSG_RESULT(yes)
++	CFLAGS="\
++	-Wall \
++	-Wchar-subscripts -Wmissing-declarations -Wmissing-prototypes \
++	-Wnested-externs -Wpointer-arith \
++	-Wcast-align -Wsign-compare \
++	$CFLAGS"
++
++	for option in -Wno-strict-aliasing -Wno-sign-compare -Wtype-limits; do
++		SAVE_CFLAGS="$CFLAGS"
++		CFLAGS="$CFLAGS $option"
++		AC_MSG_CHECKING([whether gcc understands $option])
++		AC_TRY_COMPILE([], [],
++			has_option=yes,
++			has_option=no,)
++		if test $has_option = no; then
++			CFLAGS="$SAVE_CFLAGS"
++		fi
++		AC_MSG_RESULT($has_option)
++		unset has_option
++		unset SAVE_CFLAGS
++	done
++	unset option
++else
++	AC_MSG_RESULT(no)
++fi
++
++AC_OUTPUT([
++Makefile
++common/Makefile
++client/Makefile
++metadata/Makefile
++daemon/trashlib/Makefile
++daemon/Makefile
++monitor/Makefile
++monitor/proxy/Makefile
++monitor/hal/Makefile
++monitor/gdu/Makefile
++monitor/udisks2/Makefile
++monitor/gphoto2/Makefile
++monitor/afc/Makefile
++programs/Makefile
++man/Makefile
++test/Makefile
++po/Makefile.in
++])
++
++echo 
++echo "gvfs configuration summary:"
++echo "
++        gio module directory : $giomodulesdir
++
++        hotplug backend:              $msg_hotplug_backend
++
++	Blu-ray metadata support:     $msg_bluray
++        FTP/HTTP/WebDAV support:      $msg_http
++        ObexFTP support               $msg_obexftp
++	Samba support:	              $msg_samba
++	FUSE support:                 $msg_fuse
++        CDDA support:                 $msg_cdda
++        Gphoto2 support:              $msg_gphoto2
++	archive support:              $msg_archive
++	AFC support:                  $msg_afc
++        AFP support:                  $msg_afp
++        DNS-SD support:               $msg_avahi
++	Build HAL volume monitor:     $msg_hal (with fast init path: $have_hal_fast_init)
++	Build GDU volume monitor:     $msg_gdu
++	Build udisks2 volume monitor: $msg_udisks2
++        Use libsystemd-login:         $msg_libsystemd_login
++	GNOME Keyring support:        $msg_keyring
++	GTK+ support:                 $msg_gtk
++	Bash-completion support:      $msg_bash_completion
++"
++
++# The gudev gphoto monitor needs a recent libgphoto; point to the required patch if the version is too old
++if test "x$msg_gudev" = "xyes"; then
++  PKG_CHECK_EXISTS(libgphoto2 >= 2.4.7,, msg_gphoto_patch=yes)
++  if test "x$msg_gphoto_patch" = "xyes"; then
++    AC_MSG_WARN([You are using a libgphoto2 version earlier than 2.4.7. To work with gudev, you must apply the patch in http://sourceforge.net/tracker/?func=detail&aid=2801117&group_id=8874&atid=308874])
++  fi
++fi
++
+--- gvfs-1.14.2.orig/configure.ac
++++ gvfs-1.14.2/configure.ac
+@@ -489,6 +489,37 @@ AC_SUBST(BLURAY_CFLAGS)
+ AC_SUBST(BLURAY_LIBS)
+ AM_CONDITIONAL(HAVE_BLURAY, [test "$msg_bluray" = "yes"])
+ 
++dnl *************************
++dnl *** Check for libmtp ***
++dnl *************************
++AC_ARG_ENABLE(libmtp, AS_HELP_STRING([--disable-libmtp],[build without libmtp support]))
++msg_libmtp=no
++LIBMTP_LIBS=
++LIBMTP_CFLAGS=
++
++if test "x$enable_libmtp" != "xno" -a "x$msg_gudev" = "xyes"; then
++  PKG_CHECK_EXISTS(libmtp, msg_libmtp=yes)
++
++  if test "x$msg_libmtp" = "xyes"; then
++    PKG_CHECK_MODULES(LIBMTP, libmtp >= 1.1.0)
++    AC_DEFINE(HAVE_LIBMTP, 1, [Define to 1 if libmtp is available])
++
++    PKG_CHECK_MODULES(LIBMTP_1_1_5, libmtp >= 1.1.5,
++        AC_DEFINE(HAVE_LIBMTP_1_1_5, 1, [Define to 1 if libmtp 1.1.5 is available]),
++        []
++    )
++
++    PKG_CHECK_MODULES(LIBMTP_1_1_6, libmtp >= 1.1.6,
++        AC_DEFINE(HAVE_LIBMTP_1_1_6, 1, [Define to 1 if libmtp 1.1.6 is available]),
++        []
++    )
++  fi
++fi
++
++AC_SUBST(LIBMTP_CFLAGS)
++AC_SUBST(LIBMTP_LIBS)
++AM_CONDITIONAL(USE_LIBMTP, [test "$msg_libmtp" = "yes"])
++
+ dnl ==========================================================================
+ dnl Samba 3.0
+ 
+@@ -826,6 +857,7 @@ monitor/gdu/Makefile
+ monitor/udisks2/Makefile
+ monitor/gphoto2/Makefile
+ monitor/afc/Makefile
++monitor/mtp/Makefile
+ programs/Makefile
+ man/Makefile
+ test/Makefile
+@@ -846,6 +878,7 @@ echo "
+ 	FUSE support:                 $msg_fuse
+         CDDA support:                 $msg_cdda
+         Gphoto2 support:              $msg_gphoto2
++        MTP support:                  $msg_libmtp
+ 	archive support:              $msg_archive
+ 	AFC support:                  $msg_afc
+         AFP support:                  $msg_afp
+--- gvfs-1.14.2.orig/monitor/Makefile.am
++++ gvfs-1.14.2/monitor/Makefile.am
+@@ -1,4 +1,4 @@
+-DIST_SUBDIRS = proxy hal gdu gphoto2 afc udisks2
++DIST_SUBDIRS = proxy hal gdu gphoto2 afc udisks2 mtp
+ SUBDIRS = proxy
+ 
+ if USE_HAL
+@@ -20,3 +20,7 @@ endif
+ if USE_AFC
+ SUBDIRS += afc
+ endif
++
++if USE_LIBMTP
++SUBDIRS += mtp
++endif
+--- /dev/null
++++ gvfs-1.14.2/monitor/mtp/gmtpvolumemonitor.c
+@@ -0,0 +1,330 @@
++/* GIO - GLib Input, Output and Streaming Library
++ *   Volume Monitor for MTP Backend
++ *
++ * Copyright (C) 2012 Philip Langdale <philipl@overt.org>
++ * - Based on ggphoto2volume.c
++ *   - Copyright (C) 2006-2007 Red Hat, Inc.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General
++ * Public License along with this library; if not, write to the
++ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
++ * Boston, MA 02111-1307, USA.
++ */
++
++#include <config.h>
++
++#include <limits.h>
++#include <string.h>
++#include <stdlib.h>
++
++#include <glib.h>
++#include <glib/gi18n-lib.h>
++#include <gio/gio.h>
++
++#include "gmtpvolumemonitor.h"
++#include "gmtpvolume.h"
++
++#include <gio/gunixmounts.h>
++
++G_LOCK_DEFINE_STATIC(vm_lock);
++
++static GMtpVolumeMonitor *the_volume_monitor = NULL;
++
++struct _GMtpVolumeMonitor {
++  GNativeVolumeMonitor parent;
++
++  GUnixMountMonitor *mount_monitor;
++
++  GUdevClient *gudev_client;
++
++  GList *last_devices;
++
++  GList *device_volumes;
++};
++
++static void on_uevent (GUdevClient *client, 
++                       gchar *action,
++                       GUdevDevice *device,
++                       gpointer user_data);
++
++G_DEFINE_TYPE (GMtpVolumeMonitor, g_mtp_volume_monitor, G_TYPE_VOLUME_MONITOR)
++
++static void
++list_free (GList *objects)
++{
++  g_list_free_full (objects, g_object_unref);
++}
++
++static void
++g_mtp_volume_monitor_dispose (GObject *object)
++{
++  G_LOCK (vm_lock);
++  the_volume_monitor = NULL;
++  G_UNLOCK (vm_lock);
++
++  (*G_OBJECT_CLASS (g_mtp_volume_monitor_parent_class)->dispose) (object);
++}
++
++static void
++g_mtp_volume_monitor_finalize (GObject *object)
++{
++  GMtpVolumeMonitor *monitor;
++
++  monitor = G_MTP_VOLUME_MONITOR (object);
++
++  g_signal_handlers_disconnect_by_func (monitor->gudev_client, on_uevent, monitor);
++
++  g_object_unref (monitor->gudev_client);
++
++  list_free (monitor->last_devices);
++  list_free (monitor->device_volumes);
++
++  (*G_OBJECT_CLASS (g_mtp_volume_monitor_parent_class)->finalize) (object);
++}
++
++static GList *
++get_mounts (GVolumeMonitor *volume_monitor)
++{
++  return NULL;
++}
++
++static GList *
++get_volumes (GVolumeMonitor *volume_monitor)
++{
++  GMtpVolumeMonitor *monitor;
++  GList *l;
++
++  monitor = G_MTP_VOLUME_MONITOR (volume_monitor);
++
++  G_LOCK (vm_lock);
++
++  l = g_list_copy (monitor->device_volumes);
++  g_list_foreach (l, (GFunc)g_object_ref, NULL);
++
++  G_UNLOCK (vm_lock);
++
++  return l;
++}
++
++static GList *
++get_connected_drives (GVolumeMonitor *volume_monitor)
++{
++  return NULL;
++}
++
++static GVolume *
++get_volume_for_uuid (GVolumeMonitor *volume_monitor, const char *uuid)
++{
++  return NULL;
++}
++
++static GMount *
++get_mount_for_uuid (GVolumeMonitor *volume_monitor, const char *uuid)
++{
++  return NULL;
++}
++
++static void
++gudev_add_device (GMtpVolumeMonitor *monitor, GUdevDevice *device, gboolean do_emit)
++{
++  GMtpVolume *volume;
++  const char *usb_bus_num, *usb_device_num;
++  char *uri;
++  GFile *activation_mount_root;
++
++  usb_bus_num = g_udev_device_get_property (device, "BUSNUM");
++  if (usb_bus_num == NULL) {
++    g_warning ("device %s has no BUSNUM property, ignoring", g_udev_device_get_device_file (device));
++    return;
++  }
++
++  usb_device_num = g_udev_device_get_property (device, "DEVNUM");
++  if (usb_device_num == NULL) {
++    g_warning ("device %s has no DEVNUM property, ignoring", g_udev_device_get_device_file (device));
++    return;
++  }
++
++  g_debug ("gudev_add_device: device %s (bus: %s, device: %s)",
++           g_udev_device_get_device_file (device),
++           usb_bus_num, usb_device_num);
++
++  uri = g_strdup_printf ("mtp://[usb:%s,%s]", usb_bus_num, usb_device_num);
++  activation_mount_root = g_file_new_for_uri (uri);
++  g_free (uri);
++
++  volume = g_mtp_volume_new (G_VOLUME_MONITOR (monitor),
++                             device,
++                             monitor->gudev_client,
++                             activation_mount_root);
++  if (volume != NULL) {
++    monitor->device_volumes = g_list_prepend (monitor->device_volumes, volume);
++    if (do_emit)
++      g_signal_emit_by_name (monitor, "volume_added", volume);
++  }
++
++  if (activation_mount_root != NULL)
++    g_object_unref (activation_mount_root);
++}
++
++static void
++gudev_remove_device (GMtpVolumeMonitor *monitor, GUdevDevice *device)
++{
++  GList *l, *ll;
++  const gchar* sysfs_path;
++
++  sysfs_path = g_udev_device_get_sysfs_path (device);
++
++  g_debug ("gudev_remove_device: %s", g_udev_device_get_device_file (device));
++
++  for (l = monitor->device_volumes; l != NULL; l = ll) {
++    GMtpVolume *volume = G_MTP_VOLUME (l->data);
++
++    ll = l->next;
++
++    if (g_mtp_volume_has_path (volume, sysfs_path)) {
++      g_debug ("gudev_remove_device: found volume %s, deleting", sysfs_path);
++      g_signal_emit_by_name (monitor, "volume_removed", volume);
++      g_signal_emit_by_name (volume, "removed");
++      g_mtp_volume_removed (volume);
++      monitor->device_volumes = g_list_remove (monitor->device_volumes, volume);
++      g_object_unref (volume);
++    }
++  }
++}
++
++static void
++on_uevent (GUdevClient *client, gchar *action, GUdevDevice *device, gpointer user_data)
++{
++  GMtpVolumeMonitor *monitor = G_MTP_VOLUME_MONITOR (user_data);
++
++  g_debug ("on_uevent: action=%s, device=%s", action, g_udev_device_get_device_file(device));
++
++  /* filter out uninteresting events */
++  if (!g_udev_device_has_property (device, "ID_MTP_DEVICE"))
++    {
++      g_debug ("on_uevent: discarding, not ID_MTP");
++      return;
++    }
++
++  if (strcmp (action, "add") == 0)
++     gudev_add_device (monitor, device, TRUE); 
++  else if (strcmp (action, "remove") == 0)
++     gudev_remove_device (monitor, device); 
++}
++
++static void
++gudev_coldplug_devices (GMtpVolumeMonitor *monitor)
++{
++  GList *usb_devices, *l;
++
++  usb_devices = g_udev_client_query_by_subsystem (monitor->gudev_client, "usb");
++  for (l = usb_devices; l != NULL; l = l->next) {
++    GUdevDevice *d = l->data;
++    if (g_udev_device_has_property (d, "ID_MTP_DEVICE"))
++        gudev_add_device (monitor, d, FALSE);
++  }
++  g_list_free_full(usb_devices, g_object_unref);
++}
++
++static GObject *
++g_mtp_volume_monitor_constructor (GType                  type,
++                                  guint                  n_construct_properties,
++                                  GObjectConstructParam *construct_properties)
++{
++  GObject *object;
++  GMtpVolumeMonitor *monitor;
++  GMtpVolumeMonitorClass *klass;
++  GObjectClass *parent_class;
++
++  G_LOCK (vm_lock);
++  if (the_volume_monitor != NULL) {
++    object = g_object_ref (the_volume_monitor);
++    G_UNLOCK (vm_lock);
++    return object;
++  }
++  G_UNLOCK (vm_lock);
++
++  /*g_warning ("creating vm singleton");*/
++
++  object = NULL;
++
++  /* Invoke parent constructor. */
++  klass = G_MTP_VOLUME_MONITOR_CLASS (g_type_class_peek (G_TYPE_MTP_VOLUME_MONITOR));
++  parent_class = G_OBJECT_CLASS (g_type_class_peek_parent (klass));
++  object = parent_class->constructor (type,
++                                      n_construct_properties,
++                                      construct_properties);
++
++  monitor = G_MTP_VOLUME_MONITOR (object);
++
++  const char *subsystems[] = { "usb", NULL };
++  monitor->gudev_client = g_udev_client_new (subsystems);
++
++  g_signal_connect (monitor->gudev_client, 
++                    "uevent", G_CALLBACK (on_uevent), 
++                    monitor);
++
++  gudev_coldplug_devices (monitor);
++
++  G_LOCK (vm_lock);
++  the_volume_monitor = monitor;
++  G_UNLOCK (vm_lock);
++
++  return object;
++}
++
++static void
++g_mtp_volume_monitor_init (GMtpVolumeMonitor *monitor)
++{
++}
++
++static gboolean
++is_supported (void)
++{
++  /* Today's Linux desktops pretty much need udev to have anything working, so
++   * assume it's there */
++  return TRUE;
++}
++
++static void
++g_mtp_volume_monitor_class_init (GMtpVolumeMonitorClass *klass)
++{
++  GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
++  GVolumeMonitorClass *monitor_class = G_VOLUME_MONITOR_CLASS (klass);
++
++  gobject_class->constructor = g_mtp_volume_monitor_constructor;
++  gobject_class->finalize = g_mtp_volume_monitor_finalize;
++  gobject_class->dispose = g_mtp_volume_monitor_dispose;
++
++  monitor_class->get_mounts = get_mounts;
++  monitor_class->get_volumes = get_volumes;
++  monitor_class->get_connected_drives = get_connected_drives;
++  monitor_class->get_volume_for_uuid = get_volume_for_uuid;
++  monitor_class->get_mount_for_uuid = get_mount_for_uuid;
++  monitor_class->is_supported = is_supported;
++}
++
++/**
++ * g_mtp_volume_monitor_new:
++ *
++ * Returns:  a new #GVolumeMonitor.
++ **/
++GVolumeMonitor *
++g_mtp_volume_monitor_new (void)
++{
++  GMtpVolumeMonitor *monitor;
++
++  monitor = g_object_new (G_TYPE_MTP_VOLUME_MONITOR, NULL);
++
++  return G_VOLUME_MONITOR (monitor);
++}
+--- /dev/null
++++ gvfs-1.14.2/monitor/mtp/gmtpvolume.c
+@@ -0,0 +1,433 @@
++/* GIO - GLib Input, Output and Streaming Library
++ *   Volume Monitor for MTP Backend
++ *
++ * Copyright (C) 2012 Philip Langdale <philipl@overt.org>
++ * - Based on ggphoto2volume.c
++ *   - Copyright (C) 2006-2007 Red Hat, Inc.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General
++ * Public License along with this library; if not, write to the
++ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
++ * Boston, MA 02111-1307, USA.
++ */
++
++#include <config.h>
++
++#include <string.h>
++#include <sys/wait.h>
++#include <unistd.h>
++
++#include <glib.h>
++#include <glib/gi18n-lib.h>
++#include <gio/gio.h>
++
++#include "gmtpvolume.h"
++
++G_LOCK_DEFINE_STATIC (mtp_volume);
++
++struct _GMtpVolume {
++  GObject parent;
++
++  GVolumeMonitor *volume_monitor; /* owned by volume monitor */
++
++  char *device_path;
++  GUdevDevice *device;
++
++  GFile *activation_root;
++
++  char *name;
++  char *icon;
++};
++
++static void g_mtp_volume_volume_iface_init (GVolumeIface *iface);
++
++G_DEFINE_TYPE_EXTENDED (GMtpVolume, g_mtp_volume, G_TYPE_OBJECT, 0,
++                        G_IMPLEMENT_INTERFACE (G_TYPE_VOLUME,
++                                               g_mtp_volume_volume_iface_init))
++
++static void
++g_mtp_volume_finalize (GObject *object)
++{
++  GMtpVolume *volume;
++
++  volume = G_MTP_VOLUME (object);
++
++  g_clear_object (&volume->device);
++  g_clear_object (&volume->activation_root);
++
++  if (volume->volume_monitor != NULL)
++    g_object_remove_weak_pointer (G_OBJECT (volume->volume_monitor), (gpointer) &(volume->volume_monitor));
++
++  g_free (volume->name);
++  g_free (volume->icon);
++
++  (*G_OBJECT_CLASS (g_mtp_volume_parent_class)->finalize) (object);
++}
++
++static void
++g_mtp_volume_class_init (GMtpVolumeClass *klass)
++{
++  GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
++
++  gobject_class->finalize = g_mtp_volume_finalize;
++}
++
++static void
++g_mtp_volume_init (GMtpVolume *mtp_volume)
++{
++}
++
++static int hexdigit (char c)
++{
++  if (c >= 'a')
++    return c - 'a' + 10;
++  if (c >= 'A')
++   return c - 'A' + 10;
++  g_return_val_if_fail (c >= '0' && c <= '9', 0);
++  return c - '0';
++}
++
++/* Do not free result, it's a static buffer */
++static const char*
++udev_decode_string (const char* encoded)
++{
++  int len;
++  const char* s;
++  char *decoded;
++
++  if (encoded == NULL)
++    return NULL;
++
++  decoded = g_malloc(4096);
++
++  for (len = 0, s = encoded; *s && len < sizeof (decoded) - 1; ++len, ++s) {
++    /* need to check for NUL terminator in advance */
++    if (s[0] == '\\' && s[1] == 'x' && s[2] >= '0' && s[3] >= '0') {
++      decoded[len] = (hexdigit (s[2]) << 4) | hexdigit (s[3]);
++      s += 3;
++    } else {
++      decoded[len] = *s;
++    }
++  }
++  decoded[len] = '\0';
++  return decoded;
++}
++
++static void
++set_volume_name (GMtpVolume *v)
++{
++  const char *gphoto_name;
++  const char *product = NULL;
++  const char *vendor;
++  const char *model;
++
++  /* our preference: ID_MTP > ID_MEDIA_PLAYER_{VENDOR,PRODUCT} > product >
++   * ID_{VENDOR,MODEL} */
++
++  gphoto_name = g_udev_device_get_property (v->device, "ID_MTP");
++  if (gphoto_name != NULL && strcmp (gphoto_name, "1") != 0) {
++    v->name = g_strdup (gphoto_name);
++    return;
++  }
++
++  vendor = g_udev_device_get_property (v->device, "ID_MEDIA_PLAYER_VENDOR");
++  if (vendor == NULL)
++    vendor = g_udev_device_get_property (v->device, "ID_VENDOR_ENC");
++  model = g_udev_device_get_property (v->device, "ID_MEDIA_PLAYER_MODEL");
++  if (model == NULL) {
++    model = g_udev_device_get_property (v->device, "ID_MODEL_ENC");
++    product = g_udev_device_get_sysfs_attr (v->device, "product");
++  }
++
++  v->name = NULL;
++  if (product != NULL && strlen (product) > 0) {
++    v->name = g_strdup (product);
++  } else if (vendor == NULL) {
++    if (model != NULL)
++      v->name = g_strdup (udev_decode_string (model));
++  } else {
++    if (model != NULL) {
++      /* we can't call udev_decode_string() twice in one g_strdup_printf(),
++       * it returns a static buffer */
++      gchar *temp = g_strconcat (vendor, " ", model, NULL);
++      v->name = g_strdup (udev_decode_string (temp));
++      g_free (temp);
++    } else {
++      if (g_udev_device_has_property (v->device, "ID_MEDIA_PLAYER")) {
++        /* Translators: %s is the device vendor */
++        v->name = g_strdup_printf (_("%s Audio Player"), udev_decode_string (vendor));
++      } else {
++        /* Translators: %s is the device vendor */
++        v->name = g_strdup_printf (_("%s Camera"), udev_decode_string (vendor));
++      }
++    }
++  }
++
++  if (v->name == NULL)
++    v->name = g_strdup (_("Camera"));
++}
++
++static void
++set_volume_icon (GMtpVolume *volume)
++{
++  if (g_udev_device_has_property (volume->device, "ID_MEDIA_PLAYER_ICON_NAME"))
++    volume->icon = g_strdup (g_udev_device_get_property (volume->device, "ID_MEDIA_PLAYER_ICON_NAME"));
++  else if (g_udev_device_has_property (volume->device, "ID_MEDIA_PLAYER"))
++    volume->icon = g_strdup ("multimedia-player");
++  else
++    volume->icon = g_strdup ("camera-photo");
++}
++
++GMtpVolume *
++g_mtp_volume_new (GVolumeMonitor   *volume_monitor,
++                  GUdevDevice      *device,
++                  GUdevClient      *gudev_client,
++                  GFile            *activation_root)
++{
++  GMtpVolume *volume;
++  const char *device_path;
++
++  g_return_val_if_fail (volume_monitor != NULL, NULL);
++  g_return_val_if_fail (device != NULL, NULL);
++  g_return_val_if_fail (gudev_client != NULL, NULL);
++  g_return_val_if_fail (activation_root != NULL, NULL);
++
++  if (!g_udev_device_has_property (device, "ID_MTP_DEVICE"))
++    return NULL;
++  device_path = g_udev_device_get_device_file (device);
++
++  volume = g_object_new (G_TYPE_MTP_VOLUME, NULL);
++  volume->volume_monitor = volume_monitor;
++  g_object_add_weak_pointer (G_OBJECT (volume_monitor), (gpointer) &(volume->volume_monitor));
++  volume->device_path = g_strdup (device_path);
++  volume->device = g_object_ref (device);
++  volume->activation_root = g_object_ref (activation_root);
++
++  set_volume_name (volume);
++  set_volume_icon (volume);
++  /* we do not really need to listen for changes */
++
++  return volume;
++}
++
++void
++g_mtp_volume_removed (GMtpVolume *volume)
++{
++}
++
++static GIcon *
++g_mtp_volume_get_icon (GVolume *volume)
++{
++  GMtpVolume *mtp_volume = G_MTP_VOLUME (volume);
++  GIcon *icon;
++
++  G_LOCK (mtp_volume);
++  icon = g_themed_icon_new (mtp_volume->icon);
++  G_UNLOCK (mtp_volume);
++  return icon;
++}
++
++static char *
++g_mtp_volume_get_name (GVolume *volume)
++{
++  GMtpVolume *mtp_volume = G_MTP_VOLUME (volume);
++  char *name;
++
++  G_LOCK (mtp_volume);
++  name = g_strdup (mtp_volume->name);
++  G_UNLOCK (mtp_volume);
++
++  return name;
++}
++
++static char *
++g_mtp_volume_get_uuid (GVolume *volume)
++{
++  return NULL;
++}
++
++static gboolean
++g_mtp_volume_can_mount (GVolume *volume)
++{
++  return TRUE;
++}
++
++static gboolean
++g_mtp_volume_can_eject (GVolume *volume)
++{
++  return FALSE;
++}
++
++static gboolean
++g_mtp_volume_should_automount (GVolume *volume)
++{
++  return TRUE;
++}
++
++static GDrive *
++g_mtp_volume_get_drive (GVolume *volume)
++{
++  return NULL;
++}
++
++static GMount *
++g_mtp_volume_get_mount (GVolume *volume)
++{
++  return NULL;
++}
++
++gboolean
++g_mtp_volume_has_path (GMtpVolume  *volume,
++                      const char  *sysfs_path)
++{
++  GMtpVolume *mtp_volume = G_MTP_VOLUME (volume);
++  gboolean res;
++
++  G_LOCK (mtp_volume);
++  res = FALSE;
++  if (mtp_volume->device != NULL)
++    res = strcmp (g_udev_device_get_sysfs_path (mtp_volume->device), sysfs_path) == 0;
++  G_UNLOCK (mtp_volume);
++  return res;
++}
++
++typedef struct
++{
++  GMtpVolume *enclosing_volume;
++  GAsyncReadyCallback  callback;
++  gpointer user_data;
++} ActivationMountOp;
++
++static void
++mount_callback (GObject *source_object,
++                        GAsyncResult *res,
++                        gpointer user_data)
++{
++  ActivationMountOp *data = user_data;
++  data->callback (G_OBJECT (data->enclosing_volume), res, data->user_data);
++  g_free (data);
++}
++
++static void
++g_mtp_volume_mount (GVolume             *volume,
++                        GMountMountFlags     flags,
++                        GMountOperation     *mount_operation,
++                        GCancellable        *cancellable,
++                        GAsyncReadyCallback  callback,
++                        gpointer             user_data)
++{
++  GMtpVolume *mtp_volume = G_MTP_VOLUME (volume);
++  ActivationMountOp *data;
++
++  /*g_warning ("mtp_volume_mount (can_mount=%d foreign=%p device_path=%s)",
++              g_mtp_volume_can_mount (volume),
++              mtp_volume->activation_root,
++              mtp_volume->device_path);*/
++
++  G_LOCK (mtp_volume);
++
++  data = g_new0 (ActivationMountOp, 1);
++  data->enclosing_volume = mtp_volume;
++  data->callback = callback;
++  data->user_data = user_data;
++
++  g_file_mount_enclosing_volume (mtp_volume->activation_root,
++                                 0,
++                                 mount_operation,
++                                 cancellable,
++                                 mount_callback,
++                                 data);
++
++  G_UNLOCK (mtp_volume);
++}
++
++static gboolean
++g_mtp_volume_mount_finish (GVolume       *volume,
++                           GAsyncResult  *result,
++                           GError       **error)
++{
++  GMtpVolume *mtp_volume = G_MTP_VOLUME (volume);
++  gboolean res;
++
++  G_LOCK (mtp_volume);
++  res = g_file_mount_enclosing_volume_finish (mtp_volume->activation_root, result, error);
++  G_UNLOCK (mtp_volume);
++
++  return res;
++}
++
++static char *
++g_mtp_volume_get_identifier (GVolume    *volume,
++                             const char *kind)
++{
++  GMtpVolume *mtp_volume = G_MTP_VOLUME (volume);
++  char *id;
++
++  G_LOCK (mtp_volume);
++  id = NULL;
++  if (strcmp (kind, G_VOLUME_IDENTIFIER_KIND_UNIX_DEVICE) == 0)
++    id = g_strdup (mtp_volume->device_path);
++  G_UNLOCK (mtp_volume);
++
++  return id;
++}
++
++static char **
++g_mtp_volume_enumerate_identifiers (GVolume *volume)
++{
++  GMtpVolume *mtp_volume = G_MTP_VOLUME (volume);
++  GPtrArray *res;
++
++  G_LOCK (mtp_volume);
++
++  res = g_ptr_array_new ();
++
++  if (mtp_volume->device_path && *mtp_volume->device_path != 0)
++    g_ptr_array_add (res,
++                     g_strdup (G_VOLUME_IDENTIFIER_KIND_UNIX_DEVICE));
++
++  /* Null-terminate */
++  g_ptr_array_add (res, NULL);
++
++  G_UNLOCK (mtp_volume);
++
++  return (char **)g_ptr_array_free (res, FALSE);
++}
++
++static GFile *
++g_mtp_volume_get_activation_root (GVolume *volume)
++{
++  GMtpVolume *mtp_volume = G_MTP_VOLUME (volume);
++
++  return g_object_ref (mtp_volume->activation_root);
++}
++
++static void
++g_mtp_volume_volume_iface_init (GVolumeIface *iface)
++{
++  iface->get_name = g_mtp_volume_get_name;
++  iface->get_icon = g_mtp_volume_get_icon;
++  iface->get_uuid = g_mtp_volume_get_uuid;
++  iface->get_drive = g_mtp_volume_get_drive;
++  iface->get_mount = g_mtp_volume_get_mount;
++  iface->can_mount = g_mtp_volume_can_mount;
++  iface->can_eject = g_mtp_volume_can_eject;
++  iface->should_automount = g_mtp_volume_should_automount;
++  iface->mount_fn = g_mtp_volume_mount;
++  iface->mount_finish = g_mtp_volume_mount_finish;
++  iface->eject = NULL;
++  iface->eject_finish = NULL;
++  iface->get_identifier = g_mtp_volume_get_identifier;
++  iface->enumerate_identifiers = g_mtp_volume_enumerate_identifiers;
++  iface->get_activation_root = g_mtp_volume_get_activation_root;
++}
+--- /dev/null
++++ gvfs-1.14.2/monitor/mtp/mtp-volume-monitor-daemon.c
+@@ -0,0 +1,36 @@
++/* GIO - GLib Input, Output and Streaming Library
++ *   Volume Monitor for MTP Backend
++ *
++ * Copyright (C) 2012 Philip Langdale <philipl@overt.org>
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General
++ * Public License along with this library; if not, write to the
++ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
++ * Boston, MA 02111-1307, USA.
++ */
++
++#include <config.h>
++
++#include <gvfsproxyvolumemonitordaemon.h>
++
++#include "gmtpvolumemonitor.h"
++
++int
++main (int argc, char *argv[])
++{
++  g_vfs_proxy_volume_monitor_daemon_init ();
++  return g_vfs_proxy_volume_monitor_daemon_main (argc,
++                                                 argv,
++                                                 "org.gtk.Private.MTPVolumeMonitor",
++                                                 G_TYPE_MTP_VOLUME_MONITOR);
++}
+--- /dev/null
++++ gvfs-1.14.2/monitor/mtp/Makefile.am
+@@ -0,0 +1,51 @@
++
++NULL =
++
++libexec_PROGRAMS = gvfs-mtp-volume-monitor
++
++gvfs_mtp_volume_monitor_SOURCES =
++
++gvfs_mtp_volume_monitor_SOURCES +=			\
++        mtp-volume-monitor-daemon.c \
++	gmtpvolume.c	gmtpvolume.h	\
++	gmtpvolumemonitor.c	gmtpvolumemonitor.h	\
++	$(NULL)
++
++gvfs_mtp_volume_monitor_CFLAGS =		\
++	-DG_LOG_DOMAIN=\"GVFS-MTP\"		\
++	-I$(top_srcdir)/common                  \
++	-I$(top_srcdir)/monitor/proxy           \
++	$(GLIB_CFLAGS)                          \
++	-DGIO_MODULE_DIR=\"$(GIO_MODULE_DIR)\"	\
++	-DGVFS_LOCALEDIR=\""$(localedir)"\"	\
++	-DG_UDEV_API_IS_SUBJECT_TO_CHANGE	\
++	$(NULL)
++
++gvfs_mtp_volume_monitor_CFLAGS += $(GUDEV_CFLAGS)
++
++gvfs_mtp_volume_monitor_LDFLAGS =	\
++	$(NULL)
++
++gvfs_mtp_volume_monitor_LDADD  =		     			      \
++	$(GLIB_LIBS)                                 			      \
++	$(top_builddir)/common/libgvfscommon.la 			      \
++	$(top_builddir)/monitor/proxy/libgvfsproxyvolumemonitordaemon-noin.la \
++	$(NULL)
++
++gvfs_mtp_volume_monitor_LDADD += $(GUDEV_LIBS)
++
++
++remote_volume_monitorsdir = $(datadir)/gvfs/remote-volume-monitors
++remote_volume_monitors_DATA = mtp.monitor
++
++servicedir       = $(datadir)/dbus-1/services
++service_in_files = org.gtk.Private.MTPVolumeMonitor.service.in
++service_DATA     = $(service_in_files:.service.in=.service)
++
++$(service_DATA): $(service_in_files) Makefile
++	$(AM_V_GEN) $(SED) -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
++
++clean-local:
++	rm -f *~ *.loT $(service_DATA)
++
++EXTRA_DIST = $(service_in_files) mtp.monitor
+--- /dev/null
++++ gvfs-1.14.2/monitor/mtp/gmtpvolumemonitor.h
+@@ -0,0 +1,53 @@
++/* GIO - GLib Input, Output and Streaming Library
++ *   Volume Monitor for MTP Backend
++ *
++ * Copyright (C) 2012 Philip Langdale <philipl@overt.org>
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General
++ * Public License along with this library; if not, write to the
++ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
++ * Boston, MA 02111-1307, USA.
++ */
++
++#ifndef __G_MTP_VOLUME_MONITOR_H__
++#define __G_MTP_VOLUME_MONITOR_H__
++
++#include <glib-object.h>
++#include <gio/gio.h>
++
++G_BEGIN_DECLS
++
++#define G_TYPE_MTP_VOLUME_MONITOR        (g_mtp_volume_monitor_get_type ())
++#define G_MTP_VOLUME_MONITOR(o)          (G_TYPE_CHECK_INSTANCE_CAST ((o), G_TYPE_MTP_VOLUME_MONITOR, GMtpVolumeMonitor))
++#define G_MTP_VOLUME_MONITOR_CLASS(k)    (G_TYPE_CHECK_CLASS_CAST((k), G_TYPE_MTP_VOLUME_MONITOR, GMtpVolumeMonitorClass))
++#define G_IS_MTP_VOLUME_MONITOR(o)       (G_TYPE_CHECK_INSTANCE_TYPE ((o), G_TYPE_MTP_VOLUME_MONITOR))
++#define G_IS_MTP_VOLUME_MONITOR_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE ((k), G_TYPE_MTP_VOLUME_MONITOR))
++
++typedef struct _GMtpVolumeMonitor GMtpVolumeMonitor;
++typedef struct _GMtpVolumeMonitorClass GMtpVolumeMonitorClass;
++
++/* Forward definitions */
++typedef struct _GMtpVolume GMtpVolume;
++
++struct _GMtpVolumeMonitorClass {
++  GVolumeMonitorClass parent_class;
++};
++
++GType g_mtp_volume_monitor_get_type (void) G_GNUC_CONST;
++
++GVolumeMonitor *g_mtp_volume_monitor_new          (void);
++void            g_mtp_volume_monitor_force_update (GMtpVolumeMonitor *monitor);
++
++G_END_DECLS
++
++#endif /* __G_MTP_VOLUME_MONITOR_H__ */
+--- /dev/null
++++ gvfs-1.14.2/monitor/mtp/gmtpvolume.h
+@@ -0,0 +1,59 @@
++/* GIO - GLib Input, Output and Streaming Library
++ *   Volume Monitor for MTP Backend
++ *
++ * Copyright (C) 2012 Philip Langdale <philipl@overt.org>
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General
++ * Public License along with this library; if not, write to the
++ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
++ * Boston, MA 02111-1307, USA.
++ */
++
++#ifndef __G_MTP_VOLUME_H__
++#define __G_MTP_VOLUME_H__
++
++#include <glib-object.h>
++#include <gio/gio.h>
++
++#include <gudev/gudev.h>
++#include "gmtpvolumemonitor.h"
++
++G_BEGIN_DECLS
++
++#define G_TYPE_MTP_VOLUME        (g_mtp_volume_get_type ())
++#define G_MTP_VOLUME(o)          (G_TYPE_CHECK_INSTANCE_CAST ((o), G_TYPE_MTP_VOLUME, GMtpVolume))
++#define G_MTP_VOLUME_CLASS(k)    (G_TYPE_CHECK_CLASS_CAST((k), G_TYPE_MTP_VOLUME, GMtpVolumeClass))
++#define G_IS_MTP_VOLUME(o)       (G_TYPE_CHECK_INSTANCE_TYPE ((o), G_TYPE_MTP_VOLUME))
++#define G_IS_MTP_VOLUME_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE ((k), G_TYPE_MTP_VOLUME))
++
++typedef struct _GMtpVolumeClass GMtpVolumeClass;
++
++struct _GMtpVolumeClass {
++   GObjectClass parent_class;
++};
++
++GType g_mtp_volume_get_type (void) G_GNUC_CONST;
++
++GMtpVolume *g_mtp_volume_new      (GVolumeMonitor *volume_monitor,
++                                   GUdevDevice    *device,
++                                   GUdevClient    *gudev_client,
++                                   GFile          *activation_root);
++
++gboolean    g_mtp_volume_has_path (GMtpVolume     *volume,
++                                   const char     *path);
++
++void        g_mtp_volume_removed  (GMtpVolume     *volume);
++
++G_END_DECLS
++
++#endif /* __G_MTP_VOLUME_H__ */
+--- /dev/null
++++ gvfs-1.14.2/monitor/mtp/org.gtk.Private.MTPVolumeMonitor.service.in
+@@ -0,0 +1,3 @@
++[D-BUS Service]
++Name=org.gtk.Private.MTPVolumeMonitor
++Exec=@libexecdir@/gvfs-mtp-volume-monitor
+--- /dev/null
++++ gvfs-1.14.2/monitor/mtp/mtp.monitor
+@@ -0,0 +1,4 @@
++[RemoteVolumeMonitor]
++Name=GProxyVolumeMonitorMTP
++DBusName=org.gtk.Private.MTPVolumeMonitor
++IsNative=false
+--- gvfs-1.14.2.orig/monitor/gphoto2/ggphoto2volumemonitor.c
++++ gvfs-1.14.2/monitor/gphoto2/ggphoto2volumemonitor.c
+@@ -201,6 +201,13 @@ gudev_add_camera (GGPhoto2VolumeMonitor
+ 	return;
+       }
+ #endif /* HAVE_AFC */
++#ifdef HAVE_LIBMTP
++    if (g_udev_device_get_property_as_boolean (device, "ID_MTP_DEVICE"))
++      {
++	/* g_debug ("ignoring device, is MTP"); */
++	return;
++      }
++#endif /* HAVE_LIBMTP */
+ 
+     usb_bus_num = g_udev_device_get_property (device, "BUSNUM");
+     if (usb_bus_num == NULL) {
+--- gvfs-1.14.2.orig/daemon/Makefile.am
++++ gvfs-1.14.2/daemon/Makefile.am
+@@ -79,6 +79,12 @@ mount_DATA += gphoto2.mount
+ libexec_PROGRAMS += gvfsd-gphoto2
+ endif
+ 
++mount_in_files += mtp.mount.in
++if USE_LIBMTP
++mount_DATA += mtp.mount
++libexec_PROGRAMS += gvfsd-mtp
++endif
++
+ mount_in_files += obexftp.mount.in
+ if USE_OBEXFTP
+ mount_DATA += obexftp.mount
+@@ -440,6 +446,19 @@ else
+ gvfsd_gphoto2_LDADD = $(libraries) $(GPHOTO2_LIBS) $(HAL_LIBS)
+ endif
+ 
++gvfsd_mtp_SOURCES = \
++	gvfsbackendmtp.c gvfsbackendmtp.h \
++	daemon-main.c daemon-main.h \
++	daemon-main-generic.c
++
++gvfsd_mtp_CPPFLAGS = \
++	-DBACKEND_HEADER=gvfsbackendmtp.h \
++	-DDEFAULT_BACKEND_TYPE=mtp \
++	-DBACKEND_TYPES='"mtp", G_VFS_TYPE_BACKEND_MTP,' \
++	$(GUDEV_CFLAGS) $(LIBMTP_CFLAGS)
++
++gvfsd_mtp_LDADD = $(libraries) $(GUDEV_LIBS) $(LIBMTP_LIBS)
++
+ gvfsd_http_SOURCES = \
+ 	soup-input-stream.c soup-input-stream.h \
+ 	gvfsbackendhttp.c gvfsbackendhttp.h \
+--- gvfs-1.14.2.orig/daemon/gvfsmonitor.c
++++ gvfs-1.14.2/daemon/gvfsmonitor.c
+@@ -71,7 +71,14 @@ backend_died (GVfsMonitor *monitor,
+ 	      GObject     *old_backend)
+ {
+   Subscriber *subscriber;
+-  
++
++  /*
++   * Take an extra ref on the monitor because
++   * unsubscribing may lead to the last ref
++   * being released.
++   */
++  g_object_ref (G_OBJECT (monitor));
++
+   monitor->priv->backend = NULL;
+ 
+   while (monitor->priv->subscribers != NULL)
+@@ -79,6 +86,8 @@ backend_died (GVfsMonitor *monitor,
+       subscriber = monitor->priv->subscribers->data;
+       unsubscribe (subscriber);
+     }
++
++  g_object_unref (G_OBJECT (monitor));
+ }
+ 
+ static void
+--- /dev/null
++++ gvfs-1.14.2/daemon/gvfsbackendmtp.h
+@@ -0,0 +1,75 @@
++/* GIO - GLib Input, Output and Streaming Library
++ *   MTP Backend
++ * 
++ * Copyright (C) 2012 Philip Langdale <philipl@overt.org>
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General
++ * Public License along with this library; if not, write to the
++ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
++ * Boston, MA 02111-1307, USA.
++ */
++
++#ifndef __G_VFS_BACKEND_MTP_H__
++#define __G_VFS_BACKEND_MTP_H__
++
++#include <gvfsbackend.h>
++#include <gmountspec.h>
++#ifdef HAVE_GUDEV
++#include <gudev/gudev.h>
++#endif
++#include <libmtp.h>
++
++G_BEGIN_DECLS
++
++#define G_VFS_TYPE_BACKEND_MTP         (g_vfs_backend_mtp_get_type ())
++#define G_VFS_BACKEND_MTP(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), G_VFS_TYPE_BACKEND_MTP, GVfsBackendMtp))
++#define G_VFS_BACKEND_MTP_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST((k), G_VFS_TYPE_BACKEND_MTP, GVfsBackendMtpClass))
++#define G_VFS_IS_BACKEND_MTP(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), G_VFS_TYPE_BACKEND_MTP))
++#define G_VFS_IS_BACKEND_MTP_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), G_VFS_TYPE_BACKEND_MTP))
++#define G_VFS_BACKEND_MTP_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), G_VFS_TYPE_BACKEND_MTP, GVfsBackendMtpClass))
++
++typedef struct _GVfsBackendMtp        GVfsBackendMtp;
++typedef struct _GVfsBackendMtpClass   GVfsBackendMtpClass;
++
++struct _GVfsBackendMtp
++{
++  GVfsBackend parent_instance;
++
++#ifdef HAVE_GUDEV
++  GUdevClient *gudev_client;
++  gulong on_uevent_id;
++#endif
++
++  GMutex mutex;
++  LIBMTP_mtpdevice_t *device;
++  char *dev_path;
++
++  GHashTable *file_cache;
++
++  GHashTable *monitors;
++  guint hb_id;
++  gint unmount_started;
++
++  gboolean android_extension;
++};
++
++struct _GVfsBackendMtpClass
++{
++  GVfsBackendClass parent_class;
++};
++
++GType g_vfs_backend_mtp_get_type (void) G_GNUC_CONST;
++
++G_END_DECLS
++
++#endif /* __G_VFS_BACKEND_MTP_H__ */
+--- /dev/null
++++ gvfs-1.14.2/daemon/gvfsbackendmtp.c
+@@ -0,0 +1,2317 @@
++/* GIO - GLib Input, Output and Streaming Library
++ *   MTP Backend
++ *
++ * Copyright (C) 2012 Philip Langdale <philipl@overt.org>
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General
++ * Public License along with this library; if not, write to the
++ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
++ * Boston, MA 02111-1307, USA.
++ */
++
++
++#include <config.h>
++
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <errno.h>
++#include <unistd.h>
++#include <fcntl.h>
++#include <string.h>
++#include <stdlib.h>
++
++#include <glib/gstdio.h>
++#include <glib/gi18n.h>
++#include <gio/gio.h>
++
++#include <libmtp.h>
++
++#include "gvfsbackendmtp.h"
++#include "gvfsicon.h"
++#include "gvfsjobopenforread.h"
++#include "gvfsjobread.h"
++#include "gvfsjobseekread.h"
++#include "gvfsjobopenforwrite.h"
++#include "gvfsjobwrite.h"
++#include "gvfsjobclosewrite.h"
++#include "gvfsjobseekwrite.h"
++#include "gvfsjobsetdisplayname.h"
++#include "gvfsjobqueryinfo.h"
++#include "gvfsjobdelete.h"
++#include "gvfsjobqueryfsinfo.h"
++#include "gvfsjobqueryattributes.h"
++#include "gvfsjobenumerate.h"
++#include "gvfsdaemonprotocol.h"
++#include "gvfsjobcreatemonitor.h"
++#include "gvfsjobmakedirectory.h"
++#include "gvfsmonitor.h"
++
++
++/* ------------------------------------------------------------------------------------------------- */
++
++/* showing debug traces */
++#define DEBUG_SHOW_TRACES 1
++#define DEBUG_SHOW_ENUMERATE_TRACES 0
++
++static void
++DEBUG (const gchar *message, ...)
++{
++#if DEBUG_SHOW_TRACES
++  va_list args;
++  va_start (args, message);
++  g_vfprintf (stderr, message, args);
++  va_end (args);
++  g_fprintf (stderr, "\n");
++  fflush (stderr);
++#endif
++}
++
++static void
++DEBUG_ENUMERATE (const gchar *message, ...)
++{
++#if DEBUG_SHOW_ENUMERATE_TRACES
++  va_list args;
++  va_start (args, message);
++  g_vfprintf (stderr, message, args);
++  va_end (args);
++  g_fprintf (stderr, "\n");
++  fflush (stderr);
++#endif
++}
++
++
++/************************************************
++ * Storage constants copied from ptp.h
++ *
++ * ptp.h is treated as a private header by libmtp
++ ************************************************/
++
++/* PTP Storage Types */
++
++#define PTP_ST_Undefined                        0x0000
++#define PTP_ST_FixedROM                         0x0001
++#define PTP_ST_RemovableROM                     0x0002
++#define PTP_ST_FixedRAM                         0x0003
++#define PTP_ST_RemovableRAM                     0x0004
++
++
++/************************************************
++ * Private Types
++ ************************************************/
++
++typedef enum {
++  HANDLE_FILE,
++  HANDLE_PREVIEW,
++} HandleType;
++
++typedef struct {
++  HandleType handle_type;
++  uint32_t id;
++  goffset offset;
++  gsize size;
++
++  /* For previews only */
++  GByteArray *bytes;
++} RWHandle;
++
++typedef struct {
++  uint32_t storage;
++  uint32_t id;
++} CacheEntry;
++
++
++/************************************************
++ * Static prototypes
++ ************************************************/
++
++static void
++emit_delete_event (gpointer key,
++                   gpointer value,
++                   gpointer user_data);
++
++
++/************************************************
++ * Cache Helpers
++ ************************************************/
++
++static CacheEntry *
++add_cache_entry (GVfsBackendMtp *backend,
++                 char *path,
++                 uint32_t storage,
++                 uint32_t id)
++{
++  CacheEntry *entry = g_new0 (CacheEntry, 1);
++  entry->storage = storage;
++  entry->id = id;
++  DEBUG ("(II) add_cache_entry: %s: %u, %u",
++         path, entry->storage, entry->id);
++  g_hash_table_replace (backend->file_cache,
++                        path, entry);
++}
++
++
++static char *
++build_partial_path (char **elements,
++                    unsigned int ne)
++{
++  char **pe = g_new0 (char *, ne + 2);
++  int i;
++  pe[0] = g_strdup("/");
++  for (i = 0; i < ne; i++) {
++    pe[i + 1] = elements[i];
++  }
++  char *path = g_build_filenamev(pe);
++  g_free (pe);
++  return path;
++}
++
++/**
++ * get_file_for_filename:
++ *
++ * Get the entity ID for an element given its filename and
++ * the IDs of its parents.
++ *
++ * Called with backend mutex lock held.
++ */
++static void
++add_cache_entries_for_filename (GVfsBackendMtp *backend,
++                                const char *path)
++{
++  LIBMTP_file_t *file = NULL;
++  LIBMTP_mtpdevice_t *device = backend->device;
++
++  gchar **elements = g_strsplit_set (path, "/", -1);
++  unsigned int ne = g_strv_length (elements);
++
++  DEBUG ("(III) add_cache_entries_for_filename: %s, %u", path, ne);
++
++  if (ne < 2) {
++    DEBUG ("(III) Ignoring query on invalid path");
++    goto exit;
++  }
++
++  int i;
++
++  /* Identify Storage */
++  LIBMTP_devicestorage_t *storage;
++
++  int ret = LIBMTP_Get_Storage (device, LIBMTP_STORAGE_SORTBY_NOTSORTED);
++  if (ret != 0) {
++    LIBMTP_Dump_Errorstack (device);
++    LIBMTP_Clear_Errorstack (device);
++    goto exit;
++  }
++  for (storage = device->storage; storage != 0; storage = storage->next) {
++    if (g_strcmp0 (elements[1], storage->StorageDescription) == 0) {
++      char *partial = build_partial_path (elements, 2);
++      add_cache_entry (backend, partial, storage->id, -1);
++      break;
++    }
++  }
++  if (!storage) {
++    DEBUG ("(III) Ignoring query on invalid storage");
++    goto exit;
++  }
++
++  long parent_id = -1;
++  for (i = 2; i < ne; i++) {
++    LIBMTP_file_t *f =
++      LIBMTP_Get_Files_And_Folders (device, storage->id, parent_id);
++    while (f != NULL) {
++      DEBUG_ENUMERATE ("(III) query (entity = %s, name = %s) ", f->filename, elements[i]);
++      if (strcmp (f->filename, elements[i]) == 0) {
++        file = f;
++        f = f->next;
++        char *partial = build_partial_path (elements, i + 1);
++        add_cache_entry (backend, partial, file->storage_id, file->item_id);
++        break;
++      } else {
++        LIBMTP_file_t *tmp = f;
++        f = f->next;
++        LIBMTP_destroy_file_t (tmp);
++      }
++    }
++    while (f != NULL) {
++      LIBMTP_file_t *tmp = f;
++      f = f->next;
++      LIBMTP_destroy_file_t (tmp);
++    }
++    if (!file) {
++      DEBUG ("(III) Ignoring query for non-existent file");
++      goto exit;
++    }
++    parent_id = file->item_id;
++  }
++
++ exit:
++  g_strfreev (elements);
++
++  DEBUG ("(III) add_cache_entries_for_filename done");
++}
++
++
++static CacheEntry *get_cache_entry (GVfsBackendMtp *backend,
++                                    const char *path)
++{
++  DEBUG ("(III) get_cache_entry: %s", path);
++  CacheEntry *entry = g_hash_table_lookup (backend->file_cache, path);
++  if (!entry) {
++    add_cache_entries_for_filename (backend, path);
++    entry = g_hash_table_lookup (backend->file_cache, path);
++  }
++  DEBUG ("(III) get_cache_entry done: %p", entry);
++  return entry;
++}
++
++
++static gboolean
++remove_cache_entry_by_prefix (gpointer key,
++                              gpointer value,
++                              gpointer user_data)
++{
++  const char *path = key;
++  const char *prefix = user_data;
++
++  return g_str_has_prefix (path, prefix);
++}
++
++
++static void
++remove_cache_entry (GVfsBackendMtp *backend,
++                    const char *path)
++{
++  DEBUG ("(III) remove_cache_entry: %s", path);
++  //g_hash_table_remove (backend->file_cache, path);
++  g_hash_table_foreach_remove (backend->file_cache,
++                               remove_cache_entry_by_prefix,
++                               (gpointer) path);
++  DEBUG ("(III) remove_cache_entry done");
++}
++
++
++static void
++remove_cache_entry_by_id (GVfsBackendMtp *backend,
++                          uint32_t id)
++{
++  GHashTableIter iter;
++  gpointer key, value;
++  DEBUG ("(III) remove_cache_entry_by_id: %u", id);
++
++  g_hash_table_iter_init (&iter, backend->file_cache);
++  while (g_hash_table_iter_next (&iter, &key, &value)) {
++    const char *path = key;
++    const CacheEntry *entry = value;
++
++    if (entry->id == id) {
++      g_hash_table_foreach (backend->monitors,
++                            emit_delete_event,
++                            (char *)path);
++      g_hash_table_iter_remove (&iter);
++      break;
++    }
++  }
++
++  DEBUG ("(III) remove_cache_entry_by_id done");
++}
++
++
++/************************************************
++ * Initialization
++ ************************************************/
++
++G_DEFINE_TYPE (GVfsBackendMtp, g_vfs_backend_mtp, G_VFS_TYPE_BACKEND)
++
++static void
++g_vfs_backend_mtp_init (GVfsBackendMtp *backend)
++{
++  DEBUG ("(I) g_vfs_backend_mtp_init");
++  GMountSpec *mount_spec;
++
++  g_mutex_init (&backend->mutex);
++  g_vfs_backend_set_display_name (G_VFS_BACKEND (backend), "mtp");
++  g_vfs_backend_set_icon_name (G_VFS_BACKEND (backend), "multimedia-player");
++
++  mount_spec = g_mount_spec_new ("mtp");
++  g_vfs_backend_set_mount_spec (G_VFS_BACKEND (backend), mount_spec);
++  g_mount_spec_unref (mount_spec);
++
++  backend->monitors = g_hash_table_new (NULL, NULL);
++
++  DEBUG ("(I) g_vfs_backend_mtp_init done.");
++}
++
++static void
++remove_monitor_weak_ref (gpointer monitor,
++                         gpointer unused,
++                         gpointer monitors)
++{
++  g_object_weak_unref (G_OBJECT(monitor), (GWeakNotify)g_hash_table_remove, monitors);
++}
++
++static void
++g_vfs_backend_mtp_finalize (GObject *object)
++{
++  GVfsBackendMtp *backend;
++
++  DEBUG ("(I) g_vfs_backend_mtp_finalize");
++
++  backend = G_VFS_BACKEND_MTP (object);
++
++  g_hash_table_foreach (backend->monitors, remove_monitor_weak_ref, backend->monitors);
++  g_hash_table_unref (backend->monitors);
++  g_mutex_clear (&backend->mutex);
++
++  (*G_OBJECT_CLASS (g_vfs_backend_mtp_parent_class)->finalize) (object);
++
++  DEBUG ("(I) g_vfs_backend_mtp_finalize done.");
++}
++
++
++/************************************************
++ * Monitors
++ ************************************************/
++
++/**
++ * do_create_dir_monitor:
++ *
++ * Called with backend mutex lock held.
++ */
++static void
++do_create_dir_monitor (GVfsBackend *backend,
++                       GVfsJobCreateMonitor *job,
++                       const char *filename,
++                       GFileMonitorFlags flags)
++{
++  GVfsBackendMtp *mtp_backend = G_VFS_BACKEND_MTP (backend);
++
++  DEBUG ("(I) create_dir_monitor (%s)", filename);
++
++  GVfsMonitor *vfs_monitor = g_vfs_monitor_new (backend);
++
++  g_object_set_data_full (G_OBJECT (vfs_monitor), "gvfsbackendmtp:path",
++                          g_strdup (filename), g_free);
++
++  g_vfs_job_create_monitor_set_monitor (job, vfs_monitor);
++  g_hash_table_add (mtp_backend->monitors, vfs_monitor);
++  g_object_weak_ref (G_OBJECT (vfs_monitor), (GWeakNotify)g_hash_table_remove, mtp_backend->monitors);
++  g_object_unref (vfs_monitor);
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++  DEBUG ("(I) create_dir_monitor done.");
++}
++
++
++/**
++ * do_create_file_monitor:
++ *
++ * Called with backend mutex lock held.
++ */
++static void
++do_create_file_monitor (GVfsBackend *backend,
++                        GVfsJobCreateMonitor *job,
++                        const char *filename,
++                        GFileMonitorFlags flags)
++{
++  GVfsBackendMtp *mtp_backend = G_VFS_BACKEND_MTP (backend);
++
++  DEBUG ("(I) create_file_monitor (%s)", filename);
++
++  GVfsMonitor *vfs_monitor = g_vfs_monitor_new (backend);
++
++  g_object_set_data_full (G_OBJECT (vfs_monitor), "gvfsbackendmtp:path",
++                          g_strdup (filename), g_free);
++
++  g_vfs_job_create_monitor_set_monitor (job, vfs_monitor);
++  g_hash_table_add (mtp_backend->monitors, vfs_monitor);
++  g_object_weak_ref (G_OBJECT (vfs_monitor), (GWeakNotify)g_hash_table_remove, mtp_backend->monitors);
++  g_object_unref (vfs_monitor);
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++  DEBUG ("(I) create_file_monitor done.");
++}
++
++
++static void
++emit_event_internal (GVfsMonitor *monitor,
++                     const char *path,
++                     GFileMonitorEvent event)
++{
++  DEBUG ("(III) emit_event_internal (%s, %d)", path, event);
++
++  char *dir = g_dirname (path);
++  const char *monitored_path = g_object_get_data (G_OBJECT (monitor), "gvfsbackendmtp:path");
++  if (g_strcmp0 (dir, monitored_path) == 0) {
++    DEBUG ("(III) emit_event_internal: Event %d on directory %s for %s", event, dir, path);
++    g_vfs_monitor_emit_event (monitor, event, path, NULL);
++  } else if (g_strcmp0 (path, monitored_path) == 0) {
++    DEBUG ("(III) emit_event_internal: Event %d on file %s", event, path);
++    g_vfs_monitor_emit_event (monitor, event, path, NULL);
++  }
++  g_free (dir);
++
++  DEBUG ("(III) emit_event_internal done.");
++}
++
++
++static void
++emit_create_event (gpointer key,
++                   gpointer value,
++                   gpointer user_data)
++{
++  DEBUG ("(II) emit_create_event.");
++  emit_event_internal (key, user_data, G_FILE_MONITOR_EVENT_CREATED);
++}
++
++
++static void
++emit_delete_event (gpointer key,
++                   gpointer value,
++                   gpointer user_data)
++{
++  DEBUG ("(II) emit_delete_event.");
++  emit_event_internal (key, user_data, G_FILE_MONITOR_EVENT_DELETED);
++}
++
++
++static void
++emit_change_event (gpointer key,
++                   gpointer value,
++                   gpointer user_data)
++{
++  DEBUG ("(II) emit_change_event.");
++  emit_event_internal (key, user_data, G_FILE_MONITOR_EVENT_CHANGED);
++}
++
++
++/************************************************
++ * Errors
++ ************************************************/
++
++static void
++fail_job (GVfsJob *job, LIBMTP_mtpdevice_t *device)
++{
++  const char *text;
++  LIBMTP_error_t *error = LIBMTP_Get_Errorstack (device);
++
++  if (error) {
++    text = g_strrstr (error->error_text, ":") + 1;
++  } else {
++    text = _("Unknown error.");
++  }
++  g_vfs_job_failed (job, G_IO_ERROR,
++                    g_vfs_job_is_cancelled (job) ?
++                      G_IO_ERROR_CANCELLED :
++                      G_IO_ERROR_FAILED,
++                    _("libmtp error: %s"),
++                    text);
++
++  LIBMTP_Clear_Errorstack (device);
++}
++
++
++/************************************************
++ * Mounts
++ ************************************************/
++
++static LIBMTP_mtpdevice_t *
++get_device (GVfsBackend *backend, const char *id, GVfsJob *job);
++
++
++static void
++on_uevent (GUdevClient *client, gchar *action, GUdevDevice *device, gpointer user_data)
++{
++  const char *dev_path = g_udev_device_get_device_file (device);
++  DEBUG ("(I) on_uevent (action %s, device %s)", action, dev_path);
++
++  if (dev_path == NULL) {
++    return;
++  }
++
++  GVfsBackendMtp *op_backend = G_VFS_BACKEND_MTP (user_data);
++
++  if (g_strcmp0 (op_backend->dev_path, dev_path) == 0 &&
++      g_str_equal (action, "remove")) {
++    DEBUG ("(I) on_uevent: Quiting after remove event on device %s", dev_path);
++    /* TODO: need a cleaner way to force unmount ourselves */
++    exit (1);
++  }
++
++  DEBUG ("(I) on_uevent done.");
++}
++
++#if HAVE_LIBMTP_1_1_5
++static gpointer
++check_event (gpointer user_data)
++{
++  GWeakRef *event_ref = user_data;
++
++  LIBMTP_event_t event;
++  int ret = 0;
++  while (ret == 0) {
++    uint32_t param1;
++    char *path;
++    GVfsBackendMtp *backend;
++
++    backend = g_weak_ref_get (event_ref);
++    if (backend && !g_atomic_int_get (&backend->unmount_started)) {
++      LIBMTP_mtpdevice_t *device = backend->device;
++      g_object_unref (backend);
++      /*
++       * Unavoidable race. We can't hold a reference when
++       * calling Read_Event as it blocks while waiting and
++       * we can't interrupt it in any sane way, so it would
++       * end up preventing finalization of the backend.
++       */
++      ret = LIBMTP_Read_Event (device, &event, &param1);
++    } else {
++      return NULL;
++    }
++
++    switch (event) {
++    case LIBMTP_EVENT_STORE_ADDED:
++      backend = g_weak_ref_get (event_ref);
++      if (backend && !g_atomic_int_get (&backend->unmount_started)) {
++        LIBMTP_mtpdevice_t *device = backend->device;
++        LIBMTP_devicestorage_t *storage;
++
++        int ret = LIBMTP_Get_Storage (device, LIBMTP_STORAGE_SORTBY_NOTSORTED);
++        if (ret != 0) {
++          LIBMTP_Dump_Errorstack (device);
++          LIBMTP_Clear_Errorstack (device);
++          break;
++        }
++        g_mutex_lock (&backend->mutex);
++        for (storage = device->storage; storage != 0; storage = storage->next) {
++          if (storage->id == param1) {
++            path = g_build_filename ("/", storage->StorageDescription, NULL);
++            add_cache_entry (G_VFS_BACKEND_MTP (backend),
++                             path,
++                             storage->id,
++                             -1);
++            g_hash_table_foreach (backend->monitors, emit_create_event, path);
++          }
++        }
++        g_mutex_unlock (&backend->mutex);
++        g_object_unref (backend);
++        break;
++      } else {
++        return NULL;
++      }
++#if HAVE_LIBMTP_1_1_6
++    case LIBMTP_EVENT_OBJECT_REMOVED:
++      backend = g_weak_ref_get (event_ref);
++      if (backend && !g_atomic_int_get (&backend->unmount_started)) {
++        g_mutex_lock (&backend->mutex);
++        remove_cache_entry_by_id (G_VFS_BACKEND_MTP (backend), param1);
++        g_mutex_unlock (&backend->mutex);
++        g_object_unref (backend);
++      } else {
++        return NULL;
++      }
++#endif
++    default:
++      break;
++    }
++  }
++  return NULL;
++}
++#endif
++
++static gboolean
++mtp_heartbeat (GVfsBackendMtp *backend)
++{
++  if (g_mutex_trylock (&backend->mutex)) {
++    LIBMTP_Dump_Device_Info(backend->device);
++    g_mutex_unlock (&backend->mutex);
++  }
++  return TRUE;
++}
++
++static char *
++get_dev_path_from_host (GVfsJob *job,
++                        GUdevClient *gudev_client,
++                        const char *host)
++{
++  /* turn usb:001,041 string into an udev device name */
++  if (!g_str_has_prefix (host, "[usb:")) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job), G_IO_ERROR,
++                              G_IO_ERROR_NOT_SUPPORTED,
++                              _("Unexpected host uri format."));
++    return NULL;
++  }
++
++  char *comma;
++  char *dev_path = g_strconcat ("/dev/bus/usb/", host + 5, NULL);
++  if ((comma = strchr (dev_path, ',')) == NULL) {
++    g_free (dev_path);
++    g_vfs_job_failed_literal (G_VFS_JOB (job), G_IO_ERROR,
++                              G_IO_ERROR_NOT_SUPPORTED,
++                              _("Malformed host uri."));
++    return NULL;
++  }
++  *comma = '/';
++  dev_path[strlen (dev_path) -1] = '\0';
++  DEBUG ("(II) get_dev_path_from_host: Parsed '%s' into device name %s", host, dev_path);
++
++  /* find corresponding GUdevDevice */
++  GUdevDevice *device = g_udev_client_query_by_device_file (gudev_client, dev_path);
++  if (!device) {
++    g_free (dev_path);
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                              _("Couldn't find matching udev device."));
++    return NULL;
++  }
++  g_object_unref (device);
++
++  return dev_path;
++}
++
++static void
++do_mount (GVfsBackend *backend,
++           GVfsJobMount *job,
++           GMountSpec *mount_spec,
++           GMountSource *mount_source,
++           gboolean is_automount)
++{
++  GVfsBackendMtp *op_backend = G_VFS_BACKEND_MTP (backend);
++
++  DEBUG ("(I) do_mount");
++
++  const char *host = g_mount_spec_get (mount_spec, "host");
++  DEBUG ("(I) do_mount: host=%s", host);
++  if (host == NULL) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job), G_IO_ERROR,
++                              G_IO_ERROR_FAILED, _("No device specified"));
++    return;
++  }
++
++  const char *subsystems[] = {"usb", NULL};
++  op_backend->gudev_client = g_udev_client_new (subsystems);
++  if (op_backend->gudev_client == NULL) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job), G_IO_ERROR,
++                              G_IO_ERROR_FAILED, _("Cannot create gudev client"));
++    return;
++  }
++
++  char *dev_path = get_dev_path_from_host (G_VFS_JOB (job), op_backend->gudev_client, host);
++  if (dev_path == NULL) {
++    g_object_unref (op_backend->gudev_client);
++    /* get_dev_path_from_host() sets job state. */
++    return;
++  }
++  op_backend->dev_path = dev_path;
++
++  op_backend->on_uevent_id =
++    g_signal_connect_object (op_backend->gudev_client, "uevent",
++                             G_CALLBACK (on_uevent), op_backend, 0);
++
++  op_backend->file_cache = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
++
++  LIBMTP_Init ();
++
++  get_device (backend, host, G_VFS_JOB (job));
++  if (!G_VFS_JOB (job)->failed) {
++    GMountSpec *mtp_mount_spec = g_mount_spec_new ("mtp");
++    g_mount_spec_set (mtp_mount_spec, "host", host);
++    g_vfs_backend_set_mount_spec (backend, mtp_mount_spec);
++    g_mount_spec_unref (mtp_mount_spec);
++
++    g_vfs_job_succeeded (G_VFS_JOB (job));
++
++    op_backend->hb_id =
++      g_timeout_add_seconds (900, (GSourceFunc)mtp_heartbeat, op_backend);
++
++#if HAVE_LIBMTP_1_1_5
++    GWeakRef *event_ref = g_new0 (GWeakRef, 1);
++    g_weak_ref_init (event_ref, backend);
++    GThread *event_thread = g_thread_new ("events", check_event, event_ref);
++    /*
++     * We don't need our ref to the thread, as the libmtp semantics mean
++     * that in the normal case, the thread will block forever when we are
++     * cleanining up before termination, so we can never join the thread.
++     */
++    g_thread_unref (event_thread);
++#endif
++  }
++  DEBUG ("(I) do_mount done.");
++}
++
++
++static void
++do_unmount (GVfsBackend *backend, GVfsJobUnmount *job,
++            GMountUnmountFlags flags,
++            GMountSource *mount_source)
++{
++  GVfsBackendMtp *op_backend;
++
++  DEBUG ("(I) do_umount");
++
++  op_backend = G_VFS_BACKEND_MTP (backend);
++
++  g_mutex_lock (&op_backend->mutex);
++
++  g_atomic_int_set (&op_backend->unmount_started, TRUE);
++
++  g_hash_table_unref (op_backend->file_cache);
++
++  g_source_remove (op_backend->hb_id);
++  g_signal_handler_disconnect (op_backend->gudev_client,
++                               op_backend->on_uevent_id);
++  g_object_unref (op_backend->gudev_client);
++  g_clear_pointer (&op_backend->dev_path, g_free);
++  LIBMTP_Release_Device (op_backend->device);
++
++  g_mutex_unlock (&op_backend->mutex);
++
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++  DEBUG ("(I) do_umount done.");
++}
++
++
++/************************************************
++ * 	  Queries
++ * 
++ */
++
++
++/**
++ * get_device:
++ *
++ * Called with backend mutex lock held.
++ */
++LIBMTP_mtpdevice_t *
++get_device (GVfsBackend *backend, const char *id, GVfsJob *job) {
++  DEBUG ("(II) get_device: %s", id);
++
++  LIBMTP_mtpdevice_t *device = NULL;
++
++  if (G_VFS_BACKEND_MTP (backend)->device != NULL) {
++    DEBUG ("(II) get_device: Returning cached device %p", device);
++    return G_VFS_BACKEND_MTP (backend)->device;
++  }
++
++  LIBMTP_raw_device_t * rawdevices;
++  int numrawdevices;
++  LIBMTP_error_number_t err;
++
++  err = LIBMTP_Detect_Raw_Devices (&rawdevices, &numrawdevices);
++  switch (err) {
++  case LIBMTP_ERROR_NONE:
++    break;
++  case LIBMTP_ERROR_NO_DEVICE_ATTACHED:
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                              _("No MTP devices found"));
++    goto exit;
++  case LIBMTP_ERROR_CONNECTING:
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_CONNECTION_REFUSED,
++                              _("Unable to connect to MTP device"));
++    goto exit;
++  case LIBMTP_ERROR_MEMORY_ALLOCATION:
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_FILE_ERROR, G_FILE_ERROR_NOMEM,
++                              _("Unable to allocate memory while detecting MTP devices"));
++    goto exit;
++  case LIBMTP_ERROR_GENERAL:
++  default:
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_FAILED,
++                              _("Generic libmtp error"));
++    goto exit;
++  }
++
++  /* Iterate over connected MTP devices */
++  int i;
++  for (i = 0; i < numrawdevices; i++) {
++    char *name;
++    name = g_strdup_printf ("[usb:%03u,%03u]",
++                            rawdevices[i].bus_location,
++                            rawdevices[i].devnum);
++
++    if (strcmp (id, name) == 0) {
++      device = LIBMTP_Open_Raw_Device_Uncached (&rawdevices[i]);
++      if (device == NULL) {
++        g_vfs_job_failed (G_VFS_JOB (job),
++                          G_IO_ERROR, G_IO_ERROR_FAILED,
++                          _("Unable to open MTP device '%s'"), name);
++        g_free (name);
++        goto exit;
++      }
++
++      DEBUG ("(II) get_device: Storing device %s", name);
++      G_VFS_BACKEND_MTP (backend)->device = device;
++
++      LIBMTP_Dump_Errorstack (device);
++      LIBMTP_Clear_Errorstack (device);
++      g_free (name);
++      break;
++    } else {
++      g_free (name);
++    }
++  }
++
++  /* Check supported methods/extensions. */
++  LIBMTP_device_extension_t *extension;
++  for (extension = device->extensions; extension != NULL; extension = extension->next) {
++    if (g_strcmp0 ("android.com", extension->name) == 0) {
++      G_VFS_BACKEND_MTP (backend)->android_extension = TRUE;
++      break;
++    }
++  }
++
++ exit:
++  DEBUG ("(II) get_device done.");
++  return device;
++}
++
++
++/**
++ * get_device_info:
++ *
++ * Called with backend mutex lock held.
++ */
++static void
++get_device_info (GVfsBackendMtp *backend, GFileInfo *info)
++{
++  LIBMTP_mtpdevice_t *device = backend->device;
++  const char *name;
++
++  name = g_mount_spec_get (g_vfs_backend_get_mount_spec (G_VFS_BACKEND (backend)), "host");
++
++  DEBUG_ENUMERATE ("(II) get_device_info: %s", name);
++
++  g_file_info_set_file_type (info, G_FILE_TYPE_DIRECTORY);
++  g_file_info_set_name (info, name);
++
++  char *friendlyname = LIBMTP_Get_Friendlyname (device);
++  g_file_info_set_display_name (info, friendlyname == NULL ?
++                                      _("Unnamed Device") : friendlyname);
++  free (friendlyname);
++
++  g_file_info_set_content_type (info, "inode/directory");
++  g_file_info_set_size (info, 0);
++
++  GIcon *icon = g_themed_icon_new ("multimedia-player");
++  g_file_info_set_icon (info, icon);
++  g_object_unref (icon);
++
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_READ, TRUE);
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE, TRUE);
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_DELETE, FALSE);
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE, TRUE);
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_TRASH, FALSE);
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_RENAME, TRUE); 
++
++  g_file_info_set_attribute_string (info, G_FILE_ATTRIBUTE_FILESYSTEM_TYPE, "mtpfs");
++
++  int ret = LIBMTP_Get_Storage (device, LIBMTP_STORAGE_SORTBY_NOTSORTED);
++  if (ret != 0) {
++    LIBMTP_Dump_Errorstack (device);
++    LIBMTP_Clear_Errorstack (device);
++    DEBUG_ENUMERATE ("(II) get_device_info done with no stores.");
++    return;
++  }
++  guint64 freeSpace = 0;
++  guint64 maxSpace = 0;
++  LIBMTP_devicestorage_t *storage;
++  for (storage = device->storage; storage != 0; storage = storage->next) {
++    freeSpace += storage->FreeSpaceInBytes;
++    maxSpace += storage->MaxCapacity;
++  }
++
++  g_file_info_set_attribute_uint64 (info, G_FILE_ATTRIBUTE_FILESYSTEM_FREE, freeSpace);
++  g_file_info_set_attribute_uint64 (info, G_FILE_ATTRIBUTE_FILESYSTEM_SIZE, maxSpace);
++
++  DEBUG_ENUMERATE ("(II) get_device_info done.");
++}
++
++
++/**
++ * get_storage_info:
++ *
++ * Called with backend mutex lock held.
++ */
++static void
++get_storage_info (LIBMTP_devicestorage_t *storage, GFileInfo *info) {
++
++  DEBUG_ENUMERATE ("(II) get_storage_info: %s", storage->id);
++
++  g_file_info_set_name (info, storage->StorageDescription);
++  g_file_info_set_display_name (info, storage->StorageDescription);
++  g_file_info_set_file_type (info, G_FILE_TYPE_DIRECTORY);
++  g_file_info_set_content_type (info, "inode/directory");
++  g_file_info_set_size (info, 0);
++
++  GIcon *icon;
++  switch (storage->StorageType) {
++  case PTP_ST_FixedROM:
++    g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_FILESYSTEM_READONLY, TRUE);
++    icon = g_themed_icon_new_with_default_fallbacks ("drive-harddisk");
++    break;
++  case PTP_ST_RemovableROM:
++    g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_FILESYSTEM_READONLY, TRUE);
++    icon = g_themed_icon_new_with_default_fallbacks ("media-memory-sd");
++    break;
++  case PTP_ST_RemovableRAM:
++    g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_FILESYSTEM_READONLY, FALSE);
++    icon = g_themed_icon_new_with_default_fallbacks ("media-memory-sd");
++    break;
++  case PTP_ST_FixedRAM:
++  default:
++    g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_FILESYSTEM_READONLY, FALSE);
++    icon = g_themed_icon_new_with_default_fallbacks ("drive-harddisk");
++    break;
++  }
++  g_file_info_set_icon (info, icon);
++  g_object_unref (icon);
++
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_READ, TRUE);
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE, TRUE);
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_DELETE, FALSE);
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE, TRUE);
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_TRASH, FALSE);
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_RENAME, FALSE); 
++
++  g_file_info_set_attribute_uint64 (info, G_FILE_ATTRIBUTE_FILESYSTEM_FREE, storage->FreeSpaceInBytes);
++  g_file_info_set_attribute_uint64 (info, G_FILE_ATTRIBUTE_FILESYSTEM_SIZE, storage->MaxCapacity);
++  g_file_info_set_attribute_string (info, G_FILE_ATTRIBUTE_FILESYSTEM_TYPE, "mtpfs");
++
++  DEBUG_ENUMERATE ("(II) get_storage_info done.");
++}
++
++
++/**
++ * get_file_info:
++ *
++ * Called with backend mutex lock held.
++ */
++static void
++get_file_info (GVfsBackend *backend,
++               LIBMTP_mtpdevice_t *device,
++               GFileInfo *info,
++               LIBMTP_file_t *file) {
++  GIcon *icon = NULL;
++  char *content_type = NULL;
++
++  DEBUG_ENUMERATE ("(II) get_file_info: %u", file->item_id);
++
++  g_file_info_set_name (info, file->filename);
++  g_file_info_set_display_name (info, file->filename);
++
++  switch (file->filetype) {
++  case LIBMTP_FILETYPE_FOLDER:
++    g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE, TRUE);
++    g_file_info_set_file_type (info, G_FILE_TYPE_DIRECTORY);
++    g_file_info_set_content_type (info, "inode/directory");
++    icon = g_themed_icon_new ("folder");
++    break;
++  default:
++    g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE, FALSE);
++    g_file_info_set_file_type (info, G_FILE_TYPE_REGULAR);
++    content_type = g_content_type_guess (file->filename, NULL, 0, NULL);
++    g_file_info_set_content_type (info, content_type);
++    icon = g_content_type_get_icon (content_type);
++    break;
++  }
++
++
++#if HAVE_LIBMTP_1_1_5
++  if (LIBMTP_FILETYPE_IS_IMAGE (file->filetype) ||
++      LIBMTP_FILETYPE_IS_VIDEO (file->filetype) ||
++      LIBMTP_FILETYPE_IS_AUDIOVIDEO (file->filetype)) {
++
++    GIcon *preview;
++    char *icon_id;
++    GMountSpec *mount_spec;
++
++    mount_spec = g_vfs_backend_get_mount_spec (backend);
++    icon_id = g_strdup_printf ("%u", file->item_id);
++    preview = g_vfs_icon_new (mount_spec,
++                              icon_id);
++    g_file_info_set_attribute_object (info,
++                                      G_FILE_ATTRIBUTE_PREVIEW_ICON,
++                                      G_OBJECT (preview));
++    g_object_unref (preview);
++    g_free (icon_id);
++  }
++#endif
++
++  g_file_info_set_size (info, file->filesize);
++
++  GTimeVal modtime = { file->modificationdate, 0 };
++  g_file_info_set_modification_time (info, &modtime);
++
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_READ, TRUE);
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_WRITE, TRUE);
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_DELETE, TRUE);
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_TRASH, FALSE);
++  g_file_info_set_attribute_boolean (info, G_FILE_ATTRIBUTE_ACCESS_CAN_RENAME, TRUE);
++
++
++  if (icon != NULL) {
++    g_file_info_set_icon (info, icon);
++    g_object_unref (icon);
++  }
++  g_free (content_type);
++
++  DEBUG_ENUMERATE ("(II) get_file_info done.");
++}
++
++
++static void
++do_enumerate (GVfsBackend *backend,
++              GVfsJobEnumerate *job,
++              const char *filename,
++              GFileAttributeMatcher *attribute_matcher,
++              GFileQueryInfoFlags flags)
++{
++  GVfsBackendMtp *op_backend = G_VFS_BACKEND_MTP (backend);
++  GFileInfo *info;
++
++  gchar **elements = g_strsplit_set (filename, "/", -1);
++  unsigned int ne = g_strv_length (elements);
++
++  DEBUG ("(I) do_enumerate (filename = %s, n_elements = %d) ", filename, ne);
++
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  LIBMTP_mtpdevice_t *device;
++  device = op_backend->device;
++
++  if (ne == 2 && elements[1][0] == '\0') {
++    LIBMTP_devicestorage_t *storage;
++
++    int ret = LIBMTP_Get_Storage (device, LIBMTP_STORAGE_SORTBY_NOTSORTED);
++    if (ret != 0) {
++      LIBMTP_Dump_Errorstack (device);
++      LIBMTP_Clear_Errorstack (device);
++      goto success;
++    }
++    for (storage = device->storage; storage != 0; storage = storage->next) {
++      info = g_file_info_new ();
++      get_storage_info (storage, info);
++      g_vfs_job_enumerate_add_info (job, info);
++      g_object_unref (info);
++      add_cache_entry (G_VFS_BACKEND_MTP (backend),
++                       g_build_filename (filename, storage->StorageDescription, NULL),
++                       storage->id,
++                       -1);
++    }
++  } else {
++    CacheEntry *entry = get_cache_entry (G_VFS_BACKEND_MTP (backend),
++                                         filename);
++    if (entry == NULL) {
++      LIBMTP_Dump_Errorstack (device);
++      LIBMTP_Clear_Errorstack (device);
++      g_vfs_job_failed_literal (G_VFS_JOB (job),
++                                G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                                _("File not found"));
++      goto exit;
++    }
++
++    /* Invalidate existing cache entries in case any are stale. */
++    char *remove_prefix = g_strdup_printf("%s/", filename);
++    remove_cache_entry (G_VFS_BACKEND_MTP (backend), remove_prefix);
++    g_free (remove_prefix);
++
++    LIBMTP_file_t *files;
++    LIBMTP_Clear_Errorstack (device);
++    files = LIBMTP_Get_Files_And_Folders (device, entry->storage, entry->id);
++    if (files == NULL && LIBMTP_Get_Errorstack (device) != NULL) {
++      fail_job (G_VFS_JOB (job), device);
++      goto exit;
++    }
++    while (files != NULL) {
++      LIBMTP_file_t *file = files;
++      files = files->next;
++
++      info = g_file_info_new ();
++      get_file_info (backend, device, info, file);
++      g_vfs_job_enumerate_add_info (job, info);
++      g_object_unref (info);
++
++      add_cache_entry (G_VFS_BACKEND_MTP (backend),
++                       g_build_filename (filename, file->filename, NULL),
++                       file->storage_id,
++                       file->item_id);
++
++      LIBMTP_destroy_file_t (file);
++    }
++  }
++
++ success:
++  g_vfs_job_enumerate_done (job);
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++ exit:
++  g_strfreev (elements);
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++  DEBUG ("(I) do_enumerate done.");
++}
++
++
++/**
++ * get_file_for_filename:
++ *
++ * Get the entity ID for an element given its filename and
++ * the IDs of its parents.
++ *
++ * Called with backend mutex lock held.
++ */
++static LIBMTP_file_t *
++get_file_for_filename (LIBMTP_mtpdevice_t *device,
++                       gchar **elements,
++                       unsigned int i)
++{
++  LIBMTP_file_t *file = NULL;
++
++  DEBUG ("(III) get_file_for_filename (element %d '%s') ", i, elements[i]);
++  long parent_id = -1;
++  if (i > 2) {
++    parent_id = strtol (elements[i - 1], NULL, 10);
++  }
++  LIBMTP_file_t *f = LIBMTP_Get_Files_And_Folders (device, strtol (elements[1], NULL, 10),
++                                                   parent_id);
++  while (f != NULL) {
++    DEBUG_ENUMERATE ("(III) query (entity = %s, name = %s) ", f->filename, elements[i]);
++    if (strcmp (f->filename, elements[i]) == 0) {
++      file = f;
++      f = f->next;
++      break;
++    } else {
++      LIBMTP_file_t *tmp = f;
++      f = f->next;
++      LIBMTP_destroy_file_t (tmp);
++    }
++  }
++  while (f != NULL) {
++    LIBMTP_file_t *tmp = f;
++    f = f->next;
++    LIBMTP_destroy_file_t (tmp);
++  }
++  DEBUG ("(III) get_file_for_filename done");
++  return file;
++}
++
++
++static void
++do_query_info (GVfsBackend *backend,
++               GVfsJobQueryInfo *job,
++               const char *filename,
++               GFileQueryInfoFlags flags,
++               GFileInfo *info,
++               GFileAttributeMatcher *matcher)
++{
++  DEBUG ("(I) do_query_info (filename = %s) ", filename);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  gchar **elements = g_strsplit_set (filename, "/", -1);
++  unsigned int ne = g_strv_length (elements);
++
++  LIBMTP_mtpdevice_t *device;
++  device = G_VFS_BACKEND_MTP (backend)->device;
++
++  if (ne == 2 && elements[1][0] == '\0') {
++    get_device_info (G_VFS_BACKEND_MTP (backend), info);
++  } else if (ne < 3) {
++    CacheEntry *entry = get_cache_entry (G_VFS_BACKEND_MTP (backend),
++                                         filename);
++    if (!entry) {
++      LIBMTP_Dump_Errorstack (device);
++      LIBMTP_Clear_Errorstack (device);
++      g_vfs_job_failed_literal (G_VFS_JOB (job),
++                                G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                                _("Storage not found"));
++      goto exit;
++    }
++
++    LIBMTP_devicestorage_t *storage;
++    for (storage = device->storage; storage != 0; storage = storage->next) {
++      if (storage->id == entry->storage) {
++        DEBUG ("(I) found storage %u", storage->id);
++        get_storage_info (storage, info);
++      }
++    }
++  } else {
++    CacheEntry *entry = get_cache_entry (G_VFS_BACKEND_MTP (backend),
++                                         filename);
++    if (!entry) {
++      LIBMTP_Dump_Errorstack (device);
++      LIBMTP_Clear_Errorstack (device);
++      g_vfs_job_failed_literal (G_VFS_JOB (job),
++                                G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                                _("File not found"));
++      goto exit;
++    }
++
++
++    LIBMTP_file_t *file = NULL;
++    file = LIBMTP_Get_Filemetadata (device, entry->id);
++
++    if (file != NULL) {
++      get_file_info (backend, device, info, file);
++      LIBMTP_destroy_file_t (file);
++    } else {
++      fail_job (G_VFS_JOB (job), device);
++      goto exit;
++    }
++  }
++
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++ exit:
++  g_strfreev (elements);
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++  DEBUG ("(I) do_query_info done.");
++}
++
++
++static void
++do_query_fs_info (GVfsBackend *backend,
++		  GVfsJobQueryFsInfo *job,
++		  const char *filename,
++		  GFileInfo *info,
++		  GFileAttributeMatcher *attribute_matcher)
++{
++  DEBUG ("(I) do_query_fs_info (filename = %s) ", filename);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  gchar **elements = g_strsplit_set (filename, "/", -1);
++  unsigned int ne = g_strv_length (elements);
++
++  LIBMTP_mtpdevice_t *device;
++  device = G_VFS_BACKEND_MTP (backend)->device;
++
++  if (ne == 2 && elements[1][0] == '\0') {
++    get_device_info (G_VFS_BACKEND_MTP (backend), info);
++  } else {
++    CacheEntry *entry = get_cache_entry (G_VFS_BACKEND_MTP (backend),
++                                         filename);
++    if (entry == NULL) {
++      LIBMTP_Dump_Errorstack (device);
++      LIBMTP_Clear_Errorstack (device);
++      g_vfs_job_failed_literal (G_VFS_JOB (job),
++                                G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                                _("File not found"));
++    }
++
++    LIBMTP_devicestorage_t *storage;
++    for (storage = device->storage; storage != 0; storage = storage->next) {
++      if (storage->id == entry->storage) {
++        get_storage_info (storage, info);
++      }
++    }
++  }
++
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++ exit:
++  g_strfreev (elements);
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  DEBUG ("(I) do_query_fs_info done.");
++}
++
++
++/************************************************
++ * 	  Operations
++ * 
++ */
++
++typedef struct {
++  GFileProgressCallback progress_callback;
++  gpointer progress_callback_data;
++  GVfsJob *job;
++} MtpProgressData;
++
++
++static int
++mtp_progress (uint64_t const sent, uint64_t const total,
++              MtpProgressData const * const data)
++{
++  if (data->progress_callback) {
++    data->progress_callback (sent, total, data->progress_callback_data);
++  }
++  return g_vfs_job_is_cancelled (data->job);
++}
++
++
++static void
++do_make_directory (GVfsBackend *backend,
++                   GVfsJobMakeDirectory *job,
++                   const char *filename)
++{
++  DEBUG ("(I) do_make_directory (filename = %s) ", filename);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  char *dir_name = g_path_get_dirname (filename);
++  char *base_name = g_path_get_basename (filename);
++
++  gchar **elements = g_strsplit_set (filename, "/", -1);
++  unsigned int ne = g_strv_length (elements);
++
++  if (ne < 3) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_FAILED,
++                              _("Cannot make directory in this location"));
++    goto exit;
++  }
++
++  LIBMTP_mtpdevice_t *device;
++  device = G_VFS_BACKEND_MTP (backend)->device;
++
++  CacheEntry *entry = get_cache_entry (G_VFS_BACKEND_MTP (backend), dir_name);
++  if (!entry) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                              _("Destination directory not found"));
++    goto exit;
++  }
++
++  int ret = LIBMTP_Create_Folder (device, base_name, entry->id, entry->storage);
++  if (ret == 0) {
++    fail_job (G_VFS_JOB (job), device);
++    goto exit;
++  }
++
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++  g_hash_table_foreach (G_VFS_BACKEND_MTP (backend)->monitors, emit_create_event, (char *)filename);
++
++ exit:
++  g_strfreev (elements);
++  g_free (dir_name);
++  g_free (base_name);
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  DEBUG ("(I) do_make_directory done.");
++}
++
++
++static void
++do_pull (GVfsBackend *backend,
++         GVfsJobPull *job,
++         const char *source,
++         const char *local_path,
++         GFileCopyFlags flags,
++         gboolean remove_source,
++         GFileProgressCallback progress_callback,
++         gpointer progress_callback_data)
++{
++  DEBUG ("(I) do_pull (filename = %s, local_path = %s) ", source, local_path);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  GFileInfo *info = NULL;
++  CacheEntry *entry = get_cache_entry (G_VFS_BACKEND_MTP (backend), source);
++  if (entry == NULL) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                              _("File does not exist"));
++    goto exit;
++  } else if (entry->id == -1) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_REGULAR_FILE,
++                              _("Not a regular file"));
++    goto exit;
++  }
++
++  LIBMTP_mtpdevice_t *device;
++  device = G_VFS_BACKEND_MTP (backend)->device;
++
++  LIBMTP_file_t *file = LIBMTP_Get_Filemetadata (device, entry->id);
++  if (file == NULL) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                              _("File does not exist"));
++    goto exit;
++  }
++
++  info = g_file_info_new ();
++  get_file_info (backend, device, info, file);
++  LIBMTP_destroy_file_t (file);
++  if (g_file_info_get_file_type (info) == G_FILE_TYPE_DIRECTORY) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_WOULD_RECURSE,
++                              _("Can't recursively copy directory"));
++    goto exit;
++  } else {
++    MtpProgressData mtp_progress_data;
++    mtp_progress_data.progress_callback = progress_callback;
++    mtp_progress_data.progress_callback_data = progress_callback_data;
++    mtp_progress_data.job = G_VFS_JOB (job);
++    int ret = LIBMTP_Get_File_To_File (device,
++                                       entry->id,
++                                       local_path,
++                                       (LIBMTP_progressfunc_t)mtp_progress,
++                                       &mtp_progress_data);
++    if (ret != 0) {
++      fail_job (G_VFS_JOB (job), device);
++      goto exit;
++    }
++    /* Attempt to delete object if requested but don't fail it it fails. */
++    if (remove_source) {
++      DEBUG ("(I) Removing source.");
++      LIBMTP_Delete_Object (device, entry->id);
++      g_hash_table_foreach (G_VFS_BACKEND_MTP (backend)->monitors,
++                            emit_delete_event,
++                            (char *)source);
++      remove_cache_entry (G_VFS_BACKEND_MTP (backend),
++                          source);
++    }
++    g_vfs_job_succeeded (G_VFS_JOB (job));
++  }
++
++ exit:
++  g_clear_object (&info);
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  DEBUG ("(I) do_pull done.");
++}
++
++
++static void
++do_push (GVfsBackend *backend,
++         GVfsJobPush *job,
++         const char *destination,
++         const char *local_path,
++         GFileCopyFlags flags,
++         gboolean remove_source,
++         GFileProgressCallback progress_callback,
++         gpointer progress_callback_data)
++{
++  DEBUG ("(I) do_push (filename = %s, local_path = %s) ", destination, local_path);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  char *dir_name = g_path_get_dirname (destination);
++  char *filename = g_path_get_basename (destination);
++
++  GFile *file = NULL;
++  GFileInfo *info = NULL;
++  gchar **elements = g_strsplit_set (destination, "/", -1);
++  unsigned int ne = g_strv_length (elements);
++
++  if (ne < 3) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_REGULAR_FILE,
++                              _("Cannot write to this location"));
++    goto exit;
++  }
++
++  LIBMTP_mtpdevice_t *device;
++  device = G_VFS_BACKEND_MTP (backend)->device;
++
++  CacheEntry *entry = get_cache_entry (G_VFS_BACKEND_MTP (backend), destination);
++  if (entry != NULL && entry->id != -1) {
++    if (flags & G_FILE_COPY_OVERWRITE) {
++      DEBUG ("(I) Removing destination.");
++      int ret = LIBMTP_Delete_Object (device, entry->id);
++      if (ret != 0) {
++        fail_job (G_VFS_JOB (job), device);
++        goto exit;
++      }
++      g_hash_table_foreach (G_VFS_BACKEND_MTP (backend)->monitors,
++                            emit_delete_event,
++                            (char *)destination);
++      remove_cache_entry (G_VFS_BACKEND_MTP (backend),
++                          destination);
++    } else {
++      g_vfs_job_failed_literal (G_VFS_JOB (job),
++                                G_IO_ERROR, G_IO_ERROR_EXISTS,
++                                _("File already exists"));
++      goto exit;
++    }
++  }
++
++  entry = get_cache_entry (G_VFS_BACKEND_MTP (backend), dir_name);
++  if (!entry) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                              _("Destination directory not found"));
++    goto exit;
++  }
++
++  file = g_file_new_for_path (local_path);
++  g_assert(file);
++
++  if (g_file_query_file_type (file, G_FILE_QUERY_INFO_NONE,
++                              G_VFS_JOB (job)->cancellable) ==
++      G_FILE_TYPE_DIRECTORY) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_WOULD_RECURSE,
++                              _("Can't recursively copy directory"));
++    goto exit;
++  }
++
++  GError *error = NULL;
++  info = g_file_query_info (file, G_FILE_ATTRIBUTE_STANDARD_SIZE,
++                            G_FILE_QUERY_INFO_NONE,
++                            G_VFS_JOB (job)->cancellable,
++                            &error);
++  if (!info) {
++    g_vfs_job_failed_from_error (G_VFS_JOB (job), error); 
++    g_error_free (error);
++    goto exit;
++  }
++
++  LIBMTP_file_t *mtpfile = LIBMTP_new_file_t ();
++  mtpfile->filename = strdup (filename);
++  mtpfile->parent_id = entry->id;
++  mtpfile->storage_id = entry->storage;
++  mtpfile->filetype = LIBMTP_FILETYPE_UNKNOWN; 
++  mtpfile->filesize = g_file_info_get_size (info);
++
++  MtpProgressData mtp_progress_data;
++  mtp_progress_data.progress_callback = progress_callback;
++  mtp_progress_data.progress_callback_data = progress_callback_data;
++  mtp_progress_data.job = G_VFS_JOB (job);
++  int ret = LIBMTP_Send_File_From_File (device, local_path, mtpfile,
++                                        (LIBMTP_progressfunc_t)mtp_progress,
++                                        &mtp_progress_data);
++  LIBMTP_destroy_file_t (mtpfile);
++  if (ret != 0) {
++    fail_job (G_VFS_JOB (job), device);
++    goto exit;
++  }
++
++  /* Attempt to delete object if requested but don't fail it it fails. */
++  if (remove_source) {
++    DEBUG ("(I) Removing source.");
++    g_file_delete (file, G_VFS_JOB (job)->cancellable, NULL);
++  }
++
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++  g_hash_table_foreach (G_VFS_BACKEND_MTP (backend)->monitors,
++                        emit_create_event,
++                        (char *)destination);
++
++ exit:
++  g_clear_object (&file);
++  g_clear_object (&info);
++  g_strfreev (elements);
++  g_free (dir_name);
++  g_free (filename);
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  DEBUG ("(I) do_push done.");
++}
++
++
++static void
++do_delete (GVfsBackend *backend,
++            GVfsJobDelete *job,
++            const char *filename)
++{
++  DEBUG ("(I) do_delete (filename = %s) ", filename);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  CacheEntry *entry = get_cache_entry (G_VFS_BACKEND_MTP (backend), filename);
++  if (entry == NULL) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                              _("File does not exist"));
++    goto exit;
++  } else if (entry->id == -1) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_REGULAR_FILE,
++                              _("Not a regular file"));
++    goto exit;
++  }
++
++  LIBMTP_mtpdevice_t *device;
++  device = G_VFS_BACKEND_MTP (backend)->device;
++
++  int ret = LIBMTP_Delete_Object (device, entry->id);
++  if (ret != 0) {
++    fail_job (G_VFS_JOB (job), device);
++    goto exit;
++  }
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++  g_hash_table_foreach (G_VFS_BACKEND_MTP (backend)->monitors,
++                        emit_delete_event,
++                        (char *)filename);
++  remove_cache_entry (G_VFS_BACKEND_MTP (backend),
++                      filename);
++
++ exit:
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  DEBUG ("(I) do_delete done.");
++}
++
++
++static void
++do_set_display_name (GVfsBackend *backend,
++                      GVfsJobSetDisplayName *job,
++                      const char *filename,
++                      const char *display_name)
++{
++  DEBUG ("(I) do_set_display_name '%s' --> '%s' ", filename, display_name);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  CacheEntry *entry = get_cache_entry (G_VFS_BACKEND_MTP (backend), filename);
++  if (entry == NULL) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                              _("File does not exist"));
++    goto exit;
++  } else if (entry->id == -1) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_REGULAR_FILE,
++                              _("Not a regular file"));
++    goto exit;
++  }
++
++  LIBMTP_mtpdevice_t *device;
++  device = G_VFS_BACKEND_MTP (backend)->device;
++
++  LIBMTP_file_t *file = LIBMTP_Get_Filemetadata (device, entry->id);
++  int ret = LIBMTP_Set_File_Name (device, file, display_name);
++  if (ret != 0) {
++    fail_job (G_VFS_JOB (job), device);
++    goto exit;
++  }
++
++  char *dir_name = g_path_get_dirname (filename);
++  char *new_name = g_build_filename (dir_name, display_name, NULL);
++
++  remove_cache_entry (G_VFS_BACKEND_MTP (backend),
++                      filename);
++  add_cache_entry (G_VFS_BACKEND_MTP (backend), new_name, file->storage_id, file->item_id);
++
++  LIBMTP_destroy_file_t (file);
++  file = NULL;
++
++  g_vfs_job_set_display_name_set_new_path (job, new_name);
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++  g_hash_table_foreach (G_VFS_BACKEND_MTP (backend)->monitors,
++                        emit_create_event,
++                        (char *)new_name);
++  g_hash_table_foreach (G_VFS_BACKEND_MTP (backend)->monitors,
++                        emit_delete_event,
++                        (char *)filename);
++  g_free (dir_name);
++  g_free (new_name);
++
++ exit:
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  DEBUG ("(I) do_set_display_name done.");
++}
++
++
++#if HAVE_LIBMTP_1_1_6
++static void
++do_open_for_read (GVfsBackend *backend,
++                  GVfsJobOpenForRead *job,
++                  const char *filename)
++{
++  if (!G_VFS_BACKEND_MTP (backend)->android_extension) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
++                              _("Operation not supported."));
++    return;
++  }
++
++  DEBUG ("(I) do_open_for_read (%s)", filename);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  CacheEntry *entry = get_cache_entry (G_VFS_BACKEND_MTP (backend), filename);
++  if (entry == NULL) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                              _("File does not exist"));
++    goto exit;
++  } else if (entry->id == -1) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_REGULAR_FILE,
++                              _("Not a regular file"));
++    goto exit;
++  }
++
++  LIBMTP_mtpdevice_t *device;
++  device = G_VFS_BACKEND_MTP (backend)->device;
++
++  LIBMTP_file_t *file = LIBMTP_Get_Filemetadata (device, entry->id);
++  if (file == NULL) {
++    fail_job (G_VFS_JOB (job), device);
++    goto exit;
++  }
++
++  RWHandle *handle = g_new0(RWHandle, 1);
++  handle->handle_type = HANDLE_FILE;
++  handle->id = entry->id;
++  handle->offset = 0;
++  handle->size = file->filesize;
++
++  LIBMTP_destroy_file_t (file);
++
++  g_vfs_job_open_for_read_set_can_seek (G_VFS_JOB_OPEN_FOR_READ (job), TRUE);
++  g_vfs_job_open_for_read_set_handle (G_VFS_JOB_OPEN_FOR_READ (job), handle);
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++ exit:
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  DEBUG ("(I) do_open_for_read done.");
++}
++#endif /* HAVE_LIBMTP_1_1_6 */
++
++
++#if HAVE_LIBMTP_1_1_5
++static void
++do_open_icon_for_read (GVfsBackend *backend,
++                       GVfsJobOpenIconForRead *job,
++                       const char *icon_id)
++{
++  DEBUG ("(I) do_open_icon_for_read (%s)", icon_id);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  guint id = strtol (icon_id, NULL, 10);
++
++  if (id > 0) {
++    GByteArray *bytes;
++    unsigned char *data;
++    unsigned int size;
++    int ret = LIBMTP_Get_Thumbnail (G_VFS_BACKEND_MTP (backend)->device, id,
++                                    &data, &size);
++    if (ret == 0) {
++      DEBUG ("File %u has thumbnail: %u", id, size);
++      bytes = g_byte_array_sized_new (size);
++      g_byte_array_append (bytes, data, size);
++      free (data);
++    } else {
++      LIBMTP_filesampledata_t *sample_data = LIBMTP_new_filesampledata_t ();
++      ret = LIBMTP_Get_Representative_Sample (G_VFS_BACKEND_MTP (backend)->device,
++                                              id, sample_data);
++      if (ret == 0) {
++        DEBUG ("File %u has sampledata: %u", id, size);
++        bytes = g_byte_array_sized_new (sample_data->size);
++        g_byte_array_append (bytes, (const guint8 *)sample_data->data, sample_data->size);
++        size = sample_data->size;
++        LIBMTP_destroy_filesampledata_t (sample_data);
++      } else {
++        DEBUG ("File %u has no thumbnail:", id);
++        g_vfs_job_failed (G_VFS_JOB (job),
++                          G_IO_ERROR,
++                          G_IO_ERROR_NOT_FOUND,
++                          _("No thumbnail for entity '%s'"),
++                          icon_id);
++        goto exit;
++      }
++    }
++
++    RWHandle *handle = g_new0(RWHandle, 1);
++    handle->handle_type = HANDLE_PREVIEW;
++    handle->id = id;
++    handle->offset = 0;
++    handle->size = size;
++    handle->bytes = bytes;
++    g_vfs_job_open_for_read_set_can_seek (G_VFS_JOB_OPEN_FOR_READ (job), TRUE);
++    g_vfs_job_open_for_read_set_handle (G_VFS_JOB_OPEN_FOR_READ (job), handle);
++    g_vfs_job_succeeded (G_VFS_JOB (job));
++  } else {
++    g_vfs_job_failed (G_VFS_JOB (job),
++                      G_IO_ERROR,
++                      G_IO_ERROR_INVALID_ARGUMENT,
++                      _("Malformed icon identifier '%s'"),
++                      icon_id);
++    goto exit;
++  }
++
++ exit:
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  DEBUG ("(I) do_open_icon_for_read done.");
++}
++#endif /* HAVE_LIBMTP_1_1_5 */
++
++
++static void
++do_seek_on_read (GVfsBackend *backend,
++                 GVfsJobSeekRead *job,
++                 GVfsBackendHandle opaque_handle,
++                 goffset    offset,
++                 GSeekType  type)
++{
++  RWHandle *handle = opaque_handle;
++  uint32_t id = handle->id;
++  goffset old_offset = handle->offset;
++  gsize size = handle->size;
++
++  DEBUG ("(I) do_seek_on_read (%u %lu %ld %u)", id, old_offset, offset, type);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  if (type == G_SEEK_END) {
++    offset = size + offset;
++  } else if (type == G_SEEK_CUR) {
++    offset += old_offset;
++  }
++
++  if (offset > size || offset < 0) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
++                              _("Can't seek outside file"));
++    goto exit;
++  }
++
++  handle->offset = offset;
++  g_vfs_job_seek_read_set_offset (job, offset);
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++ exit:
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++  DEBUG ("(I) do_seek_on_read done. (%lu)", offset);
++}
++
++
++static void
++do_read (GVfsBackend *backend,
++         GVfsJobRead *job,
++         GVfsBackendHandle opaque_handle,
++         char *buffer,
++         gsize bytes_requested)
++{
++  RWHandle *handle = opaque_handle;
++  uint32_t id = handle->id;
++  goffset offset = handle->offset;
++  gsize size = handle->size;
++
++  DEBUG ("(I) do_read (%u %lu %lu)", id, offset, bytes_requested);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  uint32_t actual;
++  if (handle->handle_type == HANDLE_FILE) {
++    unsigned char *temp;
++    int ret = LIBMTP_GetPartialObject (G_VFS_BACKEND_MTP (backend)->device, id, offset,
++                                       bytes_requested, &temp, &actual);
++    if (ret != 0) {
++      fail_job (G_VFS_JOB (job), G_VFS_BACKEND_MTP (backend)->device);
++      DEBUG ("(I) job failed.");
++      goto exit;
++    }
++
++    memcpy (buffer, temp, actual);
++    free (temp);
++  } else {
++    GByteArray *bytes = handle->bytes;
++    actual = MIN (bytes->len - offset, bytes_requested);
++    memcpy (buffer, bytes->data + offset, actual);
++  }
++
++  handle->offset = offset + actual;
++  g_vfs_job_read_set_size (job, actual);
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++ exit:
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++  DEBUG ("(I) do_read done.");
++}
++
++static void
++do_close_read (GVfsBackend *backend,
++               GVfsJobCloseRead *job,
++               GVfsBackendHandle opaque_handle)
++{
++  DEBUG ("(I) do_close_read");
++  RWHandle *handle = opaque_handle;
++  if (handle->bytes) {
++    g_byte_array_unref (handle->bytes);
++  }
++  g_free(handle);
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++  DEBUG ("(I) do_close_read done.");
++}
++
++
++#if HAVE_LIBMTP_1_1_6
++uint16_t zero_get_func (void* params,
++                        void* priv,
++                        uint32_t wantlen,
++                        unsigned char *data,
++                        uint32_t *gotlen)
++{
++  *gotlen = 0;
++  return LIBMTP_HANDLER_RETURN_OK;
++}
++
++
++static void
++do_create (GVfsBackend *backend,
++           GVfsJobOpenForWrite *job,
++           const char *filename,
++           GFileCreateFlags flags)
++{
++  if (!G_VFS_BACKEND_MTP (backend)->android_extension) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
++                              _("Operation not supported."));
++    return;
++  }
++
++  DEBUG ("(I) do_create (%s)", filename);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  char *dir_name = g_path_get_dirname (filename);
++  char *basename = g_path_get_basename (filename);
++
++  gchar **elements = g_strsplit_set (filename, "/", -1);
++  unsigned int ne = g_strv_length (elements);
++
++  if (ne < 3) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_FAILED,
++                              _("Cannot create files in this location"));
++    goto exit;
++  }
++
++  CacheEntry *entry = get_cache_entry (G_VFS_BACKEND_MTP (backend), dir_name);
++  if (!entry) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                              _("Destination directory not found"));
++    goto exit;
++  }
++
++  LIBMTP_mtpdevice_t *device;
++  device = G_VFS_BACKEND_MTP (backend)->device;
++
++  LIBMTP_file_t *mtpfile = LIBMTP_new_file_t ();
++  mtpfile->filename = strdup (basename);
++  mtpfile->parent_id = entry->id;
++  mtpfile->storage_id = entry->storage;
++  mtpfile->filetype = LIBMTP_FILETYPE_UNKNOWN;
++  mtpfile->filesize = 0;
++
++  int ret = LIBMTP_Send_File_From_Handler (device, zero_get_func, NULL,
++                                           mtpfile, NULL, NULL);
++  uint32_t id = mtpfile->item_id;
++  LIBMTP_destroy_file_t (mtpfile);
++  if (ret != 0) {
++    fail_job (G_VFS_JOB (job), device);
++    DEBUG ("(I) Failed to create empty file.");
++    goto exit;
++  }
++
++  ret = LIBMTP_BeginEditObject (device, id);
++  if (ret != 0) {
++    fail_job (G_VFS_JOB (job), device);
++    DEBUG ("(I) Failed to begin edit.");
++    goto exit;
++  }
++
++  RWHandle *handle = g_new0(RWHandle, 1);
++  handle->handle_type = HANDLE_FILE;
++  handle->id = id;
++  handle->offset = 0;
++  handle->size = 0;
++
++  g_vfs_job_open_for_write_set_can_seek (G_VFS_JOB_OPEN_FOR_WRITE (job), TRUE);
++  g_vfs_job_open_for_write_set_handle (G_VFS_JOB_OPEN_FOR_WRITE (job), handle);
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++  g_hash_table_foreach (G_VFS_BACKEND_MTP (backend)->monitors,
++                        emit_create_event,
++                        (char *)filename);
++ exit:
++  g_strfreev (elements);
++  g_free (basename);
++  g_free (dir_name);
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  DEBUG ("(I) do_create done.");
++}
++
++
++static void
++do_append_to (GVfsBackend *backend,
++              GVfsJobOpenForWrite *job,
++              const char *filename,
++              GFileCreateFlags flags)
++{
++  if (!G_VFS_BACKEND_MTP (backend)->android_extension) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
++                              _("Operation not supported."));
++    return;
++  }
++
++  DEBUG ("(I) do_append_to (%s)", filename);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  CacheEntry *entry = get_cache_entry (G_VFS_BACKEND_MTP (backend), filename);
++  if (entry == NULL) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_FOUND,
++                              _("File does not exist"));
++    goto exit;
++  } else if (entry->id == -1) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_REGULAR_FILE,
++                              _("Not a regular file"));
++    goto exit;
++  }
++
++  LIBMTP_mtpdevice_t *device;
++  device = G_VFS_BACKEND_MTP (backend)->device;
++
++  LIBMTP_file_t *file = LIBMTP_Get_Filemetadata (device, entry->id);
++  if (file == NULL) {
++    fail_job (G_VFS_JOB (job), device);
++    DEBUG ("(I) Failed to get metadata.");
++    goto exit;
++  }
++
++  int ret = LIBMTP_BeginEditObject (device, entry->id);
++  if (ret != 0) {
++    fail_job (G_VFS_JOB (job), device);
++    DEBUG ("(I) Failed to begin edit.");
++    goto exit;
++  }
++
++  RWHandle *handle = g_new0(RWHandle, 1);
++  handle->handle_type = HANDLE_FILE;
++  handle->id = entry->id;
++  handle->offset = file->filesize;
++  handle->size = file->filesize;
++
++  LIBMTP_destroy_file_t (file);
++
++  g_vfs_job_open_for_write_set_can_seek (G_VFS_JOB_OPEN_FOR_WRITE (job), TRUE);
++  g_vfs_job_open_for_write_set_handle (G_VFS_JOB_OPEN_FOR_WRITE (job), handle);
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++ exit:
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  DEBUG ("(I) do_append_to done.");
++}
++
++
++static void
++do_replace (GVfsBackend *backend,
++            GVfsJobOpenForWrite *job,
++            const char *filename,
++            const char *etag,
++            gboolean make_backup,
++            GFileCreateFlags flags)
++{
++  if (!G_VFS_BACKEND_MTP (backend)->android_extension) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_SUPPORTED,
++                              _("Operation not supported."));
++    return;
++  }
++
++  DEBUG ("(I) do_replace (%s)", filename);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  CacheEntry *entry = get_cache_entry (G_VFS_BACKEND_MTP (backend), filename);
++  if (entry == NULL) {
++    g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++    return do_create(backend, job, filename, flags);
++  } else if (entry->id == -1) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_NOT_REGULAR_FILE,
++                              _("Not a regular file"));
++    goto exit;
++  }
++
++  LIBMTP_mtpdevice_t *device;
++  device = G_VFS_BACKEND_MTP (backend)->device;
++
++  LIBMTP_file_t *file = LIBMTP_Get_Filemetadata (device, entry->id);
++  if (file == NULL) {
++    fail_job (G_VFS_JOB (job), device);
++    DEBUG ("(I) Failed to get metadata.");
++    goto exit;
++  }
++
++  int ret = LIBMTP_BeginEditObject (device, entry->id);
++  if (ret != 0) {
++    fail_job (G_VFS_JOB (job), device);
++    DEBUG ("(I) Failed to begin edit.");
++    goto exit;
++  }
++
++  ret = LIBMTP_TruncateObject (device, entry->id, 0);
++  if (ret != 0) {
++    fail_job (G_VFS_JOB (job), device);
++    DEBUG ("(I) Failed to truncate.");
++    goto exit;
++  }
++
++  RWHandle *handle = g_new0(RWHandle, 1);
++  handle->handle_type = HANDLE_FILE;
++  handle->id = entry->id;
++  handle->offset = 0;
++  handle->size = file->filesize;
++
++  LIBMTP_destroy_file_t (file);
++
++  g_vfs_job_open_for_write_set_can_seek (G_VFS_JOB_OPEN_FOR_WRITE (job), TRUE);
++  g_vfs_job_open_for_write_set_handle (G_VFS_JOB_OPEN_FOR_WRITE (job), handle);
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++ exit:
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  DEBUG ("(I) do_replace done.");
++}
++
++
++static void
++do_write (GVfsBackend *backend,
++          GVfsJobWrite *job,
++          GVfsBackendHandle opaque_handle,
++          char *buffer,
++          gsize buffer_size)
++{
++  RWHandle *handle = opaque_handle;
++  uint32_t id = handle->id;
++  goffset offset = handle->offset;
++  gsize size = handle->size;
++
++  DEBUG ("(I) do_write (%u %lu %lu)", id, offset, buffer_size);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  int ret = LIBMTP_SendPartialObject (G_VFS_BACKEND_MTP (backend)->device, id, offset,
++                                      buffer, buffer_size);
++  if (ret != 0) {
++    fail_job (G_VFS_JOB (job), G_VFS_BACKEND_MTP (backend)->device);
++    DEBUG ("(I) job failed.");
++    goto exit;
++  }
++
++  handle->offset = offset + buffer_size;
++  g_vfs_job_write_set_written_size (job, buffer_size);
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++ exit:
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++  DEBUG ("(I) do_write done.");
++}
++
++
++static void
++do_seek_on_write (GVfsBackend *backend,
++                  GVfsJobSeekWrite *job,
++                  GVfsBackendHandle opaque_handle,
++                  goffset offset,
++                  GSeekType type)
++{
++  RWHandle *handle = opaque_handle;
++  uint32_t id = handle->id;
++  goffset old_offset = handle->offset;
++  gsize size = handle->size;
++
++  DEBUG ("(I) do_seek_on_write (%u %lu %ld %u)", id, old_offset, offset, type);
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  if (type == G_SEEK_END) {
++    offset = size + offset;
++  } else if (type == G_SEEK_CUR) {
++    offset += old_offset;
++  }
++
++  if (offset < 0) {
++    g_vfs_job_failed_literal (G_VFS_JOB (job),
++                              G_IO_ERROR, G_IO_ERROR_INVALID_ARGUMENT,
++                              _("Can't seek outside file"));
++    goto exit;
++  }
++
++  handle->offset = offset;
++  g_vfs_job_seek_write_set_offset (job, offset);
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++ exit:
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++  DEBUG ("(I) do_seek_on_write done. (%lu)", offset);
++}
++
++
++static void
++do_close_write (GVfsBackend *backend,
++                GVfsJobCloseWrite *job,
++                GVfsBackendHandle opaque_handle)
++{
++  DEBUG ("(I) do_close_write");
++  g_mutex_lock (&G_VFS_BACKEND_MTP (backend)->mutex);
++
++  RWHandle *handle = opaque_handle;
++
++  int ret = LIBMTP_EndEditObject (G_VFS_BACKEND_MTP (backend)->device, handle->id);
++  if (ret != 0) {
++    fail_job (G_VFS_JOB (job), G_VFS_BACKEND_MTP (backend)->device);
++    goto exit;
++  }
++
++  g_vfs_job_succeeded (G_VFS_JOB (job));
++
++ exit:
++  g_free(handle);
++  g_mutex_unlock (&G_VFS_BACKEND_MTP (backend)->mutex);
++  DEBUG ("(I) do_close_write done.");
++}
++#endif /* HAVE_LIBMTP_1_1_6 */
++
++/************************************************
++ * 	  Class init
++ *
++ */
++
++
++static void
++g_vfs_backend_mtp_class_init (GVfsBackendMtpClass *klass)
++{
++  GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
++  GVfsBackendClass *backend_class = G_VFS_BACKEND_CLASS (klass);
++
++  gobject_class->finalize = g_vfs_backend_mtp_finalize;
++
++  backend_class->mount = do_mount;
++  backend_class->unmount = do_unmount;
++  backend_class->query_info = do_query_info;
++  backend_class->enumerate = do_enumerate;
++  backend_class->query_fs_info = do_query_fs_info;
++  backend_class->pull = do_pull;
++  backend_class->push = do_push;
++  backend_class->make_directory = do_make_directory;
++  backend_class->delete = do_delete;
++  backend_class->set_display_name = do_set_display_name;
++  backend_class->create_dir_monitor = do_create_dir_monitor;
++  backend_class->create_file_monitor = do_create_file_monitor;
++#if HAVE_LIBMTP_1_1_6
++  backend_class->open_for_read = do_open_for_read;
++#endif
++#if HAVE_LIBMTP_1_1_5
++  backend_class->open_icon_for_read = do_open_icon_for_read;
++#endif
++  backend_class->seek_on_read = do_seek_on_read;
++  backend_class->read = do_read;
++  backend_class->close_read = do_close_read;
++#if HAVE_LIBMTP_1_1_6
++  backend_class->create = do_create;
++  backend_class->append_to = do_append_to;
++  backend_class->replace = do_replace;
++  backend_class->write = do_write;
++  backend_class->seek_on_write = do_seek_on_write;
++  backend_class->close_write = do_close_write;
++#endif
++}
+--- /dev/null
++++ gvfs-1.14.2/daemon/mtp.mount.in
+@@ -0,0 +1,4 @@
++[Mount]
++Type=mtp
++Exec=@libexecdir@/gvfsd-mtp
++AutoMount=false
+--- gvfs-1.14.2.orig/client/gdaemonfile.c
++++ gvfs-1.14.2/client/gdaemonfile.c
+@@ -2807,6 +2807,9 @@ retry:
+   if (proxy == NULL)
+     goto out;
+ 
++  /* File transfers can take arbitrarily long amounts of time. */
++  g_dbus_proxy_set_default_timeout (G_DBUS_PROXY (proxy), G_MAXINT);
++
+   data.progress_callback = progress_callback;
+   data.progress_callback_data = progress_callback_data;
+   data.context = g_main_context_new ();

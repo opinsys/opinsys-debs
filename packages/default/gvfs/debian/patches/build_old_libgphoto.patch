@@ -1,0 +1,61 @@
+Index: gvfs/configure.ac
+===================================================================
+--- gvfs.orig/configure.ac	2012-09-20 12:58:22.755879882 +0200
++++ gvfs/configure.ac	2012-09-20 12:59:45.163883872 +0200
+@@ -436,10 +436,6 @@
+   if test "x$msg_gphoto2" = "xyes"; then
+     if test "x$use_gphoto2" = "xyes"; then
+       AC_DEFINE(HAVE_GPHOTO2, 1, [Define to 1 if gphoto2 is available])
+-      PKG_CHECK_MODULES(GPHOTO25, libgphoto2 >= 2.5.0,
+-         AC_DEFINE(HAVE_GPHOTO25, 1, [Define to 1 if libgphoto2 2.5 is available]),
+-	 []
+-      )
+     else
+       if test "x$enable_gphoto2" = "xyes"; then
+         AC_MSG_ERROR([Cannot build with gphoto2 support. Need OS tweaks in hal volume monitor.])
+Index: gvfs/daemon/gvfsbackendgphoto2.c
+===================================================================
+--- gvfs.orig/daemon/gvfsbackendgphoto2.c	2012-09-20 12:58:22.755879882 +0200
++++ gvfs/daemon/gvfsbackendgphoto2.c	2012-09-20 12:58:34.883880470 +0200
+@@ -1687,9 +1687,7 @@
+       return;
+     }
+ 
+-#ifndef HAVE_GPHOTO25
+   DEBUG ("  '%s' '%s' '%s'",  info.name, info.path, info.library_filename);
+-#endif
+   
+   /* set port */
+   rc = gp_camera_set_port_info (gphoto2_backend->camera, info);
+@@ -2638,11 +2636,7 @@
+         }
+     }
+ 
+-#ifdef HAVE_GPHOTO25
+-  rc = gp_camera_folder_put_file (gphoto2_backend->camera, dir, new_name, GP_FILE_TYPE_NORMAL, file_dest, gphoto2_backend->context);
+-#else
+   rc = gp_camera_folder_put_file (gphoto2_backend->camera, dir, file_dest, gphoto2_backend->context);
+-#endif
+   if (rc != 0)
+     goto out;
+ 
+@@ -3274,18 +3268,14 @@
+   if (rc != 0)
+     goto out;
+ 
++  gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
+   gp_file_set_name (file, write_handle->name);
+   gp_file_set_mtime (file, time (NULL));
+   gp_file_set_data_and_size (file, 
+                              dup_for_gphoto2 (write_handle->data, write_handle->size), 
+                              write_handle->size);
+   
+-#ifdef HAVE_GPHOTO25
+-  rc = gp_camera_folder_put_file (gphoto2_backend->camera, write_handle->dir, write_handle->name, GP_FILE_TYPE_NORMAL, file, gphoto2_backend->context);
+-#else
+-  gp_file_set_type (file, GP_FILE_TYPE_NORMAL);
+   rc = gp_camera_folder_put_file (gphoto2_backend->camera, write_handle->dir, file, gphoto2_backend->context);
+-#endif
+   if (rc != 0)
+     {
+       gp_file_unref (file);

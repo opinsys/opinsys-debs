@@ -1,0 +1,23 @@
+Index: gvfs/common/Makefile.am
+===================================================================
+--- gvfs.orig/common/Makefile.am	2012-09-20 12:44:55.000000000 +0200
++++ gvfs/common/Makefile.am	2012-09-20 12:48:08.067850134 +0200
+@@ -1,6 +1,8 @@
+ NULL =
+ 
+-lib_LTLIBRARIES=libgvfscommon.la
++privlibdir=$(libdir)/gvfs
++privlib_LTLIBRARIES=libgvfscommon.la
++
+ noinst_LTLIBRARIES = libgvfscommon-monitor.la
+ 
+ INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/gvfs \
+@@ -31,7 +33,7 @@
+ 	$(NULL)
+ 
+ # needed by cygwin (see bug #564003)
+-libgvfscommon_la_LDFLAGS = -no-undefined
++libgvfscommon_la_LDFLAGS = -no-undefined  -avoid-version
+ 
+ libgvfscommon_la_LIBADD =	\
+ 	$(GLIB_LIBS)		\
