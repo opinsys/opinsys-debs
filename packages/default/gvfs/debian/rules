@@ -84,7 +84,7 @@ PACKAGE = gvfs
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.xz
 get-orig-source:
-	wget -c https://download.gnome.org/sources/gvfs/1.16/gvfs-$(SRC_VERSION).tar.xz -O ../$(TARBALL)
+	wget -c https://download.gnome.org/sources/gvfs/1.14/gvfs-$(SRC_VERSION).tar.xz -O ../$(TARBALL)
 	tar -J -x -f ../$(TARBALL) --strip-components=1 -C .
 
 .PHONY: get-orig-source
