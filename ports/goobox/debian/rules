@@ -1,0 +1,172 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+#include /usr/share/quilt/quilt.make
+
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+DEB_HOST_ARCH := $(shell dpkg-architecture -qDEB_HOST_ARCH)
+
+CFLAGS = -Wall -g
+ 
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+ifeq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
+	confflags += --build $(DEB_HOST_GNU_TYPE) $(shell dpkg-buildflags --export=configure)
+else
+	confflags += --build $(DEB_BUILD_GNU_TYPE) --host $(DEB_HOST_GNU_TYPE) $(shell dpkg-buildflags --export=configure)
+endif
+
+
+DATE=$(shell date +%Y%m%d)
+TMPDIR=/tmp
+MANDIR=debian/manpage
+SVNNAME=goobox_svn$(DATE)
+SVNBDIR=$(TMPDIR)/$(SVNNAME)
+
+# FIXME: This needs to be converted to the current git repository
+svnupstream-checkout:
+	# Needs: svn 
+
+	# Getting sources
+	cd $(TMPDIR) && \
+        svn co svn://svn.gnome.org/svn/goobox/trunk goobox && \
+        mv goobox $(SVNBDIR)
+
+	# Mark it
+	touch $@
+
+svnupstream: svnupstream-checkout
+	# Needs: autoconf automake libtool
+
+	# Bootstrapping
+	-cd $(SVNBDIR) && \
+        ./autogen.sh && \
+        rm -f config.log config.status
+
+	#cd $(SVNBDIR) && \
+	#libtoolize -c -f && \
+	#aclocal && \
+	#autoconf
+
+	# Removing unused files
+	-find $(SVNBDIR) -name .svn -exec rm -rf "{}" ";"
+	-rm -r $(SVNBDIR)/autom4te.cache/
+	-rm -r $(SVNBDIR)/rm *_bak
+	
+	# Creating tarball
+	cd $(SVNBDIR)/.. && \
+	tar cfz $(SVNNAME).orig.tar.gz $(SVNNAME)
+	mv -i $(SVNBDIR)/../$(SVNNAME).orig.tar.gz ..
+
+	# Remove mark
+	rm svnupstream-checkout
+
+config.status: configure
+	dh_testdir
+
+	# Configuring package
+	#-./autogen.sh
+ifneq "$(wildcard /usr/share/misc/config.sub)" ""
+	[ -f config.sub.upstream ] || mv config.sub config.sub.upstream
+	cp -f /usr/share/misc/config.sub config.sub
+endif
+ifneq "$(wildcard /usr/share/misc/config.guess)" ""
+	[ -f config.guess.upstream ] || mv config.guess config.guess.upstream
+	cp -f /usr/share/misc/config.guess config.guess
+endif
+	# autoreconf
+	CFLAGS="$(CFLAGS)" ./configure $(confflags) --prefix=/usr --mandir=\$${prefix}/share/man --sysconfdir=/etc
+
+build: build-arch build-indep
+
+build-arch: build-stamp
+build-indep: build-stamp
+build-stamp: config.status
+	dh_testdir
+
+	# Building package
+	$(MAKE)
+
+	touch $@
+
+clean: 
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp config.log
+
+	# Cleaning package
+	# cp -p gnome-doc-utils.make gnome-doc-utils.make.save
+	cp -p ChangeLog ChangeLog.save
+#-$(MAKE) clean
+	[ ! -f Makefile ] || $(MAKE) distclean
+	# mv -f gnome-doc-utils.make.save gnome-doc-utils.make
+	mv -f ChangeLog.save ChangeLog
+	[ ! -f config.guess.upstream ] || mv -f config.guess.upstream config.guess
+	[ ! -f config.sub.upstream ] || mv -f config.sub.upstream config.sub
+
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+
+	# Installing package
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/goobox
+
+	# Installing manpages
+	install -d -m 0755 debian/goobox/usr/share/man/man1
+	install -d -m 0755 debian/goobox/usr/share/man/de/man1
+
+	docbook-to-man $(MANDIR)/goobox.en.sgml > debian/goobox/usr/share/man/man1/goobox.1
+	po4a -v -f debian/po4a.cfg
+	# po4a-translate is broken, c.f. #280882
+	perl -i -p -e 's#  <refentrytitle>\&dhucpackage;#\&dhucpackage;#ms' $(MANDIR)/goobox.de.sgml
+	perl -i -p -e 's#^\s*</refentrytitle>##' $(MANDIR)/goobox.de.sgml
+	docbook-to-man $(MANDIR)/goobox.de.sgml > debian/goobox/usr/share/man/de/man1/goobox.1
+	recode latin1..utf8 debian/goobox/usr/share/man/de/man1/goobox.1
+
+	# cf. #562722
+	perl -i -p -e 's#SYNOPSIS#ÜBERSICHT#' debian/goobox/usr/share/man/de/man1/goobox.1
+
+	# Installing pixmap
+	install -D -m 0644 debian/pixmap/goobox.xpm debian/goobox/usr/share/pixmaps/goobox.xpm
+
+	# Moving icon
+	install -d -m 0755 debian/goobox/usr/share/icons
+	#mv debian/goobox/usr/share/pixmaps/goobox.png debian/goobox/usr/share/icons
+
+binary-indep: build install
+
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs ChangeLog
+	dh_installdocs
+	dh_install
+	dh_installmenu
+	dh_gconf
+	dh_icons
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb -- -Zxz
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

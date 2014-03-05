@@ -1,0 +1,12 @@
+PO4A-HEADER:mode=after;position=AUTOR;endboundary=</refsect1>
+<refsect1>
+  <title>ÜBERSETZER</title>
+  <para>
+    Diese Handbuchseite wurde von &dhuusername; &dhuemail; auf Deutsch 
+    übersetzt. Unter den
+    Bedingungen der GNU General Public License, herausgegeben von der Free
+    Software Foundation, Version 2 oder einer neueren Version wird das
+    Recht gewährt, dieses Übersetzung zu kopieren, zu verteilen und/oder zu
+    verändern.
+  </para>
+</refsect1>

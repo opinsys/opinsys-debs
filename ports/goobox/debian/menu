@@ -1,0 +1,3 @@
+?package(goobox):needs="X11" section="Applications/Sound"\
+  title="Goobox" longtitle="Goobox CD Player"\
+  command="/usr/bin/goobox" icon="/usr/share/pixmaps/goobox.xpm"

@@ -1,0 +1,747 @@
+goobox (3.2.1-2) unstable; urgency=low
+
+  * Add libxml2-utils to build dependencies to avoid a FTBFS.
+  * Tighten libgtk-3-dev version required for building.
+  * Update some copyright entries.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun, 18 Aug 2013 13:47:02 +0200
+
+goobox (3.2.1-1) unstable; urgency=low
+
+  * New upstream release
+    * All previous patches are applied
+    * Remove obsolete ./configure option "--disable-scrollkeeper"
+    * Updated build dependency: libgstreamer1.0-dev
+    * Updated dependency: gstreamer1.0-plugins-base, gstreamer1.0-plugins-good
+    * Update debian/copyright
+  * Removed gnome-doc-utils from build depends. Closes: 717513.
+  * Remove "config.log" in clean target
+  * Add "gnome-icon-theme-symbolic" to depends to actually get the icons.
+    Closes: 678223.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun, 18 Aug 2013 07:14:38 +0200
+
+goobox (3.1.1-1) unstable; urgency=low
+
+  * New upstream release
+    * All previous patches are applied
+    * Update debian/copyright
+    * New dependency: itstool
+    * Updated dependency: libmusicbrainz4-dev
+  * Remove DM-Allowed due to new Debian Maintainer mechanism
+  * Since there is no libmusicbrainz4 in Debian, forward port to
+    libmusicbrainz5
+  * Use Xz compression
+  * Upgrade to policy 3.9.4, no changes required
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sat, 26 Jan 2013 19:36:48 +0100
+
+goobox (3.0.1-5) unstable; urgency=high
+
+  *  Urgency high due to RC fix (3rd try)
+  *  Build man pages again on all architectures. It looks like the build
+     failure (avoided in 3.0.1-4) was caused not by sp itself but rather by
+     dpkg (cf. dpkg bug #675613, closed in dpkg 1.16.4).
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun, 08 Jul 2012 11:22:30 +0200
+
+goobox (3.0.1-4) unstable; urgency=high
+
+  * Urgency high due to RC fix (2nd try)
+  * Until sp is fixed generate man pages only on build machine (currently i386
+    chroot) and ship pregenerated ones otherwise. closes: #679554.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Fri, 06 Jul 2012 19:05:12 +0200
+
+goobox (3.0.1-3) unstable; urgency=high
+
+  * Urgency high due to RC fix
+  * Until sp is fixed on mipsel (see 679552), ship pregenerated translated 
+    man pages for mipsel, closes: #679554.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Thu, 05 Jul 2012 19:46:19 +0200
+
+goobox (3.0.1-2) unstable; urgency=medium
+
+  * Revert broken NMU, closes: #679313.
+  * This reopens: #677246. Since no bug report until just before the release
+    happend, people requiring this fix will need to backport goobox after the
+    release of Wheezy. Sorry.
+  * po/fr.po updated from upstream git with msgcat.
+  * help/es/es.po updated from upstream git with msgcat.
+  * po/es.po updated from upstream git with msgcat.
+  * po/pl.po updated from upstream git with msgcat.
+  * po/sl.po updated from upstream git with msgcat.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Fri, 29 Jun 2012 10:35:53 +0200
+
+goobox (3.0.1-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Update to use libmusicbrainz5. Rework packaging to preserve
+    upstream configure and aclocal.m4 files during build process.
+    Closes: #677246.
+
+ -- Jon Dowland <jmtd@debian.org>  Tue, 26 Jun 2012 20:42:47 +0100
+
+goobox (3.0.1-1) unstable; urgency=low
+
+  * New upstream release
+    * All previous patches are applied
+    * Updated debian/copyright
+  * po/gl.po added from upstream git.
+  * po/sv.po added from upstream git.
+  * Apply patch from upstream to enable builds without notification support
+    (not relevant for Debian, maybe for downstreams).
+  * Upstream no only provides .xz files, update debian/watch
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Fri, 20 Apr 2012 20:37:15 +0200
+
+goobox (3.0.0-3) unstable; urgency=low
+
+  * help/sl/sl.po updated from upstream git.
+  * Upgrade to policy 3.9.3, no changes required
+  * Correct link to GPL v.2 in debian/copyright, thanks lintian(1)
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun, 04 Mar 2012 11:22:49 +0100
+
+goobox (3.0.0-2) unstable; urgency=low
+
+  * po/ja.po updated from upstream git.
+  * po/oc.po license clarified with original translator
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Fri, 13 Jan 2012 21:15:46 +0100
+
+goobox (3.0.0-1) experimental; urgency=low
+
+  * New upstream release
+    * All previous patches are applied
+    * Adjusted dependencies accordingly
+    * Documentation for Español updated (Daniel Mustieles)
+  * Update debian/watch.
+  * help/de/de.po updated from upstream git.
+  * help/cs/cs.po updated from upstream git.
+  * Update debian/copyright
+  * Add targets build-arch build-indep in debian/rules
+  * Use dpkg-buildflags(1)
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun, 08 Jan 2012 11:49:39 +0100
+
+goobox (2.90.1-3) unstable; urgency=low
+
+  * Really upload to unstable closes: #645264
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Fri, 21 Oct 2011 19:16:47 +0200
+
+goobox (2.90.1-2) experimental; urgency=low
+
+  * Upload to unstable for GNOME 3 transition; closes: #645264
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Thu, 20 Oct 2011 21:07:37 +0200
+
+goobox (2.90.1-1) experimental; urgency=low
+
+  * New upstream version
+    * All previous patches are applied
+    * Adjusted dependencies accordingly (port to GNOME 3)
+    * Adjusted description accordingly (mainly s/GNOME 2/GNOME 3/)
+    * Uses libnotify 0.7, Closes: #630280
+    * Added patch to src/Makefile.in, somehow does not get all includes
+  * Upgrade to policy 3.9.2, no changes required
+  * Remove some cruft from debian/rules
+  * po/ja.po updated from upstream git.
+  * po/de.po updated from upstream git.
+  * po/cs.po updated from upstream git.
+  * Update debian/watch.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Mon, 13 Jun 2011 11:08:12 +0200
+
+goobox (2.2.0-4) unstable; urgency=low
+
+  * Intrim version to enable libnotify 0.7 transition (only):
+    pull bcfa0c77f5d8fcd19392b1483b5ed596da448390 from upstream git
+    Closes: #630280
+  * Upgrade to policy 3.9.2.0, no changes required
+  * Remove some cruft from debian/rules
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Tue, 02 Aug 2011 18:13:14 +0200
+
+goobox (2.2.0-3) unstable; urgency=low
+
+  * po/zh_CN.po updated from upstream git.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun, 17 Apr 2011 12:17:48 +0200
+
+goobox (2.2.0-2) unstable; urgency=low
+
+  * help/es/es.po updated from upstream git.
+  * Clean up debian/copyright. Some files got a proper license now.
+  * Add missing license for help/ca/ca.po, it was clarified in an e-mail
+    exchange in 2007 already. 
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sat, 26 Feb 2011 15:54:51 +0100
+
+goobox (2.2.0-1) unstable; urgency=low
+
+  * New upstream release. This obsoletes the following patches:
+    add_sl_help.diff          update_cs.diff  update_sl.diff update_sv.diff
+    help_full_translate.diff  update_ja.diff
+  * Refresh remaining patches.
+  * po/da.po updated from upstream git.
+  * po/eu.po updated from upstream git.
+  * po/fr.po updated from upstream git.
+  * po/hu.po updated from upstream git.
+  * po/it.po updated from upstream git.
+  * po/pt_BR.po updated from upstream git.
+  * po/zh_CN.po updated from upstream git.
+  * Update debian/copyright accordingly.
+  * src/glib-utils.c src/glib-utils.h taken from upstream git to avoid
+    cppcheck warning.
+  * Update debian/watch.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Tue, 08 Feb 2011 19:50:14 +0100
+
+goobox (2.1.2-6) unstable; urgency=medium
+
+  * Add docbook-xml to build-dep. This hopefully resolves FTBS on
+    kfreebsd-amd64.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Wed, 01 Dec 2010 21:26:12 +0100
+
+goobox (2.1.2-5) unstable; urgency=low
+
+  * po/da.po updated from upstream git.
+  * po/eu.po updated from upstream git.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun, 21 Nov 2010 09:34:53 +0100
+
+goobox (2.1.2-4) unstable; urgency=low
+
+  * help/sl/sl.po (new partial translation) added from upstream git. 
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sat, 23 Oct 2010 09:53:21 +0200
+
+goobox (2.1.2-3) unstable; urgency=low
+
+  * po/fr.po updated from upstream git.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Wed, 08 Sep 2010 13:03:13 +0200
+
+goobox (2.1.2-2) unstable; urgency=low
+
+  * po/sv.po updated from upstream git.
+  * po/it.po updated from upstream git. 
+  * po/zh_CN.po updated from upstream git.
+  * Some strings in --help-all could not be translated (upstream bug #625669).
+    Patch for copy-n-paste/eggsmclient.c & src/main.c taken from upstream git.
+  * Upgrade to policy 3.9.1, express libcam-dev dependency using kfreebsd-any
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sat, 31 Jul 2010 17:18:54 +0200
+
+goobox (2.1.2-1) unstable; urgency=low
+
+  * New upstream release, basically 2.1.1-13 with almost all patches applied,
+    i.e.:
+     add_help_cs.diff         fix_manual.diff         update_french.diff
+     add_id.diff              limit_flac.diff         update_german.diff
+     check_folder.diff        update_german_help.diff check_folder_use_home.diff
+     slovenian.diff           check_plugins.diff      update_cs.diff   
+     update_pt-BR.diff        ensure_cache_dir.diff   update_da.diff 
+     update_spanish_help.diff fix-flac.diff           update_eu.diff 
+     whitspace_in_license.diff
+  * Remove outdated (commented out) references to patch in debian/rules
+  * po/cs.po updated from upstream git.
+  * po/sl.po updated from upstream git.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sat, 17 Jul 2010 10:25:28 +0200
+
+goobox (2.1.1-13) unstable; urgency=low
+
+  * Limit maximal compression for flac to 8 instead of 9. Even when
+    encoding directly via "gst-launch" a quality of 9 throws an error. 
+    Closes LP: #304463 and Closes LP: #304491.
+    This is upstream bug 624188, fix taken from upstream git.
+  * po/ja.po updated from upstream git.
+  * po/sl.po updated from upstream git.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Tue, 13 Jul 2010 08:03:20 +0200
+
+goobox (2.1.1-12) unstable; urgency=low
+
+  * po/es.po updated from upstream git.
+  * po/de.po updated from upstream git. 
+  * Code fixes from upstream git:
+    - Use home directory is default music directory not present
+      (extends fix from -10 in src/dlg-ripper.c and src/dlg-preferences.c)
+    - Make sure cache directory exists before using it (upstream bug #623607,
+      src/album-info.c src/goo-player.c)
+    These two also closes: #319712.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Wed, 07 Jul 2010 18:45:00 +0200
+
+goobox (2.1.1-11) unstable; urgency=low
+
+  * Update to standards version 3.9.0 (no change required).
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Wed, 30 Jun 2010 17:29:27 +0200
+
+goobox (2.1.1-10) unstable; urgency=low
+
+  * po/pt_BR.po updated from upstream git.
+  * Code fixes from upstream git:
+    - check whether the folder is NULL before using it (src/dlg-ripper.c)
+    - fixed error when a gstreamer plugin is not available (src/main.c)
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sat, 19 Jun 2010 16:28:36 +0200
+
+goobox (2.1.1-9) unstable; urgency=low
+
+  * po/id.po now contains license (taken from git).
+  * Add Czech help translation (taken from upstream git). 
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Fri, 07 May 2010 18:40:46 +0200
+
+goobox (2.1.1-8) unstable; urgency=low
+
+  * po/eu.po updated from upstream git.
+  * po/id.po added from upstream git.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun, 25 Apr 2010 10:06:20 +0200
+
+goobox (2.1.1-7) unstable; urgency=low
+
+  * help/es/es.po updated from upstream git.
+  * po/fr.po updated from upstream git. 
+  * po/cs.po updated from upstream git.
+  * po/da.po updated from upstream git.
+  * Update to standards version 3.8.4 (no change required).
+
+  * Switch to debhelper V7:
+  * Use dh_prep instead of dh_clean -k;
+  * Increase versioned build dependency on debhelper.
+
+  * Slightly simplify debian/rules by using po4a directly.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sat, 27 Feb 2010 19:52:12 +0100
+
+goobox (2.1.1-6) unstable; urgency=low
+
+  * po/sl.po updated from upstream git, now proofread by Slvoenian team and 
+    with proper license.
+  * help/de/de.po updated from upstream git, now proofread by German GNOME 
+    Team.
+  * Work around #562722 by manually translating "SYNOPSIS" in the German man
+    page.
+  * It's 2010, update debian/copyright.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun, 10 Jan 2010 09:30:38 +0100
+
+goobox (2.1.1-5) unstable; urgency=low
+
+  * Updated po/de.po as proofread by the German GNOME Team (from upstream
+    git).
+  * Updated help/de/de.po as proofread by the German GNOME Team (from 
+    upstream git) with one additional typo fix by me.
+  * Update po/es.po from upstream git.
+  * Add po/sl.po from upstream git.
+  * Update debian/copyright for all changes.
+  * Remove dependency on gstreamer0.10-gnomevfs, it's no longer needed.
+  * Slight improvements in German man page translation.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Mon, 28 Dec 2009 10:08:55 +0100
+
+goobox (2.1.1-4) unstable; urgency=low
+
+  * Adapt man page to the new upstream version (and sync German translation)
+  * Pull from upstream "fixed a syntax error in the manual" and unfuzzy German
+    translation.
+  * Pull from upstream "fixed white spaces in the license text" and unfuzzy
+    German translation.
+  * Apply patch from Jens Seidel to fix typos in the German translation. 
+  * Update Spanish help translation from upstream git.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Mon, 07 Dec 2009 22:26:55 +0100
+
+goobox (2.1.1-3) unstable; urgency=low
+
+  * Add dependency on libcam(-dev) for kfreebsd-amd64 and kfreebsd-i386. This
+    closes: #557897.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Wed, 25 Nov 2009 13:42:44 +0100
+
+goobox (2.1.1-2) unstable; urgency=low
+
+  * Add missing build dependency libgconf2-dev (pruned too much in -1).
+  * Move gnome-media from depends to recommends, goobox can be used outside
+    GNOME as well.
+  * Fix a string in po/de.po such that the desktop file is now correctly
+    translated as well.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Tue, 24 Nov 2009 19:35:45 +0100
+
+goobox (2.1.1-1) unstable; urgency=low
+
+  * New upstream release, heavily modernizing the libraries used. 
+  * Update debian/copyright (and fix broken encoding).
+  * Update po/ja.po from git.
+  * Remove versioned (built) dependencies, they are satisfied even in
+    oldstable (except debhelper, where lintian insists on keeping).
+  * Switch German man page to UTF-8.
+  * Add homepage in debian/control.
+  * Remove postinst, its fix refers to a version older than in oldstable.
+  * Update German (help/po) translation, push into upstream git in progress.
+  * Builds while binutils-gold is installed. Closes: #554695.
+  * Switch to dpkg 3.0 (quilt).
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Mon, 23 Nov 2009 18:49:19 +0100
+
+goobox (2.0.1-1) unstable; urgency=low
+
+  * New upstream release, enabling goobox to run on Debian 2.6.30 kernels at
+    the cost of probably breaking goobox on (obsolete) 2.4 kernels. This
+    closes: #547723. Thanks to Peter De Wachter for noticing and helping to
+    track this down.
+  * Update to standards version 3.8.3 (no change required)
+  * Remove (all) patches - integrated upstream.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Wed, 30 Sep 2009 09:11:24 +0200
+
+goobox (2.0.0-7) unstable; urgency=low
+
+  * Really resolve "patch-system-but-direct-changes-in-diff"
+  * Update to standards version 3.8.2 (no change required)
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Thu, 06 Aug 2009 19:50:39 +0200
+
+goobox (2.0.0-6) unstable; urgency=low
+
+  * Include config.sub and config.guess according to the new rules, this
+    should enable building with format 3.0(quilt) once this becomes accepted
+    in the archive and hence closes: #538613.
+  * Follow current /usr/share/doc/autotools-dev/README.Debian.gz more closely,
+    namely
+    * Only use --host if necessary
+    * Prepare to call autoreconf before configure (currently disabled)
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun, 02 Aug 2009 14:24:14 +0200
+
+goobox (2.0.0-5) unstable; urgency=low
+
+  * L10n & documentation upload targetting Lenny
+  * --version now displays the version, fix man page
+  * Unfuzzy German man page translation
+  * Update Basque translation from upstream SVN
+  * Update Czech translation from upstream SVN
+  * Add missing colon to please lintian
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun,  4 Jan 2009 21:26:07 +0100
+
+goobox (2.0.0-4) unstable; urgency=low
+
+  * Goobox no longer supports mp3, remove README.Debian and Recommends to
+    gstreamer-lame. Thanks Peter de Wachter for noticing. Closes: #495492.
+  * Fix crash in preference dialog, thanks Peter de Wachter for the patch.
+    The final patch was taken from upstream, Closes: #495491.
+  * Update debian/copyright appropriately.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Tue, 19 Aug 2008 16:54:16 +0000
+
+goobox (2.0.0-3) unstable; urgency=low
+
+  * L10n upload targetting Lenny
+  * Update Arabic translation from upstream SVN
+  * Update Czech translation from upstream SVN
+  * Update German translation from upstream SVN
+  * Update Brazilian translation from upstream SVN
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun, 17 Aug 2008 09:57:04 +0200
+
+goobox (2.0.0-2) unstable; urgency=low
+
+  * Update German program translation (will soon appear in upstream SVN)
+  * Properly include /usr/share/quilt/quilt.make instead of partially
+    referencing it (thanks to Loïc Minier)
+  * Add README.source, with this update to standards version 3.8.0
+  * (Build-)Depends line in debian/control is now line wrapped to better
+    track changes
+  * Lintian: Fix overlong line in debian/copyright
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Wed, 16 Jul 2008 19:33:33 +0200
+
+goobox (2.0.0-1) unstable; urgency=low
+
+  * New upstream release
+  * Add German help file from current SVN
+  * Switch to using quilt instead of dpatch
+  * No longer ignore errors from make distclean
+  * Recommend dbus-x11, yelp to ensure working online help
+  * Update to standards version 3.7.3 (no changes required)
+  * Recode copyright into UTF-8
+  * Remove version on depency for libgtk2.0-dev, even oldstable fullfils this.
+  * Update watch file to point to new upstream version
+  * If building SVN snapshots, do not encode version number in temporary
+    directory name
+  * Since I am now a debian maintainer, set "DM-Upload-Allowed: yes" in
+    debian/control
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Fri, 30 May 2008 13:51:02 +0200
+
+goobox (1.9.2-1) unstable; urgency=low
+
+  * New upstream release
+  * Remove patches, as they are all applied upstream
+  * Explicitly mention location of GPL v3 in the debian/copyright, fix a
+    minor spelling error and update some years.
+  * Add dh_icons
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun, 23 Sep 2007 18:39:43 +0200
+
+goobox (1.9.1-2) unstable; urgency=low
+
+  * Update / sync German man page (now using po4a)
+  * Improved package description (both short and long)
+  * Clearly spelled out copyright holders and licensors.
+  * Updated dz, ja, fi, vi, ca, eu, sv from SVN head and added lv, oc from SVN
+    head
+  * Use "Applications/Sound" in menu (thanks, lintian)
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun, 12 Aug 2007 12:46:49 +0200
+
+goobox (1.9.1-1) unstable; urgency=low
+
+  * New upstream version
+  * Upload to unstable (Closes: #429324, #429275)
+  * Include updated English man page
+  * Update watch file 
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Mon, 25 Jun 2007 18:33:35 +0200
+
+goobox (0.9.93svn20070601-1) unreleased; urgency=low
+
+  * New SVN snapshot
+  * Update config.sub and config.guess as requested by Daniel Baumann.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Fri,  1 Jun 2007 16:24:33 +0200
+
+goobox (0.9.93svn20070527-1) unreleased; urgency=low
+
+  * New SVN snapshot
+  * Improve clean target
+  * Include svnupstream target to retriev upstream tar ball from svn
+    (if applicable) as requested by Daniel Baumann.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sun, 27 May 2007 16:30:43 +0200
+
+goobox (0.9.93svn20070518-1) experimental; urgency=low
+
+  * Snapshot from svn to switch to gstreamer-0.10.
+    (Closes: #410441, #404155)
+  * Builds again. (Closes: #422477)
+  * All previous patches are now included upstream.
+  * Edit->Preferences no longer stops playback. (Closes: #291567)
+  * Remove version for all dependencies where the Etch version is already
+    sufficient (and update some to reflect the updated dependencies).
+  * Update package description.
+  * Include SVN download location in copyright.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Thu, 17 May 2007 14:36:11 +0200
+
+goobox (0.9.93-8) unstable; urgency=low
+
+  * In agreement with Helge, I'm removing myself as maintainer and putting him
+    as the new one.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 19 Jan 2007 21:32:00 +0100
+
+goobox (0.9.93-7) unstable; urgency=medium
+
+  * Fixed doubled uploaders field (Closes: #401450).
+
+ -- Daniel Baumann <daniel@debian.org>  Sun,  3 Dec 2006 20:05:00 +0100
+
+goobox (0.9.93-6) unstable; urgency=low
+
+  * Split monolithic patch into separate dpatch files
+  * Fix display of progress bar when ripping (Closes: #387054)
+  * Fix path to pixmap
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sat, 16 Sep 2006 20:28:38 +0200
+
+goobox (0.9.93-5) unstable; urgency=low
+
+  * Fixed registering of gconf schemas as reported by
+    Josselin Muette <joss@debian.org> (Closes: #380729):
+    - Added ${misc:Depends} to depends.
+    - Bumped debhelper dependencies/compatibility leve to 5.
+    - Using dh_gconf in rules.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue,  1 Aug 2006 10:57:00 +0200
+
+goobox (0.9.93-4) unstable; urgency=low
+
+  * Reintroducing sgml manpages, reintroducing old dependencies as requested
+    by Helge.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 12 Jul 2006 21:22:00 +0200
+
+goobox (0.9.93-3) unstable; urgency=low
+
+  * New maintainers (Closes: #353398).
+  * Redone debian-directory based on current debhelper templates, additionally:
+    - including manpages as flat files, dropping docbook-to-man.
+    - reformated manpages.
+    - updated dependencies and versions.
+    - using now dpatch for all upstream modifications.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 12 Jul 2006 08:43:00 +0200
+
+goobox (0.9.93-2) unstable; urgency=medium
+
+  * QA upload.
+  * Remove scrollkeeper database from the binary package.
+    Closes: #355247.
+
+ -- Matej Vela <vela@debian.org>  Tue,  7 Mar 2006 11:49:06 +0100
+
+goobox (0.9.93-1) unstable; urgency=low
+
+  * Orphaning goobox, maintainer set to Debian QA Group
+    <packages@qa.debian.org>.
+  * Use corrected dependencies and acknowledge NMU (Closes: #319713).
+  * New upstream release.
+  * Update to standards version 3.6.2 (no changes required).
+  * Switch to debhelper v5.
+  * Help buttons now make sense, drop remove_helpbuttons.patch.
+  * No longer ship upstream README as it does not contain any new info.
+  * Make build idempotent (work around missing source bits / distclean rules)
+  * Genre is no longer repeated depending on track number (Closes: #319719).
+  * German translation credit is now ok (Closes: #310202).
+  * The upstream PO-File has changed. I re-read the german translation and
+    applied some corrections, as the old patch from Jens Seidel does not
+    apply anymore. The new version was proofread by Jens and resulted in an
+    updated new_de_po.patch, hence this closes: #314066.
+  * Right now, genre can be specified for the entire disk only, hence
+    #319717 is addressed only partially.
+
+ -- Helge Kreutzmann <kreutzm@itp.uni-hannover.de>  Sun, 19 Feb 2006 18:15:28 +0100
+
+goobox (0.9.91-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Add a version build-depends on libglade >= 2.5, to avoid broken builds;
+    thanks to Helge Kreutzmann <kreutzm@itp.uni-hannover.de> for the
+    analysis.  Closes: #319713.
+
+ -- Steve Langasek <vorlon@debian.org>  Fri, 20 Jan 2006 14:45:33 -0800
+
+goobox (0.9.91-1) unstable; urgency=high
+
+  * New upstream release
+  * Stupid me, forgot to add gstreamer0.8-gnomevfs to Depends (Closes: #301782)
+    Big thanks to Stephen Gran for finding that out! It was so simple...
+  * Urgency is high, because this fix needs to go in Sarge.
+  * Fixed the "unparsable menu item" lintian warning.
+  * Changed my e-mail address in the control file
+
+ -- Dan Korostelev <nadako@gmail.com>  Mon,  2 May 2005 00:10:54 +0400
+
+goobox (0.9.90-2) unstable; urgency=low
+
+  * Added German man page and PO file. Thanks Helge! (Closes: #298384)
+
+ -- Dan Korostelev <dan@ats.energo.ru>  Thu, 17 Mar 2005 00:37:34 +0300
+
+goobox (0.9.90-1) unstable; urgency=low
+
+  * New upstream release
+  * Looks like toolbar moving problem has been fixed (Closes: #290556)
+  * Remove "Help" buttons from dialogs for now. There's no help content for them. (Closes: #298188)
+  * Depend on gnomevfs 2.8.4-2 to get rid of HOWL dependency.
+  * Replaced an ImageMagick-converted Debian menu XPM icon with GIMP-converted one.
+  * Fixed a little formatting mistake in manpage (Closes: #298385)
+
+ -- Dan Korostelev <dan@ats.energo.ru>  Thu, 10 Mar 2005 07:39:43 +0300
+
+goobox (0.7.2-2) unstable; urgency=low
+
+  * Added icon and nice title to Debian menu item. 
+
+ -- Dan Korostelev <dan@ats.energo.ru>  Sat, 29 Jan 2005 14:34:14 +0300
+
+goobox (0.7.2-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Dan Korostelev <dan@ats.energo.ru>  Tue, 25 Jan 2005 02:47:42 +0300
+
+goobox (0.7.1-1) unstable; urgency=low
+
+  * New upstream release
+  * Removed debian/patches/gnome_about.patch - fixed upstream 
+
+ -- Dan Korostelev <dan@ats.energo.ru>  Wed, 12 Jan 2005 05:44:35 +0300
+
+goobox (0.7.0-1) unstable; urgency=low
+
+  * New upstream release
+  * Removed debian/patches/amd64gcc40.patch - merged upstream
+  * Updated the manpage, goobox now has some command line options
+  * Added debian/patches/gnome_about.patch to fix build error with
+    gtk 2.4
+
+ -- Dan Korostelev <dan@ats.energo.ru>  Sat,  8 Jan 2005 22:22:38 +0300
+
+goobox (0.6.0-3) unstable; urgency=low
+
+  * Document problems with MP3 encoding in README.Debian (closes: #287228)
+
+ -- Dan Korostelev <dan@ats.energo.ru>  Sun, 26 Dec 2004 15:44:49 +0300
+
+goobox (0.6.0-2) unstable; urgency=low
+
+  * Added debian/patches/amd64gcc40.patch to fix FTBFS on amd64
+    with gcc-4.0 (closes: #286887). Thanks Andreas Jochens.
+
+ -- Dan Korostelev <dan@ats.energo.ru>  Sat, 25 Dec 2004 17:14:10 +0300
+
+goobox (0.6.0-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Dan Korostelev <dan@ats.energo.ru>  Mon,  6 Dec 2004 22:20:05 +0300
+
+goobox (0.5.0-3) unstable; urgency=low
+
+  * Fixed an "Upstream Authors" typo in debian/copyright. There's only one
+    upstream author. Thanks Goedson Teixeira Paixao for noticing.
+  * Changed "neon library" to GnomeVFS in package description as 0.5.0 uses
+    libgnomevfs for searching cover images, AFAIK.
+
+ -- Dan Korostelev <dan@ats.energo.ru>  Sat,  4 Dec 2004 02:20:06 +0300
+
+goobox (0.5.0-2) unstable; urgency=medium
+
+  * Added gstreamer0.8-cdparanoia to be able to play CDs out of the box :)
+    (closes: #282971)
+  * Added gstreamer0.8-flac and gstreamer0.8-vorbis to Recommends
+
+ -- Dan Korostelev <dan@ats.energo.ru>  Fri, 26 Nov 2004 01:13:22 +0300
+
+goobox (0.5.0-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Dan Korostelev <dan@ats.energo.ru>  Wed, 17 Nov 2004 23:36:06 +0300
+
+goobox (0.4.0-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Dan Korostelev <dan@ats.energo.ru>  Wed, 10 Nov 2004 01:11:51 +0300
+
+goobox (0.3.0-1) unstable; urgency=low
+
+  * Initial Release.
+  * Closes: #279175: ITP: goobox -- CD player and ripper for GNOME
+
+ -- Dan Korostelev <dan@ats.energo.ru>  Tue,  2 Nov 2004 01:02:47 +0300
