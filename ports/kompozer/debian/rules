@@ -44,20 +44,9 @@ ifneq (,$(filter armel armhf,$(DEB_HOST_ARCH)))
 	CXXFLAGS += -Wa,-mimplicit-it=thumb
 endif
 
-
-
 get-orig-source:
-	rm -rf get-orig-source $(TARBALL)
-	mkdir get-orig-source
-	svn export -r $(SVN_REVISION) https://kompozer.svn.sourceforge.net/svnroot/kompozer/trunk get-orig-source/$(PACKAGE)-$(SRC_VERSION).orig
-	rm -rf get-orig-source/$(PACKAGE)-$(SRC_VERSION).orig/debian
-	cd get-orig-source/$(PACKAGE)-$(SRC_VERSION).orig/ ; sh ../../debian/remove-nonfree.sh
-	GZIP=--best tar czf $(TARBALL) -C get-orig-source $(PACKAGE)-$(SRC_VERSION).orig
-	rm -rf get-orig-source
-	echo "  "$(TARBALL)" created; move it to the right destination to build the package"
-
-
-
+	wget http://archive.ubuntu.com/ubuntu/pool/universe/k/kompozer/kompozer_0.8~b3.dfsg.1.orig.tar.gz -O ../kompozer_0.8~b3.dfsg.1.orig.tar.gz
+	tar -z -x -f ../kompozer_0.8~b3.dfsg.1.orig.tar.gz --strip-components=1 -C .
 
 build: $(QUILT_STAMPFN) build-stamp  
 
