@@ -1,4 +1,3 @@
-# Emtpy atm
 update_fi.patch
 update_id.patch
 update_pl.patch
@@ -8,3 +7,4 @@ update_cs.patch
 update_es.patch
 update_pt_BR.patch
 update_configure.patch
+50_fix_playlist_fixed_size.patch
