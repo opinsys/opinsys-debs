@@ -1,0 +1,444 @@
+<!doctype refentry PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
+
+  <!ENTITY dhfirstname "<firstname>Dan</firstname>">
+  <!ENTITY dhsurname "<surname>Korostelev</surname>">
+  <!ENTITY dhufirstname "<firstname>Helge</firstname>">
+  <!ENTITY dhusurname "<surname>Kreutzmann</surname>">
+  <!ENTITY dhdate "<date>30. November 2009</date>">
+  <!ENTITY dhsection "<manvolnum>1</manvolnum>">
+  <!ENTITY dhemail "<email>dan@ats.energo.ru</email>">
+  <!ENTITY dhuemail "<email>debian@helgefjell.de</email>">
+  <!ENTITY dhusername "Dan Korostelev">
+  <!ENTITY dhuusername "Helge Kreutzmann">
+  <!ENTITY dhucpackage "<refentrytitle>GOOBOX</refentrytitle>">
+  <!ENTITY dhpackage "<command>goobox</command>">
+
+  <!ENTITY debian "<productname>Debian</productname>">
+  <!ENTITY gnu "<acronym>GNU</acronym>">
+  <!ENTITY gpl "&gnu; <acronym>GPL</acronym>">
+]>
+<refentry>
+ <refentryinfo>
+<address>
+	    &dhemail; und &dhuemail;
+	   </address>
+
+  <author>
+    &dhfirstname; &dhsurname;
+  </author>
+  <copyright>
+    <year>2004, 2007, 2009</year>
+   <holder>&dhusername; und &dhuusername;</holder>
+  </copyright>
+   &dhdate;
+
+ </refentryinfo>
+ <refmeta>
+&dhucpackage;
+
+	&dhsection;
+
+ </refmeta>
+ <refnamediv>
+  <refname>&dhpackage;</refname>
+  <refpurpose>graphischer CD-Spieler und Extrahierer für GNOME</refpurpose>
+ </refnamediv>
+ <refsynopsisdiv>
+<cmdsynopsis sepchar=" ">
+&dhpackage; <arg rep="norepeat" choice="opt"><replaceable>OPTION</replaceable></arg><arg rep="norepeat" choice="opt"><replaceable>...</replaceable></arg>
+   </cmdsynopsis>
+
+ </refsynopsisdiv>
+ <refsect1>
+  <title>BESCHREIBUNG</title>
+  <para>
+    <command>&dhpackage;</command> ist ein einfach-zu-verwendender
+    graphischer CD-Spieler und Extrahierer für die GNOME
+    2-Arbeitsumgebung. Es kann CDs abspielen, ihren Inhalt extrahieren
+    (d.h. sie in Dateien speichern) und Albumhüllen von ihnen anzeigen.
+  </para>
+  <para>
+    Es verwendet das GStreamer-Rahmenwerk zum Extrahieren und Abspielen der
+    CD und Musicbrainz für die Indexierung der CD.
+  </para>
+ </refsect1>
+ <refsect1>
+  <title>OPTIONEN</title>
+  <para>
+    Anwendungsoptionen:
+  </para>
+  <variablelist>
+   <varlistentry>
+    <term><option>--eject</option></term>
+    <listitem>
+     <para>
+       Werfe die CD aus
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--hide-show</option></term>
+    <listitem>
+     <para>
+       Verstecke/Zeige das Hauptfenster
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--next</option></term>
+    <listitem>
+     <para>
+       Spiele den nächsten Titel
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--play</option></term>
+    <listitem>
+     <para>
+       Spiele die CD beim Starten
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--play-pause</option></term>
+    <listitem>
+     <para>
+       Spielen/Pausieren
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--previous</option></term>
+    <listitem>
+     <para>
+       Spiele den vorhergehenden Titel
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--quit</option></term>
+    <listitem>
+     <para>
+       Anwendung beenden
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--stop</option></term>
+    <listitem>
+     <para>
+       Abspielen beenden
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--volume-down</option></term>
+    <listitem>
+     <para>
+       Lautstärke runter
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--volume-up</option></term>
+    <listitem>
+     <para>
+       Lautstärke hoch
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>-d</option> <option>--device=GERÄTE_PFAD</option></term>
+    <listitem>
+     <para>
+       Zu verwendendes CD-Gerät
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--display=ANZEIGE</option></term>
+    <listitem>
+     <para>
+       Zu verwendende X-Anzeige (display)
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>-v</option> <option>--version</option></term>
+    <listitem>
+     <para>
+       Zeige Versionsnummer des Programms
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+  <para>
+    Hilfe-Optionen:
+  </para>
+  <variablelist>
+   <varlistentry>
+    <term><option>-h</option> <option>--help</option></term>
+    <listitem>
+     <para>
+       Zeige die Hilfe-Optionen
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--help-all</option></term>
+    <listitem>
+     <para>
+       Zeige alle Hilfe-Optionen
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--help-gst</option></term>
+    <listitem>
+     <para>
+       Zeige GStreamer-Optionen
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--help-gtk</option></term>
+    <listitem>
+     <para>
+       Zeige GTK+-Optionen
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--help-sm-client</option></term>
+    <listitem>
+     <para>
+       Zeige die Sitzungsverwaltungs-Optionen
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+  <para>
+    GStreamer-Optionen:
+  </para>
+  <variablelist>
+   <varlistentry>
+    <term><option>--gst-version</option></term>
+    <listitem>
+     <para>
+       Zeige die GStreamer-Version
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--gst-fatal-warnings</option></term>
+    <listitem>
+     <para>
+       Stelle alle Warnungen auf fatal um
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--gst-debug-help</option></term>
+    <listitem>
+     <para>
+       Zeige verfügbare Debug-Kategorien und Beende
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--gst-debug-level=STUFE</option></term>
+    <listitem>
+     <para>
+       Standard-Debug-Stufe von 1 (nur Fehler) bis 4 (alles) oder 0 für
+       keine Ausgabe
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--gst-debug=AUFZÄHLUNG</option></term>
+    <listitem>
+     <para>
+       Komma-separierte Aufstellung von category_name:level-Paaren um die
+       speziellen Stufen für die einzelnen Kategorien
+       einzustellen. Beispiel: GST_AUTOPLUG:5,GST_ELEMENT_*:3.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--gst-debug-no-color</option></term>
+    <listitem>
+     <para>
+       Deaktivere gefärbte Debugging-Ausgabe
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--gst-debug-disable</option></term>
+    <listitem>
+     <para>
+       Deaktiviere Debugging
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--gst-plugin-spew</option></term>
+    <listitem>
+     <para>
+       Aktiviere ausführliche Diagnose beim Laden von Erweiterungen
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--gst-plugin-path=PFADE</option></term>
+    <listitem>
+     <para>
+       Doppelpunkt-separierte Liste von Pfaden, die Erweiterungen enthalten
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--gst-plugin-load=ERWEITERUNGEN</option></term>
+    <listitem>
+     <para>
+       Komma-separierte Liste von Erweiterungen, die zusätzlich zu den
+       Erweiterungen vorab geladen werden sollen, die in der
+       Umgebungsvariablen GST_PLUGIN_PATH stehen.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--gst-disable-segtrap</option></term>
+    <listitem>
+     <para>
+       Deaktivere das Abfangen von Segmentfehlern (»segmentation faults«)
+       während des Ladens von Erweiterungen.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--gst-disable-registry-update</option></term>
+    <listitem>
+     <para>
+       Deaktiviere die Aktualisierung der Registry.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--gst-disable-registry-fork</option></term>
+    <listitem>
+     <para>
+       Deaktiviere die Verwendung von fork() beim Durchsuchen der Registry.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+  <para>
+    GTK+-Optionen:
+  </para>
+  <variablelist>
+   <varlistentry>
+    <term><option>--class=KLASSE</option></term>
+    <listitem>
+     <para>
+       Programmklasse, wie sie vom Windowmanager (Fensterverwalter)
+       verwendet wird
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--name=NAME</option></term>
+    <listitem>
+     <para>
+       Programmname, wie er vom Windowmanager verwendet wird
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--screen=BILDSCHIRM</option></term>
+    <listitem>
+     <para>
+       Zu verwendender X-Bildschirm
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--sync</option></term>
+    <listitem>
+     <para>
+       X-Aufrufe synchron ausführen
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--gtk-module=MODULE</option></term>
+    <listitem>
+     <para>
+       Lade zusätzliche GTK+-Module
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--g-fatal-warnings</option></term>
+    <listitem>
+     <para>
+       Stelle alle Warnungen auf fatal um
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+  <para>
+    Sitzungs-Verwaltungs-(Session Management-)Optionen:
+  </para>
+  <variablelist>
+   <varlistentry>
+    <term><option>--sm-client-id=ID</option></term>
+    <listitem>
+     <para>
+       Gebe Sitzungsmanagement-ID an
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--sm-client-state-file=DATEI</option></term>
+    <listitem>
+     <para>
+       Geben die Datei mit der gespeicherten Konfiguration an
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><option>--sm-disable</option></term>
+    <listitem>
+     <para>
+       Deaktiviere die Verbindung zum Sitzungsmanager
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+ <refsect1>
+  <title>SIEHE AUCH</title>
+  <para>
+    <application>gnome-cd</application>(1),
+    <application>sound-juicer</application>(1),
+    <application>grip</application>(1)
+  </para>
+ </refsect1>
+ <refsect1>
+  <title>AUTOR</title>
+  <para>
+    Diese Handbuchseite wurde von &dhusername; &dhemail; für das
+    &debian;-System geschrieben (aber kann auch von anderen verwendet
+    werden). Sie wurde später von &dhuusername; &dhuemail;
+    aktualisiert. Unter den Bedingungen der GNU General Public License,
+    herausgegeben von der Free Software Foundation, Version 2 oder einer
+    neueren Version wird das Recht gewährt, dieses Dokument zu kopieren, zu
+    verteilen und/oder zu verändern.
+  </para>
+  <para>
+    Auf &debian;-Systemen kann der komplette Text der GNU General Public
+    License in /usr/share/common-licenses/GPL gefunden werden.
+  </para>
+ </refsect1>
+</refentry>

@@ -1,0 +1,412 @@
+<!doctype refentry PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
+  <!ENTITY dhfirstname "<firstname>Dan</firstname>">
+  <!ENTITY dhsurname   "<surname>Korostelev</surname>">
+  <!ENTITY dhufirstname "<firstname>Helge</firstname>">
+  <!ENTITY dhusurname   "<surname>Kreutzmann</surname>">
+  <!ENTITY dhdate      "<date>November 30, 2009</date>">
+  <!ENTITY dhsection   "<manvolnum>1</manvolnum>">
+  <!ENTITY dhemail     "<email>dan@ats.energo.ru</email>">
+  <!ENTITY dhuemail     "<email>debian@helgefjell.de</email>">
+  <!ENTITY dhusername  "Dan Korostelev">
+  <!ENTITY dhuusername  "Helge Kreutzmann">
+  <!ENTITY dhucpackage "<refentrytitle>GOOBOX</refentrytitle>">
+  <!ENTITY dhpackage   "<command>goobox</command>">
+
+  <!ENTITY debian      "<productname>Debian</productname>">
+  <!ENTITY gnu         "<acronym>GNU</acronym>">
+  <!ENTITY gpl         "&gnu; <acronym>GPL</acronym>">
+]>
+
+<refentry>
+    <refentryinfo>
+	<address>
+	    &dhemail; and &dhuemail;
+	</address>
+	<author>
+	    &dhfirstname;
+	    &dhsurname; 
+	    <!--
+	    and
+	    &dhufirstname;
+	    &dhusurname;  -->
+	</author>
+
+	<copyright>
+	    <year>2004, 2007, 2009</year>
+	    <holder>&dhusername; and &dhuusername;</holder>
+	</copyright>
+	&dhdate;
+    </refentryinfo>
+    <refmeta>
+	&dhucpackage;
+
+	&dhsection;
+    </refmeta>
+    <refnamediv>
+	<refname>&dhpackage;</refname>
+
+	<refpurpose>graphical CD player and ripper for GNOME</refpurpose>
+    </refnamediv>
+    <refsynopsisdiv>
+	<cmdsynopsis>
+	    &dhpackage; <arg choice="opt"><replaceable>OPTION</replaceable></arg> <arg choice="opt"><replaceable>...</replaceable></arg>
+	</cmdsynopsis>
+    </refsynopsisdiv>
+    <refsect1>
+	<title>DESCRIPTION</title>
+
+	<para><command>&dhpackage;</command> is an easy-to-use graphical CD player and ripper for GNOME 2 desktop environment. It can play CDs, rip them (i.e. save them to files) and display album cover images for them.</para>
+
+	<para>It uses the GStreamer framework to rip and play the CD and 
+	    musicbrainz to index the CD.</para>
+
+    </refsect1>
+    <refsect1>
+      <title>OPTIONS</title>
+      <para>Application Options:</para>
+
+      <variablelist>
+	  <varlistentry>
+	      <term><option>--eject</option></term>
+	      <listitem>
+		  <para>Eject the CD</para>
+	      </listitem>
+	  </varlistentry>
+
+	  <varlistentry>
+	      <term><option>--hide-show</option></term>
+	      <listitem>
+		  <para>Hide/Show the main window.</para>
+	      </listitem>
+	  </varlistentry>
+
+      <varlistentry>
+	  <term><option>--next</option></term>
+	  <listitem>
+	      <para>Play the next track.</para>
+	  </listitem>
+      </varlistentry>
+
+      <varlistentry>
+	  <term><option>--play</option></term>
+	  <listitem>
+	      <para>Play the CD on startup.</para>
+	  </listitem>
+      </varlistentry>
+
+      <varlistentry>
+	  <term><option>--play-pause</option></term>
+	  <listitem>
+	      <para>Play/Pause</para>
+	  </listitem>
+      </varlistentry>
+
+      <varlistentry>
+	  <term><option>--previous</option></term>
+	  <listitem>
+	      <para>Play the previous track.</para>
+	  </listitem>
+      </varlistentry>
+
+      <varlistentry>
+	  <term><option>--quit</option></term>
+	  <listitem>
+	      <para>Quit the application.</para>
+	  </listitem>
+      </varlistentry>
+
+      <varlistentry>
+	  <term><option>--stop</option></term>
+	  <listitem>
+	      <para>Stop playing</para>
+	  </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--volume-down</option></term>
+        <listitem>
+          <para>Volume down</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+	  <term><option>--volume-up</option></term>
+	  <listitem>
+	      <para>Volume up</para>
+	  </listitem>
+      </varlistentry>
+
+      <varlistentry>
+	  <term><option>-d</option> <option>--device=DEVICE_PATH</option></term>
+        <listitem>
+          <para>CD device to be used.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--display=DISPLAY</option></term>
+        <listitem>
+          <para>X display to use.</para>
+        </listitem>
+    </varlistentry>
+
+    <varlistentry>
+	<term><option>-v</option> <option>--version</option></term>
+	<listitem>
+	    <para>Show version of program.</para>
+        </listitem>
+      </varlistentry>
+
+
+  </variablelist>
+
+    <para>Help Options:</para>
+  
+        <variablelist>
+      <varlistentry>
+        <term><option>-h</option> <option>--help</option></term>
+        <listitem>
+          <para>Show help options.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--help-all</option></term>
+        <listitem>
+          <para>Show all help options.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--help-gst</option></term>
+        <listitem>
+          <para>Show GStreamer options.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--help-gtk</option></term>
+        <listitem>
+          <para>Show GTK+ options.</para>
+        </listitem>
+      </varlistentry>
+
+     <varlistentry>
+        <term><option>--help-sm-client</option></term>
+        <listitem>
+          <para>Show session management options.</para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+
+      <para>GStreamer Options:</para>
+        <variablelist>
+      <varlistentry>
+        <term><option>--gst-version</option></term>
+        <listitem>
+          <para>Show the GStreamer version.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--gst-fatal-warnings</option></term>
+        <listitem>
+          <para>Make all warnings fatal.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--gst-debug-help</option></term>
+       <listitem>
+          <para>Show available debug categories and exit.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--gst-debug-level=LEVEL</option></term>
+         <listitem>
+          <para>Default debug level from 1 (only error) to 5 (anything) or 0 for no output.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--gst-debug=LIST</option></term>
+        <listitem>
+          <para>Comma-separated list of category_name:level pairs to set specific levels for the individual categories. Example: GST_AUTOPLUG:5,GST_ELEMENT_*:3.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--gst-debug-no-color</option></term>
+        <listitem>
+          <para>Disable colored debugging output.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--gst-debug-disable</option></term>
+        <listitem>
+          <para>Disable debugging.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--gst-plugin-spew</option></term>
+        <listitem>
+          <para>Enable verbose plugin loading diagnostics.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--gst-plugin-path=PATHS</option></term>
+        <listitem>
+          <para>Colon-separated paths containing plugins.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--gst-plugin-load=PLUGINS</option></term>
+        <listitem>
+	    <para>Comma-separated list of plugins to preload in addition to the list stored in environment variable GST_PLUGIN_PATH.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--gst-disable-segtrap</option></term>
+        <listitem>
+          <para>Disable trapping of segmentation faults during plugin loading.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--gst-disable-registry-update</option></term>
+        <listitem>
+	    <para>Disable updating the registry.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--gst-disable-registry-fork</option></term>
+        <listitem>
+          <para>Disable the use of fork() while scanning the registry.</para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+
+    <para>GTK+ Options:</para>
+  
+      <variablelist>
+      <varlistentry>
+        <term><option>--class=CLASS</option></term>
+        <listitem>
+          <para>Program class as used by the window manager.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--name=NAME</option></term>
+        <listitem>
+          <para>Program name as used by the window manager.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--screen=SCREEN</option></term>
+        <listitem>
+          <para>X screen to use.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--sync</option></term>
+	<listitem>
+          <para>Make X calls synchronous.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--gtk-module=MODULES</option></term>
+        <listitem>
+          <para>Load additional GTK+ modules.</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
+        <term><option>--g-fatal-warnings</option></term>
+        <listitem>
+          <para>Make all warnings fatal.</para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+
+
+<para>Session management Options:</para>
+
+     <variablelist>
+      <varlistentry>
+        <term><option>--sm-client-id=ID</option></term>
+        <listitem>
+          <para>Specify session management ID.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--sm-client-state-file=FILE</option></term>
+        <listitem>
+          <para>Specify file containing saved configuration.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><option>--sm-disable</option></term>
+        <listitem>
+          <para>Disable connection to session manager.</para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+
+  </refsect1>
+  <refsect1>
+    <title>SEE ALSO</title>
+
+    <para><application>gnome-cd</application>(1), <application>sound-juicer</application>(1), <application>grip</application>(1)</para>
+  </refsect1>
+  <refsect1>
+    <title>AUTHOR</title>
+
+    <para>This manual page was written by &dhusername; &dhemail; for
+	the &debian; system (but may be used by others).  It was later updated
+	by &dhuusername; &dhuemail;. Permission is
+      granted to copy, distribute and/or modify this document under
+      the terms of the &gnu; General Public License, Version 2 or any 
+      later version published by the Free Software Foundation.
+    </para>
+	<para>
+	    On &debian; systems, the complete text of the GNU General Public
+	  License can be found in /usr/share/common-licenses/GPL.
+	</para>
+
+  </refsect1>
+</refentry>
+
+<!-- Keep this comment at the end of the file
+Local variables:
+mode: sgml
+sgml-omittag:t
+sgml-shorttag:t
+sgml-minimize-attributes:nil
+sgml-always-quote-attributes:t
+sgml-indent-step:2
+sgml-indent-data:t
+sgml-parent-document:nil
+sgml-default-dtd-file:nil
+sgml-exposed-tags:nil
+sgml-local-catalogs:nil
+sgml-local-ecat-files:nil
+End:
+-->
+
