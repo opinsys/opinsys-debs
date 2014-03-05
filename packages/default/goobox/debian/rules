@@ -169,4 +169,10 @@ binary-arch: build install
 	dh_builddeb -- -Zxz
 
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+get-orig-source:
+	wget http://archive.ubuntu.com/ubuntu/pool/universe/g/goobox/goobox_3.2.1.orig.tar.xz -O ../goobox_3.2.1.orig.tar.xz
+	tar -J -x -f ../goobox_$(SRC_VERSION).orig.tar.xz --strip-components=1 -C .
+
+.PHONY: build clean binary-indep binary-arch binary install get-orig-source
