@@ -1,3 +1,9 @@
+goobox (3.2.1-2+opinsys1) quantal; urgency=low
+
+  * Loosen build-dep on libgtk-3.0-dev (>= 3.6)
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 05 Mar 2014 15:29:35 +0200
+
 goobox (3.2.1-2) unstable; urgency=low
 
   * Add libxml2-utils to build dependencies to avoid a FTBFS.
