@@ -4,7 +4,7 @@ set -eu
 set -x
 
 sudo apt-get update
-sudo apt-get install -y --force-yes puavo-devscripts libcrypt-ssleay-perl
+sudo apt-get install -y --force-yes puavo-devscripts libcrypt-ssleay-perl aptirepo-upload
 
 package=$1
 
