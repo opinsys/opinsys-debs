@@ -22,7 +22,7 @@ DEBIAN_REV_CODE := $(shell echo $(DEBIAN_VERSION) | sed 's/^.*-\([0-9]*\)[^-]*$$
 BUILD_DATE=$(shell perl -e '($$s,$$m,$$h,$$d,$$M,$$y) = gmtime((stat("mozilla/client.mk"))[9]); printf "%04d%02d%02d\n",$$y + 1900,$$M + 1,$$d;')
 export MOZ_BUILD_DATE=$(BUILD_DATE)$(DEBIAN_REV_CODE)
 
-CFLAGS += -Wall -pipe -DDEBIAN -fPIC
+CFLAGS += -Wall -pipe -DDEBIAN -fPIC -fpermissive
 CXXFLAGS += -DDEBIAN
 
 CONFIGURE_OPTIONS = ac_add_options --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE)
