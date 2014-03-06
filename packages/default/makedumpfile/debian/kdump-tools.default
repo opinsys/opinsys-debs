@@ -36,6 +36,9 @@ USE_KDUMP=0
 #         KDUMP_FAIL_CMD="echo 'makedumpfile FAILED.'; /bin/bash; reboot -f"
 KDUMP_COREDIR="/var/crash"
 #KDUMP_FAIL_CMD="reboot -f"
+#KDUMP_SSH_SERVER=
+#KDUMP_SSH_ARGS=
+#KDUMP_SSH_REMOTE_COMMAND="makedumpfile -R vmcore"
 
 
 # ---------------------------------------------------------------------------

@@ -399,6 +399,24 @@ function kdump_save_core()
 		MAKEDUMP_ARGS=${MAKEDUMP_ARGS:="-c -d 1"}
 	fi
 
+        if [ -n "$KDUMP_SSH_SERVER" ]; then
+            # Append -F to flatten for SSH transfer
+            MAKEDUMP_ARGS="-F $MAKEDUMP_ARGS"
+            if [ -z "${KDUMP_SSH_REMOTE_COMMAND}" ]; then
+                KDUMP_SSH_REMOTE_COMMAND="makedumpfile -R dumpfile"
+            fi
+            makedumpfile $MAKEDUMP_ARGS $vmcore_file | ssh ${KDUMP_SSH_ARGS} \
+                "${KDUMP_SSH_SERVER}" "${KDUMP_SSH_REMOTE_COMMAND}"
+            if [ $? == 0 ]; then
+                log_success_msg "$NAME: saved vmcore through ssh"
+                logger -t $NAME "saved vmcore through ssh"
+                return 0
+            fi
+            log_failure_msg "$NAME: failed to save vmcore through ssh"
+            logger -t $NAME "failed to save vmcore through ssh"
+            return 1
+        fi
+
 	# Move previously linked kernel particulars into dump directory.
 	[ -e $kernel_link ] && mv $kernel_link $KDUMP_STAMPDIR
 	[ -e $kconfig_link ] && mv $kconfig_link $KDUMP_STAMPDIR
