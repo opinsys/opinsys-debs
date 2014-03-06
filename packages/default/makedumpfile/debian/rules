@@ -11,3 +11,10 @@ override_dh_installinit:
 	# (which just unloads the kdump kernel) so that we can catch crashes
 	# all the way until actual shutdown.
 	dh_installinit -pkdump-tools -- start 11 2 3 4 5 .
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+get-orig-source:
+	wget http://archive.ubuntu.com/ubuntu/pool/main/m/makedumpfile/makedumpfile_$(SRC_VERSION).orig.tar.gz -O ../makedumpfile_$(SRC_VERSION).orig.tar.gz
+	tar -z -x -f ../makedumpfile_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
+
+.PHONY: get-orig-source
