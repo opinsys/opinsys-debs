@@ -1,3 +1,9 @@
+makedumpfile (1.4.4-1+opinsys1) quantal; urgency=low
+
+  * Add support for kdumping over SSH
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Thu, 06 Mar 2014 10:00:30 +0200
+
 makedumpfile (1.4.4-1) unstable; urgency=low
 
   * New upstream version
