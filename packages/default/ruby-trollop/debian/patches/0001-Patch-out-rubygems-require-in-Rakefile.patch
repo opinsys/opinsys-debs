@@ -1,0 +1,19 @@
+From: Per Andersson <avtobiff@gmail.com>
+Date: Thu, 26 Apr 2012 01:18:29 +0200
+Subject: Patch out rubygems require in Rakefile.
+
+---
+ Rakefile |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/Rakefile b/Rakefile
+index d379118..d433c8a 100644
+--- a/Rakefile
++++ b/Rakefile
+@@ -1,4 +1,4 @@
+-require 'rubygems'
++#require 'rubygems'
+ $:.unshift "lib"
+ require 'trollop'
+ require 'rake/gempackagetask.rb'
+-- 
