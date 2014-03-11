@@ -11,5 +11,10 @@
 # If you need to specify the .gemspec (eg there is more than one)
 #export DH_RUBY_GEMSPEC=gem.gemspec
 
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+get-orig-source:
+	uscan --download-current-version --force-download --rename
+	tar -z -x -f ../ruby-trollop_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
+
 %:
 	dh $@ --buildsystem=ruby --with ruby
