@@ -1,15 +1,64 @@
-qpdf (4.0.1-2+opinsys2) precise; urgency=low
+qpdf (5.1.1-1) unstable; urgency=medium
 
-  * Using debhelper 9 is fine.
+  * New upstream release.
 
- -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Wed, 29 May 2013 13:14:57 +0300
+ -- Jay Berkenbilt <qjb@debian.org>  Tue, 14 Jan 2014 15:51:35 -0500
 
-qpdf (4.0.1-2+opinsys1) precise; urgency=low
+qpdf (5.1.0-1) unstable; urgency=medium
 
-  * Backported to Precise.
-    - use debhelper 8 instead of 9
+  * New upstream release
+  * Use dh-autoreconf (Closes: #732093)
+  * Update standards to 3.9.5.  No changes required.
 
- -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Tue, 28 May 2013 10:14:05 +0300
+ -- Jay Berkenbilt <qjb@debian.org>  Tue, 17 Dec 2013 15:50:11 -0500
+
+qpdf (5.0.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Jay Berkenbilt <qjb@debian.org>  Fri, 18 Oct 2013 12:53:02 -0400
+
+qpdf (5.0.0-2) unstable; urgency=low
+
+  * Upload to unstable
+
+ -- Jay Berkenbilt <qjb@debian.org>  Fri, 26 Jul 2013 09:45:50 -0400
+
+qpdf (5.0.0-1) experimental; urgency=low
+
+  * New upstream release
+
+ -- Jay Berkenbilt <qjb@debian.org>  Wed, 10 Jul 2013 13:34:36 -0400
+
+qpdf (4.2.0-2) unstable; urgency=low
+
+  * Revert ABI change caused by bug fix.  The bug fix will be re-released
+    in qpdf 5.0.0.  (Closes: #715448)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Wed, 10 Jul 2013 13:00:43 -0400
+
+qpdf (4.2.0-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sun, 07 Jul 2013 19:05:03 -0400
+
+qpdf (4.1.0-2) unstable; urgency=low
+
+  * Re-upload to unstable.
+  * Build depend on autotools-dev to always get latest config.sub and
+    config.guess
+  * Update standards version to 3.9.4.  No changes made.  (qpdf is a C++
+    library with versioned symbols that version "*", so we continue to use
+    a shlibs file instead of a symbols file.)
+
+ -- Jay Berkenbilt <qjb@debian.org>  Tue, 07 May 2013 14:15:47 -0400
+
+qpdf (4.1.0-1) experimental; urgency=low
+
+  * New upstream release
+
+ -- Jay Berkenbilt <qjb@debian.org>  Sun, 14 Apr 2013 14:51:40 -0400
 
 qpdf (4.0.1-2) experimental; urgency=low
 
