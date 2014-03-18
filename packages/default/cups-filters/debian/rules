@@ -64,3 +64,10 @@ endif
 	install -D -m 644 debian/local/modules-load.conf debian/cups-filters/etc/modules-load.d/cups-filters.conf
 
 	dh_apparmor -pcups-browsed --profile-name=usr.sbin.cups-browsed
+
+PACKAGE = $(shell dpkg-parsechangelog | sed -r -n 's/^Source: (.*)/\1/p')
+SRC_VERSION = $(shell dpkg-parsechangelog | sed -r -n -e 's/^Version: (([0-9]+):)?(.*)-.*/\3/p')
+.PHONY: get-orig-source
+get-orig-source:
+	uscan --download-current-version --repack --no-symlink --rename
+	tar -z -x -v -f ../$(PACKAGE)_$(SRC_VERSION).orig.tar.gz --strip-components=1
