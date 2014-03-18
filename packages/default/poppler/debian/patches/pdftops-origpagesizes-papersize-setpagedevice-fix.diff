@@ -1,0 +1,55 @@
+--- a/poppler/PSOutputDev.cc
++++ b/poppler/PSOutputDev.cc
+@@ -1433,10 +1433,10 @@
+   switch (mode) {
+   case psModePSOrigPageSizes:
+     paperMatch = gTrue;
+-    prevWidth = 0;
+-    prevHeight = 0;
+   case psModePS:
+     if (paperMatch) {
++      prevWidth = 0;
++      prevHeight = 0;
+       // We do not add the "%%DocumentMedia: ..." lines when using
+       // "-origpagesizes" as these lines break many PostScript viewers
+       // assuming all pages have the first format (the one in the
+@@ -3597,24 +3597,21 @@
+     writePSFmt("%%PageOrientation: {0:s}\n",
+ 	       landscape ? "Landscape" : "Portrait");
+     if (paperMatch) {
+-      writePSFmt("{0:d} {1:d} pdfSetupPaper\n", imgURX, imgURY);
+-      if (mode == psModePSOrigPageSizes) {
+-	// Set page size only when it actually changes, as otherwise Duplex
+-	// printing does not work
+-	if (rotate == 0 || rotate == 180) {
+-	  if ((width != prevWidth) || (height != prevHeight)) {
+-	    writePSFmt("<</PageSize [{0:d} {1:d}]>> setpagedevice\n",
+-		       width, height);
+-	    prevWidth = width;
+-	    prevHeight = height;
+-	  }
+-	} else {
+-	  if ((height != prevWidth) || (width != prevHeight)) {
+-	    writePSFmt("<</PageSize [{0:d} {1:d}]>> setpagedevice\n",
+-		       height, width);
+-	    prevWidth = height;
+-	    prevHeight = width;
+-	  }
++      // Set page size only when it actually changes, as otherwise Duplex
++      // printing does not work
++      if (rotate == 0 || rotate == 180) {
++	if ((width != prevWidth) || (height != prevHeight)) {
++	  writePSFmt("{0:d} {1:d} pdfSetupPaper\n",
++		     width, height);
++	  prevWidth = width;
++	  prevHeight = height;
++	}
++      } else {
++	if ((height != prevWidth) || (width != prevHeight)) {
++	  writePSFmt("{0:d} {1:d} pdfSetupPaper\n",
++		     height, width);
++	  prevWidth = height;
++	  prevHeight = width;
+ 	}
+       }
+     }

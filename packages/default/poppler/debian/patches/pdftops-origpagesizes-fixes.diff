@@ -1,0 +1,100 @@
+--- a/poppler/PSOutputDev.cc
++++ b/poppler/PSOutputDev.cc
+@@ -1432,15 +1432,21 @@
+ 
+   switch (mode) {
+   case psModePSOrigPageSizes:
++    paperMatch = gTrue;
+     prevWidth = 0;
+     prevHeight = 0;
+   case psModePS:
+-    if (paperMatch) {      
+-      for (i = 0; i < paperSizes->getLength(); ++i) {
+-	size = (PSOutPaperSize *)paperSizes->get(i);
+-	writePSFmt("%%{0:s} {1:d}x{2:d} {1:d} {2:d} 0 () ()\n",
+-		   i==0 ? "DocumentMedia:" : "+", size->w, size->h);
+-      }
++    if (paperMatch) {
++      // We do not add the "%%DocumentMedia: ..." lines when using
++      // "-origpagesizes" as these lines break many PostScript viewers
++      // assuming all pages have the first format (the one in the
++      // "%%DocumentMedia: ..." line).
++      if (mode != psModePSOrigPageSizes)
++	for (i = 0; i < paperSizes->getLength(); ++i) {
++	  size = (PSOutPaperSize *)paperSizes->get(i);
++	  writePSFmt("%%{0:s} {1:d}x{2:d} {1:d} {2:d} 0 () ()\n",
++		     i==0 ? "DocumentMedia:" : "+", size->w, size->h);
++	}
+     } else {
+       writePSFmt("%%DocumentMedia: plain {0:d} {1:d} 0 () ()\n",
+ 		 paperWidth, paperHeight);
+@@ -3550,34 +3556,6 @@
+   switch (mode) {
+ 
+   case psModePSOrigPageSizes:
+-    x1 = (int)floor(state->getX1());
+-    y1 = (int)floor(state->getY1());
+-    x2 = (int)ceil(state->getX2());
+-    y2 = (int)ceil(state->getY2());
+-    width = x2 - x1;
+-    height = y2 - y1;
+-    if (width > height) {
+-      landscape = gTrue;
+-    } else {
+-      landscape = gFalse;
+-    }
+-    writePSFmt("%%PageBoundingBox: {0:d} {1:d} {2:d} {3:d}\n", x1, y1, x2 - x1, y2 - y1);
+-    writePS("%%BeginPageSetup\n");
+-    writePSFmt("%%PageOrientation: {0:s}\n",
+-	       landscape ? "Landscape" : "Portrait");
+-    if ((width != prevWidth) || (height != prevHeight)) {
+-      // Set page size only when it actually changes, as otherwise Duplex
+-      // printing does not work
+-      writePSFmt("<</PageSize [{0:d} {1:d}]>> setpagedevice\n", width, height);
+-      prevWidth = width;
+-      prevHeight = height;
+-    }
+-    writePS("pdfStartPage\n");
+-    writePSFmt("{0:d} {1:d} {2:d} {3:d} re W\n", x1, y1, x2 - x1, y2 - y1);
+-    writePS("%%EndPageSetup\n");
+-    ++seqPage;
+-    break;
+-
+   case psModePS:
+     // rotate, translate, and scale page
+     imgWidth = imgURX - imgLLX;
+@@ -3620,6 +3598,25 @@
+ 	       landscape ? "Landscape" : "Portrait");
+     if (paperMatch) {
+       writePSFmt("{0:d} {1:d} pdfSetupPaper\n", imgURX, imgURY);
++      if (mode == psModePSOrigPageSizes) {
++	// Set page size only when it actually changes, as otherwise Duplex
++	// printing does not work
++	if (rotate == 0 || rotate == 180) {
++	  if ((width != prevWidth) || (height != prevHeight)) {
++	    writePSFmt("<</PageSize [{0:d} {1:d}]>> setpagedevice\n",
++		       width, height);
++	    prevWidth = width;
++	    prevHeight = height;
++	  }
++	} else {
++	  if ((height != prevWidth) || (width != prevHeight)) {
++	    writePSFmt("<</PageSize [{0:d} {1:d}]>> setpagedevice\n",
++		       height, width);
++	    prevWidth = height;
++	    prevHeight = width;
++	  }
++	}
++      }
+     }
+     writePS("pdfStartPage\n");
+     if (rotate == 0) {
+@@ -3670,7 +3667,7 @@
+     if (tx0 >= 0 && ty0 >= 0) {
+       tx += (rotate == 0 || rotate == 180) ? tx0 : ty0;
+       ty += (rotate == 0 || rotate == 180) ? ty0 : -tx0;
+-    } else if (globalParams->getPSCenter()) {
++    } else if (mode != psModePSOrigPageSizes && globalParams->getPSCenter()) {
+       if (clipLLX0 < clipURX0 && clipLLY0 < clipURY0) {
+ 	tx += (imgWidth2 - xScale * (clipURX0 - clipLLX0)) / 2;
+ 	ty += (imgHeight2 - yScale * (clipURY0 - clipLLY0)) / 2;

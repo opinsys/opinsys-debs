@@ -1,0 +1,5 @@
+ltmain-as-needed.diff
+qt-visibility.diff
+pdftops-origpagesizes-fixes.diff
+pdftops-origpagesizes-papersize-setpagedevice-fix.diff
+upstream_fix_qt5_moc_detection.diff
