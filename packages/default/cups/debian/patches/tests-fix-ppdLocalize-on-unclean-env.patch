@@ -7,7 +7,7 @@ Last-Update: 2012-09-18
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 --- a/cups/testppd.c
 +++ b/cups/testppd.c
-@@ -494,6 +494,14 @@
+@@ -496,6 +496,14 @@
      * Test localization...
      */
  

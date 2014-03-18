@@ -22,7 +22,7 @@
   capability setgid,
   capability setuid,
   capability audit_write,
-#  deny capability block_suspend, ## Commented out because this capability is not available in Precise
+  deny capability block_suspend,
 
   # nasty, but we limit file access pretty tightly, and cups chowns a
   # lot of files to 'lp' which it cannot read/write afterwards any
@@ -55,6 +55,7 @@
   /dev/parport* rw,
   /etc/cups/ rw,
   /etc/cups/** rw,
+  /etc/cups/interfaces/* ixrw,
   /etc/foomatic/* r,
   /etc/gai.conf r,
   /etc/papersize r,
@@ -134,6 +135,9 @@
   # likewise authentication
   /etc/likewise r,
   /etc/likewise/* r,
+
+  # silence noise
+  deny /etc/udev/udev.conf r,
 
   # Site-specific additions and overrides. See local/README for details.
   #include <local/usr.sbin.cupsd>

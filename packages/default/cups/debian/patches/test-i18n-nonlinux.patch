@@ -11,4 +11,4 @@ Bug-Debian: http://bugs.debian.org/662996
 +#if !defined(__linux__) && !defined(__GLIBC__)
    fputs("cupsCharsetToUTF8(CUPS_EUC_JP): ", stdout);
  
-   strcpy(legsrc, legdest);
+   strlcpy(legsrc, legdest, sizeof(legsrc));

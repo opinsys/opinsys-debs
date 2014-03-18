@@ -18,5 +18,5 @@
 	endscript
 	compress
 	notifempty
-	create 640 root lpadmin
+	create
 }

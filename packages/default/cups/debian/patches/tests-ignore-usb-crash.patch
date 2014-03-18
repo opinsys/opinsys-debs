@@ -5,16 +5,16 @@ Description: Ignore
  on Debian/Ubuntu buildds.
 Author: Martin Pitt <mpitt@debian.org>
 Author: Didier Raboud <odyx@debian.org>
-Last-Update: 2012-11-01
+Last-Update: 2013-01-09
 
 --- a/test/run-stp-tests.sh
 +++ b/test/run-stp-tests.sh
-@@ -823,7 +823,7 @@
+@@ -897,7 +897,7 @@
  fi
  
  # Error log messages
 -count=`$GREP '^E ' /tmp/cups-$user/log/error_log | wc -l | awk '{print $1}'`
-+count=`$GREP '^E ' /tmp/cups-$user/log/error_log | grep -v '(usb) crashed on signal 11' | grep -v '(dnssd) stopped with status 1' | wc -l | awk '{print $1}'`
++count=`$GREP '^E ' /tmp/cups-$user/log/error_log | $GREP -v '(usb) crashed on signal 11' | $GREP -v '(dnssd) stopped with status 1' | wc -l | awk '{print $1}'`
  if test $count != 33; then
  	echo "FAIL: $count error messages, expected 33."
  	$GREP '^E ' /tmp/cups-$user/log/error_log

@@ -33,13 +33,10 @@ case "$1" in
 	rm -rf /etc/cups/ssl
 	rm -rf /etc/cups/passwd.md5
 	rm -rf /etc/cups/cups.d
-	rm -rf /etc/cups/cupsd.conf
+	rm -f /etc/cups/cupsd.conf
+	rm -f /etc/cups/cupsd.conf.pre16-bak
 	rm -f /etc/cups/printers.conf* /etc/cups/classes.conf*
 	rmdir /etc/cups 2>/dev/null || true
-	rm -f /etc/apparmor.d/disable/usr.sbin.cupsd || true
-	rm -f /etc/apparmor.d/force-complain/usr.sbin.cupsd || true
-	rm -f /etc/apparmor.d/local/usr.sbin.cupsd || true
-	rmdir /etc/apparmor.d/local 2>/dev/null || true
 	;;
     abort-upgrade)
         if [ -e /etc/cups/cupsd.conf.conffile-bak ]; then

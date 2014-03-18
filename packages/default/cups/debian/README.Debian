@@ -6,7 +6,7 @@ of the Debian package. When necessary, other versions will be specified
 explicitly.  This is because there is a very important difference in the
 behaviour of cups and cups 1.5.x (or older versions) regarding advertising
 print queues. In almost every other regard, the behaviour of cups is
-identical to its preceeding versions.
+identical to its preceding versions.
 
 We will we also use 'standard' to mean a Debian cups installation which
 pulls in all recommended packages. This will set you up with a complete
@@ -104,20 +104,26 @@ check the setting for 'BrowseRemoteProtocols' in its configuration file,
 Advertising your local queues
 =============================
 
-Your standard cups install automatically uses the Bonjour protocol to
-advertise any print queues you choose to share. If you do not want it to
-do so you have to stop avahi-daemon running. But, remember, if you go
-down that path you will no longer be able to access the Bonjour shared
-queues of other servers.
+Your cups install (standard or not) automatically uses only the Bonjour
+protocol to advertise any print queues you choose to share. Sharing
+print queues may be done either by
 
-Ok, you keep avahi-daemon running and let it do its job. Everything is now
-alright? Not quite! A 1.6.x machine listening to your broadcasts will be
-capable of processing them but a 1.5.x (or older) machine will not be.
-This is because it usually does not have cups-browsed available to install
-so can only process CUPS/IPP protocol broadcasts. But, once again,
-cups-browsed on your machine can help your cups daemon out.  Please read
-its documentation.
+   * setting 'Browsing' to 'On' or 'Off' in /etc/cups/cusd.conf
+or
+   * Using the Administration section of the web interface
 
+Having done this, finer control over individual print queues can be
+achieved in /etc/cups/printers.conf with 'Shared' as 'On' or 'Off' for
+chosen printers. Alternatively, a print queue can be modified from the
+Printers section of the web interface.
+
+Ok, you have chosen to share; everything is now alright? Not quite! A
+1.6.x machine listening to your Bonjour broadcasts will be capable of
+processing them with the aid of cups-browsed but a 1.5.x (or older)
+machine will not be. This is because it usually does not have
+cups-browsed available to install so can only process CUPS/IPP protocol
+broadcasts. But, once again, cups-browsed on your machine can help your
+cups daemon out. Please read its documentation.
 
 Printing without using a local cups daemon
 ==========================================

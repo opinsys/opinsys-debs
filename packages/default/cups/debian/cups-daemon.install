@@ -1,6 +1,5 @@
 var/
 etc/cups/cups-files.conf
-etc/cups/cupsd.conf.default
 usr/lib/cups/backend/ipp
 usr/lib/cups/backend/ipps
 usr/lib/cups/backend/ipp14
@@ -8,6 +7,7 @@ usr/lib/cups/backend/http
 usr/lib/cups/backend/https
 usr/lib/cups/notifier
 usr/share/cups/mime/mime.types
+usr/share/cups/cupsd.conf.default
 usr/sbin/cupsd
 usr/share/man/man5/classes.conf.5.gz
 usr/share/man/man5/cupsd.conf.5.gz

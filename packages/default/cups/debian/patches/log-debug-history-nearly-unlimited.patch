@@ -2,7 +2,7 @@ Author: till.kamppeter@gmail.com
 
 --- a/scheduler/conf.c
 +++ b/scheduler/conf.c
-@@ -724,7 +724,7 @@
+@@ -702,7 +702,7 @@
    KeepAlive                = TRUE;
    KeepAliveTimeout         = DEFAULT_KEEPALIVE;
    ListenBackLog            = SOMAXCONN;
@@ -13,7 +13,7 @@ Author: till.kamppeter@gmail.com
    LogTimeFormat            = CUPSD_TIME_STANDARD;
 --- a/scheduler/conf.h
 +++ b/scheduler/conf.h
-@@ -167,7 +167,7 @@
+@@ -166,7 +166,7 @@
  					/* Allow overrides? */
  			ConfigFilePerm		VALUE(0640),
  					/* Permissions for config files */

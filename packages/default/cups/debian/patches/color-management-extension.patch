@@ -1,0 +1,1177 @@
+Description: Color management per queue using colord.
+Author: Joe Simon <jsimon383@gmail.com>
+Last-Update: 2014-01-04
+--- a/cgi-bin/admin.c
++++ b/cgi-bin/admin.c
+@@ -27,6 +27,8 @@
+  *   do_list_printers()        - List available printers.
+  *   do_menu()                 - Show the main menu.
+  *   do_set_allowed_users()    - Set the allowed/denied users for a queue.
++ *   do_update_ppd()           - Enable/Disable color management for a queue.
++ *   do_set_timestamp()        - Set the server default printer/class.
+  *   do_set_default()          - Set the server default printer/class.
+  *   do_set_options()          - Configure the default options for a queue.
+  *   do_set_sharing()          - Set printer-is-shared value.
+@@ -46,6 +48,7 @@
+ #include <fcntl.h>
+ #include <sys/wait.h>
+ #include <limits.h>
++#include <time.h>
+ 
+ 
+ /*
+@@ -82,6 +85,12 @@
+ static char	*get_option_value(ppd_file_t *ppd, const char *name,
+ 		                  char *buffer, size_t bufsize);
+ static double	get_points(double number, const char *uval);
++/* Per-queue extension */
++static void     do_set_timestamp(http_t* http, ipp_t* request);
++static void     do_update_ppd(http_t* http, 
++                              ipp_t *request, int is_cm, 
++                              const char* file);
++
+ 
+ 
+ /*
+@@ -697,6 +706,10 @@
+           }
+ 	}
+ 
++	if ((attr = ippFindAttribute(response, "ppd-timestamp",
++	                             IPP_TAG_TEXT)) != NULL)
++	  cgiSetVariable("PPD_TIMESTAMP", attr->values[0].string.text);
++
+ 	if ((attr = ippFindAttribute(response, "printer-info",
+ 	                             IPP_TAG_TEXT)) != NULL)
+ 	  cgiSetVariable("PRINTER_INFO", attr->values[0].string.text);
+@@ -852,12 +865,17 @@
+ 		*response,		/* IPP response */
+ 		*oldinfo;		/* Old printer information */
+   const cgi_file_t *file;		/* Uploaded file, if any */
+-  const char	*var;			/* CGI variable */
++  const char	*var,			/* CGI variable */
++              	*cm_var;		/* Color-management variable */
+   char		uri[HTTP_MAX_URI],	/* Device or printer URI */
+ 		*uriptr;		/* Pointer into URI */
+-  int		maxrate;		/* Maximum baud rate */
++  int		maxrate,		/* Maximum baud rate */
++  		is_per_queue,		/* Using per-queue interface? */
++                is_colormanaged;        /* Color management on? */
+   char		baudrate[255];		/* Baud rate string */
++  char		new_makeppd[1024];	/* New make file PPD */
+   const char	*name,			/* Pointer to class name */
++                *printer,		/* Pointer to class name */
+ 		*ptr;			/* Pointer to CGI variable */
+   const char	*title;			/* Title of page */
+   static int	baudrates[] =		/* Baud rates */
+@@ -909,14 +927,38 @@
+   else
+     oldinfo = NULL;
+ 
++   /*
++    * If asked for a per-queue job...
++    */
++  if((var = cgiGetVariable("PER_QUEUE_SUBMIT")) != NULL)
++  {
++    cgiStartHTML("Replace PPD");
++    cgiCopyTemplateLang("replace-ppd.tmpl");
++    cgiEndHTML();
++  }
++
+   file = cgiGetFile();
+ 
++  if ((var = cgiGetVariable("PER_QUEUE")) != NULL)
++    is_per_queue = 1;
++  else 
++    is_per_queue = 0;
++
+   if (file)
+   {
+     fprintf(stderr, "DEBUG: file->tempfile=%s\n", file->tempfile);
+     fprintf(stderr, "DEBUG: file->name=%s\n", file->name);
+     fprintf(stderr, "DEBUG: file->filename=%s\n", file->filename);
+     fprintf(stderr, "DEBUG: file->mimetype=%s\n", file->mimetype);
++  } 
++  else if (is_per_queue)
++  {
++    cgiSetVariable("ERROR",
++	           cgiText(_("No PPD file specified.")));
++    cgiStartHTML(title);
++    cgiCopyTemplateLang("error.tmpl");
++    cgiEndHTML();
++    return;
+   }
+ 
+   if ((name = cgiGetVariable("PRINTER_NAME")) != NULL)
+@@ -1128,10 +1170,19 @@
+ 	                             IPP_TAG_TEXT)) != NULL)
+           cgiSetVariable("PRINTER_LOCATION", attr->values[0].string.text);
+ 
++        if ((attr = ippFindAttribute(oldinfo, "ppd-timestamp",
++	                             IPP_TAG_TEXT)) != NULL)
++          cgiSetVariable("PPD_TIMESTAMP", attr->values[0].string.text);
++
+ 	if ((attr = ippFindAttribute(oldinfo, "printer-is-shared",
+ 				     IPP_TAG_BOOLEAN)) != NULL)
+ 	  cgiSetVariable("PRINTER_IS_SHARED",
+ 			 attr->values[0].boolean ? "1" : "0");
++
++        if ((attr = ippFindAttribute(oldinfo, "printer-is-colormanaged",
++				     IPP_TAG_BOOLEAN)) != NULL)
++	  cgiSetVariable("PRINTER_IS_COLORMANAGED",
++			 attr->values[0].boolean ? "1" : "0");      
+       }
+ 
+       cgiCopyTemplateLang("modify-printer.tmpl");
+@@ -1148,6 +1199,7 @@
+       else
+ #endif /* __APPLE__ */
+         cgiSetVariable("printer_is_shared", "0");
++        cgiSetVariable("printer_is_colormanaged", "1");
+ 
+       cgiCopyTemplateLang("add-printer.tmpl");
+     }
+@@ -1169,7 +1221,6 @@
+       */
+ 
+       int		fd;		/* PPD file */
+-      char		filename[1024];	/* PPD filename */
+       ppd_file_t	*ppd;		/* PPD information */
+       char		buffer[1024];	/* Buffer */
+       int		bytes;		/* Number of bytes */
+@@ -1191,28 +1242,27 @@
+         fprintf(stderr, "ERROR: Unable to get PPD file %s: %d - %s\n",
+ 	        uri, get_status, httpStatus(get_status));
+       }
+-      else if ((fd = cupsTempFd(filename, sizeof(filename))) >= 0)
++      else if ((fd = cupsTempFd(new_makeppd, sizeof(new_makeppd))) >= 0)
+       {
+ 	while ((bytes = httpRead2(http, buffer, sizeof(buffer))) > 0)
+           write(fd, buffer, bytes);
+ 
+ 	close(fd);
+ 
+-        if ((ppd = ppdOpenFile(filename)) != NULL)
++        if ((ppd = ppdOpenFile(new_makeppd)) != NULL)
+ 	{
+ 	  if (ppd->manufacturer)
+ 	    cgiSetVariable("CURRENT_MAKE", ppd->manufacturer);
+ 
+ 	  if (ppd->nickname)
+ 	    cgiSetVariable("CURRENT_MAKE_AND_MODEL", ppd->nickname);
+-
++      
+           ppdClose(ppd);
+-          unlink(filename);
+ 	}
+ 	else
+ 	{
+ 	  fprintf(stderr, "ERROR: Unable to open PPD file %s: %s\n",
+-	          filename, ppdErrorString(ppdLastError(&bytes)));
++	          new_makeppd, ppdErrorString(ppdLastError(&bytes)));
+ 	}
+       }
+       else
+@@ -1296,7 +1346,7 @@
+ 	cgiCopyTemplateLang("choose-make.tmpl");
+         cgiEndHTML();
+       }
+-      else
++      else if (!cgiGetVariable("PER_QUEUE_SUBMIT"))
+       {
+        /*
+ 	* Let the user choose a model...
+@@ -1336,6 +1386,7 @@
+     *    ppd-name
+     *    device-uri
+     *    printer-is-accepting-jobs
++    *    printer-is-colormanaged
+     *    printer-is-shared
+     *    printer-state
+     */
+@@ -1395,17 +1446,56 @@
+     ippAddBoolean(request, IPP_TAG_PRINTER, "printer-is-shared",
+                   var && (!strcmp(var, "1") || !strcmp(var, "on")));
+ 
++    cm_var = cgiGetVariable("printer_is_colormanaged");
++    ippAddBoolean(request, IPP_TAG_PRINTER, "printer-is-colormanaged",
++                  cm_var && (!strcmp(cm_var, "1") || !strcmp(cm_var, "on")));
++
+     ippAddInteger(request, IPP_TAG_PRINTER, IPP_TAG_ENUM, "printer-state",
+                   IPP_PRINTER_IDLE);
+ 
++   if (cm_var && (!strcmp(cm_var, "1") || !strcmp(cm_var, "on")))
++     is_colormanaged = 1;
++   else
++     is_colormanaged = 0;
++
+    /*
+     * Do the request and get back a response...
+     */
+ 
+     if (file)
+-      ippDelete(cupsDoFileRequest(http, request, "/admin/", file->tempfile));
+-    else
+-      ippDelete(cupsDoRequest(http, request, "/admin/"));
++    {
++     /*
++      * If user uploads a PPD, mark color management in file...
++      */
++     if (modify)
++        do_set_timestamp(http, request);
++
++     do_update_ppd(http, request, is_colormanaged, file->tempfile);
++    } 
++    else if (cupsGetPPD2(http, new_makeppd))
++    {
++     /*
++      * Obtain a PPD from a specific make
++      */
++      if (modify)
++        do_set_timestamp(http, request);
++
++      do_update_ppd(http, request, is_colormanaged, new_makeppd); 
++      unlink(new_makeppd);
++    }
++    else 
++    {
++     /*
++      * If no new file is added, we only mark color management 
++      * in the existing printer.
++      */
++      var = cgiGetVariable("PRINTER_NAME");
++    
++      const char *filename = cupsGetPPD2(http, var);
++
++      do_update_ppd(http, request, is_colormanaged, filename);
++      unlink(filename);
++    }
+ 
+     if (cupsLastError() == IPP_NOT_AUTHORIZED)
+     {
+@@ -1423,14 +1513,16 @@
+      /*
+       * Redirect successful updates back to the printer page...
+       */
+-
+       char	refresh[1024];		/* Refresh URL */
+ 
+-
+       cgiFormEncode(uri, name, sizeof(uri));
+ 
+-      snprintf(refresh, sizeof(refresh),
+-	       "5;/admin/?OP=redirect&URL=/printers/%s", uri);
++      if (!is_per_queue)
++        snprintf(refresh, sizeof(refresh),
++	         "5;/admin/?OP=redirect&URL=/printers/%s", uri);
++      else
++        snprintf(refresh, sizeof(refresh),
++	         "5;/admin/?OP=redirect&URL=/printers/", uri);
+ 
+       cgiSetVariable("refresh_page", refresh);
+ 
+@@ -1443,7 +1535,6 @@
+      /*
+       * Set the printer options...
+       */
+-
+       cgiSetVariable("OP", "set-printer-options");
+       do_set_options(http, 0);
+       return;
+@@ -3015,6 +3106,120 @@
+   }
+ }
+ 
++/*
++ * 'do_update_ppd()' - Refreshes the PPD file for a given queue
++ */
++
++static void     
++do_update_ppd(http_t* http, ipp_t* request, int is_cm, const char* file)
++{
++   char		line[1024];		/* Line from PPD file */ 
++   cups_file_t	*in,			/* Input file */
++  	        *out;			/* Output file */
++   const char *temp = "/tmp/temp.ppd";
++
++   if (!request)     
++     return;
++   else if(!file)
++   {
++     ippDelete(cupsDoRequest(http, request, "/admin/")); 
++     return;
++   }
++
++   in = cupsFileOpen(file, "r");
++   out = cupsFileOpen(temp, "w");
++
++  /*
++   * Here we enable or disable color management inside
++   * a PPD file.
++   */
++   while (cupsFileGets(in, line, sizeof(line)))
++   {
++     if (!strncmp(line, "*OpenUI *Resolution", 19) ||
++         !strncmp(line, "*OpenUI *ColorModel", 19) ||
++         !strncmp(line, "*OpenUI *MediaType", 18))
++     {            
++        do
++        {
++           if (!is_cm)
++             cupsFilePuts(out, "*%(CM_OFF)");
++
++             cupsFilePrintf(out, "%s\n", line);             
++        } while (cupsFileGets(in, line, sizeof(line)) &&
++                 strncmp(line, "*CloseUI", 8) != 0);
++
++        if (!is_cm)
++          cupsFilePuts(out, "*%(CM_OFF)");
++
++        cupsFilePrintf(out, "%s\n", line); 
++     }
++     else if (!strncmp(line, "*%(CM_OFF)*OpenUI *Resolution", 29) ||
++              !strncmp(line, "*%(CM_OFF)*OpenUI *ColorModel", 29) ||
++              !strncmp(line, "*%(CM_OFF)*OpenUI *MediaType", 28))
++     {       
++        if(is_cm)
++        {
++          do             
++          {
++           cupsFilePrintf(out, "%s\n", line+10); 
++          } while (cupsFileGets(in, line, sizeof(line)) &&
++                   strncmp(line, "*%(CM_OFF)*CloseUI", 18) != 0);
++           cupsFilePrintf(out, "%s\n", line+10); 
++        }
++     }
++     else if (!strncmp(line, "*cupsICCProfile", 15))
++     {
++        if (!is_cm)
++          cupsFilePuts(out, "*%(CM_OFF)");
++
++        cupsFilePrintf(out, "%s\n", line);
++     }
++     else if (!strncmp(line, "*%(CM_OFF)*cupsICCProfile", 25))
++     {
++        if (is_cm)
++          cupsFilePrintf(out, "%s\n", line+10); 
++        else 
++          cupsFilePrintf(out, "%s\n", line); 
++     }
++     else if (!strncmp(line, "*cupsICCQualifier", 17))
++     {
++        if (!is_cm)
++          cupsFilePuts(out, "*%(CM_OFF)");
++
++        cupsFilePrintf(out, "%s\n", line);
++     }
++     else if (!strncmp(line, "*%(CM_OFF)*cupsICCQualifier", 27))
++     {
++        if (is_cm)
++          cupsFilePrintf(out, "%s\n", line+10); 
++        else 
++          cupsFilePrintf(out, "%s\n", line); 
++     }
++     else
++       cupsFilePrintf(out, "%s\n", line);
++   }
++     
++   cupsFileClose(in);
++   cupsFileClose(out);
++
++   ippDelete(cupsDoFileRequest(http, request, "/admin/", temp)); 
++}
++
++static 
++void     do_set_timestamp(http_t* http, ipp_t* request)
++{
++   time_t       curtime;
++   struct tm    *loctime;	
++
++   /*
++    * Update the PPD 'last modified' timestamp.
++    */
++   curtime = time(NULL);
++   loctime = localtime (&curtime);
++
++   ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_TEXT, "ppd-timestamp",
++                 NULL, asctime(loctime));     
++}
+ 
+ /*
+  * 'do_set_default()' - Set the server default printer/class.
+--- a/cgi-bin/printers.c
++++ b/cgi-bin/printers.c
+@@ -27,7 +27,7 @@
+ #include "cgi-private.h"
+ #include <errno.h>
+ 
+-
++    const cgi_file_t *file;
+ /*
+  * Local functions...
+  */
+@@ -59,7 +59,6 @@
+ 		  "printer-uri-supported"
+ 		};
+ 
+-
+  /*
+   * Get any form variables...
+   */
+@@ -353,7 +352,7 @@
+     ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_NAME,
+         	 "requesting-user-name", NULL, user);
+ 
+-  cgiGetAttributes(request, "printers.tmpl");
++    cgiGetAttributes(request, "printers.tmpl");
+ 
+  /*
+   * Do the request and get back a response...
+--- a/cups/cups.h
++++ b/cups/cups.h
+@@ -244,7 +244,10 @@
+   CUPS_PRINTER_SCANNER = 0x2000000,	/* Scanner-only device
+ 					 * @since CUPS 1.4/OS X 10.6@ */
+   CUPS_PRINTER_MFP = 0x4000000,		/* Printer with scanning capabilities
+-					 * @since CUPS 1.4/OS X 10.6@ */
++					 * @since CUPS 1.4/OS X
++10.5@ */
++  CUPS_CM_OFF = 0x800000,	       /* Printer is not color-managed
++					 * @since CUPS 1.2/OS X 10.6@ */
+   CUPS_PRINTER_OPTIONS = 0x6fffc	/* ~(CLASS | REMOTE | IMPLICIT |
+ 					 * DEFAULT | FAX | REJECTING | DELETE |
+ 					 * NOT_SHARED | AUTHENTICATED |
+--- a/cups/dest.c
++++ b/cups/dest.c
+@@ -1433,11 +1433,13 @@
+ #ifdef __APPLE__
+ 		  "media-supported",
+ #endif /* __APPLE__ */
++                  "ppd-timestamp",
+ 		  "printer-commands",
+ 		  "printer-defaults",
+ 		  "printer-info",
+ 		  "printer-is-accepting-jobs",
+-		  "printer-is-shared",
++		  "printer-is-colormanaged",
++                  "printer-is-shared"
+ 		  "printer-location",
+ 		  "printer-make-and-model",
+ 		  "printer-mandatory-job-attributes",
+@@ -1542,8 +1544,10 @@
+ 	    !strcmp(attr->name, "marker-message") ||
+ 	    !strcmp(attr->name, "marker-names") ||
+ 	    !strcmp(attr->name, "marker-types") ||
++	    !strcmp(attr->name, "ppd-timestamp") ||
+ 	    !strcmp(attr->name, "printer-commands") ||
+ 	    !strcmp(attr->name, "printer-info") ||
++	    !strcmp(attr->name, "printer-is-colormanaged") ||
+ 	    !strcmp(attr->name, "printer-is-shared") ||
+ 	    !strcmp(attr->name, "printer-make-and-model") ||
+ 	    !strcmp(attr->name, "printer-mandatory-job-attributes") ||
+--- a/cups/encode.c
++++ b/cups/encode.c
+@@ -288,6 +288,7 @@
+   { 0, "ppd-type",		IPP_TAG_KEYWORD,	IPP_TAG_OPERATION,
+ 							IPP_TAG_ZERO,
+ 							cups_get_ppds },
++  { 0, "ppd-timestamp",	        IPP_TAG_TEXT,		IPP_TAG_PRINTER },
+   { 0, "ppi",			IPP_TAG_INTEGER,	IPP_TAG_JOB },
+   { 0, "ppi-default",		IPP_TAG_INTEGER,	IPP_TAG_PRINTER },
+   { 0, "prettyprint",		IPP_TAG_BOOLEAN,	IPP_TAG_JOB },
+@@ -299,6 +300,7 @@
+   { 0, "printer-error-policy",	IPP_TAG_NAME,		IPP_TAG_PRINTER },
+   { 0, "printer-info",		IPP_TAG_TEXT,		IPP_TAG_PRINTER },
+   { 0, "printer-is-accepting-jobs", IPP_TAG_BOOLEAN,	IPP_TAG_PRINTER },
++  { 0, "printer-is-colormanaged",	IPP_TAG_BOOLEAN,	IPP_TAG_PRINTER },
+   { 0, "printer-is-shared",	IPP_TAG_BOOLEAN,	IPP_TAG_PRINTER },
+   { 0, "printer-location",	IPP_TAG_TEXT,		IPP_TAG_PRINTER },
+   { 0, "printer-make-and-model", IPP_TAG_TEXT,		IPP_TAG_PRINTER },
+--- a/cups/ipp-support.c
++++ b/cups/ipp-support.c
+@@ -1533,6 +1533,7 @@
+     "pdf-k-octets-supported",		/* CUPS extension */
+     "pdf-versions-supported",		/* CUPS extension */
+     "pdl-override-supported",
++    "ppd-timestamp",
+     "port-monitor",			/* CUPS extension */
+     "port-monitor-supported",		/* CUPS extension */
+     "preferred-attributes-supported",
+@@ -1556,6 +1557,7 @@
+     "printer-icons",
+     "printer-info",
+     "printer-is-accepting-jobs",
++    "printer-is-colormanaged",
+     "printer-is-shared",		/* CUPS extension */
+     "printer-kind",			/* IPP Paid Printing */
+     "printer-location",
+--- a/doc/Makefile
++++ b/doc/Makefile
+@@ -97,6 +97,7 @@
+ 			help/network.html \
+ 			help/options.html \
+ 			help/overview.html \
++			help/perqueue.html \
+ 			help/policies.html \
+ 			help/postscript-driver.html \
+ 			help/ppd-compiler.html \
+--- /dev/null
++++ b/doc/help/perqueue.html
+@@ -0,0 +1,34 @@
++<HTML>
++<!-- SECTION: Getting Started -->
++<HEAD>
++	<TITLE>Using the Per-Queue Interface</TITLE>
++	<LINK REL="STYLESHEET" TYPE="text/css" HREF="../cups-printable.css">
++</HEAD>
++<BODY>
++
++<P>This version of CUPS has been enhanced with an interface for per-queue color management, allowing a much easier way for color-savvy users to test and distribute printer drivers in order to produce precise results.</P>
++
++<P>In addition to a new interface, a means to disable color management for a given queue has been included as well. This makes it so that target printing can be achieved on individual queues.</P>
++
++<H2 CLASS="title"><A NAME="USING">How Do I Use It?</A></H2>
++
++<P>Click on the <A HREF="http://localhost:631/printers">Printers</A> tab at
++the top of this page. There you will see the usual interface for managing your 
++printers, along with an additional "Settings" column for each of your queues.</P>
++
++<P>There are two buttons available for each printer. <B>Download</B> simply lets you save the PPD file currently associated with a queue (where available) to your computer. If want to change the currently associated driver, use <B>Replace</B> to upload a PPD file from your hard drive. This will update the queue and mark a time stamp in the “Last Modified” column. Note that if you added a queue, the time stamp will simply display an asterisk (*).</P>
++
++<P>Modifying any queue requires administrative privileges.</P>
++
++<H2 CLASS="title"><A NAME="COLOR">Color Management</A></H2>
++
++<P>A feature to enable/disable color management has been implemented. To use it, you will need to select a queue in <A HREF="http://localhost:631/printers">Printers</A> (listed below "Queue Name"). Once selected, click on the “Administration” combo box located below the header, and select “Modify Printer”.</P>
++
++<P>You will be asked to make the usual changes to a queue, but you will also see a “Color Management” check box option, where a check will enable color management for a printer. Un-check if you wish to use the queue for duties such as target printing.</P>
++
++<P>Color management is enabled by default whenever you add a new queue.</P>
++
++<BLOCKQUOTE>This build was produced during the 2013 Google Summer of Code. As such, it is still experimental and a few bugs will likely need to be addressed in the future.</BLOCKQUOTE>
++
++</BODY>
++</HTML>
+--- /dev/null
++++ b/doc/index.html
+@@ -0,0 +1,109 @@
++<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
++<HTML>
++<HEAD>
++	<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
++	<TITLE>Home - CUPS 1.6.1</TITLE>
++	<LINK REL="STYLESHEET" TYPE="text/css" HREF="/cups.css">
++	<LINK REL="SHORTCUT ICON" HREF="/images/cups-icon.png" TYPE="image/png">
++</HEAD>
++<BODY>
++<TABLE CLASS="page" SUMMARY="{title}">
++<TR><TD CLASS="body">
++<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" SUMMARY="">
++<TR HEIGHT="36">
++<TD><A HREF="http://www.cups.org/" TARGET="_blank"><IMG
++SRC="/images/left.gif" WIDTH="64" HEIGHT="36" BORDER="0" ALT=""></A></TD>
++<TD CLASS="sel"><A HREF="/">&nbsp;&nbsp;Home&nbsp;&nbsp;</A></TD>
++<TD CLASS="unsel"><A HREF="/admin">&nbsp;&nbsp;Administration&nbsp;&nbsp;</A></TD>
++<TD CLASS="unsel"><A HREF="/classes/">&nbsp;&nbsp;Classes&nbsp;&nbsp;</A></TD>
++<TD CLASS="unsel"><A HREF="/help/">&nbsp;&nbsp;Online&nbsp;Help&nbsp;&nbsp;</A></TD>
++<TD CLASS="unsel"><A HREF="/jobs/">&nbsp;&nbsp;Jobs&nbsp;&nbsp;</A></TD>
++<TD CLASS="unsel"><A HREF="/printers/">&nbsp;&nbsp;Printers&nbsp;&nbsp;</A></TD>
++<TD CLASS="unsel" WIDTH="100%"><FORM ACTION="/help/" METHOD="GET"><INPUT
++TYPE="SEARCH" NAME="QUERY" SIZE="20" PLACEHOLDER="Search Help"
++AUTOSAVE="org.cups.help" RESULTS="20"></FORM></TD>
++<TD><IMG SRC="/images/right.gif" WIDTH="4" HEIGHT="36" ALT=""></TD>
++</TR>
++</TABLE>
++
++<TABLE CLASS="indent" SUMMARY="">
++<TR><TD STYLE="padding-right: 20px;">
++
++<H1>CUPS 1.6.1</H1>
++
++<P>CUPS is the standards-based, open source printing system developed by
++<A HREF="http://www.apple.com/">Apple Inc.</A> for OS<SUP>&reg;</SUP> X and
++other UNIX<SUP>&reg;</SUP>-like operating systems.</P>
++
++</TD>
++<TD><A HREF="http://www.cups.org/"><IMG SRC="images/cups-icon.png" WIDTH="128"
++HEIGHT="128" ALT="CUPS"></A></TD>
++</TR>
++</TABLE>
++
++<TABLE CLASS="indent" SUMMARY="">
++<TR><TD VALIGN="top" STYLE="border-right: dotted thin #cccccc; padding-right: 20px;">
++
++<H2>CUPS for Users</H2>
++
++<P><A HREF="help/overview.html">Overview of CUPS</A></P>
++
++<P><A HREF="help/options.html">Command-Line Printing and Options</A></P>
++
++<P><A HREF="help/perqueue.html">Using the Per-Queue Interface</A></P>
++
++<P><A HREF="help/whatsnew.html">What's New in CUPS 1.6</A></P>
++
++<P><A HREF="http://www.cups.org/newsgroups.php?gcups.general">User Forum</A></P>
++
++</TD><TD VALIGN="top" STYLE="border-right: dotted thin #cccccc; padding-left: 20px; padding-right: 20px;">
++
++<H2>CUPS for Administrators</H2>
++
++<P><A HREF="admin">Adding Printers and Classes</A></P>
++
++<P><A HREF="help/policies.html">Managing Operation Policies</A></P>
++
++<P><A HREF="help/accounting.html">Printer Accounting Basics</A></P>
++
++<P><A HREF="help/security.html">Server Security</A></P>
++
++<P><A HREF="help/kerberos.html">Using Kerberos Authentication</A></P>
++
++<P><A HREF="help/network.html">Using Network Printers</A></P>
++
++<P><A HREF="help/ref-cupsd-conf.html">cupsd.conf Reference</A></P>
++
++<P><A HREF="http://www.cups.org/ppd.php">Find Printer Drivers</A></P>
++
++</TD><TD VALIGN="top" STYLE="padding-left: 20px;">
++
++<H2>CUPS for Developers</H2>
++
++<P><A HREF="help/api-overview.html">Introduction to CUPS Programming</A></P>
++
++<P><A HREF="help/api-cups.html">CUPS API</A></P>
++
++<P><A HREF="help/api-filter.html">Filter and Backend Programming</A></P>
++
++<P><A HREF="help/api-httpipp.html">HTTP and IPP APIs</A></P>
++
++<P><A HREF="help/api-ppd.html">PPD API</A></P>
++
++<P><A HREF="help/api-raster.html">Raster API</A></P>
++
++<P><A HREF="help/ref-ppdcfile.html">PPD Compiler Driver Information File Reference</A></P>
++
++<P><A HREF="http://www.cups.org/newsgroups.php?gcups.development">Developer Forum</A></P>
++
++</TD></TR>
++</TABLE>
++
++</TD></TR>
++<TR><TD>&nbsp;</TD></TR>
++<TR><TD CLASS="trailer">CUPS and the CUPS logo are trademarks of
++<A HREF="http://www.apple.com">Apple Inc.</A> CUPS is copyright 2007-2012 Apple
++Inc. All rights reserved.</TD></TR>
++</TABLE>
++</BODY>
++</HTML>
+--- a/scheduler/classes.c
++++ b/scheduler/classes.c
+@@ -506,6 +506,26 @@
+ 	                "Syntax error on line %d of classes.conf.",
+ 	                linenum);
+     }
++    else if (!_cups_strcasecmp(line, "ColorManaged"))
++    {
++     /*
++      * Set the initial color-managed state...
++      */
++
++      if (value &&
++          (!_cups_strcasecmp(value, "yes") ||
++           !_cups_strcasecmp(value, "on") ||
++           !_cups_strcasecmp(value, "true")))
++        p->color_managed = 1;
++      else if (value &&
++               (!_cups_strcasecmp(value, "no") ||
++        	!_cups_strcasecmp(value, "off") ||
++        	!_cups_strcasecmp(value, "false")))
++        p->color_managed = 0;
++      else
++	cupsdLogMessage(CUPSD_LOG_ERROR,
++	                "Syntax error on line %d of printers.conf.", linenum);
++    }
+     else if (!_cups_strcasecmp(line, "Shared"))
+     {
+      /*
+@@ -772,6 +792,11 @@
+     else
+       cupsFilePuts(fp, "Accepting No\n");
+ 
++    if (pclass->color_managed)
++      cupsFilePuts(fp, "ColorManaged Yes\n");
++    else
++      cupsFilePuts(fp, "ColorManaged No\n");
++
+     if (pclass->shared)
+       cupsFilePuts(fp, "Shared Yes\n");
+     else
+--- a/scheduler/cups-lpd.c
++++ b/scheduler/cups-lpd.c
+@@ -71,7 +71,7 @@
+ 			   int num_options, cups_option_t *options);
+ static int	get_printer(http_t *http, const char *name, char *dest,
+ 		            int destsize, cups_option_t **options,
+-			    int *accepting, int *shared, ipp_pstate_t *state);
++			    int *accepting, int *color_managed, int *shared, ipp_pstate_t *state);
+ static int	print_file(http_t *http, int id, const char *filename,
+ 		           const char *docname, const char *user,
+ 			   const char *format, int last);
+@@ -412,6 +412,7 @@
+             int           destsize,	/* I - Size of destination buffer */
+ 	    cups_option_t **options,	/* O - Printer options */
+ 	    int           *accepting,	/* O - printer-is-accepting-jobs value */
++            int           *color_managed,	/* O - printer-is-colormanaged value */
+ 	    int           *shared,	/* O - printer-is-shared value */
+ 	    ipp_pstate_t  *state)	/* O - printer-state value */
+ {
+@@ -430,6 +431,7 @@
+ 		{			/* Requested attributes */
+ 		  "printer-info",
+ 		  "printer-is-accepting-jobs",
++		  "printer-is-colormanaged",
+ 		  "printer-is-shared",
+ 		  "printer-name",
+ 		  "printer-state"
+@@ -442,6 +444,8 @@
+ 
+   if (accepting)
+     *accepting = 0;
++  if (color_managed)
++    *color_managed = 0;
+   if (shared)
+     *shared = 0;
+   if (state)
+@@ -488,6 +492,7 @@
+     */
+ 
+     ipp_attribute_t	*accepting_attr,/* printer-is-accepting-jobs */
++			*cm_attr,	/* printer-is-colormanaged */
+ 			*info_attr,	/* printer-info */
+ 			*name_attr,	/* printer-name */
+ 			*shared_attr,	/* printer-is-shared */
+@@ -547,6 +552,7 @@
+       */
+ 
+       accepting_attr = NULL;
++      cm_attr        = NULL;
+       info_attr      = NULL;
+       name_attr      = NULL;
+       shared_attr    = NULL;
+@@ -563,6 +569,9 @@
+ 	else if (!strcmp(attr->name, "printer-name") &&
+ 	         attr->value_tag == IPP_TAG_NAME)
+ 	  name_attr = attr;
++	else if (!strcmp(attr->name, "printer-is-colormanaged") &&
++	         attr->value_tag == IPP_TAG_BOOLEAN)
++	  cm_attr = attr;
+ 	else if (!strcmp(attr->name, "printer-is-shared") &&
+ 	         attr->value_tag == IPP_TAG_BOOLEAN)
+ 	  shared_attr = attr;
+@@ -585,6 +594,9 @@
+ 	if (accepting && accepting_attr)
+ 	  *accepting = accepting_attr->values[0].boolean;
+ 
++	if (color_managed && cm_attr)
++	  *color_managed = cm_attr->values[0].boolean;
++
+ 	if (shared && shared_attr)
+ 	  *shared = shared_attr->values[0].boolean;
+ 
+@@ -622,6 +634,19 @@
+ 	*accepting = attr->values[0].boolean;
+     }
+ 
++   if (color_managed)
++   {
++    if ((attr = ippFindAttribute(response, "printer-is-colormanaged",
++				   IPP_TAG_BOOLEAN)) == NULL)
++      {
++	syslog(LOG_ERR, "No printer-is-colormanaged attribute found in "
++			"response from server!");
++	*color_managed = 1;
++      }
++      else
++       *color_managed = attr->values[0].boolean;
++    }
++
+     if (shared)
+     {
+       if ((attr = ippFindAttribute(response, "printer-is-shared",
+@@ -654,7 +679,7 @@
+ 
+   num_options = 0;
+ 
+-  if (options && shared && accepting)
++  if (options && color_managed && shared && accepting)
+   {
+     if ((cups_serverroot = getenv("CUPS_SERVERROOT")) == NULL)
+       cups_serverroot = CUPS_SERVERROOT;
+@@ -796,6 +821,7 @@
+ 		docname[1024],		/* Document name */
+ 		dest[256];		/* Printer/class queue */
+   int		accepting,		/* printer-is-accepting */
++		color_managed,		/* printer-is-colormanaged */
+ 		shared,			/* printer-is-shared */
+ 		num_options;		/* Number of options */
+   cups_option_t	*options;		/* Options */
+@@ -823,7 +849,7 @@
+   */
+ 
+   num_options = get_printer(http, queue, dest, sizeof(dest), &options,
+-                            &accepting, &shared, NULL);
++                            &accepting, &color_managed, &shared, NULL);
+ 
+   if (num_options < 0 || !accepting || !shared)
+   {
+@@ -1372,7 +1398,7 @@
+   * Get the actual destination name and printer state...
+   */
+ 
+-  if (get_printer(http, queue, dest, sizeof(dest), NULL, NULL, NULL, &state))
++  if (get_printer(http, queue, dest, sizeof(dest), NULL, NULL, NULL, NULL, &state))
+   {
+     syslog(LOG_ERR, "Unable to get printer %s: %s", queue,
+            cupsLastErrorString());
+--- a/scheduler/ipp.c
++++ b/scheduler/ipp.c
+@@ -974,6 +974,10 @@
+                                IPP_TAG_TEXT)) != NULL)
+     cupsdSetString(&pclass->info, attr->values[0].string.text);
+ 
++  if ((attr = ippFindAttribute(con->request, "ppd-timestamp",
++                               IPP_TAG_TEXT)) != NULL)
++    cupsdSetString(&pclass->ppd_timestamp, attr->values[0].string.text);
++
+   if ((attr = ippFindAttribute(con->request, "printer-is-accepting-jobs",
+                                IPP_TAG_BOOLEAN)) != NULL &&
+       attr->values[0].boolean != pclass->accepting)
+@@ -1001,6 +1005,13 @@
+     pclass->shared = attr->values[0].boolean;
+   }
+ 
++  if ((attr = ippFindAttribute(con->request, "printer-is-colormanaged",
++                               IPP_TAG_BOOLEAN)) != NULL)
++  {
++    if (pclass->color_managed && !attr->values[0].boolean)
++        pclass->color_managed = attr->values[0].boolean;
++  }
++
+   if ((attr = ippFindAttribute(con->request, "printer-state",
+                                IPP_TAG_ENUM)) != NULL)
+   {
+@@ -2332,6 +2343,10 @@
+                                IPP_TAG_TEXT)) != NULL)
+     cupsdSetString(&printer->info, attr->values[0].string.text);
+ 
++  if ((attr = ippFindAttribute(con->request, "ppd-timestamp",
++                               IPP_TAG_TEXT)) != NULL)
++    cupsdSetString(&printer->ppd_timestamp, attr->values[0].string.text);
++
+   set_device_uri = 0;
+ 
+   if ((attr = ippFindAttribute(con->request, "device-uri",
+@@ -2491,6 +2506,12 @@
+ 		  printer->accepting ? "Now" : "No longer");
+   }
+ 
++if ((attr = ippFindAttribute(con->request, "printer-is-colormanaged",
++                               IPP_TAG_BOOLEAN)) != NULL)
++  {
++    printer->color_managed = attr->values[0].boolean;
++  }
++
+   if ((attr = ippFindAttribute(con->request, "printer-is-shared",
+                                IPP_TAG_BOOLEAN)) != NULL)
+   {
+@@ -4905,6 +4926,10 @@
+     ippAddBoolean(con->response, IPP_TAG_PRINTER, "printer-is-shared",
+                   printer->shared);
+ 
++  if (!ra || cupsArrayFind(ra, "printer-is-colormanaged"))
++    ippAddBoolean(con->response, IPP_TAG_PRINTER, "printer-is-colormanaged",
++                  printer->color_managed);
++
+   if (!ra || cupsArrayFind(ra, "printer-more-info"))
+   {
+     httpAssembleURIf(HTTP_URI_CODING_ALL, printer_uri, sizeof(printer_uri),
+@@ -4953,6 +4978,9 @@
+     if (!printer->shared)
+       type |= CUPS_PRINTER_NOT_SHARED;
+ 
++    if (!printer->color_managed)
++      type |= CUPS_CM_OFF;
++
+     ippAddInteger(con->response, IPP_TAG_PRINTER, IPP_TAG_ENUM, "printer-type",
+ 		  type);
+   }
+--- a/scheduler/printers.c
++++ b/scheduler/printers.c
+@@ -95,12 +95,13 @@
+   cupsdSetString(&p->uuid, _httpAssembleUUID(ServerName, RemotePort, name, 0,
+                                              uuid, sizeof(uuid)));
+   cupsdSetDeviceURI(p, "file:///dev/null");
+-
+-  p->state      = IPP_PRINTER_STOPPED;
+-  p->state_time = time(NULL);
+-  p->accepting  = 0;
+-  p->shared     = DefaultShared;
+-  p->filetype   = mimeAddType(MimeDatabase, "printer", name);
++  cupsdSetString(&p->ppd_timestamp, "*");
++  p->state         = IPP_PRINTER_STOPPED;
++  p->state_time    = time(NULL);
++  p->accepting     = 0;
++  p->color_managed = 1;
++  p->shared        = DefaultShared;
++  p->filetype      = mimeAddType(MimeDatabase, "printer", name);
+ 
+   cupsdSetString(&p->job_sheets[0], "none");
+   cupsdSetString(&p->job_sheets[1], "none");
+@@ -754,6 +755,7 @@
+   cupsdClearString(&p->job_sheets[0]);
+   cupsdClearString(&p->job_sheets[1]);
+   cupsdClearString(&p->device_uri);
++  cupsdClearString(&p->ppd_timestamp);
+   cupsdClearString(&p->sanitized_device_uri);
+   cupsdClearString(&p->port_monitor);
+   cupsdClearString(&p->op_policy);
+@@ -953,6 +955,11 @@
+       if (value)
+ 	cupsdSetString(&p->make_model, value);
+     }
++    else if (!_cups_strcasecmp(line, "PPDTimeStamp"))
++    {
++      if (value)
++	cupsdSetString(&p->ppd_timestamp, value);
++    }
+     else if (!_cups_strcasecmp(line, "Location"))
+     {
+       if (value)
+@@ -1110,6 +1117,26 @@
+ 	cupsdLogMessage(CUPSD_LOG_ERROR,
+ 	                "Syntax error on line %d of printers.conf.", linenum);
+     }
++    else if (!_cups_strcasecmp(line, "ColorManaged"))
++    {
++     /*
++      * Set the initial color-managed state...
++      */
++
++      if (value &&
++          (!_cups_strcasecmp(value, "yes") ||
++           !_cups_strcasecmp(value, "on") ||
++           !_cups_strcasecmp(value, "true")))
++        p->color_managed = 1;
++      else if (value &&
++               (!_cups_strcasecmp(value, "no") ||
++        	!_cups_strcasecmp(value, "off") ||
++        	!_cups_strcasecmp(value, "false")))
++        p->color_managed = 0;
++      else
++	cupsdLogMessage(CUPSD_LOG_ERROR,
++	                "Syntax error on line %d of printers.conf.", linenum);
++    }
+     else if (!_cups_strcasecmp(line, "JobSheets"))
+     {
+      /*
+@@ -1416,6 +1443,9 @@
+ 
+     cupsFilePutConf(fp, "DeviceURI", printer->device_uri);
+ 
++    if (printer->ppd_timestamp)
++      cupsFilePutConf(fp, "PPDTimeStamp", printer->ppd_timestamp);
++
+     if (printer->port_monitor)
+       cupsFilePutConf(fp, "PortMonitor", printer->port_monitor);
+ 
+@@ -1449,6 +1479,11 @@
+     else
+       cupsFilePuts(fp, "Shared No\n");
+ 
++    if (printer->color_managed)
++      cupsFilePuts(fp, "ColorManaged Yes\n");
++    else
++      cupsFilePuts(fp, "ColorManaged No\n");
++
+     snprintf(value, sizeof(value), "%s %s", printer->job_sheets[0],
+              printer->job_sheets[1]);
+     cupsFilePutConf(fp, "JobSheets", value);
+@@ -2090,6 +2125,8 @@
+                NULL, p->info ? p->info : "");
+   ippAddString(p->attrs, IPP_TAG_PRINTER, IPP_TAG_URI, "printer-uuid", NULL,
+ 	       p->uuid);
++  ippAddString(p->attrs, IPP_TAG_PRINTER, IPP_TAG_TEXT,
++               "ppd-timestamp", NULL, p->ppd_timestamp ? p->ppd_timestamp : "*");
+ 
+   if (cupsArrayCount(p->users) > 0)
+   {
+@@ -3032,6 +3069,7 @@
+ 			     "\t\t<%s/>\n"
+ 			     "\t\t<key>printer-location</key>\n"
+ 			     "\t\t<string>", p->accepting ? "true" : "false");
++
+ 	  write_xml_string(fp, p->location);
+ 	  cupsFilePuts(fp, "</string>\n"
+ 			   "\t\t<key>printer-make-and-model</key>\n"
+--- a/scheduler/printers.h
++++ b/scheduler/printers.h
+@@ -70,6 +70,7 @@
+ 		*error_policy;		/* Error policy */
+   cupsd_policy_t *op_policy_ptr;	/* Pointer to operation policy */
+   int		shared;			/* Shared? */
++  int		color_managed;		/* Color Managed? */
+   int		accepting;		/* Accepting jobs? */
+   int		holding_new_jobs;	/* Holding new jobs for printing? */
+   int		in_implicit_class;	/* In an implicit class? */
+@@ -81,6 +82,7 @@
+   char		*job_sheets[2];		/* Banners/job sheets */
+   cups_ptype_t	type;			/* Printer type (color, small, etc.) */
+   char		*device_uri;		/* Device URI */
++  char		*ppd_timestamp;	        /* Driver Modification Date */
+   char		*sanitized_device_uri;	/* Sanitized device URI */
+   char		*port_monitor;		/* Port monitor */
+   int		raw;			/* Raw queue? */
+--- a/templates/Makefile
++++ b/templates/Makefile
+@@ -79,6 +79,7 @@
+ 		printer-stop.tmpl \
+ 		printers.tmpl \
+ 		printers-header.tmpl \
++		replace-ppd.tmpl \
+ 		restart.tmpl \
+ 		samba-export.tmpl \
+ 		samba-exported.tmpl \
+--- a/templates/add-printer.tmpl
++++ b/templates/add-printer.tmpl
+@@ -38,10 +38,15 @@
+ Share This Printer</TD>
+ </TR>
+ <TR>
++<TH CLASS="label">Color Management:</TH>
++<TD><INPUT TYPE="CHECKBOX" NAME="PRINTER_IS_COLORMANAGED" {PRINTER_IS_COLORMANAGED=1?CHECKED:}>
++Enabled</TD>
++</TR>
++<TR>
+ <TD></TD>
+ <TD><INPUT TYPE="SUBMIT" VALUE="Continue"></TD>
+ </TR>
+ </TABLE>
+ 
+ </FORM>
+-</DIV>
+\ No newline at end of file
++</DIV>
+--- a/templates/choose-make.tmpl
++++ b/templates/choose-make.tmpl
+@@ -34,6 +34,10 @@
+ {?printer_is_shared=?Do Not:{?printer_is_shared=0?Do Not:}} Share This Printer</TD>
+ </TR>
+ <TR>
++<TH CLASS="label">Color Management:</TH>
++<TD><INPUT TYPE="HIDDEN" NAME="PRINTER_IS_COLORMANAGED" VALUE="{?printer_is_colormanaged}">{?printer_is_colormanaged=?Not:{?printer_is_colormanaged=0?Not:}} Enabled</TD>
++</TR>
++<TR>
+ <TH CLASS="label">Make:</TH>
+ <TD>
+ <SELECT NAME="PPD_MAKE" SIZE="10">
+@@ -61,4 +65,4 @@
+ </TABLE>
+ 
+ </FORM>
+-</DIV>
+\ No newline at end of file
++</DIV>
+--- a/templates/choose-model.tmpl
++++ b/templates/choose-model.tmpl
+@@ -33,6 +33,10 @@
+ {?printer_is_shared=?Do Not:{?printer_is_shared=0?Do Not:}} Share This Printer</TD>
+ </TR>
+ <TR>
++<TH CLASS="label">Color Management:</TH>
++<TD><INPUT TYPE="HIDDEN" NAME="PRINTER_IS_COLORMANAGED" VALUE="{?printer_is_colormanaged}">{?printer_is_colormanaged=?Not:{?printer_is_colormanaged=0?Not:}} Enabled</TD>
++</TR>
++<TR>
+ <TH CLASS="label">Make:</TH>
+ <TD>{PPD_MAKE} <INPUT TYPE="SUBMIT" NAME="SELECT_MAKE" VALUE="Select Another Make/Manufacturer"></TD>
+ </TR>
+@@ -57,4 +61,4 @@
+ </TABLE>
+ 
+ </FORM>
+-</DIV>
+\ No newline at end of file
++</DIV>
+--- a/templates/modify-printer.tmpl
++++ b/templates/modify-printer.tmpl
+@@ -32,6 +32,11 @@
+ Share This Printer</TD>
+ </TR>
+ <TR>
++<TH CLASS="label">Color Management:</TH>
++<TD><INPUT TYPE="CHECKBOX" NAME="PRINTER_IS_COLORMANAGED" {PRINTER_IS_COLORMANAGED=1?CHECKED:}>
++Enabled</TD>
++</TR>
++<TR>
+ <TR>
+ <TD></TD>
+ <TD><INPUT TYPE="SUBMIT" VALUE="Continue"></TD>
+--- a/templates/printer.tmpl
++++ b/templates/printer.tmpl
+@@ -3,7 +3,7 @@
+ <H2 CLASS="title"><A HREF="{printer_uri_supported}">{printer_name}</A>
+ ({printer_state=3?Idle:{printer_state=4?Processing:Paused}},
+ {printer_is_accepting_jobs=0?Rejecting Jobs:Accepting Jobs},
+-{server_is_sharing_printers=0?Not:{printer_is_shared=0?Not:}} Shared{default_name={printer_name}?, Server Default:})</H2>
++{server_is_sharing_printers=0?Not:{printer_is_shared=0?Not:}} Shared{default_name={printer_name}?, Server Default:}, {printer_is_colormanaged=0?Not Color-Managed:Color-Managed})</H2>
+ 
+ <FORM METHOD="POST" ACTION="{printer_uri_supported}" NAME="maintenance">
+ <INPUT TYPE="HIDDEN" NAME="org.cups.sid" VALUE="{$org.cups.sid}">
+@@ -44,4 +44,4 @@
+ {sides_default?sides={sides_default}:}</TD></TR>
+ </TABLE>
+ 
+-</DIV>
+\ No newline at end of file
++</DIV>
+--- /dev/null
++++ b/templates/replace-ppd.tmpl
+@@ -0,0 +1,40 @@
++
++<DIV CLASS="indent">
++
++<H2 CLASS="title">Replace {printer_name} PPD File</H2>
++
++<FORM METHOD="POST" ENCTYPE="multipart/form-data" ACTION="/admin">
++
++<INPUT TYPE="HIDDEN" NAME="PRINTER_IS_SHARED" VALUE="{?printer_is_shared}">
++<INPUT TYPE="HIDDEN" NAME="BAUDRATE" VALUE="{?baudrate}">
++<INPUT TYPE="HIDDEN" NAME="BITS" VALUE="{?bits}">
++<INPUT TYPE="HIDDEN" NAME="PARITY" VALUE="{?parity}">
++<INPUT TYPE="HIDDEN" NAME="FLOW" VALUE="{?flow}">
++<INPUT TYPE="HIDDEN" NAME="DEVICE_URI" VALUE="{device_uri}">
++<INPUT TYPE="HIDDEN" NAME="printer_name" VALUE="{?printer_name}">
++<INPUT TYPE="HIDDEN" NAME="PER_QUEUE" VALUE="1">
++<INPUT TYPE="HIDDEN" NAME="PRINTER_INFO" VALUE="{printer_info}">
++<INPUT TYPE="HIDDEN" NAME="org.cups.sid" VALUE="{$org.cups.sid}">
++<INPUT TYPE="HIDDEN" NAME="OP" VALUE="{op}">
++<INPUT TYPE="HIDDEN" NAME="PRINTER_IS_COLORMANAGED" VALUE="{?printer_is_colormanaged}">
++<INPUT TYPE="HIDDEN" NAME="PRINTER_LOCATION" VALUE="{printer_location}">
++
++<table>
++<tr>
++<TR>
++<TH CLASS="label">Provide a PPD File:</TH>
++<TD><INPUT TYPE="HIDDEN" NAME="MAX_FILE_SIZE" VALUE="262144"><INPUT
++TYPE="FILE" NAME="PPD_FILE">
++</TR>
++<TR>
++<TD>
++<Input TYPE=SUBMIT VALUE=Upload>
++</TD>
++</TR>
++</table>
++
++</form>
++
++</DIV>
++
++

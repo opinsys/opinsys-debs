@@ -1,0 +1,54 @@
+Description: The dnssd backend runs the Avahi simple loop for 500ms in
+ continuous loop of its own, stopping once it's resolved as many services
+ as it's discovered. The first time round the loop, it might not have
+ discovered any yet, so thinks there is nothing to resolve and exits. The
+ fix is to wait until each service browser has said "all for now".
+Author: Tim Waugh <twaugh@redhat.com>
+Origin: http://pkgs.fedoraproject.org/cgit/cups.git/tree/cups-avahi-browse.patch?id=7048cf473bca56b13d3c2f140fd749d561490784
+Bug: https://cups.org/str.php?L4365
+Bug-RedHat: https://bugzilla.redhat.com/show_bug.cgi?id=1026940
+--- a/backend/dnssd.c
++++ b/backend/dnssd.c
+@@ -95,6 +95,7 @@
+ static AvahiSimplePoll	*simple_poll = NULL;
+ 					/* Poll information */
+ static int		got_data = 0;	/* Got data from poll? */
++static int		browsers = 0;	/* Number of running browsers */
+ #endif /* HAVE_AVAHI */
+ 
+ 
+@@ -345,6 +346,7 @@
+     return (1);
+   }
+ 
++  browsers = 6;
+   avahi_service_browser_new(client, AVAHI_IF_UNSPEC,
+ 			    AVAHI_PROTO_UNSPEC,
+ 			    "_fax-ipp._tcp", NULL, 0,
+@@ -559,7 +561,11 @@
+       fprintf(stderr, "DEBUG: sent=%d, count=%d\n", sent, count);
+ 
+       if (sent == cupsArrayCount(devices))
+-	break;
++#ifdef HAVE_AVAHI
++	  if (browsers == 0)
++	      /* All service browsers have finished */
++#endif /* HAVE_AVAHI */
++	      break;
+     }
+   }
+ 
+@@ -710,9 +716,12 @@
+ 	break;
+ 
+     case AVAHI_BROWSER_REMOVE:
+-    case AVAHI_BROWSER_ALL_FOR_NOW:
+     case AVAHI_BROWSER_CACHE_EXHAUSTED:
+         break;
++
++    case AVAHI_BROWSER_ALL_FOR_NOW:
++	browsers--;
++	break;
+   }
+ }
+ 

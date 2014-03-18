@@ -1,0 +1,19 @@
+Description: Reverted upstream change to FINAL_CONTENT_TYPE in order to fix printing to remote CUPS servers 
+Bug-RedHat: https://bugzilla.redhat.com/show_bug.cgi?id=1010580
+Last-Updated: 2013-11-28
+--- a/scheduler/job.c
++++ b/scheduler/job.c
+@@ -599,12 +599,7 @@
+ 
+     if (!job->printer->remote)
+     {
+-      for (filter = (mime_filter_t *)cupsArrayLast(filters);
+-           filter && filter->dst;
+-           filter = (mime_filter_t *)cupsArrayPrev(filters))
+-        if (strcmp(filter->dst->super, "printer") ||
+-            strcmp(filter->dst->type, job->printer->name))
+-          break;
++      filter = (mime_filter_t *)cupsArrayLast(filters);
+ 
+       if (filter && filter->dst)
+       {

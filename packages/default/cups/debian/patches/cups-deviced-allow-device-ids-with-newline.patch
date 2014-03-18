@@ -1,4 +1,10 @@
-Author: till.kamppeter@gmail.com
+Description: Some printers have broken device IDs with newline
+ characters inside. These break the cups-deviced printer discovery
+ mechanism and so the printers get ignored. This patch allows newline
+ characters in device IDs
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/468701
+Bug: https://www.cups.org/str.php?L4345
+Author: Till Kamppeter <till.kamppeter@gmail.com>
 
 --- a/scheduler/cups-deviced.c
 +++ b/scheduler/cups-deviced.c

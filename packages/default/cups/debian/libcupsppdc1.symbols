@@ -43,7 +43,7 @@ libcupsppdc.so.1 libcupsppdc1 #MINVER#
  _ZN10ppdcOptionD2Ev@Base 1.4.0
  _ZN10ppdcShared6retainEv@Base 1.4.0
  _ZN10ppdcShared7releaseEv@Base 1.4.0
- _ZN10ppdcSharedC1Ev@Base 1.4.0
+ (optional)_ZN10ppdcSharedC1Ev@Base 1.4.0
  _ZN10ppdcSharedC2Ev@Base 1.4.0
  _ZN10ppdcSharedD0Ev@Base 1.4.0
  _ZN10ppdcSharedD1Ev@Base 1.4.0

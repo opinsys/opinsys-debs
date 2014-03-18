@@ -4,16 +4,16 @@ Author: Julien Desfossez at Revolution Linux
 === modified file 'cups-1.3.9/cups/ipp.c'
 --- a/cups/ipp.c
 +++ b/cups/ipp.c
-@@ -68,6 +68,8 @@
-  *   ippNewRequest()	    - Allocate a new IPP request message.
-  *   ippRead()		    - Read data for an IPP message from a HTTP
-  *			      connection.
-+ *   ippFilterPrinters()    - Filter printer list based on an environment
-+ *			      variable
-  *   ippReadFile()	    - Read data for an IPP message from a file.
-  *   ippReadIO()	    - Read data for an IPP message.
-  *   ippSetBoolean()	    - Set a boolean value in an attribute.
-@@ -2353,6 +2355,120 @@
+@@ -77,6 +77,8 @@
+  *   ippNewResponse()	     - Allocate a new IPP response message.
+  *   ippRead()		     - Read data for an IPP message from a HTTP
+  *			       connection.
++ *   ippFilterPrinters()     - Filter printer list based on an environment
++ *			       variable
+  *   ippReadFile()	     - Read data for an IPP message from a file.
+  *   ippReadIO()	     - Read data for an IPP message.
+  *   ippSetBoolean()	     - Set a boolean value in an attribute.
+@@ -2754,6 +2756,120 @@
    return (temp);
  }
  
@@ -134,12 +134,12 @@ Author: Julien Desfossez at Revolution Linux
  
  /*
   *  'ippNewRequest()' - Allocate a new IPP request message.
-@@ -2595,6 +2711,8 @@
+@@ -3104,6 +3220,8 @@
  	    */
  
              DEBUG_puts("2ippReadIO: IPP_TAG_END.");
 +            if(getenv("PRINTER_LIST"))
 +	            ippFilterPrinters(ipp);
  
- 	    ipp->state = IPP_DATA;
+ 	    ipp->state = IPP_STATE_DATA;
  	    break;

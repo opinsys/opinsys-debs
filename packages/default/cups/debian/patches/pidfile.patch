@@ -6,7 +6,7 @@ Last-Update: 2012-11-29
 
 --- a/scheduler/conf.c
 +++ b/scheduler/conf.c
-@@ -177,7 +177,8 @@
+@@ -156,7 +156,8 @@
  #ifdef HAVE_AUTHORIZATION_H
    { "SystemGroupAuthKey",	&SystemGroupAuthKey,	CUPSD_VARTYPE_STRING },
  #endif /* HAVE_AUTHORIZATION_H */
@@ -16,7 +16,7 @@ Last-Update: 2012-11-29
  };
  
  static int		default_auth_type = CUPSD_AUTH_AUTO;
-@@ -594,6 +595,7 @@
+@@ -572,6 +573,7 @@
    cupsdSetStringf(&ServerHeader, "CUPS/%d.%d IPP/2.1", CUPS_VERSION_MAJOR,
                    CUPS_VERSION_MINOR);
    cupsdSetString(&StateDir, CUPS_STATEDIR);
@@ -24,7 +24,7 @@ Last-Update: 2012-11-29
  
    if (!strcmp(CUPS_DEFAULT_PRINTCAP, "/etc/printers.conf"))
      PrintcapFormat = PRINTCAP_SOLARIS;
-@@ -3348,6 +3350,7 @@
+@@ -3333,6 +3335,7 @@
               !_cups_strcasecmp(line, "SystemGroup") ||
               !_cups_strcasecmp(line, "SystemGroupAuthKey") ||
               !_cups_strcasecmp(line, "TempDir") ||
@@ -34,18 +34,18 @@ Last-Update: 2012-11-29
        cupsdLogMessage(CUPSD_LOG_INFO,
 --- a/scheduler/conf.h
 +++ b/scheduler/conf.h
-@@ -244,6 +244,8 @@
+@@ -245,6 +245,8 @@
  VAR int			SSLOptions		VALUE(CUPSD_SSL_NONE);
  					/* SSL/TLS options */
  #endif /* HAVE_SSL */
 +VAR char		*PidFile		VALUE(NULL);
 +					/* Debian CUPS pid file */
  
- #ifdef HAVE_LAUNCHD
- VAR int			LaunchdTimeout		VALUE(10);
+ VAR int			ExitOnIdleTimeout	VALUE(0);
+ 					/* Time after which an idle cupsd will exit */
 --- a/scheduler/main.c
 +++ b/scheduler/main.c
-@@ -90,6 +90,8 @@
+@@ -93,6 +93,8 @@
  static void		sigterm_handler(int sig);
  static long		select_timeout(int fds);
  static void		usage(int status) __attribute__((noreturn));
@@ -54,9 +54,9 @@ Last-Update: 2012-11-29
  
  
  /*
-@@ -640,6 +642,11 @@
-   }
- #endif /* __sgi */
+@@ -700,6 +702,11 @@
+     cupsdStartSystemMonitor();
+ #endif /* __APPLE__ */
  
 +  if (write_pid() == 0) {
 +    cupsdLogMessage(CUPSD_LOG_ERROR, "Unable to write pid file");
@@ -64,9 +64,9 @@ Last-Update: 2012-11-29
 +  }
 +
   /*
-   * Initialize authentication certificates...
+   * Send server-started event...
    */
-@@ -1181,10 +1188,41 @@
+@@ -1236,10 +1243,41 @@
  
    cupsdStopSelect();
  
@@ -110,7 +110,7 @@ Last-Update: 2012-11-29
   */
 --- a/test/run-stp-tests.sh
 +++ b/test/run-stp-tests.sh
-@@ -420,6 +420,7 @@
+@@ -502,6 +502,7 @@
  DocumentRoot $root/doc
  RequestRoot /tmp/cups-$user/spool
  TempDir /tmp/cups-$user/spool/temp

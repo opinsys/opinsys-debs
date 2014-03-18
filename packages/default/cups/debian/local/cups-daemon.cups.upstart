@@ -30,11 +30,11 @@ pre-start script
     fi
 end script
 
-exec /usr/sbin/cupsd -F
+exec /usr/sbin/cupsd -f
 
 post-start script
     # wait until daemon is ready
-    timeout=6
+    timeout=60
     while [ ! -e /var/run/cups/cups.sock ]; do 
         sleep 0.5
 	timeout=$((timeout-1))

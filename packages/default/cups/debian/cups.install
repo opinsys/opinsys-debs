@@ -8,7 +8,7 @@ usr/lib/cups/backend/snmp usr/lib/cups/backend-available
 usr/lib/cups/cgi-bin
 usr/lib/cups/monitor
 usr/lib/cups/daemon/
-usr/lib/cups/filter/
+usr/lib/cups/filter/rasterto*
 usr/lib/cups/driver/
 usr/sbin/cupsfilter
 usr/share/man/man7/filter.7.gz

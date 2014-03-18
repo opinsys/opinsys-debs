@@ -5,7 +5,7 @@ Bug-Debian: http://bugs.debian.org/549673
 
 --- a/scheduler/classes.c
 +++ b/scheduler/classes.c
-@@ -698,7 +698,7 @@
+@@ -718,7 +718,7 @@
    strftime(temp, sizeof(temp) - 1, "%Y-%m-%d %H:%M", curdate);
  
    cupsFilePuts(fp, "# Class configuration file for " CUPS_SVERSION "\n");
@@ -16,7 +16,7 @@ Bug-Debian: http://bugs.debian.org/549673
   /*
 --- a/scheduler/job.c
 +++ b/scheduler/job.c
-@@ -2157,7 +2157,7 @@
+@@ -2091,7 +2091,7 @@
    strftime(temp, sizeof(temp) - 1, "%Y-%m-%d %H:%M", curdate);
  
    cupsFilePuts(fp, "# Job cache file for " CUPS_SVERSION "\n");
@@ -27,7 +27,7 @@ Bug-Debian: http://bugs.debian.org/549673
   /*
 --- a/scheduler/printers.c
 +++ b/scheduler/printers.c
-@@ -1425,7 +1425,7 @@
+@@ -1377,7 +1377,7 @@
    strftime(temp, sizeof(temp) - 1, "%Y-%m-%d %H:%M", curdate);
  
    cupsFilePuts(fp, "# Printer configuration file for " CUPS_SVERSION "\n");

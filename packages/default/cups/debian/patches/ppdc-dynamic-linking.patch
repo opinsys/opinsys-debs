@@ -4,7 +4,7 @@ Bug-Debian: http://bugs.debian.org/548246
 
 --- a/ppdc/Makefile
 +++ b/ppdc/Makefile
-@@ -237,14 +237,14 @@
+@@ -239,14 +239,14 @@
  # genstrings - generate GNU gettext strings.
  #
  
@@ -22,7 +22,7 @@ Bug-Debian: http://bugs.debian.org/548246
  
  
  #
-@@ -258,12 +258,12 @@
+@@ -260,12 +260,12 @@
  
  ppdc-static:		ppdc.o libcupsppdc.a ../cups/$(LIBCUPSSTATIC) foo.drv foo-fr.po
  	echo Linking $@...
@@ -38,7 +38,7 @@ Bug-Debian: http://bugs.debian.org/548246
  
  
  #
-@@ -286,14 +286,14 @@
+@@ -288,14 +288,14 @@
  
  ppdi-static:		ppdc-static ppdi.o libcupsppdc.a  ../cups/$(LIBCUPSSTATIC)
  	echo Linking $@...
@@ -57,7 +57,7 @@ Bug-Debian: http://bugs.debian.org/548246
  	if diff -r ppd ppd2 >/dev/null; then \
  		echo PPD import OK; \
  	else \
-@@ -326,7 +326,7 @@
+@@ -328,7 +328,7 @@
  
  testcatalog:		testcatalog.o libcupsppdc.a ../cups/$(LIBCUPSSTATIC)
  	echo Linking $@...

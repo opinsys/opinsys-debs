@@ -1,10 +1,12 @@
 Description: po4a infrastructure and translations for manpages.
 Author: Nicolas François <nicolas.francois@centraliens.net>, Helge Kreutzmann <debian@helgefjell.de>
+Origin: vendor
 Bug-Debian: http://bugs.debian.org/478597
+Last-Update: 2014-01-03
 
 --- a/man/Makefile
 +++ b/man/Makefile
-@@ -67,12 +67,18 @@
+@@ -68,12 +68,18 @@
  		lpmove.$(MAN8EXT) \
  		lpc.$(MAN8EXT)
  
@@ -24,10 +26,10 @@ Bug-Debian: http://bugs.debian.org/478597
  
  
  #
-@@ -112,6 +118,11 @@
- 	for file in $(MAN8); do \
- 		$(RM) ../doc/help/man-`basename $$file .$(MAN8EXT)`.html; \
- 	done
+@@ -97,6 +103,11 @@
+ clean:
+ 	$(RM) mantohtml mantohtml.o
+ 	$(RM) $(MAN1) $(MAN5) $(MAN7) $(MAN8)
 +	for lang in $(LANGUAGES); do $(MAKE) -C $$lang clean; done
 +	# Make sure the PO files are updated and remove generated
 +	# translations.
@@ -36,7 +38,7 @@ Bug-Debian: http://bugs.debian.org/478597
  
  
  #
-@@ -159,6 +170,7 @@
+@@ -144,6 +155,7 @@
  	done
  	$(RM) $(AMANDIR)/man$(MAN8DIR)/cupsdisable.$(MAN8EXT)
  	$(LN) cupsenable.$(MAN8EXT) $(AMANDIR)/man$(MAN8DIR)/cupsdisable.$(MAN8EXT)
@@ -44,7 +46,7 @@ Bug-Debian: http://bugs.debian.org/478597
  
  
  #
-@@ -207,6 +219,7 @@
+@@ -192,6 +204,7 @@
  	$(RM) $(AMANDIR)/man$(MAN8DIR)/reject.$(MAN8EXT)
  	$(RM) $(AMANDIR)/man$(MAN8DIR)/cupsdisable.$(MAN8EXT)
  	-$(RMDIR) $(AMANDIR)/man$(MAN8DIR)

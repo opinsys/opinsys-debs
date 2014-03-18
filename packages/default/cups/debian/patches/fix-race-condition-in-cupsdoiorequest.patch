@@ -1,0 +1,19 @@
+Description: Fix race condition in cupsDoIORequest(). When
+ cupsDoIORequest() sends a request that will fail due to lack of
+ credentials, if the server closes the connection after
+ cupsSendRequest() returned but before ippWrite() finishes sending the
+ request then the request will not be retried and the caller will see
+ a failure (CUPS STR #4386, Red Hat bug #1072952).
+Author: Michael Sweet <msweet@apple.com>
+Bug: http://www.cups.org/str.php?L4386
+--- a/cups/request.c
++++ b/cups/request.c
+@@ -261,7 +261,7 @@
+     * Get the server's response...
+     */
+ 
+-    if (status != HTTP_STATUS_ERROR)
++    if (status <= HTTP_STATUS_CONTINUE)
+     {
+       response = cupsGetResponse(http, resource);
+       status   = httpGetStatus(http);

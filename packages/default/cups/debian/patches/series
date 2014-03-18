@@ -1,44 +1,50 @@
 # patches accepted and committed upstream:
+fix-race-condition-in-cupsdoiorequest.patch
+fix-cupsdgetprivateattrs-function-missing-null-check.patch
+fix-cupsenumdests-does-not-fill-in-is_default-field.patch
+cupsd-support-avahi-daemon-restarting.patch
+cupsenumdests-does-not-set-cb.patch
+cupsd-enable-dbus-threading-support.patch
 
 # patches sent upstream
-usb-backend-more-quirk-rules.patch
-cupsd-no-crash-on-avahi-threaded-poll-shutdown.patch
-get-ppd-file-for-statically-configured-ipp-shared-queues.patch
-pidfile.patch
-ppd-poll-with-client-conf.patch
 manpage-hyphen-minus.patch
 rootbackends-worldreadable.patch
-cups-dbus-utf8.patch
-usb-backend-do-not-crash-if-usb-disabled-in-bios.patch
+mention-rfc2911-in-ipptoolfile-for-clarity.patch
+fixes-for-jobs-with-multiple-files-and-multiple-formats.patch
+build-with-full-relro.patch
+fix-template.c-typo.patch
+prevent-dnssd-backend-exiting-too-early.patch
 
 # patches which should go upstream
-drop-arch-specifics-from-doc.patch
-airprint-support.patch
-removecvstag.patch
-no-conffile-timestamp.patch
-drop_unnecessary_dependencies.patch
-reactivate_recommended_driver.patch
-read-embedded-options-from-incoming-postscript-and-add-to-ipp-attrs.patch
-do-not-broadcast-with-hostnames.patch
-cups-deviced-allow-device-ids-with-newline.patch
-cups-snmp-oids-device-id-hp-ricoh.patch
-configure-default-browse-protocols.patch
-mention-rfc2911-in-ipptoolfile-for-clarity.patch
-colord-add-profile-fix.patch
+color-management-extension.patch
+cupsd-upstart-support.patch
+cupsd-exit-on-idle.patch
+cupsd-exit-on-idle-upstart.patch
 # Fix tests, should probably go upstream
 tests-ignore-warnings.patch
 tests-ignore-usb-crash.patch
+tests-ignore-kfreebsd-amd64-not-a-pdf.patch
 test-i18n-nonlinux.patch
 tests-wait-on-unfinished-jobs-everytime.patch
 tests-fix-ppdLocalize-on-unclean-env.patch
 tests-use-cupsfilters.patch
 
-# This one has been submitted upstream but no answer has been given yet,
-# po4a might not be appropriate. It also needs to be high on the patch
-# queue to catch all Debian-specific changes
-manpage-translations.patch
+# Debian patches that upstream doesn't want to fix
+move-cupsd-conf-default-to-share.patch
+drop_unnecessary_dependencies.patch
+read-embedded-options-from-incoming-postscript-and-add-to-ipp-attrs.patch
+cups-deviced-allow-device-ids-with-newline.patch
+airprint-support.patch
+cups-snmp-oids-device-id-hp-ricoh.patch
+no-conffile-timestamp.patch
+pidfile.patch
+ppd-poll-with-client-conf.patch
+removecvstag.patch
 
 # Debian patches
+revert-upstream-change-to-FINAL_CONTENT_TYPE-to-fix-printing-to-remote-CUPS-servers.patch
+do-not-broadcast-with-hostnames.patch
+reactivate_recommended_driver.patch
 add-ipp-backend-of-cups-1.4.patch
 logfiles_adm_readable.patch
 default_log_settings.patch
@@ -47,5 +53,12 @@ printer-filtering.patch
 show-compile-command-lines.patch
 ppdc-dynamic-linking.patch
 log-debug-history-nearly-unlimited.patch
+cupsd-set-default-for-SyncOnClose-to-Yes.patch
+man-cups-lpd-drop-dangling-references.patch
 # Disabled in 1.6.1-1 as it breaks the tests. It addresses #593338
 # pstops-based-workflow-only-for-printing-ps-on-a-ps-printer.patch
+
+# This one has been submitted upstream but no answer has been given yet,
+# po4a might not be appropriate. It also needs to be high on the patch
+# queue to catch all Debian-specific changes
+manpage-translations.patch

@@ -50,29 +50,6 @@ if [ "$1" = configure ]; then
 	 ln -s /etc/ssl/private/ssl-cert-snakeoil.key /etc/cups/ssl/server.key
     fi
 
-    APP_PROFILE=/etc/apparmor.d/usr.sbin.cupsd
-    if [ -f "$APP_PROFILE" ]; then
-        # Add the local/ include
-        LOCAL_APP_PROFILE=/etc/apparmor.d/local/usr.sbin.cupsd
-
-        [ -e "$LOCAL_APP_PROFILE" ] || \
-        [ -e /etc/apparmor.d/local -a ! -d /etc/apparmor.d/local ] || {
-            tmp=`mktemp`
-        cat <<EOM > "$tmp"
-# Site-specific additions and overrides for usr.sbin.cupsd.
-# For more details, please see /etc/apparmor.d/local/README.
-EOM
-            mkdir `dirname $LOCAL_APP_PROFILE` 2>/dev/null || true
-            mv -f "$tmp" "$LOCAL_APP_PROFILE"
-            chmod 644 "$LOCAL_APP_PROFILE"
-        }
-
-        # Reload the profile, including any abstraction updates
-        if aa-status --enabled 2>/dev/null; then
-            apparmor_parser -r -T -W "$APP_PROFILE" || true
-        fi
-    fi
-
     # Clear cache if we upgrade to 1.4.x
     if dpkg --compare-versions "$2" lt-nl "1.4.1-5"; then
 	rm /var/cache/cups/* 2> /dev/null || :
@@ -107,30 +84,35 @@ EOM
             # Move cupsd.conf back as it is now a non-conffile
             mv /etc/cups/cupsd.conf.conffile-bak /etc/cups/cupsd.conf
         else
-            cp /etc/cups/cupsd.conf.default /etc/cups/cupsd.conf
+            cp /usr/share/cups/cupsd.conf.default /etc/cups/cupsd.conf
         fi
     fi
 
     # Remove lines from cupsd.conf which got obsolete in CUPS 1.6.x and would
     # prevent the CUPS daemon from starting due to being invalid now.
-    cat /etc/cups/cupsd.conf | grep -Eiv '^\s*Browse(Order|Allow|Deny|Poll|RemoteProtocols)' > /etc/cups/cupsd.conf.new
-    if [ -r /etc/cups/cupsd.conf.new ]; then
-	if ! diff -q /etc/cups/cupsd.conf /etc/cups/cupsd.conf.new > /dev/null 2>&1; then
-	    mv -f /etc/cups/cupsd.conf.new /etc/cups/cupsd.conf
-	else
-	    rm /etc/cups/cupsd.conf.new
-	fi
+    if dpkg --compare-versions "$2" le "1.6.4"; then
+        # Backup pre-1.6 cupsd.conf for cups-browsed upgrade path
+        cp /etc/cups/cupsd.conf /etc/cups/cupsd.conf.pre16-bak
+
+        cat /etc/cups/cupsd.conf | grep -Eiv '^\s*Browse(Order|Allow|Deny|Poll|RemoteProtocols)' > /etc/cups/cupsd.conf.new
+        if [ -r /etc/cups/cupsd.conf.new ]; then
+            if ! diff -q /etc/cups/cupsd.conf /etc/cups/cupsd.conf.new > /dev/null 2>&1; then
+                mv -f /etc/cups/cupsd.conf.new /etc/cups/cupsd.conf
+            else
+                rm /etc/cups/cupsd.conf.new
+            fi
+        fi
+        # Also the argument "cups" for BrowseLocalProtocols is obsolete. Remove the
+        # argument and put "dnssd" if there are no arguments left.
+        cat /etc/cups/cupsd.conf | perl -p -e 's/^(\s*BrowseLocalProtocols.*?)\s+cups/$1/i; s/^(\s*BrowseLocalProtocols)(\s*)$/$1 dnssd$2/i' > /etc/cups/cupsd.conf.new
+        if [ -r /etc/cups/cupsd.conf.new ]; then
+            if ! diff -q /etc/cups/cupsd.conf /etc/cups/cupsd.conf.new > /dev/null 2>&1; then
+                mv -f /etc/cups/cupsd.conf.new /etc/cups/cupsd.conf
+            else
+                rm /etc/cups/cupsd.conf.new
+            fi
+        fi
     fi
-    # Also the argument "cups" for BrowseLocalProtocols is obsolete. Remove the
-    # argument and put "dnssd" if there are no arguments left.
-    cat /etc/cups/cupsd.conf | perl -p -e 's/^(\s*BrowseLocalProtocols.*?)\s+cups/$1/i; s/^(\s*BrowseLocalProtocols)(\s*)$/$1 dnssd$2/i' > /etc/cups/cupsd.conf.new
-    if [ -r /etc/cups/cupsd.conf.new ]; then
-	if ! diff -q /etc/cups/cupsd.conf /etc/cups/cupsd.conf.new > /dev/null 2>&1; then
-	    mv -f /etc/cups/cupsd.conf.new /etc/cups/cupsd.conf
-	else
-	    rm /etc/cups/cupsd.conf.new
-	fi
-    fi    
 fi
 
 #DEBHELPER#

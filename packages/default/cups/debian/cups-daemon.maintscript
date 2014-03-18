@@ -1,0 +1,1 @@
+rm_conffile /etc/cups/cupsd.conf.default 1.7.1-3~

@@ -1,0 +1,16 @@
+Description: Build with full read-only relocations
+Bug-RedHat:  https://bugzilla.redhat.com/show_bug.cgi?id=996740
+Bug: https://cups.org/str.php?L4349
+Author: Tim Waugh <twaugh@redhat.com>
+Last-Update: 2013-08-15
+--- a/config-scripts/cups-compiler.m4
++++ b/config-scripts/cups-compiler.m4
+@@ -185,7 +185,7 @@
+ 			# The -z relro option is provided by the Linux linker command to
+ 			# make relocatable data read-only.
+ 			if test x$enable_relro = xyes; then
+-				RELROFLAGS="-Wl,-z,relro"
++				RELROFLAGS="-Wl,-z,relro,-z,now"
+ 			fi
+ 			;;
+ 	esac

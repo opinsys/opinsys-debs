@@ -5,8 +5,8 @@ libcups.so.2 libcups2 #MINVER#
  (optional|regex)"^_http.*@Base$" 1.6.2
  (optional|regex)"^_ipp.*@Base$" 1.6.2
  (optional|regex)"^_ppd.*@Base$" 1.6.2
- _httpReadGNUTLS@Base 1.4.4-3~
- _httpWriteGNUTLS@Base 1.4.4-3~
+ (optional=GnuTLS)_httpReadGNUTLS@Base 1.4.4-3~
+ (optional=GnuTLS)_httpWriteGNUTLS@Base 1.4.4-3~
  cupsAddDest@Base 1.4.0
  cupsAddOption@Base 1.4.0
  cupsAdminCreateWindowsPPD@Base 1.4.0
@@ -90,6 +90,9 @@ libcups.so.2 libcups2 #MINVER#
  cupsFileTell@Base 1.4.0
  cupsFileUnlock@Base 1.4.0
  cupsFileWrite@Base 1.4.0
+ cupsFindDestDefault@Base 1.7.0
+ cupsFindDestReady@Base 1.7.0
+ cupsFindDestSupported@Base 1.7.0
  cupsFinishDestDocument@Base 1.6.0
  cupsFinishDocument@Base 1.4.0
  cupsFreeDestInfo@Base 1.6.0
@@ -101,8 +104,11 @@ libcups.so.2 libcups2 #MINVER#
  cupsGetDefault2@Base 1.4.0
  cupsGetDefault@Base 1.4.0
  cupsGetDest@Base 1.4.0
+ cupsGetDestMediaByIndex@Base 1.7.0
  cupsGetDestMediaByName@Base 1.6.0
  cupsGetDestMediaBySize@Base 1.6.0
+ cupsGetDestMediaCount@Base 1.7.0
+ cupsGetDestMediaDefault@Base 1.7.0
  cupsGetDests2@Base 1.4.0
  cupsGetDests@Base 1.4.0
  cupsGetDevices@Base 1.4.0
@@ -156,6 +162,7 @@ libcups.so.2 libcups2 #MINVER#
  cupsSetServer@Base 1.4.0
  cupsSetServerCertCB@Base 1.5.0
  cupsSetUser@Base 1.4.0
+ cupsSetUserAgent@Base 1.7.0
  cupsSideChannelDoRequest@Base 1.4.0
  cupsSideChannelRead@Base 1.4.0
  cupsSideChannelSNMPGet@Base 1.4.0
@@ -170,25 +177,32 @@ libcups.so.2 libcups2 #MINVER#
  cupsUTF8ToCharset@Base 1.4.0
  cupsUTF8ToUTF32@Base 1.4.0
  cupsUser@Base 1.4.0
+ cupsUserAgent@Base 1.7.0
  cupsWriteRequestData@Base 1.4.0
+ httpAcceptConnection@Base 1.7.0
  httpAddCredential@Base 1.5.0
  httpAddrAny@Base 1.4.0
  httpAddrConnect2@Base 1.6.0
  httpAddrConnect@Base 1.4.0
+ httpAddrCopyList@Base 1.7.0
  httpAddrEqual@Base 1.4.0
  httpAddrFreeList@Base 1.4.0
  httpAddrGetList@Base 1.4.0
  httpAddrLength@Base 1.4.0
+ httpAddrListen@Base 1.7.0
  httpAddrLocalhost@Base 1.4.0
  httpAddrLookup@Base 1.4.0
+ httpAddrPort@Base 1.7.0
  httpAddrString@Base 1.4.0
  httpAssembleURI@Base 1.4.0
  httpAssembleURIf@Base 1.4.0
+ httpAssembleUUID@Base 1.7.0
  httpBlocking@Base 1.4.0
  httpCheck@Base 1.4.0
  httpClearCookie@Base 1.4.0
  httpClearFields@Base 1.4.0
  httpClose@Base 1.4.0
+ httpConnect2@Base 1.7.0
  httpConnect@Base 1.4.0
  httpConnectEncrypt@Base 1.4.0
  httpCopyCredentials@Base 1.5.0
@@ -205,10 +219,12 @@ libcups.so.2 libcups2 #MINVER#
  httpGet@Base 1.4.0
  httpGetAuthString@Base 1.4.0
  httpGetBlocking@Base 1.4.0
+ httpGetContentEncoding@Base 1.7.0
  httpGetCookie@Base 1.4.0
  httpGetDateString2@Base 1.4.0
  httpGetDateString@Base 1.4.0
  httpGetDateTime@Base 1.4.0
+ httpGetExpect@Base 1.7.0
  httpGetFd@Base 1.4.0
  httpGetField@Base 1.4.0
  httpGetHostByName@Base 1.4.0
@@ -227,11 +243,13 @@ libcups.so.2 libcups2 #MINVER#
  httpMD5Final@Base 1.4.0
  httpMD5String@Base 1.4.0
  httpOptions@Base 1.4.0
+ httpPeek@Base 1.7.0
  httpPost@Base 1.4.0
  httpPrintf@Base 1.4.0
  httpPut@Base 1.4.0
  httpRead2@Base 1.4.0
  httpRead@Base 1.4.0
+ httpReadRequest@Base 1.7.0
  httpReconnect2@Base 1.6.0
  httpReconnect@Base 1.4.0
  httpSeparate2@Base 1.4.0
@@ -240,6 +258,7 @@ libcups.so.2 libcups2 #MINVER#
  httpSetAuthString@Base 1.4.0
  httpSetCookie@Base 1.4.0
  httpSetCredentials@Base 1.5.0
+ httpSetDefaultField@Base 1.7.0
  httpSetExpect@Base 1.4.0
  httpSetField@Base 1.4.0
  httpSetLength@Base 1.4.0
@@ -250,6 +269,7 @@ libcups.so.2 libcups2 #MINVER#
  httpWait@Base 1.4.0
  httpWrite2@Base 1.4.0
  httpWrite@Base 1.4.0
+ httpWriteResponse@Base 1.7.0
  ippAddBoolean@Base 1.4.0
  ippAddBooleans@Base 1.4.0
  ippAddCollection@Base 1.4.0
@@ -265,10 +285,15 @@ libcups.so.2 libcups2 #MINVER#
  ippAddResolutions@Base 1.4.0
  ippAddSeparator@Base 1.4.0
  ippAddString@Base 1.4.0
+ ippAddStringf@Base 1.7.0
+ ippAddStringfv@Base 1.7.0
  ippAddStrings@Base 1.4.0
  ippAttributeString@Base 1.6.0
+ ippContainsInteger@Base 1.7.0
+ ippContainsString@Base 1.7.0
  ippCopyAttribute@Base 1.6.0
  ippCopyAttributes@Base 1.6.0
+ ippCreateRequestedArray@Base 1.7.0
  ippDateToTime@Base 1.4.0
  ippDelete@Base 1.4.0
  ippDeleteAttribute@Base 1.4.0
@@ -288,6 +313,7 @@ libcups.so.2 libcups2 #MINVER#
  ippGetGroupTag@Base 1.6.0
  ippGetInteger@Base 1.6.0
  ippGetName@Base 1.6.0
+ ippGetOctetString@Base 1.7.0
  ippGetOperation@Base 1.6.0
  ippGetRange@Base 1.6.0
  ippGetRequestId@Base 1.6.0
@@ -300,6 +326,7 @@ libcups.so.2 libcups2 #MINVER#
  ippLength@Base 1.4.0
  ippNew@Base 1.4.0
  ippNewRequest@Base 1.4.0
+ ippNewResponse@Base 1.7.0
  ippNextAttribute@Base 1.6.0
  ippOpString@Base 1.4.0
  ippOpValue@Base 1.4.0
@@ -313,6 +340,7 @@ libcups.so.2 libcups2 #MINVER#
  ippSetGroupTag@Base 1.6.0
  ippSetInteger@Base 1.6.0
  ippSetName@Base 1.6.0
+ ippSetOctetString@Base 1.7.0
  ippSetOperation@Base 1.6.0
  ippSetPort@Base 1.4.0
  ippSetRange@Base 1.6.0
@@ -321,11 +349,15 @@ libcups.so.2 libcups2 #MINVER#
  ippSetState@Base 1.6.0
  ippSetStatusCode@Base 1.6.0
  ippSetString@Base 1.6.0
+ ippSetStringf@Base 1.7.0
+ ippSetStringfv@Base 1.7.0
  ippSetValueTag@Base 1.6.0
  ippSetVersion@Base 1.6.0
  ippTagString@Base 1.4.0
  ippTagValue@Base 1.4.0
  ippTimeToDate@Base 1.4.0
+ ippValidateAttribute@Base 1.7.0
+ ippValidateAttributes@Base 1.7.0
  ippWrite@Base 1.4.0
  ippWriteFile@Base 1.4.0
  ippWriteIO@Base 1.4.0
@@ -369,3 +401,9 @@ libcups.so.2 libcups2 #MINVER#
  ppdPageSizeLimits@Base 1.4.0
  ppdPageWidth@Base 1.4.0
  ppdSetConformance@Base 1.4.0
+ pwgFormatSizeName@Base 1.7.0
+ pwgInitSize@Base 1.7.0
+ pwgMediaForLegacy@Base 1.7.0
+ pwgMediaForPPD@Base 1.7.0
+ pwgMediaForPWG@Base 1.7.0
+ pwgMediaForSize@Base 1.7.0

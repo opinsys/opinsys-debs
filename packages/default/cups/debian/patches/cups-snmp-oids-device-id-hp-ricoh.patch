@@ -1,4 +1,12 @@
-Author: till.kamppeter@gmail.com
+Description: Let the "snmp" backend also use the manufacturer-specific
+ MIBs of HP and Ricoh to obtain the device IDs of network-connected
+ printers. This way we get more reliable information about make and model
+ and in addition the supported page description languages, which allow to
+ identify whether an optional PostScript add-on is installed or for an
+ unsupported printer which generic PPD is the best choice (requested by
+ Ricoh).
+Bug: https://www.cups.org/str.php?L3552
+Author: Tim Waugh <twaugh@redhat.com>
 
 --- a/backend/snmp.c
 +++ b/backend/snmp.c

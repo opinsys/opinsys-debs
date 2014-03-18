@@ -1,9 +1,402 @@
-cups (1.6.3-1+opinsys1) precise; urgency=low
+cups (1.7.1-5ubuntu8) trusty; urgency=low
 
-  * Remove the usage block_suspend cap from the apparmor profile
-  * Disable tests
+  * Removed har dependency of cups-daemon on avahi-daemon, demoted Depends: yo
+    Recommends: and removed "on started avahi-daemon" from the "start on ..."
+    rule in /etc/init/cups.conf (LP: #1242185, LP: #1178172).
 
- -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Mon, 26 Aug 2013 15:26:34 +0300
+ -- Till Kamppeter <till.kamppeter@gmail.com>  Fri,  7 Mar 2014 17:45:01 +0100
+
+cups (1.7.1-5ubuntu7) trusty; urgency=low
+
+  * cupsd-upstart-support.patch: Merged in fix-upstart-socket-activation.patch
+    from cups 1.7.1-5ubuntu6 release (LP: #1276713).
+  * cupsd-support-avahi-daemon-restarting.patch: Updated patch to the version
+    from upstream (CUPS STR #4373).
+  * fix-cupsenumdests-does-not-fill-in-is_default-field.patch: cupsEnumDests()
+    doesn't fill in is_default field (CUPS STR #4332).
+  * fix-cupsdgetprivateattrs-function-missing-null-check.patch:
+    cupsdGetPrivateAttrs() function in scheduler/policy.c is missing NULL
+    check for input parameters (CUPS STR #4378, LP: #1284568).
+  * fix-race-condition-in-cupsdoiorequest.patch: Fix race condition in
+    cupsDoIORequest(). When cupsDoIORequest() sends a request that will fail
+    due to lack of credentials, if the server closes the connection after
+    cupsSendRequest() returned but before ippWrite() finishes sending the
+    request then the request will not be retried and the caller will see a
+    failure (CUPS STR #4386, Red Hat bug #1072952).
+  * cupsenumdests-does-not-set-cb.patch, color-management-extension.patch,
+    airprint-support.patch, cupsd-exit-on-idle.patch,
+    cupsd-exit-on-idle-upstart.patch, no-conffile-timestamp.patch:
+    Refreshed with quilt.
+
+ -- Till Kamppeter <till.kamppeter@gmail.com>  Thu,  6 Mar 2014 16:49:01 +0100
+
+cups (1.7.1-5ubuntu6) trusty; urgency=medium
+
+  * Fix cups upstart socket activation:
+    - run by default in foreground (-f), not foreground (-F). With -F cups
+    closes all inherited file descriptors, which is not needed under
+    upstart since it does that on our behalf, furthermore closing passed
+    socket activation descriptors prevents us from using socket
+    activation.
+    - force foreground (-f) mode if environment suggests, we are upstart
+    socket activated. (similar to "-l" flag for launchd)
+    - initialize addrlen to the sizeof addr
+    - correct environmental variable name used to check for event type
+    - simplify logic to get UPSTART_FDS, simply use atoi
+    - perform explicit return code checking from getsockname function call
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Thu, 06 Mar 2014 10:53:25 +0000
+
+cups (1.7.1-5ubuntu5) trusty; urgency=low
+
+  * cupsenumdests-does-not-set-cb.patch: Let the cupsEnumDests() function
+    correctly set "cb" and "user_data" in the context data structure, to
+    avoid crashes and hangs of print dialogs (CUPS STR #4380, Red Hat bug
+    #1054312).
+
+ -- Till Kamppeter <till.kamppeter@gmail.com>  Wed,  5 Mar 2014 17:35:01 +0100
+
+cups (1.7.1-5ubuntu4) trusty; urgency=low
+
+  * cupsd-exit-on-idle.patch: Use "IdleExitTimeout" as cupsd.conf directive as
+    this is the term settled on by Debian and upstream, to not have 14.04 LTS
+    to support the first-shot expresssion "ExitOnIdleTimeout" for five years.
+    Note that we do not overtake the Debian patch as a whole at this time as
+    this requires changes in many other patches. This will be done after the
+    14.04 LTS release.
+
+ -- Till Kamppeter <till.kamppeter@gmail.com>  Tue,  4 Mar 2014 18:46:01 +0100
+
+cups (1.7.1-5ubuntu3) trusty; urgency=low
+
+  * cupsd-support-avahi-daemon-restarting.patch: Allow avahi-daemon be started
+    after CUPS and stopped and re-started while CUPS is running, without loss
+    of Bonjour broadcasting of shared printers and without need of restarting
+    CUPS.
+  * airprint-support.patch: Refreshed with quilt.
+
+ -- Till Kamppeter <till.kamppeter@gmail.com>  Sun, 23 Feb 2014 16:23:01 +0100
+
+cups (1.7.1-5ubuntu2) trusty; urgency=low
+
+  * cupsd-enable-dbus-threading-support.patch: Let cupsd enable threading
+    support in D-BUS instead of doing the complex workaround of the former
+    dont-use-dbus-from-two-threads.patch (CUPS STR #4347).
+  * cupsd-upstart-support.patch, cupsd-exit-on-idle.patch,
+    cupsd-exit-on-idle-upstart.patch, airprint-support.patch, pidfile.patch:
+    Refreshed with quilt.
+
+ -- Till Kamppeter <till.kamppeter@gmail.com>  Fri, 21 Feb 2014 15:17:01 +0100
+
+cups (1.7.1-5ubuntu1) trusty; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - cupsd-upstart-support.patch, cupsd-exit-on-idle.patch,
+      cupsd-exit-on-idle-upstart.patch: Patches for running cupsd on-demand,
+      introduced in 1.7.1-4ubuntu1.
+    - airprint-support.patch, pidfile.patch,
+      do-not-broadcast-with-hostnames.patch, confdirperms.patch,
+      log-debug-history-nearly-unlimited.patch,
+      cupsd-set-default-for-SyncOnClose-to-Yes.patch: Refreshed with quilt
+      after applying the patches to run cupsd on-demand.
+
+ -- Till Kamppeter <till.kamppeter@gmail.com>  Wed, 19 Feb 2014 16:18:01 +0100
+
+cups (1.7.1-5) unstable; urgency=medium
+
+  * In cups' initscript, stop trying to restart xprint.
+    Thanks to Damyan Ivanov (Closes: #738801)
+  * Import Fedora patch to prevent the dnssd backend from exiting too
+    early
+
+ -- Didier Raboud <odyx@debian.org>  Tue, 18 Feb 2014 15:44:18 +0100
+
+cups (1.7.1-4ubuntu1) trusty; urgency=low
+
+  * cupsd-upstart-support.patch: Allow starting cupsd socket-triggered
+    through Upstart, for on-demand starting to save resources (especially
+    on mobile devices, LP: #1276713).
+  * cupsd-exit-on-idle.patch: Add mode to let cupsd terminate when it is idle,
+    also for running CUPS on-demand. If the mode is activated, either by
+    ExitOnIdleTimeout=TIMEOUT in cupsd.conf, by "-x TIMEOUT" on the cupsd
+    command line or by setting the env variable CUPSD_EXIT_ON_IDLE_TIMEOUT=
+    TIMEOUT (With TIMEOUT in all theree cases the idle timeout in seconds,
+    0 turning off the feature, off by default), cupsd terminates when it
+    is idle (no jobs, no shared printers) for the given timeout.
+  * cupsd-exit-on-idle-upstart.patch: Set idle timeout of cupsd to 30 sec
+    if CUPS is started socket-triggered by Upstart and the timeout is not
+    explicitly set (LP: #1276713).
+  * airprint-support.patch, pidfile.patch,
+    do-not-broadcast-with-hostnames.patch, confdirperms.patch,
+    log-debug-history-nearly-unlimited.patch,
+    cupsd-set-default-for-SyncOnClose-to-Yes.patch: Refreshed with quilt.
+
+ -- Till Kamppeter <till.kamppeter@gmail.com>  Fri, 14 Feb 2014 17:08:01 +0100
+
+cups (1.7.1-4) unstable; urgency=medium
+
+  [ Martin Pitt ]
+  * debian/libcups2-dev.preinst: Move aside a /usr/include/cups/i18n.h
+    directory during upgrades (from wheezy/precise); this directory got
+    replaced with a file, and triggers a bug in overlayfs when dist-upgrading
+    schroots/containers/similar. This is a hackish workaround and can be
+    dropped again in jessie+1/trusty+1. (LP: #1272285)
+
+  [ Didier Raboud ]
+  * Fix LGPL-2 references in debian/copyright, hanks to Thorsten Alteholz
+  * Move commandtops from cups to cups-core-drivers (Closes: #737306)
+
+ -- Didier Raboud <odyx@debian.org>  Tue, 04 Feb 2014 15:31:13 +0100
+
+cups (1.7.1-3) unstable; urgency=low
+
+  [ Till Kamppeter ]
+  * Split binary package "cups" into "cups" and "cups-core-drivers". In
+    low-footprint (mobile) environments we can restrict the printer
+    support to only IPP printers with known common languages (PDF,
+    PostScript, PWG Raster, PCL) to get rid of the heavy load of drivers
+    and PPDs for thousands of printers. From CUPS we need only the
+    "cups-daemon" and "cups-core-drivers" (plus library packages) then.
+    "cups-core-drivers" currently only contains the gziptoany and pstops
+    filters.
+
+  [ Didier Raboud ]
+  * Avoid specifying mode, user and (wrong) group in the logrotate
+    'create' statement (LP: #1268011)
+  * Install cups-daemon AppArmor, ufw profile and apport hooks on Debian
+    too (Closes: #735313)
+  * Replace custom AppArmor post{inst,rm} machinery with a dh_apparmor
+    call
+  * Add patch to move cupsd.conf.default from /etc/cups to
+    /usr/share/cups as it's not a configuration file (Closes: #640124)
+  * Reorder most patches to let those that upstream doesn't intend to
+    fix stay on top of the pile; most also mark those reported upstream
+    as such
+  * Drop configure-default-browse-protocols patch, now useless
+  * Drop update-rc.d arguments in Debian, as they are no longer
+    supported
+
+  [ Helge Kreutzmann ]
+  * Update German man page (1518t)
+
+ -- Didier Raboud <odyx@debian.org>  Mon, 20 Jan 2014 23:06:36 +0100
+
+cups (1.7.1-2) unstable; urgency=medium
+
+  * Revert "Link against OpenSSL instead of GnuTLS", reopens #714492
+  * Add tests' patch to ignore a kfreebsd-amd64 error that breaks the
+    error lines counting
+
+ -- Didier Raboud <odyx@debian.org>  Tue, 14 Jan 2014 10:03:37 +0100
+
+cups (1.7.1-1) unstable; urgency=medium
+
+  * New 1.7.0 upstream release
+   - Security: the lppasswd program incorrectly used settings from
+     ~/.cups/client.conf (STR #4319)
+   - Some gzip'd PPD files could not be used
+   - Cleaned up some job logging in the scheduler
+   - ATTR messages could cause string pool memory corruption in the
+     scheduler
+   - Printing to a raw queue could result in corrupt output due to
+     opportunistic compression
+   - The "make check" test suite did not work on Linux without the
+     cups-filters package installed (That's not fully fixed yet)
+   - The libusb-based USB backend incorrectly used write timeouts
+   - Using "@IF(name)" in an Allow or Deny rule did not wor
+     (STR #4328, Closes: #674520)
+   - The D-BUS notifier did not remove its lockfile (STR #4314)
+
+  [ Didier Raboud ]
+  * Link against OpenSSL instead of GnuTLS; mark two GnuTLS-specific
+    symbols in libcups2 as optional (Closes: #714492)
+  * Refresh 13 patches for 1.7.1
+  * Drop patches obsoleted by 1.7.1:
+    - avoid-sign-extending-CRCs-for-gz-decompression
+    - avoid_stale_lockfile_in_dbus_notifier
+    - cups-dbus-utf8
+    - fix-job-history-logging
+    - fix-stringpool-corruption
+    - prevent-USB-timeouts-causing-incorrect-print-output
+  * Refresh the testsuite patches
+  * Rewrite tests-use-cupsfilters patch to have the whole test-suite
+    pass
+
+  [ wookey ]
+  * Honour DEB_BUILD_OPTIONS=nocheck (Closes: #734670)
+
+ -- Didier Raboud <odyx@debian.org>  Thu, 09 Jan 2014 16:54:26 +0100
+
+cups (1.7.0-2) unstable; urgency=low
+
+  [ Russell Coker ]
+  * In the cups init script, run restorecon after creating a /var/run
+    directory (Closes: #677580)
+
+  [ Bastien ROUCARIÈS ]
+  * Add patch to drop two dangling references in cups-lpd.man
+    (Closes: #570157)
+
+  [ Nicolas Boulenguez ]
+  * Enhance cups' init-script(Closes: #718798)
+    - Specify SCRIPTNAME instead of relying on N=${0##*/} bashism
+    - Replace restart_xprint() implicit parameter (success) with an
+      explicit first parameter for readability
+    - Replace log_begin_msg() calls by log_daemon_msg() to use the
+      vendor-specific formatting
+    - Clarify exit statuses handling by making sure only the result of
+      start-stop-daemon is returned
+    - Don't call coldplug_usb_printers when the daemon fails to start
+    - Use status_of_proc from lsb-base >= 3.2.14 instead of a
+      hand-written implementation
+    - Unimplemented actions must return 3
+
+  [ Didier Raboud ]
+  * Let uscan verify PGP signatures on signed upstream tarballs
+  * Update manpage-hyphen-minus.patch to fix three missing fixes in
+    ippfind.1
+  * Add patch to fix expres{,s}ion typo
+  * Fix two occurences of pointer-from-integer in the color-management
+    extension patch
+  * Update drop_unnecessary_dependencies patch to make sure
+    libcupsimage2 is linked against pthread
+  * Bump Standards-Version to 3.9.5 without changes needed
+
+ -- Didier Raboud <odyx@debian.org>  Sat, 04 Jan 2014 15:46:02 +0100
+
+cups (1.7.0-1) unstable; urgency=low
+
+  * New 1.7.0 upstream release
+
+  [ Till Kamppeter ]
+  * Refresh most patches with quilt
+  * Removed usb-backend-do-not-crash-if-usb-disabled-in-bios and
+    cupsd-no-crash-on-avahi-threaded-poll-shutdown patches as they got
+    applied upstream
+  * Removed drop-arch-specifics-from-doc patch as it is not needed
+    anymore
+  * Updated drop_unnecessary_dependencies, manpage-hyphen-minus,
+    manpage-translations and ppd-poll-with-client-conf patches manually
+    to apply to the new CUPS version
+  * Added error counting exception from
+    usb-backend-do-not-crash-if-usb-disabled-in-bios to
+    tests-ignore-warnings
+  * Install the newly added ippfind utility and its manpage in
+    cups-client
+  * Added pwg.h to libcups2-dev package
+  * Call dh_auto_clean only if the file Makedefs is present, to avoid a
+    FTBFS
+  * Added color management extensions from Joe Simon's GSoC 2013
+    project.
+  * Patch cups-files.conf to activate CUPS daemon syncing of files when
+    closing, so that config files (like printers.conf) do not
+    mysteriously disappear (LP: #1157972)
+  * In the AppArmor profile, allow execution of programs in
+    /etc/cups/interfaces/, needed to make CUPS working with queues based
+    on System V interface scripts, especially PPD-less queues
+    auto-generated by cups-browsed from cups-filters 1.0.41 on.
+  * Silenced AppArmor noise from udev.conf in syslog (LP: #1229766)
+
+  [ Steve Langasek ]
+  * Add cups-filters (>= 1.0.42) as alternative to foomatic-filters
+    (which is deprecated) in package relationships
+
+  [ Didier Raboud ]
+  * Remove Roger Leigh from uploaders on his request with thanks for his
+    past work!
+  * Switch avahi LSB Should-Start dependency to be avahi-daemon; also
+    bump package relationship to >= 0.6.31-3~ (Closes: #731608)
+  * Refresh the manpage translation files
+  * Move the USB backend quirk rules file to cups-server-common
+  * Add 38 new 1.7.0 libcups2 symbols
+  * Mark one C++ libcupsppdc1 symbol as optional as it isn't exported in
+    1.7.0 anymore
+  * Import Fedora patches:
+    - to avoid sign-extending CRCs in gz decompression
+    - to build with full read-only relocations
+    - to fix job history logging (upstream patch)
+    - to set the internal default for SyncOnClose to Yes, instead of
+      only configuring it to Yes
+    - to fix a stringpool corruption issue
+    - to prevent USB timeouts causing incorrect print output
+  * Import Fedora patch updates:
+    - to dont-use-dbus-from-two-threads patch so it removes a call to
+      avahi_threaded_poll_stop()
+    - to avoid_stale_lockfile_in_dbus_notifier patch to call _exit when
+      handling SIGTERM
+  * Move manpage-translations patch at the very end of the patch series
+    to have it include all our patches
+
+ -- Didier Raboud <odyx@debian.org>  Fri, 03 Jan 2014 18:42:39 +0100
+
+cups (1.6.4-2) unstable; urgency=low
+
+  * Import several patches from Fedora, thanks to Tim Waugh:
+    - Avoid stale lockfile in dbus notifier
+    - Stop accessing avahi through D-Bus using two threads
+    - Fix jobs with multiple files and  multiple formats
+    - Revert upstream change to FINAL_CONTENT_TYPE in order to fix
+      printing to remote CUPS servers
+  * On purge, also delete the cupsd.conf.pre16-bak file to leave no
+    traces
+
+ -- Didier Raboud <odyx@debian.org>  Thu, 28 Nov 2013 12:22:09 +0100
+
+cups (1.6.4-1) unstable; urgency=low
+
+  * New 1.6.4 upstream release:
+    - Removed some duplicate size definitions for some ISO sizes that
+      were causing problems
+    - The IPP backend did not add the "last-document" attribute
+    - Added a SyncOnClose directive to cups-files.conf to force cupsd to
+      call fsync before closing any configuration/state files it writes
+    - Added USB quirk rule for Lexmark E238
+    - Closed server connections were still not always detected
+    - The libusb-based USB backend now loads its list of quirks from
+      files in /usr/share/cups/usb instead of using a hardcoded table
+    - The scheduler did not properly register ICC color profiles with
+      colord
+
+  [ Adam Conrad ]
+  * Update the cupsfilters tests patch to reflect the filter list in
+    cups-filters 1.0.36 and fix the testsuite
+  * Remove versioned Suggests/Recommends on ghostscript-cups (LP: #1212239)
+
+  [ Till Kamppeter ]
+  * debian/local/cups-daemon.cups.upstart: Increased timeout for waiting for
+    the CUPS daemon to get ready before automatically configuring printers
+    from 3 sec to 30 sec, on slower systems CUPS often needs more than 3
+    seconds and so the automatic printer configuration does not get done
+    (LP: #933308).
+  * debian/cups.dirs: Create empty /etc/cups/interfaces directory
+    (LP: #499585).
+  * debian/control: Use "Recommends: cups-filters (>= 1.0.36) |
+    ghostscript-cups (>= 9.02~)" as the CUPS filters in ghostscript-cups moved
+    to cups-filters.
+
+  [ Didier Raboud ]
+  * Don't run the dh_auto_clean command if the Makedefs doesn't exist
+    (Closes: #724134)
+  * Refresh patches for 1.6.4:
+    - Drop colord-add-profile-fix.patch, fixed differently upstream
+    - Drop usb-backend-more-quirk-rules.patch, fixed differently upstream
+    - Refresh 9 other patches
+  * Refresh the manpages translation files
+  * Install the usb-quirks in cups-common
+  * Update the tests-use-cupsfilters patch to use a patched copy of
+    cups-filters 1.0.38's cupsfilters.convs to circumvent #712337 and
+    allow cups-filters 1.0.38 to ship with the optimized pstops filters
+    path
+  * Bump cups-filters B-D to 1.0.38 to make sure the tests run as
+    expected
+  * Fix typo in README.Debian
+  * On upgrade to 1.6.4, keep a copy of obsolete stanzas to let
+    cups-browsed's postinst read them. This eases the 1.5->1.6 upgrade.
+
+  [ Helge Kreutzmann ]
+  * Update German manpages translation.
+
+ -- Didier Raboud <odyx@debian.org>  Wed, 27 Nov 2013 17:19:20 +0100
 
 cups (1.6.3-1) unstable; urgency=low
 
@@ -6343,3 +6736,4 @@ cupsys (1.0.1-1) unstable; urgency=low
   * Initial Release.
 
  -- Jeff Licquia <licquia@debian.org>  Sun,  6 Nov 1999 20:58:02 -0500
+

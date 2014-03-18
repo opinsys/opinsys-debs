@@ -1,17 +1,18 @@
 Source: cups
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 Priority: optional
 Section: net
-Maintainer: Debian Printing Team <debian-printing@lists.debian.org>
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: Debian Printing Team <debian-printing@lists.debian.org>
 Uploaders: 
  Masayuki Hatta (mhatta) <mhatta@debian.org>,
  Till Kamppeter <till.kamppeter@gmail.com>,
- Roger Leigh <rleigh@debian.org>, 
  Jeff Licquia <licquia@debian.org>,
  Martin Pitt <mpitt@debian.org>,
  Didier Raboud <odyx@debian.org>
 Build-Depends: 
  debhelper (>= 9~),
+ dh-apparmor,
  dpkg-dev (>= 1.16.1~),
  patch,
  autoconf, 
@@ -43,8 +44,8 @@ Build-Depends:
  sharutils,
  zlib1g-dev,
 # Needed for running the tests, not for the build
- cups-filters (>= 1.0.25~),
- libcupsfilters-dev (>= 1.0.25~)
+ cups-filters (>= 1.0.38~),
+ libcupsfilters-dev (>= 1.0.38~)
 Homepage: http://www.cups.org
 Vcs-Git: git://anonscm.debian.org/pkg-cups/cups.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-cups/cups.git;a=summary
@@ -137,12 +138,13 @@ Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends},
  ${misc:Depends},
  libc-bin (>= 2.13),
+ cups-core-drivers (>= ${binary:Version}),
  cups-daemon (>= ${binary:Version}),
  debconf (>= 1.2.9) | debconf-2.0,
  poppler-utils (>= 0.12),
  procps,
  ghostscript (>= 9.02~),
- lsb-base (>= 3),
+ lsb-base (>= 3.2-14~),
  cups-common (>= ${source:Version}),
  cups-server-common (>= ${source:Version}),
  cups-client (>= ${binary:Version}),
@@ -151,9 +153,9 @@ Depends: ${shlibs:Depends},
  cups-filters (>= 1.0.24-3~)
 Recommends: avahi-daemon,
  colord,
- foomatic-filters (>= 4.0), 
+ cups-filters (>= 1.0.42) | foomatic-filters (>= 4.0),
  printer-driver-gutenprint,
- ghostscript-cups (>= 9.02~)
+ cups-filters (>= 1.0.36) | ghostscript-cups (>= 9.02~)
 Suggests: cups-bsd,
  foomatic-db-compressed-ppds | foomatic-db,
  printer-driver-hpcups,
@@ -164,7 +166,7 @@ Suggests: cups-bsd,
 Replaces: ghostscript-cups (<< 9.02~)
 Breaks: foomatic-filters (<< 4.0), ghostscript-cups (<< 9.02~)
 Multi-Arch: foreign
-Description: Common UNIX Printing System(tm) - server
+Description: Common UNIX Printing System(tm) - PPD/driver support, web interface
  The Common UNIX Printing System (or CUPS(tm)) is a printing system and 
  general replacement for lpd and the like.  It supports the Internet 
  Printing Protocol (IPP), and has its own filtering driver model for 
@@ -172,6 +174,27 @@ Description: Common UNIX Printing System(tm) - server
  .
  This package provides the parts of CUPS which are needed for using printer
  drivers.
+
+Package: cups-core-drivers
+Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
+ cups-daemon (>= ${binary:Version}),
+ libcups2 (= ${binary:Version}),
+ cups-filters-core-drivers (>= 1.0.24-3~)
+Recommends: avahi-daemon
+Replaces: cups (<< 1.7.1-4~)
+Breaks: cups (<< 1.7.1-4~)
+Multi-Arch: foreign
+Description: Common UNIX Printing System(tm) - PPD-less printing
+ The Common UNIX Printing System (or CUPS(tm)) is a printing system and 
+ general replacement for lpd and the like.  It supports the Internet 
+ Printing Protocol (IPP), and has its own filtering driver model for 
+ handling various document types.
+ .
+ This package provides the parts of CUPS which are needed for PPD-less
+ printing on IPP printers with common data formats.
 
 Package: cups-daemon
 Architecture: any
@@ -183,11 +206,10 @@ Depends: ${shlibs:Depends},
  libcups2 (= ${binary:Version}),
  ssl-cert (>= 1.0.11),
  adduser,
- bc,
- ${ubuntu:avahi-daemon}
+ bc
 Recommends: colord,
  cups-browsed,
- ${debian:avahi-daemon}
+ ${debian:avahi-daeon}
 Suggests: cups, cups-bsd,
  cups-common (>= ${source:Version}),
  cups-server-common (>= ${source:Version}),
@@ -196,8 +218,7 @@ Suggests: cups, cups-bsd,
  cups-filters,
  poppler-utils (>= 0.12),
  ghostscript (>= 9.02~),
- ghostscript-cups (>= 9.02~),
- foomatic-filters (>= 4.0), 
+ cups-filters (>= 1.0.42) | foomatic-filters (>= 4.0),
  foomatic-db-compressed-ppds | foomatic-db,
  printer-driver-gutenprint,
  printer-driver-hpcups,
@@ -354,8 +375,8 @@ Description: Common UNIX Printing System(tm) - common files
 Package: cups-server-common
 Architecture: all
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Replaces: cups (<< 1.6.2-2~)
-Breaks: cups (<< 1.6.2-2~)
+Replaces: cups (<< 1.6.2-2~), cups-common (<< 1.7.0)
+Breaks: cups (<< 1.6.2-2~), cups-common (<< 1.7.0)
 Multi-Arch: foreign
 Description: Common UNIX Printing System(tm) - server common files
  The Common UNIX Printing System (or CUPS(tm)) is a printing system and
