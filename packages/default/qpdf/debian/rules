@@ -25,3 +25,10 @@ install/libqpdf-dev::
 	mkdir -p debian/tmp/usr/share/doc/libqpdf-dev/examples
 	cp -p $(DEB_SRCDIR)/examples/*.cc $(DEB_SRCDIR)/examples/*.c \
 		debian/tmp/usr/share/doc/libqpdf-dev/examples
+
+PACKAGE = $(shell dpkg-parsechangelog | sed -r -n 's/^Source: (.*)/\1/p')
+SRC_VERSION = $(shell dpkg-parsechangelog | sed -r -n -e 's/^Version: (([0-9]+):)?(.*)-.*/\3/p')
+.PHONY: get-orig-source
+get-orig-source:
+	uscan --download-current-version --repack --no-symlink --rename
+	tar -z -x -v -f ../$(PACKAGE)_$(SRC_VERSION).orig.tar.gz --strip-components=1
