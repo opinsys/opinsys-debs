@@ -31,7 +31,6 @@ CONFIGURE_ARGS :=				\
 	--enable-cairo-output			\
 	--enable-poppler-glib			\
 	--enable-poppler-qt4			\
-	--enable-poppler-qt5			\
 	--enable-poppler-cpp			\
 	--enable-gtk-doc			\
 	--enable-xpdf-headers			\
