@@ -65,6 +65,8 @@ endif
 
 	dh_apparmor -pcups-browsed --profile-name=usr.sbin.cups-browsed
 
+override_dh_auto_test:
+
 PACKAGE = $(shell dpkg-parsechangelog | sed -r -n 's/^Source: (.*)/\1/p')
 SRC_VERSION = $(shell dpkg-parsechangelog | sed -r -n -e 's/^Version: (([0-9]+):)?(.*)-.*/\3/p')
 .PHONY: get-orig-source

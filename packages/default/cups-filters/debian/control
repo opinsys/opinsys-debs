@@ -34,9 +34,7 @@ Build-Depends:
  libavahi-common-dev,
  libavahi-client-dev,
  libavahi-glib-dev,
- librsvg2-bin,
-# Needed for tests
- fonts-dejavu-core
+ librsvg2-bin
 Homepage: http://www.openprinting.org/
 Vcs-Git: https://alioth.debian.org/anonscm/git/printing/cups-filters.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=printing/cups-filters.git
