@@ -1,157 +1,269 @@
-cups-filters (1.0.40-0ubuntu1) saucy; urgency=low
+cups-filters (1.0.48-0ubuntu1) trusty; urgency=high
 
-  * New upstream bug fix release 1.0.40:
+  * New upstream release 1.0.48
+     - cups-browsed: Fix for a crash which happens on Bonjour reports of
+       printers without "product", "usb_MDL", and "ty" fields in the
+       text record (LP: #1284834).
+     - cups-browsed: In README and in the sample startup scripts/configs
+       for System V Init and Upstart taken into account the fact that it
+       is not required any more to start avahi-daemon before starting
+       cups-browsed.
+
+ -- Till Kamppeter <till.kamppeter@gmail.com>  Wed, 12 Mar 2014 21:03:06 +0100
+
+cups-filters (1.0.47-2) unstable; urgency=high
+
+  * In cups-browsed's initscript, demote avahi-daemon from
+    Required-{Start,Stop}, to Should-{Start,Stop}, to cope with the
+    corresponding demotion in dependencies (Closes: #741353)
+  * Set urgency to high for the fix of four CVEs in -1.
+
+ -- Didier Raboud <odyx@debian.org>  Tue, 11 Mar 2014 19:05:48 +0100
+
+cups-filters (1.0.47-1) unstable; urgency=medium
+
+  * New upstream release 1.0.47
+     - pdftoopvp: SECURITY FIX for CVE-2013-6474, CVE-2013-6475,
+       and CVE-2013-6476: Introduction of gmallocn and gmallocn3
+       to protect against arbitrary code execution with the
+       privileges of the "lp" user via malicious PDF files. Also
+       restrict the directory from where OPVP drivers can get
+       loaded (Closes: #741318)
+     - urftopdf: SECURITY FIX for CVE-2013-6473: Two heap-based
+       buffer overflow flaws in urftopdf. If a malicious URF file
+       were processed it could lead to arbitrary code execution
+       with the privileges of the "lp" user (Closes: #741318)
+
+  [ Till Kamppeter ]
+  * Demote Dependency of cups-browsed on avahi-daemon to Recommends, also
+    remove "on started avahi-daemon" from the "start on ..." rule in
+    /etc/init/cups-browsed.conf (LP: #1242185, LP: #1178172)
+
+ -- Didier Raboud <odyx@debian.org>  Tue, 11 Mar 2014 13:36:14 +0100
+
+cups-filters (1.0.46-2) unstable; urgency=medium
+
+  * Convert to dh tiny style away from cdbs, fix and run the tests in the
+    process
+  * Install cups-browsed.service, therefore build-depend on and use dh-systemd
+  * Move the repository from pkg-cups to printing; update the VCS-* fields
+    accordingly
+
+ -- Didier Raboud <odyx@debian.org>  Thu, 06 Mar 2014 17:03:34 +0100
+
+cups-filters (1.0.46-1) unstable; urgency=medium
+
+  * New upstream release 1.0.46
+  * Move LP_LOAD_MODULES configuration away from cups to
+    /etc/modules-load.d/cups-filters.conf
+
+ -- Didier Raboud <odyx@debian.org>  Mon, 24 Feb 2014 15:45:32 +0100
+
+cups-filters (1.0.46-0ubuntu1) trusty; urgency=low
+
+  * New upstream release 1.0.46
+     - gstoraster: Ignore SIGCHLD, rely on waitpid instead. Thanks
+       to Lauri Tirkkonen (Upstream bug #1184).
+     - gstoraster: Fix two instances of insufficient EINTR handling.
+       Thanks to Lauri Tirkkonen (Upstream bug #1184).
+
+ -- Till Kamppeter <till.kamppeter@gmail.com>  Wed, 19 Feb 2014 20:19:06 +0100
+
+cups-filters (1.0.45-1) unstable; urgency=medium
+
+  * New upstream release 1.0.45
+    - cups-browsed: Under Upstart load the AppArmor profile (LP: #1276630)
+    - foomatic-rip: Do not use PATH_MAX for the length of static strings
+      which are supposed to hold a command line. Use our own CMDLINE_MAX
+      constant to set them to a length of 65535 bytes
+      (LP: #1019662, Closes: #738440).
+
+  * Drop the upstart patch now included upstream
+  * Bump Standards-Version to 3.9.5 without changes needed
+
+ -- Didier Raboud <odyx@debian.org>  Fri, 14 Feb 2014 10:37:28 +0100
+
+cups-filters (1.0.44-2) unstable; urgency=medium
+
+  [ Jamie Strandboge ]
+  * Add patch to ensure that under upstart, the apparmor profile is
+    loaded in the kernel before cups-browsed is started (LP: #1276630)
+
+  [ Didier Raboud ]
+  * Drop specific fonts' dependencies from cups-filters, as a reasonable
+    set of fonts is provided through fontconfig already, thanks to
+    Fabian Greffrath (Closes: #735223, #670059)
+
+ -- Didier Raboud <odyx@debian.org>  Wed, 05 Feb 2014 17:25:00 +0100
+
+cups-filters (1.0.44-1) unstable; urgency=low
+
+  * New upstream release 1.0.44
+
+  [ Till Kamppeter ]
+  * Split binary package "cups-filters" into "cups-filters" and
+    "cups-filters-core-drivers". In low-footprint (mobile) environments we
+    can restrict the printer support to only IPP printers with known
+    common languages (PDF, PostScript, PWG Raster, PCL) to get rid of
+    the heavy load of drivers and PPDs for thousands of printers. From
+    cups-filters we need only the "cups-browsed" and
+    "cups-filters-core-drivers" (plus library packages) then and with
+    "cups-daemon" and "cups-core-drivers" from CUPS and "poppler-utils"
+    and "libpoppler" from Poppler one gets a low-footprint printing stack
+    for mobile devices setting up IPP printers automatically (Needs
+    "CreateIPPPrinterQueues Yes" in cups-browsed.conf).
+  * AppArmor profile: Allow reading and writing in /tmp/ as cups-browsed
+    creates temporary files when setting up native IPP printers PPD-less
+    ("CreateIPPPrinterQueues Yes" in cups-browsed.conf).
+
+  [ Didier Raboud ]
+  * Strip UNRELEASED 1.0.39-1 changelog entry (Closes: #733981)
+  * Drop update-rc.d arguments in Debian, as they are no longer
+    supported
+
+ -- Didier Raboud <odyx@debian.org>  Sun, 26 Jan 2014 12:28:55 +0100
+
+cups-filters (1.0.43-1) unstable; urgency=medium
+
+  * New upstream release 1.0.43:
+    - pdftopdf: Fixed software copy generation logic for printers
+      with hardware copy generation, but without collate support
+      (LP: #1259240).
+    - pstopdf: Support for the "landscape" and
+      "orientation-requested" options (LP: #1243484).
+  * Drop all patches:
+    - PATH_MAX fix was from upstream;
+    - The Fedora fix for PDF landscape printing got included
+      differently.
+  * Update debian/watch to prefer .xz tarballs
+  * Install manpages for cups-browsed and foomatic-rip
+
+ -- Didier Raboud <odyx@debian.org>  Thu, 19 Dec 2013 19:29:49 +0100
+
+cups-filters (1.0.42-2) unstable; urgency=low
+
+  [ Didier Raboud ]
+  * Switch avahi LSB Required-{Start,Stop} dependencies to be
+    avahi-daemon; also bump package relationship to >= 0.6.31-3~
+    (Closes: #731611)
+  * Add Debian-specific more lightweight default testpage in svg;
+    convert it at build-time with rsvg-convert, hence add librsvg2-bin
+    in Build-Depends. Thanks to Stefan Nagy (Closes: #718895)
+  * Make all Ubuntu derivatives use Ubuntu material through dpkg-vendor
+    --derives-from instead of --is
+  * Backport upstream patch to fix kFreeBSD FTBFS due to conflicting
+    PATH_MAX defintions. Thanks to Peter Green (Closes: #731658)
+
+  [ Felix Geyer ]
+  * Include AppArmor profile (Closes: #728709)
+
+ -- Didier Raboud <odyx@debian.org>  Tue, 10 Dec 2013 15:01:49 +0100
+
+cups-filters (1.0.42-1) unstable; urgency=low
+
+  * New upstream release 1.0.42:
+     - cupsfilters.convs: Corrected cost factor of
+       vnd.cups-postscript -> vnd.cups-raster conversion with
+       gstoraster, so that input data of the type
+       application/vnd.adobe-reader-postscript is converted
+       correctly (not via pstotiff). Thanks to Tim Waugh from Red
+       Hat for this patch
+     - cups-browsed: Fixed several memory leaks by adding missing
+       free() calls and removing an unneeded strdup(). Thanks to
+       Jaromir Koncicky from Red Hat for the patch (Red Hat bug
+       #1027317).
+     - foomatic-rip: Moved foomatic-rip's upstream home from the
+       foomatic-filters package to cups-filters, to make it easier
+       for distributions to ship and maintain a complete printing
+       stack and also to make upstream maintenance and development
+       easier.
+     - gstoraster: Fixed build system for gstoraster use D-Bus for
+       colord support.
+
+  [ Till Kamppeter ]
+  * Drop patches included upstream:
+    - Include dbus to make sure colord support works; therefore add
+      libdbus-1-dev in Build-Depends
+    - Fix memory leaks in cups-browsed
+    - Adjust filter costs so application/vnd.adobe-read-postscript input
+      doesn't go via pstotiff
+  * Updated libcupsfilters1 symbols for 1.0.42
+  * Add "Conflicts/Replaces/Provides: foomatic-filters" for the
+    cups-filters binary package. Now foomatic-rip is part of
+    cups-filters and the foomatic-filters package is obsolete and should
+    get automatically uninstalled by the cups-filters binary package.
+
+  [ Didier Raboud ]
+  * Move packaging from bzr to git
+    - Drop .bzr-builddeb
+    - Update Vcs-* fields
+  * Drop conflicting Recommends against foomatic-filters
+  * Rename ttf-dejavu dependency to fonts-dejavu (Closes: #716744)
+
+ -- Didier Raboud <odyx@debian.org>  Fri, 06 Dec 2013 23:36:33 +0100
+
+cups-filters (1.0.41-2) unstable; urgency=low
+
+  * Import several patches from Fedora:
+    - Fix PDF landscape printing
+    - Include dbus to make sure colord support works; therefore add
+      libdbus-1-dev in Build-Depends
+    - Fix memory leaks in cups-browsed (Closes: #730720)
+    - Adjust filter costs so application/vnd.adobe-read-postscript input
+      doesn't go via pstotiff
+  * Use dh-autoreconf to cope with the patching of configure.ac
+  * In cups-filters, add Replaces and Breaks against cups-ppdc << 1.6 as
+    pcl.h moved (Closes: #730709)
+
+ -- Didier Raboud <odyx@debian.org>  Thu, 28 Nov 2013 23:27:04 +0100
+
+cups-filters (1.0.41-1) unstable; urgency=low
+
+  * New upstream release 1.0.41:
      - pdftops: Introduced new "hybrid" renderer: Here usually
        Ghostscript is used, but if the printer is a Brother,
        Minolta, or Konica Minolta Poppler's pdftops gets used. This
        is a quirk rule to work around bugs in the PS interpreters
        of the printers (LP: #1097105, LP: #1053443, LP: #1205898, LP: #238129,
        LP: #1072915, LP: #293832).
-     - Fixed format string issues and added __attribute__ wording
-       to printf-like functions to catch any regressions. Thanks to
-       Tim Waugh from Red Hat for the patch.
-     - pdftops: Fix for landscape PDF handling. Do not use the
-       command line options "-origpagesizes" and
-       "-choosePaperByPDFPageSize" of Poppler's pdftops utility on
-       already processed PDF data. Thanks to Tim Waugh from Red Hat
-       for the patch.
-     - cups-browsed: Improve the efficiency of BrowsePoll by using
-       IPP notifications when possible. It falls back to the
-       previous behaviour if it is not possible to use this
-       optimization. Thanks to Tim Waugh from Red Hat for the patch.
-  * pdftops-only-use-origpagesizes-on-unprocessed-PDFs.patch: Removed patch
-    backported from upstream.
-  * debian/rules: Added ./configure option "--with-pdftops=hybrid" to activate
-    the hybrid rendering mode (LP: #1097105, LP: #1053443, LP: #1205898,
-    LP: #238129, LP: #1072915, LP: #293832).
-
- -- Till Kamppeter <till.kamppeter@gmail.com>  Thu, 10 Oct 2013 12:04:57 +0200
-
-cups-filters (1.0.38-0ubuntu2) saucy; urgency=low
-
-  * pdftops-only-use-origpagesizes-on-unprocessed-PDFs.patch: Fix for landscape
-    PDF handling in Poppler mode. Do not use the command line options
-    "-origpagesizes" and "-choosePaperByPDFPageSize" of Poppler's pdftops
-    utility on already processed PDF data. Thanks to Tim Waugh from Red Hat for
-    the patch.
-
- -- Till Kamppeter <till.kamppeter@gmail.com>  Wed, 02 Oct 2013 12:49:34 +0200
-
-cups-filters (1.0.38-0ubuntu1) saucy; urgency=low
-
-  * New upstream release 1.0.38:
-     - pdftops: Added "-dNOINTERPOLATE" to the Ghostscript command line
-       for quicker processing of embedded bitmaps.
-     - pstopdf: Added "-dUseCIEColor" to the Ghostscript command line
-       to assure compatibility with newer Ghostscript versions (9.08
-       and newer).
-
- -- Till Kamppeter <till.kamppeter@gmail.com>  Tue, 03 Sep 2013 17:03:34 +0200
-
-cups-filters (1.0.37-0ubuntu1) saucy; urgency=low
-
-  * New upstream release 1.0.37:
-     - Added example configuration files for systemd and Upstart. Thanks
-       to Tomáš Chvátal for the systemd file.
-     - Build system: Make sure that gstoraster gets linked against the
-       libcupsfilters of the currently built package and not of the
-       system. Thanks to Tomáš Chvátal.
-     - cupsfilters.convs: Reworked the cost factors of the filters to
-       avoid bogus filter chains like pstotiff|imagetopdf instead of
-       pstopdf|pdftopdf for PostScript->PDF. Thanks to Tim Waugh from
-       Red Hat for the report.
-     - pdftopdf: Accept additional command line options for PPD-less
-       printing.
-     - cups-browsed: Fixed building with CUPS 1.5.x and older,
-       ippSetVersion() was missing under the accessor function definitions
-       for backward compatibility.
-
- -- Till Kamppeter <till.kamppeter@gmail.com>  Wed, 28 Aug 2013 22:21:32 +0200
-
-cups-filters (1.0.36-0ubuntu2) saucy; urgency=low
-
-  * Drop Recommends and Breaks on ghostscript-cups, now that we're
-    using the magic Provides/Conflicts/Replaces trio (LP: #1212239)
-
- -- Adam Conrad <adconrad@ubuntu.com>  Wed, 14 Aug 2013 12:42:57 -0600
-
-cups-filters (1.0.36-0ubuntu1) saucy; urgency=low
-
-  [ Till Kamppeter ]
-  * New upstream release 1.0.36:
-     - Fixed libdl detection in configure. Thanks to Andreas Huettel and
-       Yuta Satoh (Gentoo bug #478642).
-     - cups-browsed: Allow BrowsePoll operation also access print queues
-       on older CUPS servers. Thanks to David Mohr for the patch.
      - cups-browsed: Assure that it always applies to the local CUPS
        daemon and never to a remote one specified via client.conf
        (LP: #1207203).
-     - pdftoopvp, pdftoijs, pdftoraster, bannertopdf: Made code working
-       with Poppler 0.24.x (Upstream bug #1144).
-     - gstoraster: Silenced compiler warnings.
-     - gstoraster, pdftoraster: Added support for PPD-less printing
-       controlled by IPP attributes (CUPS 1.7.x+ only).
-     - gstoraster, gstopxl: Moved these filters from Ghostscript to
-       cups-filters as upstream home.
-     - libcupsfilters: Added new cupsRasterParseIPPOptions() API
-       function for PPD-less printing controlled by IPP attributes
-       (raster.h, CUPS 1.7.x+ only).
-     - pdftopdf: Added support for page labels. "page-label" option and
-       "CLASSIFICATION" environment variable. Thanks to Tim Waugh from
-       Red Hat for the patch.
      - pdftops: If one or more of the PDF-to-PS renderers (Ghostscript,
        Poppler pdftops, Poppler pdftocairo, acroread) is not installed
        at build time, pre-fill the appropriate executable's path with the
        executable name to allow the use of this renderer when it gets
        installed later (Closes: #716842).
-     - cups-browsed: Do not resolve host names of remote printers discovered
-       via CUPS broadcasts (Upstream bug #1141).
      - Added man pages for cups-browsed and cups-browsed.conf. Thanks to
        Brian Potkin for the contribution (Closes: #714460).
-     - Install also escp.h, it is useful for .drv files.
-  * New upstream release 1.0.35:
-     - pdftoraster: Silenced compiler warning (Upstream bug #1092).
-     - bannertopdf: Fixed typo which prevented the host name to be shown
-       (Upstream bug #1115).
-     - README: Fixed info about the PPD keyword cupsManualCopies (Upstream bug
-       #1086).
-     - Modified the cost factors of the filters to avoid unneeded PDF
-       conversion detours when the input data is PostScript. Instead of
-       pstopdf->pdftopdf->pdftops and pstopdf->pdftopdf->gstoraster we
-       get pstops and pstops->gstoraster now (Upstream bug #1138).
-     - pdftops: Added experimental support for pdftocairo as PDF renderer.
-       Note that PostScript level 1 output and PDF input with color
-       spaces other than DeviceRGB, DeviceGray, sRGB or sGray is not
-       supported. PDFs generated by Cairo (for example when printing from
-       evince) uses only supported color spaces. Thanks to James Cloos
-       for the patch (Upstream bug #1139).
-     - cups-browsed: Changed default of browsing protocols fron none to
-       both DNS-SD and CUPS.
      - pdftops: Let Poppler generally generate PostScript level 3 if the
        PPD identifies the printer as PS3 printer, make an exception of
        sending PostScript Level 2 only for HP's laser printers, to not
        compromise print quality and performance on all PS3 printers only
        due to some buggy HP models (Closes: #712949, see also LP: #277404).
-     - Install pcl.h, it is needed by cupsfilters.drv. Thanks to Jiri
-       Popelka from Red Hat for the patch (Upstream bug #1133).
-     - Make cups-filters building with automake 1.13. Thanks to Andreas K.
-       Huettel (dilfridge) on IRC.
-     - libcupsfilters, libfontembed, pdftopdf, texttopdf, cups-browsed:
-       Fixed several resource leaks and other problems. Thanks to Jiri
-       Popelka from Red Hat for the patches (Upstream bug #1116).
-  * debian/control: Added "Conflicts/Provides/Replaces: ghostscript-cups"
-    to the cups-filters binary package as all files from ghostscript-cups
-    moved to cups-filters.
-  * debian/libcupsfilters1.symbols: Updated.
+
+  [ Till Kamppeter ]
+  * Added Conflicts/Provides/Replaces and droppded Recommends/Breaks against
+    ghostscript-cups to the cups-filters binary package as all files from
+    ghostscript-cups moved to cups-filters (LP: #1212239).
+  * debian/libcupsfilters1.symbols: Updated for 1.0.36
   * debian/rules: Removed "--with-browseremoteprotocols=dnssd" from the
     ./configure command line, we use the upstream default "dnssd,cups"
     now.
+  * debian/rules: Added ./configure option "--with-pdftops=hybrid" to activate
+    the hybrid rendering mode (LP: #1097105, LP: #1053443, LP: #1205898,
+    LP: #238129, LP: #1072915, LP: #293832).
 
   [ Didier Raboud ]
   * Install escp.h and pcl.h in the CUPS ppdc include directory; this
     fixes cupsfilters.drv.
+  * In cups-browsed's postinst:
+    - Drop useless uses of cat
+    - Handle upgrade of Browse{Remote,Local}Protocols from cups < 1.6
+  * Make cups-browsed break cups-daemon << 1.6.4 to make sure the above
+    upgrade is left possible
 
- -- Till Kamppeter <till.kamppeter@gmail.com>  Wed, 26 Jun 2013 18:58:06 +0200
+ -- Didier Raboud <odyx@debian.org>  Wed, 27 Nov 2013 17:39:38 +0100
 
 cups-filters (1.0.34-3) unstable; urgency=low
 

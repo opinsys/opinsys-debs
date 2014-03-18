@@ -1,62 +1,66 @@
 #!/usr/bin/make -f
-# -*- makefile -*-
-# Sample debian/rules that uses debhelper.
-# GNU copyright 1997 to 1999 by Joey Hess.
-#
-# Modified to make a template file for a multi-binary package with separated
-# build-arch and build-indep targets  by Bill Allombert 2001
 
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+derives_from_ubuntu := $(shell (dpkg-vendor --derives-from Ubuntu && echo "yes") || echo "no")
 
-DPKG_EXPORT_BUILDFLAGS=1
-include /usr/share/dpkg/buildflags.mk
-LDFLAGS += -Wl,--as-needed
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
-include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/class/autotools.mk
+%:
+	dh $@ --with autoreconf,systemd
 
-DEB_CONFIGURE_EXTRA_FLAGS := --libdir=/usr/lib/$(DEB_HOST_MULTIARCH) --mandir=/usr/share/man --enable-static --with-pdftops=hybrid
-# Do not install /etc/rc?.d/* links, on Ubuntu we use Upstart and on Debian
-# we create the links on our own
-# DEB_CONFIGURE_EXTRA_FLAGS += --with-rcdir=/etc/init.d --with-rclevels=
+override_dh_auto_configure:
+	dh_auto_configure -- \
+		--disable-silent-rules \
+		--libdir=/usr/lib/$(DEB_HOST_MULTIARCH) \
+		--mandir=/usr/share/man \
+		--enable-static \
+		--with-test-font-path=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
 
-DEB_MAKE_INSTALL_TARGET := install DESTDIR=$(DEB_DESTDIR)
-DEB_INSTALL_CHANGELOGS_ALL := NEWS
-DEB_INSTALL_DOCS_ALL := README AUTHORS
+override_dh_installchangelogs:
+	dh_installchangelogs NEWS
 
-#DEB_DH_STRIP_ARGS := --dbg-package=cups-filters-dbg
-DEB_DH_INSTALL_SOURCEDIR := debian/tmp
-DEB_DH_FIXPERMS_ARGS := -Xusr/lib/cups/backend
-DPKG_GENSYMBOLS_CHECK_LEVEL=4
-export DPKG_GENSYMBOLS_CHECK_LEVEL
+override_dh_installdocs:
+	dh_installdocs -A AUTHORS README
 
-ifeq ($(shell dpkg-vendor --query vendor), Ubuntu)
-DEB_DH_INSTALLINIT_ARGS := --upstart-only
+override_dh_fixperms:
+	dh_fixperms -Xusr/lib/cups/backend
+	
+	# Make the serial backend run as root, since /dev/ttyS* are
+	# root:dialout and thus not accessible as user lp
+	chmod 700 debian/cups-filters/usr/lib/cups/backend/serial
+
+override_dh_makeshlibs:
+	dh_makeshlibs -- -c4
+
+override_dh_installinit:
+ifeq ($(derives_from_ubuntu),yes)
+	dh_installinit --upstart-only
 else
-DEB_DH_INSTALLINIT_ARGS := -u'start 50 2 3 4 5 . stop 80 1 .'
+	dh_installinit
 endif
 
-cleanbuilddir::
+override_dh_auto_clean:
 	[ ! -r Makefile ] || make distclean
 	rm -f debian/*.upstart # master copy is in debian/local
 
-common-install-prehook-impl::
+override_dh_install:
+ifeq ($(derives_from_ubuntu),yes)
 	# Use upstart script on Ubuntu; we need to hide it away for Debian
 	# builds, as dh_installinit does not have a --sysvinit-only
-	if dpkg-vendor --is ubuntu; then \
-	    cp debian/local/*.upstart debian; \
-	fi
-
-binary-post-install/cups-filters::
-	# Ubuntu-specific stuff
+	cp debian/local/*.upstart debian
+endif
+	dh_install
+	
+ifeq ($(derives_from_ubuntu),yes)
 	#  - Install Apport hook
 	#  - Replace standard test page template by Ubuntu-branded one
-	if dpkg-vendor --is ubuntu; then \
-	   install -D -m 644 debian/local/apport-hook.py debian/$(cdbs_curpkg)/usr/share/apport/package-hooks/source_cups-filters.py; \
-	   install -D -m 644 debian/local/default-testpage.pdf debian/$(cdbs_curpkg)/usr/share/cups/data/default-testpage.pdf; \
-	fi
+	install -D -m 644 debian/local/apport-hook.py debian/cups-filters/usr/share/apport/package-hooks/source_cups-filters.py
+	install -D -m 644 debian/local/default-testpage-ubuntu.pdf debian/cups-filters/usr/share/cups/data/default-testpage.pdf
+else
+	mkdir -p debian/cups-filters/usr/share/cups/data/
+	rsvg-convert debian/local/default-testpage-debian.svg -f pdf > debian/cups-filters/usr/share/cups/data/default-testpage.pdf
+endif
 
-	# Make the serial backend run as root, since /dev/ttyS* are
-	# root:dialout and thus not accessible as user lp
-	chmod 700 debian/$(cdbs_curpkg)/usr/lib/cups/backend/serial
+	# Install the modules loader for lp, ppdev and parport_pc
+	install -D -m 644 debian/local/modules-load.conf debian/cups-filters/etc/modules-load.d/cups-filters.conf
+
+	dh_apparmor -pcups-browsed --profile-name=usr.sbin.cups-browsed

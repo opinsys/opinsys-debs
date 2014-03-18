@@ -1,10 +1,28 @@
 etc/fonts/conf.d/99pdftoopvp.conf
 usr/bin/*
 usr/lib/cups/backend/*
-usr/lib/cups/filter/*
+usr/lib/cups/filter/imagetopdf
+usr/lib/cups/filter/commandtopclx
+usr/lib/cups/filter/commandtoescpx
+usr/lib/cups/filter/pdftoijs
+usr/lib/cups/filter/textonly
+usr/lib/cups/filter/gstoraster
+usr/lib/cups/filter/urftopdf
+usr/lib/cups/filter/texttopdf
+usr/lib/cups/filter/texttops
+usr/lib/cups/filter/imagetops
+usr/lib/cups/filter/rastertoescpx
+usr/lib/cups/filter/bannertopdf
+usr/lib/cups/filter/pdftoopvp
+usr/lib/cups/filter/imagetoraster
+usr/lib/cups/filter/foomatic-rip
+usr/lib/cups/filter/gstopxl
+usr/lib/cups/filter/pstopdf
 usr/share/cups/*
 usr/share/ppd/*
 ../*.ppd-updater usr/share/cups/ppd-updaters/
+# Manpages
+usr/share/man/man1/foomatic-rip.1
 # Install files deprecated by CUPS
 ../../filter/escp.h	usr/share/cups/ppdc/
 ../../filter/pcl.h	usr/share/cups/ppdc/

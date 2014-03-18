@@ -25,33 +25,43 @@ set -e
 if [ "$1" = "configure" ]; then
 
   # Look for broadcasting/browsing configuration in /etc/cups/cupsd.conf
-  # and overtake the directives to /etc/cups/cups-browsed.conf. Cooment
+  # and overtake the directives to /etc/cups/cups-browsed.conf. Comment
   # out lines to activate CUPS Broadcasting and browsing, to assure that
   # users use this deprecated method only if really needed.
   
   # Do this only on the initial introduction of cups-browsed or on the update
-  # from any version older than 1.0.32 to 1.0.32 or newer (to avoid doing this
+  # from any version older than 1.0.41 to 1.0.41 or newer (to avoid doing this
   # more than once on the same system)
-  if dpkg --compare-versions "$2" lt "1.0.32~" && [ -r /etc/cups/cupsd.conf ]; then
+  if dpkg --compare-versions "$2" lt "1.0.41~" && [ -r /etc/cups/cupsd.conf ]; then
       ECHO=/bin/echo
       linesadded=0
       tempfiles=
       trap 'rm -f $tempfiles; exit 0' 0 HUP INT QUIT ILL ABRT PIPE TERM
       tmpfile0=`mktemp -t updateppds.XXXXXX`
       tempfiles="$tempfiles $tmpfile0"
-      if cat /etc/cups/cupsd.conf | grep -Piq '^\s*BrowseRemoteProtocols.*\s+cups\b' 2>/dev/null; then
-	  if ! cat /etc/cups/cups-browsed.conf | grep -Piq '^\s*BrowseRemoteProtocols.*\s+\#?cups\b' 2>/dev/null; then
-	      if cat /etc/cups/cups-browsed.conf | grep -Piq '^\s*BrowseRemoteProtocols\s+' 2>/dev/null; then
-		  perl -p -i -e 's/^(\s*BrowseRemoteProtocols.*)/\n\# Please remove the "\#" before "cups" to make printers on servers running\n\# CUPS 1.5.x or older available on this machine.\n$1 \#cups\n/i' /etc/cups/cups-browsed.conf
-	      else
-		  linesadded=1
-		  $ECHO -en '\n# Please remove the "#" in the beginning of the following line to make printers\n# on servers running CUPS 1.5.x or older available on this machine.\n#BrowseRemoteProtocols dnssd cups\n\n' >> $tmpfile0
-	      fi
-	  fi
+      # If cupsd.conf.pre16-bak exists (and therefore has the pre-1.6 upgrade values), use it
+      cupsdconf_orig=/etc/cups/cupsd.conf
+      if [ -r /etc/cups/cupsd.conf.pre16-bak ]; then
+          cupsdconf_orig=/etc/cups/cupsd.conf.pre16-bak
       fi
-      if cat /etc/cups/cupsd.conf | grep -Piq '^\s*BrowseLocalProtocols.*\s+cups\b' 2>/dev/null; then
-	  if ! cat /etc/cups/cups-browsed.conf | grep -Piq '^\s*BrowseLocalProtocols.*\s+\#?cups\b' 2>/dev/null; then
-	      if cat /etc/cups/cups-browsed.conf | grep -Piq '^\s*BrowseLocalProtocols\s+' 2>/dev/null; then
+      
+      if grep -Piq '^\s*BrowseRemoteProtocols' $cupsdconf_orig 2>/dev/null; then
+	        # Get previously enabled protocols, remove cups and dnssd from that list
+	        previousProtocols=`grep -Pi '^\s*BrowseRemoteProtocols\s+' $cupsdconf_orig | perl -pe "s/BrowseRemoteProtocols\s*(.*)\#?.*$/\1/;s/\s*(dnssd|cups)//gi;s/^\s*//;s/\s*$//"`
+	        if grep -Piq '^\s*BrowseRemoteProtocols\s+' /etc/cups/cups-browsed.conf 2>/dev/null; then
+	            if dpkg --compare-versions "$2" lt "1.0.32~"; then
+	                # Enable the previously enabled protocols on top of the defaults which are 'dnssd cups'
+	                perl -p -i -e "s/^(\s*BrowseRemoteProtocols.*)/\1 $previousProtocols\n# Upgraded from cups: $previousProtocols\n# Defaults from 1.0.41: dnssd cups/i" /etc/cups/cups-browsed.conf
+	            else
+	                # 1.0.32 already had an upgrade handling which added a commented cups
+	                # Keep enabled protocols, add dnssd and cups
+	                perl -p -i -e "s/^(\s*BrowseRemoteProtocols\s*)(.*)(#.*)?$/\1 $previousProtocols \2 dnssd cups \3\n# Upgraded from cups: \3\n# Upgraded from cups-browsed >= 1.0.32: $previousProtocols\n# Defaults from 1.0.41: dnssd cups/i" /etc/cups/cups-browsed.conf
+	            fi
+	        fi
+      fi
+      if grep -Piq '^\s*BrowseLocalProtocols.*\s+cups\b' $cupsdconf_orig 2>/dev/null; then
+	  if ! grep -Piq '^\s*BrowseLocalProtocols.*\s+\#?cups\b' /etc/cups/cups-browsed.conf 2>/dev/null; then
+	      if grep -Piq '^\s*BrowseLocalProtocols\s+' /etc/cups/cups-browsed.conf 2>/dev/null; then
 		  perl -p -i -e 's/^(\s*BrowseLocalProtocols.*)/\n\# Please remove the "\#" before "cups" to make the local printers available to clients running\n\# CUPS 1.5.x or older.\n$1 \#cups\n/i' /etc/cups/cups-browsed.conf
 	      else
 		  linesadded=1
@@ -59,10 +69,10 @@ if [ "$1" = "configure" ]; then
 	      fi
 	  fi
       fi
-      if cat /etc/cups/cupsd.conf | grep -Piq '^\s*Browse(Order|Allow|Deny|Poll)' 2>/dev/null; then
+      if grep -Piq '^\s*Browse(Order|Allow|Deny|Poll)' $cupsdconf_orig 2>/dev/null; then
 	  linesadded=1
 	  $ECHO -en '\n# The following CUPS broadcasting/browsing-related lines were overtaken from\n# /etc/cups/cupsd.conf. Not all are supported by cups-browsed and so could get\n# ignored. Please check the comments and examples above and edit the lines if\n# needed. Note that for getting available the remote printers from all hosts/\n# networks you have to remove all "BrowseAllow" lines.\n' >> $tmpfile0
-	  cat /etc/cups/cupsd.conf | grep -Pi '^\s*Browse(Order|Allow|Deny|Poll)' >> $tmpfile0 2>/dev/null
+	  grep -Pi '^\s*Browse(Order|Allow|Deny|Poll)' $cupsdconf_orig >> $tmpfile0 2>/dev/null
 	  $ECHO -en '\n' >> $tmpfile0
       fi
       if [ "$linesadded" = "1" ]; then
@@ -70,6 +80,9 @@ if [ "$1" = "configure" ]; then
 	  cat $tmpfile0 >> /etc/cups/cups-browsed.conf
       fi
       rm $tmpfile0
+      if [ -r /etc/cups/cupsd.conf.pre16-bak ]; then
+          rm /etc/cups/cupsd.conf.pre16-bak
+      fi
   fi
 
 elif [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-remove" ] || [ "$1" = "abort-deconfigure" ]; then

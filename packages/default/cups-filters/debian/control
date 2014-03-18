@@ -1,5 +1,5 @@
 Source: cups-filters
-Standards-Version: 3.9.3
+Standards-Version: 3.9.5
 Priority: optional
 Section: net
 Maintainer: Debian Printing Team <debian-printing@lists.debian.org>
@@ -10,9 +10,11 @@ Uploaders:
 Build-Depends: 
  autoconf,
  autotools-dev,
- cdbs (>= 0.4.93~),
  debhelper (>= 9~),
+ dh-autoreconf,
+ dh-systemd,
  dpkg-dev (>= 1.16.1~),
+ dh-apparmor,
  pkg-config,
  sharutils,
  ghostscript (>= 9.02~),
@@ -29,12 +31,16 @@ Build-Depends:
  libijs-dev,
  zlib1g-dev,
  libfontconfig1-dev,
+ libdbus-1-dev,
  libavahi-common-dev,
  libavahi-client-dev,
- libavahi-glib-dev
+ libavahi-glib-dev,
+ librsvg2-bin,
+# Needed for tests
+ fonts-dejavu-core
 Homepage: http://www.openprinting.org/
-Vcs-Bzr: http://bzr.debian.org/pkg-cups/cups-filters/debian-trunk/
-Vcs-Browser: http://bzr.debian.org/loggerhead/pkg-cups/cups-filters/debian-trunk/
+Vcs-Git: https://alioth.debian.org/anonscm/git/printing/cups-filters.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=printing/cups-filters.git
 
 Package: libcupsfilters1
 Section: libs
@@ -64,23 +70,49 @@ Package: cups-filters
 Architecture: any
 Depends: ${shlibs:Depends}, 
  ${misc:Depends},
+ cups-filters-core-drivers (>= ${binary:Version}),
  bc,
  ghostscript (>= 9.02~),
- fonts-freefont-ttf | fonts-liberation | ttf-dejavu
-Recommends: colord, 
- foomatic-filters (>= 4.0) 
+Recommends: colord
 Suggests: foomatic-db-compressed-ppds | foomatic-db
-Conflicts: ghostscript-cups
+Conflicts: ghostscript-cups,
+ foomatic-filters
 Replaces: cups (<< 1.5.0-16), 
  cups-common (<< 1.5.0-16),
- ghostscript-cups
+ ghostscript-cups,
+ foomatic-filters,
+ cups-ppdc (<< 1.6)
 Breaks: cups (<< 1.5.0-16), 
- cups-common (<< 1.5.0-16)
-Provides: ghostscript-cups
-Description: OpenPrinting CUPS Filters
+ cups-common (<< 1.5.0-16),
+ cups-ppdc (<< 1.6)
+Provides: ghostscript-cups,
+ foomatic-filters
+Description: OpenPrinting CUPS Filters - Main Package
  This package provides additional CUPS filters which are not provided
  by the CUPS project itself. This includes filters for a PDF based
  printing workflow.
+ .
+ This package contains the filters for printing with drivers/PPDs and
+ for converting non-PDF input files to PDF.
+
+Package: cups-filters-core-drivers
+Architecture: any
+Depends: ${shlibs:Depends}, 
+ ${misc:Depends},
+ bc,
+ poppler-utils
+Replaces: cups (<< 1.5.0-16),
+ cups-filters (<< 1.0.44-1~)
+Breaks: cups (<< 1.5.0-16),
+ cups-filters (<< 1.0.44-1~)
+Description: OpenPrinting CUPS Filters - PPD-less printing
+ This package provides additional CUPS filters which are not provided
+ by the CUPS project itself. This includes filters for a PDF based
+ printing workflow.
+ .
+ This package contains only the filters needed for PPD-less printing of
+ PDF input files on IPP printers with known, common languages (PDF,
+ PostScript, PWG Raster, PCL).
 
 Package: libcupsfilters-dev
 Section: libdevel
@@ -113,8 +145,9 @@ Description: OpenPrinting CUPS Filters - Development files for font embed librar
 Package: cups-browsed
 Architecture: any
 Depends: ${shlibs:Depends}, 
- ${misc:Depends},
- avahi-daemon
+ ${misc:Depends}
+Recommends: avahi-daemon (>= 0.6.31-3~)
+Breaks: cups-daemon (<< 1.6.4)
 Enhances: cups
 Description: OpenPrinting CUPS Filters - cups-browsed
  This package provides cups-browsed, a daemon which browses the Bonjour
