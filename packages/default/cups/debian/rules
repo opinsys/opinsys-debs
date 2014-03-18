@@ -180,3 +180,11 @@ else
 	echo "debian:avahi-daemon=avahi-daemon (>= 0.6.31-3~)" >> debian/cups-daemon.substvars
 endif
 	dh_gencontrol
+
+
+PACKAGE = $(shell dpkg-parsechangelog | sed -r -n 's/^Source: (.*)/\1/p')
+SRC_VERSION = $(shell dpkg-parsechangelog | sed -r -n -e 's/^Version: (([0-9]+):)?(.*)-.*/\3/p')
+.PHONY: get-orig-source
+get-orig-source:
+	uscan --download-current-version --repack --no-symlink --rename
+	tar -z -x -v -f ../$(PACKAGE)_$(SRC_VERSION).orig.tar.gz --strip-components=1
