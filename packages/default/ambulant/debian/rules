@@ -42,3 +42,11 @@ override_dh_auto_test:
 
 override_dh_install:
 	dh_install --list-missing --sourcedir=debian/tmp
+
+SRC_VERSION := 2.5.20140318
+.PHONY: get-orig-source
+get-orig-source:
+	wget http://www.ambulantplayer.org/nightlybuilds/default/deb/dists/13.10/ambulant/source/debian-20140318/ambulant_2.5.20140318~saucy.tar.gz \
+		-O ../ambulant_$(SRC_VERSION).orig.tar.gz
+	tar -z -x -f ../ambulant_$(SRC_VERSION).orig.tar.gz --strip-components=1 \
+		--exclude=*/debian
