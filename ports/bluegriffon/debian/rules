@@ -25,3 +25,9 @@ endif
 
 override_dh_shlibdeps:
 	dh_shlibdeps -l$(CURDIR)/debian/bluegriffon/usr/lib/bluegriffon
+
+PACKAGE := $(shell dpkg-parsechangelog | sed -r -n 's/^Source: //p')
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -r -n 's/^Version: (([0-9]+):)?(.*)-.*/\3/p')
+get-orig-source:
+	uscan --download-current-version --rename --repack --no-symlink
+	tar -z -x -f ../$(PACKAGE)_$(SRC_VERSION).orig.tar.gz --strip-components=1
