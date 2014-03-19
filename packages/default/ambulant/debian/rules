@@ -1,0 +1,44 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+# default configure options
+CONFIGARGS= --with-gnu-ld --with-expat --with-xerces --with-xerces-plugin --with-third-party-packages=
+# enable interfaces
+CONFIGARGS+= --with-gtk
+# configure the backends plugins
+CONFIGARGS+= --with-sdl --with-gstreamer
+# enabl extra backends
+CONFIGARGS+= --with-ffmpeg
+# enable python plguins
+CONFIGARGS+= --with-python --with-python-plugin
+# enable browser plguin support, disabled fo now, broken script api
+#CONFIGARGS+= --with-npambulant
+# this build documentationapi develper
+#  --with-doxygen          Build doxygen API documentation
+# --with-uikit       Enable the WebKit DOM plugin (default: disabled)
+
+# LDFLAGS="-Wl,-z,defs"
+
+%:
+	dh --with autoreconf $@
+
+
+override_dh_auto_configure:
+	dh_auto_configure -- CFLAGS="$(CFLAGS)"  $(CONFIGARGS)
+
+override_dh_auto_test:
+	
+
+override_dh_install:
+	dh_install --list-missing --sourcedir=debian/tmp
