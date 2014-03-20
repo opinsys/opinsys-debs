@@ -29,5 +29,5 @@ override_dh_shlibdeps:
 PACKAGE := $(shell dpkg-parsechangelog | sed -r -n 's/^Source: //p')
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -r -n 's/^Version: (([0-9]+):)?(.*)-.*/\3/p')
 get-orig-source:
-	uscan --download-current-version --rename --repack --no-symlink
+	uscan --download-current-version --rename --repack
 	tar -z -x -f ../$(PACKAGE)_$(SRC_VERSION).orig.tar.gz --strip-components=1
