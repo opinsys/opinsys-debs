@@ -179,3 +179,9 @@ else
 	echo "debian:avahi-daemon=avahi-daemon" >> debian/cups-daemon.substvars
 endif
 	dh_gencontrol
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -r -n 's/^Version: (([0-9]+):)?(.*)-.*/\3/p')
+get-orig-source:
+	wget http://www.cups.org/software/$(SRC_VERSION)/cups-$(SRC_VERSION)-source.tar.bz2 \
+		-O ../cups_$(SRC_VERSION).orig.tar.bz2
+	tar -j -x -f ../cups_$(SRC_VERSION).orig.tar.bz2 --strip-components=1
