@@ -1,0 +1,12 @@
+Index: pycharm/Makefile
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ pycharm/Makefile	2014-03-21 15:26:46.970708646 +0200
+@@ -0,0 +1,7 @@
++all:
++
++install:
++	mkdir -p $(DESTDIR)/opt/pycharm
++	cp -a bin help helpers lib license plugins build.txt $(DESTDIR)/opt/pycharm
++
++clean:
