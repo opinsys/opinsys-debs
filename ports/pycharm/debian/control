@@ -1,0 +1,15 @@
+Source: pycharm
+Section: editors
+Priority: optional
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.1.1
+Homepage: http://www.jetbrains.com/pycharm/
+
+Package: pycharm
+Architecture: i386
+Depends: ${misc:Depends}
+Description: The intelligent Python IDE with unique code assistance 
+ and analysis, for productive Python development on all levels.
+ .
+

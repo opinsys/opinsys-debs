@@ -1,0 +1,7 @@
+pycharm (3.1.1-0+opinsys1) quantal; urgency=low
+
+  * Initial package.
+    - upstream source from http://download.jetbrains.com/python/pycharm-community-3.1.1.tar.gz
+    - debian/patches/opinsys-add-makefile.patch
+
+ -- Christoph Joohs <christoph.joohs@opinsys.fi>  Fri, 21 Mar 2014 15:00:23 +0200
