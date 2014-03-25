@@ -1,0 +1,15 @@
+Source: quicktile
+Section: utils
+Priority: optional
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.1.1
+Homepage: http://ssokolow.com/quicktile/
+
+Package: quicktile
+Architecture: any
+Depends: ${misc:Depends}, python, python-gtk2, python-xlib, python-dbus, python-wnck
+Description: Adds window-tiling keybindings to any X11-based deskto
+ An analogue to WinSplit Revolution for people who don't want to use the Compiz Grid plugin
+ .
+

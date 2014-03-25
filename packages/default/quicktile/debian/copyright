@@ -1,0 +1,11 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: pycharm
+Source: http://download.jetbrains.com/python/pycharm-community-3.1.1.tar.gz
+
+Files: *
+Copyright: 2000-2014 JetBrains s.r.o
+License: Apache 2.0
+
+Files: debian/*
+Copyright: 2014 Opinsys Oy
+License: Apache 2.0
