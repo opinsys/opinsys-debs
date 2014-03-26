@@ -1,3 +1,8 @@
+node-webkit (0.8.5-0+opinsys1) quantal; urgency=low
+
+  * Release 0.8.5
+  * https://groups.google.com/forum/#!msg/node-webkit/Izwu5icHFOQ/0A-3uEKfldkJ
+
 node-webkit (0.8.4-0+opinsys1) quantal; urgency=low
 
   * Release 0.8.4
