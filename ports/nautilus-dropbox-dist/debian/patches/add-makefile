@@ -1,11 +1,12 @@
-diff -ruN nautilus-dropbox-dist.orig/Makefile nautilus-dropbox-dist/Makefile
---- nautilus-dropbox-dist.orig/Makefile	1970-01-01 02:00:00.000000000 +0200
-+++ nautilus-dropbox-dist/Makefile	2013-04-10 13:19:51.703149919 +0300
+Index: nautilus-dropbox-dist/Makefile
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ nautilus-dropbox-dist/Makefile	2014-04-03 11:33:18.240639509 +0300
 @@ -0,0 +1,7 @@
 +all:
 +
 +install:
-+	mkdir -p $(DESTDIR)
-+	cp -pR var $(DESTDIR)
++	mkdir -p $(DESTDIR)/
++	cp -pR var $(DESTDIR)/
 +
 +clean:
