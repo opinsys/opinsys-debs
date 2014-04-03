@@ -1,3 +1,12 @@
+nautilus-dropbox-dist (2.6.27-0+opinsys1) quantal; urgency=low
+
+  * New upstream release.
+    - Orig tarball got by downloading the tarball from
+      https://www.dropbox.com/download?plat=lnx.x86 and
+      repackaging the .dropbox-dist with /var/lib/dropbox -prefix.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Thu, 03 Apr 2014 11:15:31 +0300
+
 nautilus-dropbox-dist (2.2.13-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
