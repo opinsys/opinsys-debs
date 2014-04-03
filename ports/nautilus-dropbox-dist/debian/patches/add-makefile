@@ -1,12 +1,12 @@
 Index: nautilus-dropbox-dist/Makefile
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ nautilus-dropbox-dist/Makefile	2014-04-03 11:33:18.240639509 +0300
++++ nautilus-dropbox-dist/Makefile	2014-04-03 11:43:37.109501924 +0300
 @@ -0,0 +1,7 @@
 +all:
 +
 +install:
-+	mkdir -p $(DESTDIR)/
-+	cp -pR var $(DESTDIR)/
++	mkdir -p $(DESTDIR)/var/lib/dropbox
++	cp -pR lib/dropbox/.dropbox-dist $(DESTDIR)/var/lib/dropbox
 +
 +clean:
