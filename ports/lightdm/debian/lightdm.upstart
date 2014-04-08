@@ -20,6 +20,8 @@ emits login-session-start
 emits desktop-session-start
 emits desktop-shutdown
 
+respawn
+
 script
     if [ -n "$UPSTART_EVENTS" ]
     then
