@@ -1,4 +1,4 @@
-libpam-envfeed (0.5-0+opinsys1) quantal; urgency=low
+libpam-envfeed (0.5-0+opinsys1) trusty; urgency=low
 
   * Import to opinsys-debs.
 
