@@ -1,3 +1,9 @@
+oracle-java (1.7.55-0+opinsys1ubuntu1) precise; urgency=low
+
+  * Update to Java 7u55
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 16 Apr 2014 08:55:10 +0300
+
 oracle-java (1.7.51-0+opinsys1) precise; urgency=low
 
   * Update to Java 7u51
