@@ -5,7 +5,7 @@ set -e
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
 priority=1100
-version=jdk1.7.0_51
+version=jdk1.7.0_55
 
 update-alternatives --install \
   /usr/lib/mozilla/plugins/libjavaplugin.so \
