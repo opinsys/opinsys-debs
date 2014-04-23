@@ -1,3 +1,9 @@
+nodejs-bundle (0.10.22-0+opinsys2) trusty; urgency=low
+
+  * Build for trusty.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 23 Apr 2014 14:06:05 +0300
+
 nodejs-bundle (0.10.22-0+opinsys1) quantal; urgency=low
 
   * Update to 0.10.22
