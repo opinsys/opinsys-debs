@@ -1,7 +1,18 @@
+node-webkit (0.8.6-0+opinsys1) quantal; urgency=low
+
+  * Release 0.8.6
+  * https://groups.google.com/forum/#!msg/node-webkit/CLPkgfV-i7s/hwkkQuJ1kngJ
+  * Add libudev.so.0 workaroud for Ubuntu Trusty
+  * https://github.com/rogerwang/node-webkit/wiki/The-solution-of-lacking-libudev.so.0
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Fri, 25 Apr 2014 12:54:40 +0000
+
 node-webkit (0.8.5-0+opinsys1) quantal; urgency=low
 
   * Release 0.8.5
   * https://groups.google.com/forum/#!msg/node-webkit/Izwu5icHFOQ/0A-3uEKfldkJ
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wer, 26 Mar 2014 12:39:38 +0000
 
 node-webkit (0.8.4-0+opinsys1) quantal; urgency=low
 
