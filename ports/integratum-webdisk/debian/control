@@ -1,0 +1,12 @@
+Source: integratum-webdisk
+Section: misc
+Priority: extra
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+Homepage: http://www.simple-groupware.de/cms/WebDisk/IntegraTUMWebDisk
+
+Package: integratum-webdisk
+Architecture: all
+Depends: ${misc:Depends}, tomcat6
+Description: IntegraTUM WebDisk

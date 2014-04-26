@@ -1,0 +1,5 @@
+integratum-webdisk (0.44-0+opinsys1) precise; urgency=low
+
+  * Initial version to opinsys-debs
+
+ -- Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>  Fri, 25 Apr 2014 15:03:12 +0300

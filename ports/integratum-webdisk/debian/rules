@@ -1,0 +1,23 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE=1
+
+%:
+	dh $@ --with quilt
+
+override_dh_fixperms:
+override_dh_shlibdeps:
+override_dh_strip:
+
+PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+ZIPFILE = $(PACKAGE)_$(SRC_VERSION).orig.zip
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+.PHONY: get-orig-source
+get-orig-source:
+	wget "http://netcologne.dl.sourceforge.net/project/webdisk/webdisk/$(SRC_VERSION)/IntegraTUM_WebDisk_$(SRC_VERSION).zip" \
+	  -O../$(ZIPFILE)
+	unzip ../$(ZIPFILE)
+	tar czf ../$(TARBALL) IntegraTUM_WebDisk_$(SRC_VERSION)
+	rm -rf IntegraTUM_WebDisk_$(SRC_VERSION)
+	tar xvf ../$(TARBALL) --strip-components=1
