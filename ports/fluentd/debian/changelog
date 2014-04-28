@@ -1,3 +1,10 @@
+fluentd (0.10.46-1+opinsys1) precise; urgency=low
+
+  * Update to 0.10.46
+  * https://github.com/fluent/fluentd/blob/67bac6836bb08722d25d763e76453fa3fde3d7f7/ChangeLog#L1-L48
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 28 Apr 2014 13:30:48 +0300
+
 fluentd (0.10.41-2+opinsys1) precise; urgency=low
 
   * Use sudo to set puavo user. Fixes startup issues while creating the
