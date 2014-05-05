@@ -16,6 +16,7 @@ Build-Depends: debhelper (>= 9),
                libindicator3-dev,
                libido3-0.1-dev (>= 13.10.0),
                libx11-dev,
+               quilt
 Standards-Version: 3.9.3
 Homepage: https://launchpad.net/indicator-applet
 # If you aren't a member of ~indicator-applet-developers but need to upload
