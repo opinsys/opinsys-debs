@@ -16,6 +16,7 @@ override_dh_install:
 	dh_install --fail-missing
 
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = indicator-applet_$(SRC_VERSION).orig.tar.gz
 get-orig-source:
-	uscan --download-current-version --force-download --rename
-	tar -z -x -f ../indicator-applet_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
+	wget -O ../$(TARBALL) https://launchpad.net/ubuntu/+archive/primary/+files/$(TARBALL)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
