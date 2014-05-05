@@ -1,21 +1,141 @@
-indicator-applet (12.10.1-0ubuntu1+opinsys3) quantal; urgency=low
+indicator-applet (12.10.2+14.04.20140403-0ubuntu1+opinsys1) trusty; urgency=low
 
-  * debian/patches/opinsys-fix-shrinking-menu-bug
+  * Forward-port two old patches
+    (debian/patches/opinsys-fix-shrinking-menu-bug and
+     check_environment_on_whether_to_load_modules.patch).
 
- -- Opinsys Developers <dev@opinsys.fi>  Fri, 12 Apr 2013 08:28:23 +0300
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 05 May 2014 14:01:50 +0300
 
-indicator-applet (12.10.1-0ubuntu1+opinsys2) quantal; urgency=low
+indicator-applet (12.10.2+14.04.20140403-0ubuntu1) trusty; urgency=low
 
-  * Plug a memory leak in previous patch.
+  [ Dimitri John Ledkov ]
+  * Drop indicator-sync recommendation and references. (LP: #1300916)
+    (LP: #1300916)
 
- -- Opinsys Developers <dev@opinsys.fi>  Mon, 04 Mar 2013 16:47:23 +0200
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 03 Apr 2014 01:11:06 +0000
 
-indicator-applet (12.10.1-0ubuntu1+opinsys1) quantal; urgency=low
+indicator-applet (12.10.2+14.04.20140320.1-0ubuntu1) trusty; urgency=low
 
-  * Add a patch to support "HIDE_INDICATOR_APPLETS" environment variable,
-    should allow hiding some indicator modules.
+  [ Dmitry Shachnev ]
+  * Fix assertion error which prevented indicator-applet-appmenu from
+    functioning.
 
- -- Opinsys Developers <dev@opinsys.fi>  Mon, 04 Mar 2013 16:05:35 +0200
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 20 Mar 2014 19:07:58 +0000
+
+indicator-applet (12.10.2+14.04.20140320-0ubuntu1) trusty; urgency=low
+
+  [ Charles Kerr ]
+  * Use the correct signal_spec syntax when calling
+    g_object_disconnect(). (LP: #1284840)
+
+  [ Dmitry Shachnev ]
+  * Allow Gtk deprecations, to workaround FTBFS.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 20 Mar 2014 09:03:53 +0000
+
+indicator-applet (12.10.2+13.10.20130924.2-0ubuntu1) saucy; urgency=low
+
+  [ Alberts Muktupāvels ]
+  * Don't load all indicators for indicator-applet-appmenu, indicator-
+    applet-session... LP: (#1215337). (LP: #1215337)
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 421
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 24 Sep 2013 08:58:23 +0000
+
+indicator-applet (12.10.2+13.10.20130913-0ubuntu1) saucy; urgency=low
+
+  [ Alistair Buxton ]
+  * Fix the loaded indicators count. The addition of support for
+    indicator-ng means that there are now two ways to load indicators,
+    but only those loaded by the second function are counted. Fix this
+    by making the worker functions add to the counter variable instead
+    of assigning to it.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 419
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 13 Sep 2013 15:15:33 +0000
+
+indicator-applet (12.10.2+13.10.20130822.5-0ubuntu1) saucy; urgency=low
+
+  [ Jeremy Bicha ]
+  * Have indicator-applet-complete also recommend indicator-keyboard.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 417
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 22 Aug 2013 20:29:07 +0000
+
+indicator-applet (12.10.2+13.10.20130809-0ubuntu1) saucy; urgency=low
+
+  [ Iain Lane ]
+  * Only prioritise and invert new-style indicators.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 415
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 09 Aug 2013 02:02:21 +0000
+
+indicator-applet (12.10.2+13.10.20130731-0ubuntu1) saucy; urgency=low
+
+  [ Jeremy Bicha ]
+  * Have indicator-applet-complete also recommend the other default
+    indicators (bluetooth, datetime, power, printers, and sync).
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 413
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 31 Jul 2013 02:01:59 +0000
+
+indicator-applet (12.10.2+13.10.20130719-0ubuntu1) saucy; urgency=low
+
+  [ Alberts Muktupāvels ]
+  * Place old indicators first than new indicators from keyfiles.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 411
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 19 Jul 2013 02:02:43 +0000
+
+indicator-applet (12.10.2+13.10.20130716-0ubuntu1) saucy; urgency=low
+
+  [ Alberts Muktupavels ]
+  * Load indicator objects from keyfiles in /usr/share/unity/indicators. (LP: #1197957)
+  * Added ido_init() and restored datetime and power indicators position.
+  * Added libido3-0.1 to configure.ac.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 409
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 16 Jul 2013 02:01:57 +0000
+
+indicator-applet (12.10.2daily13.03.01-0ubuntu1) raring; urgency=low
+
+  [ Mathieu Trudel-Lapierre ]
+  * debian/control:
+    - Update style to match other indicator packages.
+    - Reorganize Build-Depends for clarity.
+    - Drop Build-Depends on cdbs.
+    - Bump Build-Depends on debhelper to (>= 9)
+    - Add a Build-Depends for gnome-common.
+    - Update Vcs-Bzr, Vcs-Browser and add a notice to uploaders.
+    - Drop outdated Conflicts/Replaces for old upgrade paths.
+  * debian/compat: bump compat level to 9.
+  * debian/rules:
+    - Convert to using the dh sequencer.
+    - Add and export DPKG_GENSYMBOLS_CHECK_LEVEL.
+    - Override dh_autoreconf to have it call autogen.sh and not run configure.
+  * debian/*.install: update paths for multiarch.
+
+  [ Didier Roche ]
+  * Automatic snapshot from revision 406 (bootstrap)
+
+  [ Automatic PS uploader ]
+  * Automatic snapshot from revision 407
+
+ -- Automatic PS uploader <ps-jenkins@lists.canonical.com>  Fri, 01 Mar 2013 02:01:57 +0000
 
 indicator-applet (12.10.1-0ubuntu1) quantal; urgency=low
 
