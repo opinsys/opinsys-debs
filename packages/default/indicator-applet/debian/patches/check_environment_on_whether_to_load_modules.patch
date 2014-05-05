@@ -1,8 +1,8 @@
-diff -ruN indicator-applet-12.10.1.orig/src/applet-main.c indicator-applet-12.10.1/src/applet-main.c
---- indicator-applet-12.10.1.orig/src/applet-main.c	2012-09-19 19:17:44.000000000 +0300
-+++ indicator-applet-12.10.1/src/applet-main.c	2013-03-04 16:43:15.915148786 +0200
-@@ -607,6 +607,30 @@
- 
+diff -ruN indicator-applet.orig/src/applet-main.c indicator-applet/src/applet-main.c
+--- indicator-applet.orig/src/applet-main.c	2014-04-03 04:10:57.000000000 +0300
++++ indicator-applet/src/applet-main.c	2014-05-05 16:09:05.193449147 +0300
+@@ -644,6 +644,30 @@
+ }
  
  static gboolean
 +load_module_is_ok (const gchar * name)
@@ -31,8 +31,8 @@ diff -ruN indicator-applet-12.10.1.orig/src/applet-main.c indicator-applet-12.10
 +static gboolean
  load_module (const gchar * name, GtkWidget * menubar)
  {
-   GObject * o;
-@@ -618,6 +642,10 @@
+   
+@@ -654,6 +678,10 @@
      return FALSE;
    }
  
