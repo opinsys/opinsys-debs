@@ -159,7 +159,6 @@ X-Ubuntu-Depends: dbus,
   ttf-freefont,
   ttf-indic-fonts-core,
   ttf-punjabi-fonts,
-  ttf-thai-tlwg,
   ttf-ubuntu-font-family,
   ttf-wqy-microhei,
   wget
