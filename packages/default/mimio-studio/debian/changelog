@@ -1,3 +1,9 @@
+mimio-studio (11.11-0intl+opinsys1) trusty; urgency=low
+
+  * Update mimio-studio to version 11.11-0intl
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 14 May 2014 14:51:48 +0300
+
 mimio-studio (9.12.opinsys1-0+opinsys1) quantal; urgency=low
 
   * Import package to opinsys-debs from liitu-debs.
