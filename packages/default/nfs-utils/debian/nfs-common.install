@@ -15,8 +15,6 @@ debian/tmp/usr/sbin/mountstats
 debian/tmp/usr/sbin/rpc.gssd
 debian/tmp/usr/sbin/rpc.idmapd
 debian/tmp/usr/sbin/rpc.svcgssd
-debian/tmp/usr/sbin/gss_clnt_send_err
-debian/tmp/usr/sbin/gss_destroy_creds
 debian/tmp/usr/sbin/rpcdebug
 debian/tmp/var/lib/nfs/state
 debian/idmapd.conf usr/share/nfs-common/conffiles/
