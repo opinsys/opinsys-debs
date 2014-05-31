@@ -456,3 +456,8 @@ override_dh_clean: regen-from-templates
 	rm -fr debian/temp
 	rm -f debian/$(PKG_driver).substvars
 
+DEB_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)/\1/p')
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+get-orig-source:
+	wget https://launchpad.net/ubuntu/trusty/+source/nvidia-graphics-drivers-331/$(DEB_VERSION)/+files/nvidia-graphics-drivers-331_$(SRC_VERSION).orig.tar.gz -O ../nvidia-graphics-drivers-331_$(SRC_VERSION).orig.tar.gz
+	tar -z -x -f ../nvidia-graphics-drivers-331_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
