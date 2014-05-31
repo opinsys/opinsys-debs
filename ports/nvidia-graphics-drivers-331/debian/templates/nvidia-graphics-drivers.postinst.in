@@ -207,11 +207,6 @@ case "$1" in
             update-grub-gfxpayload
         fi
 
-        # Enable any quirks for the driver
-        if [ `which quirks-handler` ]; then
-           quirks-handler -e $PACKAGE_NAME -v
-        fi
-
         if ! id "$NVPD_USER" > /dev/null 2>&1; then
             # Create the user and group for nvidia-persistenced
             adduser --system --no-create-home --home '/' \
