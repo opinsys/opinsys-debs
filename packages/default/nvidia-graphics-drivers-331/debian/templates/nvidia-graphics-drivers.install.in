@@ -1,0 +1,32 @@
+debian/#DRIVERNAME#.override                 usr/share/lintian/overrides
+#Blacklist some card ids from GRUB gfxpayload=keep
+debian/#DRIVERNAME#.grub-gfxpayload          #PKGDATADIR#
+
+debian/glamor.conf                           #PKGDATADIR#
+
+debian/69-nvidia-persistenced.rules          lib/udev/rules.d
+debian/start-nvidia-persistenced             usr/bin
+debian/nvidia-persistenced.conf              etc/init
+
+#DIRNAME#/nvidia_drv.so #PKGDRIVERSDIR#
+#DIRNAME#/libglx.so.#VERSION# #NVIDIAEXTENSION#
+
+#DIRNAME#/libGL*.so*                  #PKGLIBDIR#
+#DIRNAME#/libnv*.so*                  #PKGLIBDIR#
+
+#DIRNAME#/libvdpau_nvidia.so*   #PKGVDPAUDIR#
+#DIRNAME#/tls/*.so*                   #PKGTLSDIR#
+
+debian/temp/modules/nvidia-kernel/kernel/*    usr/src/#DRIVERNAME#-#VERSION#
+debian/dkms_nvidia/patches/*                  usr/src/#DRIVERNAME#-#VERSION#/patches
+debian/dkms_nvidia/dkms.conf                  usr/src/#DRIVERNAME#-#VERSION#
+
+#DIRNAME#/nvidia-bug-report.sh #PKGBINDIR#
+#DIRNAME#/nvidia-xconfig #PKGBINDIR#
+#DIRNAME#/nvidia-smi #PKGBINDIR#
+#DIRNAME#/nvidia-debugdump #PKGBINDIR#
+#DIRNAME#/nvidia-cuda-mps-control #PKGBINDIR#
+#DIRNAME#/nvidia-cuda-mps-server #PKGBINDIR#
+#DIRNAME#/nvidia-persistenced #PKGBINDIR#
+
+#DIRNAME#/nvidia-application-profiles-#VERSION#-rc #PKGDATADIR#
