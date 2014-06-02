@@ -18,8 +18,8 @@ Recommends: nvidia-settings (>= 331.20), nvidia-prime (>= 0.5) | bumblebee,
  libcuda1-331, nvidia-libopencl1-331, nvidia-opencl-icd-331
 Provides: xorg-driver-binary, nvidia-driver-binary, nvidia-persistenced,
  ${xviddriver:Provides}
-Conflicts: xorg-driver-binary, nvidia-persistenced
-Replaces: xorg-driver-binary, nvidia-persistenced
+Conflicts: nvidia-persistenced
+Replaces: nvidia-persistenced
 Suggests: nvidia-331-uvm
 XB-Modaliases: ${modaliases}
 Description: NVIDIA binary driver - version 331.38
