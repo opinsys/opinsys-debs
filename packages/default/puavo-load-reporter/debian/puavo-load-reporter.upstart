@@ -3,6 +3,13 @@ description "puavo-load-reporter"
 start on runlevel [23]
 stop on shutdown
 
+pre-start script
+    # Only terminal servers should be running the load reporter
+    if ! grep -q ltspserver /etc/puavo/hosttype; then
+      stop; exit 0   
+    fi
+end script
+
 exec /usr/sbin/puavo-load-reporter
 
 respawn
