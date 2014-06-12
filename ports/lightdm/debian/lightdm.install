@@ -1,7 +1,6 @@
 usr/sbin/lightdm
 usr/share/man
 usr/share/locale
-usr/share/man
 usr/lib/lightdm
 usr/bin
 etc/dbus-1/
@@ -11,4 +10,9 @@ etc/lightdm/keys.conf usr/share/doc/lightdm/
 etc/apparmor.d
 debian/lightdm-session usr/sbin
 debian/guest-account usr/sbin
+debian/guest-session-auto.sh usr/lib/lightdm
 debian/lightdm-greeter-session usr/lib/lightdm
+debian/source_lightdm.py usr/share/apport/package-hooks
+debian/50-xserver-command.conf usr/share/lightdm/lightdm.conf.d
+debian/50-greeter-wrapper.conf usr/share/lightdm/lightdm.conf.d
+debian/50-guest-wrapper.conf usr/share/lightdm/lightdm.conf.d

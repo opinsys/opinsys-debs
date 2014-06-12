@@ -11,8 +11,7 @@ author		"Robert Ancell <robert.ancell@canonical.com>"
 start on ((filesystem
            and runlevel [!06]
            and started dbus
-           and (drm-device-added card0 PRIMARY_DEVICE_FOR_DISPLAY=1
-                or stopped udev-fallback-graphics))
+           and plymouth-ready)
           or runlevel PREVLEVEL=S)
 
 stop on runlevel [016]
@@ -20,8 +19,6 @@ stop on runlevel [016]
 emits login-session-start
 emits desktop-session-start
 emits desktop-shutdown
-
-respawn
 
 script
     if [ -n "$UPSTART_EVENTS" ]
@@ -49,7 +46,14 @@ script
     exec lightdm
 end script
 
+post-start script
+    sleep 5
+    clear > /dev/tty7
+end script
+
 post-stop script
+	clear > /dev/tty7
+	sleep 1
 	if [ "$UPSTART_STOP_EVENTS" = runlevel ]; then
 		initctl emit desktop-shutdown
 	fi

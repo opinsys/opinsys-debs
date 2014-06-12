@@ -1,10 +1,696 @@
-lightdm (1.4.0-0ubuntu2+opinsys1) quantal; urgency=low
+lightdm (1.10.1-0ubuntu1) trusty; urgency=medium
 
-  * debian/patches/opinsys-fix-session-child-race.patch:
-    - Fix session child spawning race condition
-      LP: #1172752
+  * New upstream release:
+    - When switching to an existing session refresh PAM credentials and end
+      session cleanly so no resources leak. (LP: #1296276)
+    - Update apparmor rules to allow oxide based browsers and Google Chrome to
+      run in the guest session.
+  * debian/patches/06_apparmor_chromium_updates.patch:
+    - Applied upstream
 
- -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Fri, 26 Apr 2013 16:35:20 +0300
+ -- Robert Ancell <robert.ancell@canonical.com>  Mon, 28 Apr 2014 09:56:14 +1200
+
+lightdm (1.10.0-0ubuntu3) trusty; urgency=medium
+
+  * debian/patches/06_apparmor_chromium_updates.patch: allow oxide based
+    browsers and Google Chrome to run in the guest session
+    - LP: #1298021
+    - LP: #1306560
+
+ -- Jamie Strandboge <jamie@ubuntu.com>  Fri, 11 Apr 2014 09:24:09 -0500
+
+lightdm (1.10.0-0ubuntu2) trusty; urgency=medium
+
+  * Add pam_kwallet to pam configs. (LP: #1305307)
+
+ -- Harald Sitter <apachelogger@kubuntu.org>  Thu, 10 Apr 2014 10:27:18 +0200
+
+lightdm (1.10.0-0ubuntu1) trusty; urgency=medium
+
+  * New upstream release:
+    - Fix return value for Vala bindings to Greeter.start_session_sync
+    - Fix logging when failing to find session
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Tue, 08 Apr 2014 16:12:46 +1200
+
+lightdm (1.9.15-0ubuntu1) trusty; urgency=medium
+
+  * debian/patches/06_guest_signal_and_ptrace_aa_rules.patch,
+    debian/patches/07_guest_proc_pid_stat_aa_rule.patch: Dropped, the fixes
+    are upstream
+
+ -- Tyler Hicks <tyhicks@canonical.com>  Mon, 07 Apr 2014 10:33:46 -0500
+
+lightdm (1.9.14-0ubuntu2) trusty; urgency=medium
+
+  * debian/patches/06_guest_signal_and_ptrace_aa_rules.patch: Grant
+    permission for guest session processes to signal and ptrace each
+    other (LP: #1298611)
+  * debian/patches/07_guest_proc_pid_stat_aa_rule.patch: Grant permission for
+    guest session processes to read /proc/<PID>/stat. This prevents AppArmor
+    denial messages caused by bamfdaemon and common utilities such as ps and
+    killall. (LP: #1301625)
+
+ -- Tyler Hicks <tyhicks@canonical.com>  Thu, 03 Apr 2014 02:48:51 -0500
+
+lightdm (1.9.14-0ubuntu1) trusty; urgency=medium
+
+  * New upstream release:
+    - Pass --enable-hardware-greeter to unity-system-compositor for Mir sessions
+      on xlocal seats (LP: #1289072)
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Thu, 03 Apr 2014 09:07:39 +1300
+
+lightdm (1.9.13-0ubuntu1) trusty; urgency=medium
+
+  * New upstream release:
+    - Handle not getting an X connection when attempting to get X layouts.
+      (LP: #1235915)
+    - Read config data from both XDG_DATA_DIRS and XDG_CONFIG_DIRS.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Tue, 25 Mar 2014 14:45:54 +1300
+
+lightdm (1.9.12-0ubuntu1) trusty; urgency=medium
+
+  [ Robert Ancell ]
+  * New upstream release:
+    - Ensure X authority is written before X server is started (LP: #1260220)
+    - Activate after unlocking a logind session
+
+  [ Gunnar Hjalmarsson ]
+  * debian/guest-account:
+    - Disable Unity shortcut hint. (LP: #1292178)
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Mon, 17 Mar 2014 16:49:37 +1300
+
+lightdm (1.9.11-0ubuntu2) trusty; urgency=medium
+
+  * Rebuild against Qt 5.2.1.
+
+ -- Timo Jyrinki <timo-jyrinki@ubuntu.com>  Thu, 13 Mar 2014 07:41:22 +0200
+
+lightdm (1.9.11-0ubuntu1) trusty; urgency=medium
+
+  * New upstream release:
+    - Don't use g_hash_table_get_keys_as_array, it's a glib 2.40 feature
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Thu, 13 Mar 2014 13:42:04 +1300
+
+lightdm (1.9.10-0ubuntu1) trusty; urgency=medium
+
+  * New upstream release:
+    - Honour session type requested by greeter for guest sessions (LP: #1285132)
+    - Log to wtmp and btmp. (LP: #1027805)
+    - Implement guest-session config option
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Thu, 13 Mar 2014 11:50:38 +1300
+
+lightdm (1.9.9-0ubuntu1) trusty; urgency=medium
+
+  * New upstream release:
+    - Handle signals being received in child processes instead of treating them
+      like they are received in the daemon.
+    - Set utmp ut_line to the display name (i.e. :0) to match what other
+      programs expect (e.g. 'w').
+    - Fix lightdm_greeter_ensure_shared_data_dir_sync returning the wrong value.
+    - Fix shared data tests so you can run test suite without root again.
+    - Be extra careful not to call any non thread safe function after a fork.
+    - Fix some small memory leaks detected by valgrind.
+    - Fix process shutdown code to stop generating confusing warnings
+    - Fix more double removal of source IDs.
+    - Test improvements.
+
+  [ Gunnar Hjalmarsson ]
+  * debian/patches/04_language_handling.patch:
+    - Make lightdm_get_language() return a language with a short form language
+      code (LP: #1276072).
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Tue, 11 Mar 2014 09:17:15 +1300
+
+lightdm (1.9.8-0ubuntu1) trusty; urgency=medium
+
+  * New upstream release:
+    - Add support for shared user data directories between the greeter and user
+      sessions.
+    - Refactor LightDMUser and User classes to use the same code internally.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Thu, 20 Feb 2014 16:02:35 +1300
+
+lightdm (1.9.7-0ubuntu2) trusty; urgency=medium
+
+  * debian/lightdm.postinst: Guard the chown'ing of /var/lib/lightdm/, it
+    might fail on the .gvfs mount. (LP: #1279428)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Wed, 12 Feb 2014 18:15:55 +0100
+
+lightdm (1.9.7-0ubuntu1) trusty; urgency=medium
+
+  * New upstream release:
+    - Correctly invoke PAM to change authentication token. (LP: #1270118)
+    - Make xdg-seat a core property of a seat and always pass it to X servers.
+    - Qt bindings: properly hand over prompt and message type.
+    - Add warning flags where they are missing and fix the resulting warnings.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Fri, 07 Feb 2014 15:40:20 +0000
+
+lightdm (1.9.6-0ubuntu3) trusty; urgency=medium
+
+  [ Gunnar Hjalmarsson ]
+  * debian/guest-session-auto.sh:
+    - Export gettext variables.
+  * debian/guest-account:
+    - Chown $HOME after /etc/guest-session/prefs.sh has been sourced.
+  * debian/patches/05_translate_guest_session_dialog.patch:
+    - Make the translatable strings in debian/guest-session-auto.sh end up in
+      the PO files.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Wed, 05 Feb 2014 10:23:52 +0000
+
+lightdm (1.9.6-0ubuntu2) trusty; urgency=medium
+
+  * Clear default tty on lightdm shutdown, to avoid brief display of text
+    messages on shutdown. (LP: #967229)
+
+ -- Dimitri John Ledkov <xnox@ubuntu.com>  Tue, 04 Feb 2014 10:12:05 +0000
+
+lightdm (1.9.6-0ubuntu1) trusty; urgency=medium
+
+  * New upstream release:
+    - Support Mir sessions in xlocal seats by starting a unity system compositor
+      for each session.
+    - Add --screen and --fullscreen options to "dm-tool add-nested-seat"
+    - Don't try to compile liblightdm-qt if liblightdm-gobject will not be
+      compiled.
+    - Stop greeters warning if sessions directories not present or lightdm.conf
+      doesn't exist - this is valid.
+    - Fix log name for Mir display servers
+    - Fix double removal of source IDs
+  * debian/guest-account:
+  * debian/guest-session-auto.sh:
+  * debian/lightdm.install:
+  * debian/rules:
+    - Warn users about the temporary nature of a guest session. (LP: #435930)
+  * debian/lightdm.install:
+  * debian/lightdm.maintscript:
+    - Move configuration from /etc to /usr/share so dpkg doesn't keep it around.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Wed, 22 Jan 2014 15:51:29 +1300
+
+lightdm (1.9.5-0ubuntu1) trusty; urgency=low
+
+  * New upstream release:
+    - In the unity seat, if we don't have proper VT support, fake VT 0 instead
+      of a real VT number. This matches what logind expects.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Thu, 05 Dec 2013 09:35:42 +1300
+
+lightdm (1.9.4-0ubuntu1) trusty; urgency=low
+
+  * New upstream release:
+    - Fix issue where VTs are double used when switching sessions.
+      (LP: #1256150)
+    - Remove lightdm-set-defaults and gdmflexiserver.
+    - Add new ability to specify a list of seat types to try, rather than just
+      one.
+    - Allow Mir sessions in the surfaceflinger seat.
+    - Rename the guest session wrapper to have a simpler name.
+    - Make sure sessions are associated with the display server before starting
+      them.
+    - Add a dm-tool man page.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Tue, 03 Dec 2013 19:07:28 +1300
+
+lightdm (1.9.3-0ubuntu1) trusty; urgency=low
+
+  * New upstream release:
+    - Don't pass system user accounts from AccountsService to greeters.
+      (LP: #1248541)
+    - Fix crash if switching to greeter and it isn't installed. (LP: #1246529)
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Thu, 07 Nov 2013 15:07:34 +1300
+
+lightdm (1.9.2-0ubuntu1) trusty; urgency=low
+
+  * New upstream release:
+    - Implement missing guest-wrapper functionality and enable it for Ubuntu.
+    - Update AppArmor scripts to work in Ubuntu 13.10.
+      (LP: #1243339)
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Wed, 30 Oct 2013 15:35:23 -0700
+
+lightdm (1.9.1-0ubuntu1) trusty; urgency=low
+
+  * New upstream release:
+    - Correctly set $XDG_SESSION_CLASS for greeters. This was regressed in 1.7.5
+      for ConsoleKit and was never passed to logind. logind/ConsoleKit treat
+      greeter sessions without this set as user sessions. This causes greeters
+      to show the lightdm user able to be logged in with.
+      (LP: #1242939)
+    - Set $USER when running the session-setup-script. This is a regression from
+      1.7.5. (LP: #1245957)
+    - Fix notification of sessions being logged out. This is a regression from
+      1.7.5 and caused greeters to show sessions logged in after they had been
+      logged out. (LP: #1245295)
+    - Refactor liblightdm user scanning to be simpler and more reliable. This
+      fixes bugs where some properties wouldn't be updated when they changed in
+      accounts service.
+    - Add support for a "display-stopped-script" field in lightdm.conf. The
+      "display-stopped-script" field allows us to run a script right after
+      stopping the display server.
+    - Allow dm-tool to run outside of a session if it doesn't need to be.
+    - Set $MIR_SERVER_NAME to assign a name to launched sessions. Also use a
+      "greeter-" prefix for greeter sessions for the benefit of
+      unity-system-compositor.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Wed, 30 Oct 2013 14:11:16 -0700
+
+lightdm (1.9.0-0ubuntu2) UNRELEASED; urgency=low
+
+  * debian/50-guest-wrapper.conf:
+    - Configure guest session wrapper to use
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Sun, 27 Oct 2013 17:34:20 +1300
+
+lightdm (1.9.0-0ubuntu1) trusty; urgency=low
+
+  * New upstream release:
+    - Fix crash when starting with existing X servers. This was introduced in
+      rev 1651 (lightdm 1.7.0). (LP: #1231841)
+    - Fix crash where Process objects are accessed after unref (LP: #1207935)
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Tue, 22 Oct 2013 12:19:25 +1300
+
+lightdm (1.8.0-0ubuntu1) saucy; urgency=low
+
+  * debian/lightdm-session:
+    - Handle xrdb, setxkbmap and xmodmap not being installed (LP: #1236317)
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Wed, 09 Oct 2013 15:53:56 +1300
+
+lightdm (1.7.18-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    - Set session environment variables for guest sessions (1.7 regression).
+      (LP: #1214504)
+    - Don't fail writing X authority if reading it had an error. (LP: #1234400)
+    - Update environment variables that we pass to Mir.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Mon, 07 Oct 2013 11:57:02 +1300
+
+lightdm (1.7.17-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    - surfaceflinger: Set XDG_VTNR=0 if VTs are not available
+    - Allow compiling of liblightdm-qt without liblightdm-gobject
+    - Add missing documentation for xremote seat options.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Wed, 25 Sep 2013 12:06:25 +1200
+
+lightdm (1.7.16-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    - Fix ConsoleKit support broken in 1.7.5
+    - Fix --test-mode (LP: #1226544) 
+    - Add support for running Surfaceflinger sessions
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Thu, 19 Sep 2013 17:42:48 -0400
+
+lightdm (1.7.15-0ubuntu1) saucy; urgency=low
+
+  [ Jeremy Bicha ]
+  * Have liblightdm-gobject-1.0 suggest not recommend lightdm
+    (LP: #1222155)
+
+  [ Michael Terry ]
+  * Set XDG_VTNR=1 as a fallback if using SeatUnity without a functioning
+    compositor or working VT switching, so that logind will recognize the VT
+    as active.
+
+ -- Michael Terry <mterry@ubuntu.com>  Wed, 11 Sep 2013 11:27:51 -0400
+
+lightdm (1.7.14-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    - Correctly set permissions on Xauthority file.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Wed, 11 Sep 2013 13:06:28 +1200
+
+lightdm (1.7.13-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    - Correctly set $XDG_CURRENT_DESKTOP for non-autologin sessions
+      (LP: #1221803)
+    - Fix overallocation of array for strings from greeter.
+    - Fix truncation writing card32 in XDMCP server.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Mon, 09 Sep 2013 16:08:55 +1200
+
+lightdm (1.7.12-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    - Add xdg-seat config setting
+    - Notify Unity System Compositor of the session being authenticated
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Thu, 29 Aug 2013 12:59:39 +1200
+
+lightdm (1.7.11-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    [ 1.7.11 ]
+    - Fix crash when greeter quits due to read watch not being removed
+    - Correctly setup Unity System Compositor environment
+    - Improve log messages
+    [ 1.7.10 ]
+    - Fix session locking broken in 1.7.5
+    - Load lightdm.conf after lightdm.conf.d/*.conf
+    - Also support loading config from /usr/share
+    - When switching sessions show a greeter if authentication required
+    - Set $XDG_CURRENT_DESKTOP if specified in the xsession file (LP: #1212408)
+    - Change logging prefixes to make it easier to troubleshoot multiseat setups
+    - Bring Ubuntu packaging in-tree
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Mon, 26 Aug 2013 14:48:55 +1200
+
+lightdm (1.7.9-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    - Correctly set XDG_VTNR for unity sessions that are not autologin.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Tue, 30 Jul 2013 18:35:21 +0100
+
+lightdm (1.7.8-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    - Add support for Mir sessions and greeters.
+    - Set XDG_VTNR for unity sessions.
+    - Fix desktop-session-start upstart signal not being emitted since 1.7.5.
+    - Fix greeter log broken in 1.7.5.
+  * debian/liblightdm-gobject-1-0.symbols:
+    - Updated
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Tue, 30 Jul 2013 15:27:58 +0100
+
+lightdm (1.7.7-0ubuntu2) saucy; urgency=low
+
+  * debian/lightdm.init:
+    - Use correct path to daemon (LP: #1204713)
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Thu, 25 Jul 2013 14:25:48 +1200
+
+lightdm (1.7.7-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    - Fix uninitialized pointer introduced in 1.7.3
+    - Enable compile warnings and fix code generating warnings
+  * debian/patches/50_ubuntu_fix_uninitialised_pointer.patch:
+    - Applied upstream:
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Tue, 23 Jul 2013 11:23:47 +1200
+
+lightdm (1.7.6-0ubuntu2) saucy; urgency=low
+
+  * src/main.c: fix up an unitialised pointer in configuration directory
+    handling.  (LP: #1203711)
+
+ -- Andy Whitcroft <apw@canonical.com>  Mon, 22 Jul 2013 11:36:05 +0100
+
+lightdm (1.7.6-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    [ 1.7.6 ]
+    - Restore greeter hints that were regressed in 1.7.5.
+    - Don't run greeters through session wrapper - regression in 1.7.5    
+    [ 1.7.5 ]
+    - Quit Plymouth correctly when using the unity seat type (LP: #1192051)
+    - Release the VT when the system compositor fails to start
+    - Load sessions and greeters from /usr/share/lightdm/sessions and
+      /usr/share/lightdm/greeters. The existing directories are checked
+      if the sessions are not in these directories.
+    - Refactor the Display class so that it merges with the Seat class
+    - Support running the greeter and session in different display servers
+      instead of re-using the same one during a login.
+    - Add more regression tests
+    - Documentation fixes
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Mon, 22 Jul 2013 17:13:19 +1200
+
+lightdm (1.7.4-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    - Set XDG_SEAT and XDG_VTNR environment variables.
+    - Add initial support for Unity (i.e. Mir based) seats.
+    - Add a greeter wrapper option.
+  * debian/50-xserver-command.conf:
+  * debian/patches/05_add_xserver_core_option.patch:
+    - Use a conf file to replace X server core patch
+  * debian/50-greeter-wrapper.conf
+  * debian/patches/03_launch_dbus.patch
+    - Use a conf file to greeter wrapper patch    
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Mon, 01 Jul 2013 15:47:21 +1200
+
+lightdm (1.7.3-0ubuntu2) saucy; urgency=low
+
+  * debian/guest-account: disable screen locking in a more reliable way.
+    Rather than trying to write a key for another user, while setting up the
+    guest user account, just set up an autostart desktop that will set it 
+    during the login (lp: #951000)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Tue, 25 Jun 2013 22:30:04 +0200
+
+lightdm (1.7.3-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    - Load configuration from /etc/lightdm/lightdm.conf.d. (LP: #1190425)
+    - Fix compile warnings
+    - Fix tests not running from install directory inside checkout.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Fri, 21 Jun 2013 14:39:27 +1200
+
+lightdm (1.7.2-0ubuntu1) saucy; urgency=low
+
+  * New upstream release:
+    - Fix .pc file for liblightdm-qt5-3
+    - Add a new option "autologin-in-background" which lets an autologin happen
+      in a second display while still showing the greeter.
+    - Stop if fail to create default seat
+    - Add option to set seat type in lightdm-set-defaults
+    - Stop using g_file_set_contents - it can leave intermediate files around
+    - Make tests work without installing them
+    - Fix distcheck
+  * debian/patches/06_fix_qt_pcfiles.patch:
+  * debian/patches/07_lp1189948.patch:
+    - Applied upstream
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Mon, 17 Jun 2013 14:08:46 +1200
+
+lightdm (1.7.0-0ubuntu6) saucy; urgency=low
+
+  * install apparmor abstractions as 064 (LP: #1189948)
+    - debian/patches/07_lp1189948.patch: adjust Makefile.am and Makefile.in
+      to use install --mode=0644
+    - debian/lightdm.postinst: chmod apparmor abstractions to 0644 on upgrade
+
+ -- Jamie Strandboge <jamie@ubuntu.com>  Tue, 11 Jun 2013 14:11:34 -0500
+
+lightdm (1.7.0-0ubuntu5) saucy; urgency=low
+
+  * Drop XS-Testsuite header. We don't actually have any autopkgtests right
+    now (they are commented out in debian/tests/control and are broken).
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Thu, 06 Jun 2013 06:58:11 +0200
+
+lightdm (1.7.0-0ubuntu4) saucy; urgency=low
+
+  * Install some files in liblightdm-qt-dev, so it's somewhat useful.
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Fri, 24 May 2013 00:31:31 -0600
+
+lightdm (1.7.0-0ubuntu3) saucy; urgency=low
+
+  * Switch to unversioned -dev package for liblightdm-qt to match Debian and
+    avoid having to change other packages synced from Debian
+  * Swtich Conflicts to Breaks and add liblightdm-qt-3-dev to Breaks/Replaces
+
+ -- Scott Kitterman <scott@kitterman.com>  Fri, 24 May 2013 00:37:06 -0400
+
+lightdm (1.7.0-0ubuntu2) saucy; urgency=low
+
+  * Cherry-pick patches from upstream to fix liblightdm-qt{,5} pcfiles. 
+  * Refresh patches to apply cleanly 
+
+ -- Iain Lane <iain.lane@canonical.com>  Tue, 07 May 2013 17:36:29 +0100
+
+lightdm (1.7.0-0ubuntu1) saucy; urgency=low
+
+  [ Robert Ancell ]
+  * New upstream release:
+    - Use logind instead of ConsoleKit if it is available
+    - Use Q_SLOTS and Q_SIGNALS instead of slots and signals.
+    - Ignore stale X server locks
+    - Pass through system locale or set locale from AccountsService/.dmrc
+    - Fix bug where seat failure before D-Bus acquired would not stop daemon
+  * debian/control:
+    - liblightdm-qt-2 -> liblightdm-qt-3
+  * debian/patches/06_qt_no_keywords.patch:
+    - Applied upstream
+    
+  [ Gunnar Hjalmarsson ]
+  * debian/patches/04_language_options.patch:
+    - Applied upstream
+  * debian/patches/04_language_handling.patch:
+    - Set LANGUAGE instead of LANG, since the Language property in
+      accountsservice as patched for Ubuntu does not contain a valid
+      locale name.
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Thu, 02 May 2013 10:20:02 -0700
+
+lightdm (1.6.0-0ubuntu2.1) raring-proposed; urgency=low
+
+  * lightdm.upstart: Add a start condition on plymouth-ready, and
+    drop conditions already handled by plymouth-splash (LP: #982889).
+  * control: Depend on the new plymouth version that provides plymouth-ready.
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Tue, 23 Apr 2013 12:10:28 +0300
+
+lightdm (1.6.0-0ubuntu2) raring; urgency=low
+
+  * debian/patches/06_qt_no_keywords.patch:
+    - Don't use Qt keywords like slots and signals in headers.  Instead,
+      use Q_SLOTS and Q_SIGNALS.  This avoids breaking builds of projects
+      that define QT_NO_KEYWORDS.
+
+ -- Michael Terry <mterry@ubuntu.com>  Mon, 15 Apr 2013 11:31:15 -0400
+
+lightdm (1.6.0-0ubuntu1) raring; urgency=low
+
+  * New upstream bugfix release:
+    - Allow VNC command to be specified in lightdm.conf
+    - Register enums with QObject meta type system.
+  * debian/watch:
+    - Watch for .xz releases
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Mon, 15 Apr 2013 11:01:22 +1200
+
+lightdm (1.5.3-0ubuntu1) raring; urgency=low
+
+  * New upstream bugfix release:
+    - Fix build with gobject-introspection 1.35.9
+    - Fix authentication cancel regression caused in 1.5.2 (LP: #1163456)
+  * debian/patches/fix-ftbfs-gir-scanner.patch:
+    - Applied upstream
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Wed, 03 Apr 2013 15:55:16 +1300
+
+lightdm (1.5.2-0ubuntu2) raring; urgency=low
+
+  * Pass --symbol-prefix via LightDM_1_gir_SCANNERFLAGS rather than
+    LightDM_1_gir_CFLAGS, fixing build failure with
+    gobject-introspection >= 1.35.9.
+
+ -- Dmitrijs Ledkovs <dmitrij.ledkov@ubuntu.com>  Tue, 02 Apr 2013 12:51:14 +0100
+
+lightdm (1.5.2-0ubuntu1) raring; urgency=low
+
+  * New upstream bugfix release:
+    * Fix stale X server being left behind when using LockSession D-Bus API
+      (LP: #1005813)
+    * Adjust AppArmor profile to also work with logind
+    * Don't use GIO to access X authority files - it uses GVFS which is
+      unnecessary overhead/complexity
+    * Handle over/underflows when reading from greeter
+    * Improve warning message when XDMCP packet has length mismatch
+    * Only report test command line if it fails
+    * Add more regression tests
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Wed, 27 Mar 2013 14:44:44 +1300
+
+lightdm (1.5.1-0ubuntu2) raring; urgency=low
+
+  * debian/lightdm.upstart: Clear the virtual terminal after starting lightdm
+    so startup messages are not displayed when switching users or when
+    suspending (LP: #967229)
+
+ -- Brian Murray <brian@ubuntu.com>  Thu, 21 Mar 2013 14:33:46 -0700
+
+lightdm (1.5.1-0ubuntu1) raring; urgency=low
+
+  * New upstream release:
+    [ 1.5.0 ]
+    - Add man page for lightdm-set-defaults (LP: #1044485)
+    - Use xzip for distribution, don't distribute old metadata
+    - Correctly check if display is active when session quits
+    - Relicense liblightdm to LGPL-2/LGPL-3 so GPL-2 code can link against it
+    - Selectively lock memory rather than calling mlockall for main daemon
+    [ 1.5.1 ]
+    - QLightDM: Add Qt5 version of the library: liblightdm-qt5-2 (LP: #1117355)
+    - QLightDM: Add some missing role names in UsersModel
+    - QLightDM: Add a backgroundPath role to UsersModel
+    - QLightDM: Fix potential crash in QLightDM::UsersModel closedown.
+    - Improve guest session apparmor
+    - Run each test in its own /tmp dir so they can't interfere with eachother
+    - Fix script hooks no longer working with latest glib (LP: #1128474)
+    - Fix display clean up code
+  * debian/control:
+    - Use standards version 3.9.4
+    - Drop bzr branch
+    - Build-depend on qtbase5-dev
+    - Add new Qt 5 packages
+  * debian/patches/08_lp1059510.patch:
+  * debian/patches/09_lp577919-fix-chromium-launch.patch:
+  * debian/patches/10_selective_mlock.patch:
+  * debian/patches/11_runtime_dir_access.patch:
+     - Applied upstream
+  * debian/source/format:
+    - Use 3.0
+
+ -- Robert Ancell <robert.ancell@canonical.com>  Fri, 08 Mar 2013 11:06:52 +1300
+
+lightdm (1.4.0-0ubuntu5) raring; urgency=low
+
+  * Add 11_runtime_dir_access.patch: Allow guest session to write
+    /run/user/<username>/. (LP: #1131139)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 25 Feb 2013 14:44:18 +0100
+
+lightdm (1.4.0-0ubuntu4) raring; urgency=low
+
+  * Update pam configs to call pam_env last and use user_readenv=1
+    explicitly, so that ~/.pam_environment can always be read even when
+    home directories are encrypted with ecryptfs.  LP: #952185.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 12 Feb 2013 12:57:29 -0800
+
+lightdm (1.4.0-0ubuntu3) raring; urgency=low
+
+  [ Michael Terry ]
+  * debian/02_disable_tests.patch, debian/rules:
+    - Drop patch, disable test suite during build by just overriding
+      dh_auto_test.  This way we can still manually run tests
+  * debian/control, debian/tests:
+    - Add dep8 tests to run upstream test suite.  The suite only works once
+      lightdm is installed into PREFIX.  So we must run via dep8.
+      Disabled for now until the next upstream release.
+  * debian/patches/05_add_xserver_core_option.patch:
+    - Modify test X server to also accept -core
+  * debian/patches/10_selective_mlock.patch:
+    - Backport patch from upstream to not use mlockall for the daemon
+      (LP: #1074279)
+  * debian/rules:
+    - Use ./autogen.sh when running dh_autoreconf
+
+  [ Matt Fischer ]
+  * debian/lightdm.install:
+    - Remove duplicate entry /usr/share/man
+    - Install apport hook
+  * debian/lightdm.postinst:
+    - Fix ownership of /var/lib/lightdm
+  * debian/lightdm.postrm:
+    - Correctly remove /var/lib/lightdm on uninstall
+  * debian/source_lightdm.py:
+    - Update apport hook
+
+ -- Michael Terry <mterry@ubuntu.com>  Thu, 31 Jan 2013 11:05:23 -0500
 
 lightdm (1.4.0-0ubuntu2) quantal; urgency=low
 
