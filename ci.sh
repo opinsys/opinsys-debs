@@ -20,7 +20,7 @@ cd "${packagedir}"
 sudo puavo-install-deps
 debian/rules get-orig-source
 puavo-dch
-dpkg-buildpackage -us -uc -sa
+dpkg-buildpackage -us -uc -sa --source-option='--compression=gzip'
 
 if [ -n "${APTIREPO_REMOTE}" ]; then
     aptirepo-upload -r "${APTIREPO_REMOTE}" \
