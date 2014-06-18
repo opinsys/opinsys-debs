@@ -20,3 +20,9 @@ binary-post-install/unity-control-center::
 	./panels/info/logo-generator --logo panels/info/UbuntuLogoBlank.png --text "ubuntu 14.04 LTS" --output debian/unity-control-center/usr/share/unity-control-center/ui/UbuntuLogo.png
 
 common-binary-post-install-arch:: list-missing
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+URL_SUBDIR  := $(shell dpkg-parsechangelog --show-field Version)
+get-orig-source:
+	wget https://launchpad.net/ubuntu/trusty/+source/unity-control-center/$(URL_SUBDIR)/+files/unity-control-center_$(SRC_VERSION).orig.tar.gz -O ../unity-control-center_$(SRC_VERSION).orig.tar.gz
+	tar -z -x -f ../unity-control-center_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
