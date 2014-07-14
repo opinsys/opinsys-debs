@@ -18,6 +18,6 @@ lp1048520_delay_pin_dialog_in_greeter.patch
 rebuild_menu_after_init.patch
 0001_Move_on_with_enter_in_the_country_page_of_the_new_mobile_wizard.patch
 set_atk_relations.patch
-11-user-connections.patch
+# 11-user-connections.patch
 ubuntu_dont_autostart_under_GNOME.patch
 opinsys-allow-user-to-modify-connection-settings.patch
