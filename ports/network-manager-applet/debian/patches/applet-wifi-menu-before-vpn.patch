@@ -1,15 +1,28 @@
-Index: network-manager-applet-0.8.3+git.20110203t003354.9bf0b98/src/applet.c
+---
+ src/applet.c |    7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+Index: b/src/applet.c
 ===================================================================
---- network-manager-applet-0.8.3+git.20110203t003354.9bf0b98.orig/src/applet.c	2011-02-14 17:18:54.408664077 -0500
-+++ network-manager-applet-0.8.3+git.20110203t003354.9bf0b98/src/applet.c	2011-02-14 17:22:46.547351391 -0500
-@@ -1649,15 +1649,15 @@
+--- a/src/applet.c
++++ b/src/applet.c
+@@ -1718,8 +1718,6 @@ nma_menu_add_vpn_submenu (GtkWidget *men
+ 	GSList *list, *iter;
+ 	int num_vpn_active = 0;
  
- 	n_wireless = nma_menu_add_devices (menu, applet);
+-	nma_menu_add_separator_item (menu);
+-
+ 	vpn_menu = GTK_MENU (gtk_menu_new ());
+ 
+ 	item = GTK_MENU_ITEM (gtk_menu_item_new_with_mnemonic (_("_VPN Connections")));
+@@ -1888,15 +1886,14 @@ static void nma_menu_show_cb (GtkWidget
+ 
+ 	n_wifi = nma_menu_add_devices (menu, applet);
  
 -	nma_menu_add_vpn_submenu (menu, applet);
 -
- 	if (n_wireless > 0 && nm_client_wireless_get_enabled (applet->nm_client)) {
- 		/* Add the "Hidden wireless network..." entry */
+ 	if (n_wifi > 0 && nm_client_wireless_get_enabled (applet->nm_client)) {
+ 		/* Add the "Hidden Wi-Fi network..." entry */
 -		nma_menu_add_separator_item (menu);
  		nma_menu_add_hidden_network_item (menu, applet);
  		nma_menu_add_create_network_item (menu, applet);
@@ -17,7 +30,6 @@ Index: network-manager-applet-0.8.3+git.20110203t003354.9bf0b98/src/applet.c
  	}
  
 +	nma_menu_add_vpn_submenu (menu, applet);
-+
  	gtk_widget_show_all (menu);
  
  //	nmi_dbus_signal_user_interface_activated (applet->connection);

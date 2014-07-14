@@ -2,36 +2,31 @@ From: Antti Kaijanmäki <antti.kaijanmaki@canonical.com>
 Subject: Avoid trying to set the pin dialog to save password (and require a
  keyring) when the user doesn't have MODIFY_OWN permissions.
 
+---
+ src/applet-device-gsm.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
 Index: b/src/applet-device-gsm.c
 ===================================================================
 --- a/src/applet-device-gsm.c
 +++ b/src/applet-device-gsm.c
-@@ -1041,6 +1041,8 @@ unlock_dialog_new (NMDevice *device, Gsm
- 	guint32 label1_min = 0, label2_min = 0, label3_min = 0;
- 	guint32 label1_max = 0, label2_max = 0, label3_max = 0;
- 	guint32 unlock_code = 0;
-+	gboolean show_save = FALSE;
+@@ -655,12 +655,19 @@ unlock_dialog_response (GtkDialog *dialo
+ static void
+ unlock_dialog_new (NMDevice *device, GsmDeviceInfo *info)
+ {
 +	NMClientPermission perm;
- 
++
  	g_return_if_fail (info->unlock_required != NULL);
+ 	g_return_if_fail (!strcmp (info->unlock_required, "sim-pin") || !strcmp (info->unlock_required, "sim-puk"));
  
-@@ -1084,12 +1086,18 @@ unlock_dialog_new (NMDevice *device, Gsm
+ 	if (info->dialog)
  		return;
- 	}
  
-+	show_save = (unlock_code == UNLOCK_CODE_PIN) ? TRUE : FALSE;
 +	perm = NM_CLIENT_PERMISSION_SETTINGS_MODIFY_OWN;
 +	if (! (   info->applet->permissions[perm] == NM_CLIENT_PERMISSION_RESULT_YES
-+		   || info->applet->permissions[perm] == NM_CLIENT_PERMISSION_RESULT_AUTH))
-+		show_save = FALSE;
++               || info->applet->permissions[perm] == NM_CLIENT_PERMISSION_RESULT_AUTH))
++		return;
 +
- 	/* Construct and run the dialog */
- 	info->dialog = applet_mobile_pin_dialog_new (title,
- 	                                             header,
- 	                                             desc,
- 	                                             show_pass_label,
--	                                             (unlock_code == UNLOCK_CODE_PIN) ? TRUE : FALSE);
-+	                                             show_save);
- 	g_free (desc);
- 	g_return_if_fail (info->dialog != NULL);
+ 	info->dialog = applet_mobile_pin_dialog_new (info->unlock_required,
+ 	                                             nma_utils_get_device_description (device));
  

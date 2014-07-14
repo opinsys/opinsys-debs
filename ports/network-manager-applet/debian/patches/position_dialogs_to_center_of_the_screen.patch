@@ -34,9 +34,9 @@ Index: b/src/applet-dialogs.c
  	gtk_window_set_title (GTK_WINDOW (dialog), _("Mobile broadband network password"));
  
  	w = gtk_dialog_add_button (dialog, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT);
-@@ -1149,6 +1152,7 @@ applet_mobile_pin_dialog_new (const char
- 
- 	g_object_set_data_full (G_OBJECT (dialog), "builder", builder, (GDestroyNotify) g_object_unref);
+@@ -1338,6 +1341,7 @@ applet_mobile_pin_dialog_new (const char
+ 	} else
+ 		g_assert_not_reached ();
  
 +	gtk_window_set_position (GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ALWAYS);
  	gtk_window_set_title (GTK_WINDOW (dialog), title);
@@ -46,7 +46,7 @@ Index: b/src/utils/utils.c
 ===================================================================
 --- a/src/utils/utils.c
 +++ b/src/utils/utils.c
-@@ -343,6 +343,8 @@ utils_show_error_dialog (const char *tit
+@@ -192,6 +192,8 @@ utils_show_error_dialog (const char *tit
  	                                     "%s",
  	                                     text1);
  
