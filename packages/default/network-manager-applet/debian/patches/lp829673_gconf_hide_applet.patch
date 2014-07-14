@@ -1,3 +1,5 @@
+From: Mathieu Trudel-Lapierre <mathieu@canonical.com>
+Subject: Allow for a show-applet gsettings to possibly hide the applet.
 ---
  nm-applet.convert                  |    1 +
  org.gnome.nm-applet.gschema.xml.in |    5 +++++
@@ -9,7 +11,7 @@ Index: b/src/applet.c
 ===================================================================
 --- a/src/applet.c
 +++ b/src/applet.c
-@@ -2750,6 +2750,8 @@ applet_update_icon (gpointer user_data)
+@@ -2863,6 +2863,8 @@ applet_update_icon (gpointer user_data)
  	if (!nm_running)
  		state = NM_STATE_UNKNOWN;
  
@@ -18,7 +20,7 @@ Index: b/src/applet.c
  	switch (state) {
  	case NM_STATE_UNKNOWN:
  	case NM_STATE_ASLEEP:
-@@ -3439,6 +3441,21 @@ dbus_setup (NMApplet *applet, GError **e
+@@ -3562,6 +3564,21 @@ dbus_setup (NMApplet *applet, GError **e
  	return success;
  }
  
@@ -40,7 +42,7 @@ Index: b/src/applet.c
  static GObject *
  constructor (GType type,
               guint n_props,
-@@ -3461,6 +3478,9 @@ constructor (GType type,
+@@ -3584,6 +3601,9 @@ constructor (GType type,
  	}
  
  	applet->gsettings = g_settings_new (APPLET_PREFS_SCHEMA);
@@ -54,17 +56,17 @@ Index: b/src/applet.h
 ===================================================================
 --- a/src/applet.h
 +++ b/src/applet.h
-@@ -65,6 +65,7 @@ typedef struct
+@@ -69,6 +69,7 @@ typedef struct
  #define PREF_DISABLE_VPN_NOTIFICATIONS            "disable-vpn-notifications"
  #define PREF_DISABLE_WIFI_CREATE                  "disable-wifi-create"
- #define PREF_SUPPRESS_WIRELESS_NETWORKS_AVAILABLE "suppress-wireless-networks-available"
+ #define PREF_SUPPRESS_WIFI_NETWORKS_AVAILABLE     "suppress-wireless-networks-available"
 +#define PREF_SHOW_APPLET                          "show-applet"
  
  #define ICON_LAYER_LINK 0
  #define ICON_LAYER_VPN 1
-@@ -95,6 +96,8 @@ typedef struct
- 
- 	GSettings *gsettings;
+@@ -104,6 +105,8 @@ typedef struct
+ 	gboolean   mm1_running;
+ #endif
  
 +	gboolean visible;
 +

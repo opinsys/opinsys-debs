@@ -1,0 +1,402 @@
+Index: set-atk-label-relations/src/applet-dialogs.c
+===================================================================
+--- set-atk-label-relations.orig/src/applet-dialogs.c	2014-02-07 17:56:44.471316676 +1100
++++ set-atk-label-relations/src/applet-dialogs.c	2014-02-07 17:59:46.947321348 +1100
+@@ -397,6 +397,10 @@
+ 	GtkWidget* speed_label, *sec_label = NULL;
+ 	const GSList *addresses;
+ 	gboolean show_security = FALSE;
++	GtkWidget *desc_widget = NULL;
++	GtkWidget *data_widget = NULL;
++	AtkObject *desc_object = NULL;
++	AtkObject *data_object = NULL;
+ 
+ 	table = GTK_TABLE (gtk_table_new (12, 2, FALSE));
+ 	gtk_table_set_col_spacings (table, 12);
+@@ -432,9 +436,15 @@
+ 	                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 	row++;
+ 
+-	gtk_table_attach (table, create_info_label (_("Interface:"), FALSE),
++	desc_widget = create_info_label (_("Interface:"), FALSE);
++	desc_object = gtk_widget_get_accessible (desc_widget);
++	data_widget = create_info_label (str, TRUE);
++	data_object = gtk_widget_get_accessible (data_widget);
++	atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++	gtk_table_attach (table, desc_widget,
+ 	                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+-	gtk_table_attach (table, create_info_label (str, TRUE),
++	gtk_table_attach (table, data_widget,
+ 	                  1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 	g_free (str);
+ 	row++;
+@@ -448,17 +458,33 @@
+ 	else if (NM_IS_DEVICE_WIMAX (device))
+ 		str = g_strdup (nm_device_wimax_get_hw_address (NM_DEVICE_WIMAX (device)));
+ 
+-	gtk_table_attach (table, create_info_label (_("Hardware Address:"), FALSE),
++	desc_widget = create_info_label (_("Hardware Address:"), FALSE);
++	desc_object = gtk_widget_get_accessible (desc_widget);
++	data_widget = create_info_label (str, TRUE);
++	data_object = gtk_widget_get_accessible (data_widget);
++	atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++	gtk_table_attach (table, desc_widget,
+ 	                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+-	gtk_table_attach (table, create_info_label (str, TRUE),
++	gtk_table_attach (table, data_widget,
+ 	                  1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 	g_free (str);
++	desc_widget = NULL;
++	desc_object = NULL;
++	data_widget = NULL;
++	data_object = NULL;
+ 	row++;
+ 
+ 	/* Driver */
+-	gtk_table_attach (table, create_info_label (_("Driver:"), FALSE),
++	desc_widget = create_info_label (_("Driver:"), FALSE);
++	desc_object = gtk_widget_get_accessible (desc_widget);
++	data_object = create_info_label (nm_device_get_driver (device), TRUE);
++	data_object = gtk_widget_get_accessible (data_widget);
++	atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++	gtk_table_attach (table, desc_widget,
+ 	                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+-	gtk_table_attach (table, create_info_label (nm_device_get_driver (device), TRUE),
++	gtk_table_attach (table, data_widget,
+ 	                  1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 	row++;
+ 
+@@ -485,20 +511,36 @@
+ 	gtk_label_set_text (GTK_LABEL(speed_label), str ? str : C_("Speed", "Unknown"));
+ 	g_free (str);
+ 
+-	gtk_table_attach (table, create_info_label (_("Speed:"), FALSE),
++	desc_widget = create_info_label (_("Speed:"), FALSE);
++	desc_object = gtk_widget_get_accessible (desc_widget);
++	data_object = gtk_widget_get_accessible (speed_label);
++	atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++	gtk_table_attach (table, desc_widget,
+ 	                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 	gtk_table_attach (table, speed_label,
+ 	                  1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
++	desc_widget = NULL;
++	desc_object = NULL;
++	data_object = NULL;
+ 	row++;
+ 
+ 	/* Security */
+ 	if (show_security) {
+ 		sec_label = create_info_label_security (connection);
+ 		if (sec_label) {
+-			gtk_table_attach (table, create_info_label (_("Security:"), FALSE),
++			desc_widget = create_info_label (_("Security:"), FALSE);
++			desc_object = gtk_widget_get_accessible (desc_widget);
++			data_object = gtk_widget_get_accessible (sec_label);
++			atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++			gtk_table_attach (table, desc_widget,
+ 				              0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 			gtk_table_attach (table, sec_label,
+ 				              1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
++			desc_widget = NULL;
++			desc_object = NULL;
++			data_object = NULL;
+ 			row++;
+ 		}
+ 	}
+@@ -508,7 +550,12 @@
+ 
+ 		/* CINR */
+ 		cinr_label = create_info_label ("", TRUE);
+-		gtk_table_attach (table, create_info_label (_("CINR:"), FALSE),
++		desc_widget = create_info_label (_("CINR:"), FALSE);
++		desc_object = gtk_widget_get_accessible (desc_widget);
++		data_object = gtk_widget_get_accessible (cinr_label);
++		atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++		gtk_table_attach (table, desc_widget,
+ 			              0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 		gtk_table_attach (table, cinr_label,
+ 			              1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+@@ -517,11 +564,19 @@
+ 		                "notify::" NM_DEVICE_WIMAX_CINR,
+ 		                G_CALLBACK (wimax_cinr_changed_cb));
+ 		wimax_cinr_changed_cb (device, NULL, cinr_label);
++		desc_widget = NULL;
++		desc_object = NULL;
++		data_object = NULL;
+ 		row++;
+ 
+ 		/* Base Station ID */
+ 		bsid_label = create_info_label ("", TRUE);
+-		gtk_table_attach (table, create_info_label (_("BSID:"), FALSE),
++		desc_widget = create_info_label (_("BSID:"), FALSE);
++		desc_object = gtk_widget_get_accessible (desc_widget);
++		data_object = gtk_widget_get_accessible (bsid_label);
++		atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++		gtk_table_attach (table, desc_widget,
+ 			              0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 		gtk_table_attach (table, bsid_label,
+ 			              1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+@@ -530,6 +585,9 @@
+ 		                "notify::" NM_DEVICE_WIMAX_BSID,
+ 		                G_CALLBACK (wimax_bsid_changed_cb));
+ 		wimax_bsid_changed_cb (device, NULL, bsid_label);
++		desc_widget = NULL;
++		desc_object = NULL;
++		data_object = NULL;
+ 		row++;
+ 	}
+ 
+@@ -549,12 +607,22 @@
+ 		def_addr = addresses->data;
+ 
+ 	/* Address */
+-	gtk_table_attach (table, create_info_label (_("IP Address:"), FALSE),
+-	                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 	str = def_addr ? ip4_address_as_string (nm_ip4_address_get_address (def_addr)) : g_strdup (C_("Address", "Unknown"));
+-	gtk_table_attach (table, create_info_label (str, TRUE),
++	desc_widget = create_info_label (_("IP Address:"), FALSE);
++	desc_object = gtk_widget_get_accessible (desc_widget);
++	data_widget = create_info_label (str, TRUE);
++	data_object = gtk_widget_get_accessible (data_widget);
++	atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++	gtk_table_attach (table, desc_widget,
++	                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
++	gtk_table_attach (table, data_widget,
+ 	                  1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 	g_free (str);
++	desc_widget = NULL;
++	desc_object = NULL;
++	data_widget = NULL;
++	data_object = NULL;
+ 	row++;
+ 
+ 	/* Broadcast */
+@@ -565,62 +633,122 @@
+ 		bcast = htonl (network | hostmask);
+ 	}
+ 
+-	gtk_table_attach (table, create_info_label (_("Broadcast Address:"), FALSE),
+-	                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 	str = def_addr ? ip4_address_as_string (bcast) : g_strdup (C_("Address", "Unknown"));
+-	gtk_table_attach (table, create_info_label (str, TRUE),
++	desc_widget = create_info_label (_("Broadcast Address:"), FALSE);
++	desc_object = gtk_widget_get_accessible (desc_widget);
++	data_widget = create_info_label (str, TRUE);
++	data_object = gtk_widget_get_accessible (data_widget);
++	atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++	gtk_table_attach (table, desc_widget,
++	                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
++	gtk_table_attach (table, data_widget,
+ 	                  1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 	g_free (str);
++	desc_widget = NULL;
++	desc_object = NULL;
++	data_widget = NULL;
++	data_object = NULL;
+ 	row++;
+ 
+ 	/* Prefix */
+-	gtk_table_attach (table, create_info_label (_("Subnet Mask:"), FALSE),
+-	                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 	str = def_addr ? ip4_address_as_string (netmask) : g_strdup (C_("Subnet Mask", "Unknown"));
+-	gtk_table_attach (table, create_info_label (str, TRUE),
++	desc_widget = create_info_label (_("Subnet Mask:"), FALSE);
++	desc_object = gtk_widget_get_accessible (desc_widget);
++	data_widget = create_info_label (str, TRUE);
++	data_object = gtk_widget_get_accessible (data_widget);
++	atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++	gtk_table_attach (table, desc_widget,
++	                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);;
++	gtk_table_attach (table, data_widget,
+ 	                  1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 	g_free (str);
++	desc_widget = NULL;
++	desc_object = NULL;
++	data_widget = NULL;
++	data_object = NULL;
+ 	row++;
+ 
+ 	/* Gateway */
+ 	if (def_addr && nm_ip4_address_get_gateway (def_addr)) {
+-		gtk_table_attach (table, create_info_label (_("Default Route:"), FALSE),
+-		                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 		str = ip4_address_as_string (nm_ip4_address_get_gateway (def_addr));
+-		gtk_table_attach (table, create_info_label (str, TRUE),
++		desc_widget = create_info_label (_("Default Route:"), FALSE);
++		desc_object = gtk_widget_get_accessible (desc_widget);
++		data_widget = create_info_label (str, TRUE);
++		data_object = gtk_widget_get_accessible (data_widget);
++		atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++		gtk_table_attach (table, desc_widget,
++		                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
++		gtk_table_attach (table, data_widget,
+ 		                  1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 		g_free (str);
++		desc_widget = NULL;
++		desc_object = NULL;
++		data_widget = NULL;
++		data_object = NULL;
+ 		row++;
+ 	}
+ 
+ 	/* DNS */
+ 	dns = def_addr ? nm_ip4_config_get_nameservers (ip4_config) : NULL;
+ 	if (dns && dns->len) {
+-		gtk_table_attach (table, create_info_label (_("Primary DNS:"), FALSE),
+-		                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 		str = ip4_address_as_string (g_array_index (dns, guint32, 0));
+-		gtk_table_attach (table, create_info_label (str, TRUE),
++		desc_widget = create_info_label (_("Primary DNS:"), FALSE);
++		desc_object = gtk_widget_get_accessible (desc_widget);
++		data_widget = create_info_label (str, TRUE);
++		data_object = gtk_widget_get_accessible (data_widget);
++		atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++		gtk_table_attach (table, desc_widget,
++		                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
++		gtk_table_attach (table, data_widget,
+ 		                  1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 		g_free (str);
++		desc_widget = NULL;
++		desc_object = NULL;
++		data_widget = NULL;
++		data_object = NULL;
+ 		row++;
+ 
+ 		if (dns->len > 1) {
+-			gtk_table_attach (table, create_info_label (_("Secondary DNS:"), FALSE),
+-			                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 			str = ip4_address_as_string (g_array_index (dns, guint32, 1));
+-			gtk_table_attach (table, create_info_label (str, TRUE),
++			desc_widget = create_info_label (_("Secondary DNS:"), FALSE);
++			desc_object = gtk_widget_get_accessible (desc_widget);
++			data_widget = create_info_label (str, TRUE);
++			data_object = gtk_widget_get_accessible (data_widget);
++			atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++			gtk_table_attach (table, desc_widget,
++			                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
++			gtk_table_attach (table, data_widget,
+ 			                  1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 			g_free (str);
++			desc_widget = NULL;
++			desc_object = NULL;
++			data_widget = NULL;
++			data_object = NULL;
+ 			row++;
+ 		}
+ 
+ 		if (dns->len > 2) {
+-			gtk_table_attach (table, create_info_label (_("Ternary DNS:"), FALSE),
+-			                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 			str = ip4_address_as_string (g_array_index (dns, guint32, 2));
+-			gtk_table_attach (table, create_info_label (str, TRUE),
++			desc_widget = create_info_label (_("Ternary DNS:"), FALSE);
++			desc_object = gtk_widget_get_accessible (desc_widget);
++			data_widget = create_info_label (str, TRUE);
++			data_object = gtk_widget_get_accessible (data_widget);
++			atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++			gtk_table_attach (table, desc_widget,
++			                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
++			gtk_table_attach (table, data_widget,
+ 			                  1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 			g_free (str);
++			desc_widget = NULL;
++			desc_object = NULL;
++			data_widget = NULL;
++			data_object = NULL;
+ 			row++;
+ 		}
+ 	}
+@@ -656,27 +784,47 @@
+ 		char *tmp_addr;
+ 		guint32 prefix;
+ 
+-		gtk_table_attach (table, create_info_label (_("IP Address:"), FALSE),
+-		                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 		tmp_addr = ip6_address_as_string (nm_ip6_address_get_address (def6_addr));
+ 		prefix = nm_ip6_address_get_prefix (def6_addr);
+ 		str = g_strdup_printf ("%s/%d", tmp_addr, prefix);
+ 		g_free (tmp_addr);
+ 
+-		gtk_table_attach (table, create_info_label (str, TRUE),
++		desc_widget = create_info_label (_("IP Address:"), FALSE);
++		desc_object = gtk_widget_get_accessible (desc_widget);
++		data_widget = create_info_label (str, TRUE);
++		data_object = gtk_widget_get_accessible (data_widget);
++		atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++		gtk_table_attach (table, desc_widget,
++		                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
++		gtk_table_attach (table, data_widget,
+ 		                  1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 		g_free (str);
++		desc_widget = NULL;
++		desc_object = NULL;
++		data_widget = NULL;
++		data_object = NULL;
+ 		row++;
+ 	}
+ 
+ 	/* Gateway */
+ 	if (def6_addr && nm_ip6_address_get_gateway (def6_addr)) {
+-		gtk_table_attach (table, create_info_label (_("Default Route:"), FALSE),
+-		                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 		str = ip6_address_as_string (nm_ip6_address_get_gateway (def6_addr));
+-		gtk_table_attach (table, create_info_label (str, TRUE),
++		desc_widget = create_info_label (_("Default Route:"), FALSE);
++		desc_object = gtk_widget_get_accessible (desc_widget);
++		data_widget = create_info_label (str, TRUE);
++		data_object = gtk_widget_get_accessible (data_widget);
++		atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
++
++		gtk_table_attach (table, desc_widget,
++		                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
++		gtk_table_attach (table, data_widget,
+ 		                  1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 		g_free (str);
++		desc_widget = NULL;
++		data_widget = NULL;
++		desc_object = NULL;
++		data_object = NULL;
+ 		row++;
+ 	}
+ 
+@@ -685,13 +833,22 @@
+ 
+ 	for (i = 0; dns6 && i < 3 ; dns6 = g_slist_next (dns6), i++) {
+ 		char *label[] = { "Primary DNS:", "Secondary DNS:", "Ternary DNS:" };
++		str = ip6_address_as_string (dns6->data);
++		desc_widget = create_info_label (_(label[i]), FALSE);
++		desc_object = gtk_widget_get_accessible (desc_widget);
++		data_widget = create_info_label (str, TRUE);
++		data_object = gtk_widget_get_accessible (data_widget);
++		atk_object_add_relationship (desc_object, ATK_RELATION_LABEL_FOR, data_object);
+ 
+-		gtk_table_attach (table, create_info_label (_(label[i]), FALSE),
++		gtk_table_attach (table, desc_widget,
+ 		                  0, 1, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+-		str = ip6_address_as_string (dns6->data);
+-		gtk_table_attach (table, create_info_label (str, TRUE),
++		gtk_table_attach (table, data_widget,
+ 		                  1, 2, row, row + 1, GTK_FILL, GTK_FILL, 0, 0);
+ 		g_free (str);
++		desc_widget = NULL;
++		data_widget = NULL;
++		desc_object = NULL;
++		data_object = NULL;
+ 		row++;
+ 	}
+ 

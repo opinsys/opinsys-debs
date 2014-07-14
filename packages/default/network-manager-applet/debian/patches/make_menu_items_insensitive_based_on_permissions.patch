@@ -13,7 +13,7 @@ Index: b/src/applet.c
 ===================================================================
 --- a/src/applet.c
 +++ b/src/applet.c
-@@ -86,6 +86,8 @@ extern gboolean shell_debug;
+@@ -87,6 +87,8 @@ extern gboolean shell_debug;
  
  G_DEFINE_TYPE(NMApplet, nma, G_TYPE_OBJECT)
  
@@ -22,7 +22,7 @@ Index: b/src/applet.c
  /********************************************************************/
  /* Temporary dbus interface stuff */
  
-@@ -1578,7 +1580,10 @@ nma_menu_device_get_menu_item (NMDevice
+@@ -1602,7 +1604,10 @@ nma_menu_device_get_menu_item (NMDevice
  		                       G_CALLBACK (applet_device_disconnect_db),
  		                       info,
  		                       (GClosureNotify) applet_device_info_destroy, 0);
@@ -34,7 +34,7 @@ Index: b/src/applet.c
  		break;
  	}
  	default:
-@@ -1790,12 +1795,24 @@ nma_menu_add_vpn_submenu (GtkWidget *men
+@@ -1814,12 +1819,24 @@ nma_menu_add_vpn_submenu (GtkWidget *men
  	item = GTK_MENU_ITEM (gtk_menu_item_new_with_mnemonic (_("_Configure VPN...")));
  	g_signal_connect (item, "activate", G_CALLBACK (nma_menu_configure_vpn_item_activate), applet);
  	gtk_menu_shell_append (GTK_MENU_SHELL (vpn_menu), GTK_WIDGET (item));
@@ -60,7 +60,7 @@ Index: b/src/applet.c
  
  	g_slist_free (list);
  }
-@@ -2066,6 +2083,20 @@ nma_context_menu_update (NMApplet *apple
+@@ -2089,6 +2106,20 @@ nma_context_menu_update (NMApplet *apple
  		gtk_widget_show_all (applet->wimax_enabled_item);
  	else
  		gtk_widget_hide (applet->wimax_enabled_item);
@@ -85,7 +85,7 @@ Index: b/src/applet-device-wifi.c
 ===================================================================
 --- a/src/applet-device-wifi.c
 +++ b/src/applet-device-wifi.c
-@@ -93,6 +93,8 @@ nma_menu_add_hidden_network_item (GtkWid
+@@ -94,6 +94,8 @@ nma_menu_add_hidden_network_item (GtkWid
  {
  	GtkWidget *menu_item;
  	GtkWidget *label;
@@ -93,8 +93,8 @@ Index: b/src/applet-device-wifi.c
 +	NMClientPermissionResult perm;
  
  	menu_item = gtk_menu_item_new ();
- 	label = gtk_label_new_with_mnemonic (_("_Connect to Hidden Wireless Network..."));
-@@ -103,6 +105,33 @@ nma_menu_add_hidden_network_item (GtkWid
+ 	label = gtk_label_new_with_mnemonic (_("_Connect to Hidden Wi-Fi Network..."));
+@@ -104,6 +106,33 @@ nma_menu_add_hidden_network_item (GtkWid
  	g_signal_connect_swapped (menu_item, "activate",
  	                          G_CALLBACK (applet_wifi_connect_to_hidden_network),
  	                          applet);
@@ -132,7 +132,7 @@ Index: b/src/applet-device-cdma.c
 ===================================================================
 --- a/src/applet-device-cdma.c
 +++ b/src/applet-device-cdma.c
-@@ -327,6 +327,8 @@ cdma_add_menu_item (NMDevice *device,
+@@ -328,6 +328,8 @@ cdma_add_menu_item (NMDevice *device,
  #ifdef ENABLE_INDICATOR
  	GtkWidget *signal_icon;
  #endif
@@ -141,7 +141,7 @@ Index: b/src/applet-device-cdma.c
  
  	info = g_object_get_data (G_OBJECT (device), "devinfo");
  
-@@ -442,8 +444,32 @@ cdma_add_menu_item (NMDevice *device,
+@@ -439,8 +441,32 @@ cdma_add_menu_item (NMDevice *device,
  				}
  			}
  		} else {
@@ -178,7 +178,7 @@ Index: b/src/applet-device-gsm.c
 ===================================================================
 --- a/src/applet-device-gsm.c
 +++ b/src/applet-device-gsm.c
-@@ -376,6 +376,8 @@ gsm_add_menu_item (NMDevice *device,
+@@ -383,6 +383,8 @@ gsm_add_menu_item (NMDevice *device,
  #ifdef ENABLE_INDICATOR
  	GtkWidget *signal_icon;
  #endif
@@ -187,7 +187,7 @@ Index: b/src/applet-device-gsm.c
  
  	info = g_object_get_data (G_OBJECT (device), "devinfo");
  
-@@ -493,9 +495,33 @@ gsm_add_menu_item (NMDevice *device,
+@@ -496,9 +498,33 @@ gsm_add_menu_item (NMDevice *device,
  				}
  			}
  		} else {

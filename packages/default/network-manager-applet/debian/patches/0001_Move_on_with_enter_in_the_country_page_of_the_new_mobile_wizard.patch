@@ -1,0 +1,44 @@
+From 6f62085919b0504424f4f4cf115e3e7ef9565795 Mon Sep 17 00:00:00 2001
+From: Iain Lane <iain.lane@canonical.com>
+Date: Tue, 3 Dec 2013 09:51:05 +0000
+Subject: [PATCH] Move on with enter in the country page of the new mobile
+ wizard
+
+Patch by Tiago Porangaba
+
+https://bugzilla.gnome.org/show_bug.cgi?id=663774
+---
+ src/libnm-gtk/nm-mobile-wizard.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+Index: b/src/libnm-gtk/nm-mobile-wizard.c
+===================================================================
+--- a/src/libnm-gtk/nm-mobile-wizard.c
++++ b/src/libnm-gtk/nm-mobile-wizard.c
+@@ -1042,6 +1042,16 @@
+ 		nma_country_info_unref (country_info);
+ }
+ 
++static void
++country_update_continue (NMAMobileWizard *self)
++{
++	gtk_assistant_set_page_complete (GTK_ASSISTANT (self->assistant),
++	                                 self->country_page,
++	                                 TRUE);
++
++	gtk_assistant_next_page (GTK_ASSISTANT (self->assistant));
++}
++
+ static gint
+ country_sort_func (GtkTreeModel *model,
+                    GtkTreeIter *a,
+@@ -1177,6 +1187,9 @@
+ 
+ 	self->country_page = vbox;
+ 
++	/* If the user presses the ENTER key after selecting the country, continue to the next page */
++	g_signal_connect_swapped (self->country_view, "row-activated", G_CALLBACK (country_update_continue), self);
++
+ 	/* Initial completeness state */
+ 	country_update_complete (self);
+ }

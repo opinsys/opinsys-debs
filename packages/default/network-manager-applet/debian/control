@@ -1,51 +1,65 @@
 Source: network-manager-applet
 Section: gnome
 Priority: optional
-Maintainer: Ubuntu Core Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 XSBC-Original-Maintainer: Utopia Maintenance Team <pkg-utopia-maintainers@lists.alioth.debian.org>
 Uploaders: Michael Biebl <biebl@debian.org>
 Build-Depends:
- debhelper (>= 8),
- dh-autoreconf,
- dh-translations,
+ debhelper (>= 8.1.0~),
+ dpkg-dev (>= 1.16.1),
  autotools-dev,
+ dh-autoreconf,
+ gnome-common,
  intltool,
- iso-codes,
+ docbook-to-man,
  libdbus-glib-1-dev (>= 0.74),
  libgnome-keyring-dev,
+ libsecret-1-dev,
  libgtk-3-dev (>= 3.0),
- libglib2.0-dev (>= 2.16),
+ libglib2.0-dev (>= 2.26),
  libgconf2-dev,
- libnotify-dev (>= 0.4.3),
- libnm-util-dev (>= 0.9.6),
- libnm-glib-dev (>= 0.9.6),
- libnm-glib-vpn-dev (>= 0.9.6),
- network-manager-dev (>= 0.9.6),
- docbook-to-man,
+ libnotify-dev (>= 0.7),
+ libnm-util-dev (>= 0.9.8),
+ libnm-glib-dev (>= 0.9.8),
+ libnm-glib-vpn-dev (>= 0.9.8),
+ network-manager-dev (>= 0.9.8),
+ libmm-glib-dev,
+ libgudev-1.0-dev (>= 147),
+ libgnome-bluetooth-dev (>= 3.0.0),
+ iso-codes,
+ libgirepository1.0-dev,
+ dh-translations,
  libappindicator3-dev,
- libgnome-bluetooth-dev (>= 2.27.6)
-Standards-Version: 3.9.2
+ gobject-introspection
+Standards-Version: 3.9.4
+Vcs-Bzr: https://code.launchpad.net/~network-manager/network-manager-applet/ubuntu
 Homepage: http://www.gnome.org/projects/NetworkManager/
-Vcs-Bzr: https://code.launchpad.net/~network-manager/network-manager-applet/ubuntu.head
 
 Package: network-manager-gnome
-Architecture: any
+Architecture: linux-any
 Section: gnome
+Pre-Depends: ${misc:Pre-Depends}
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
- network-manager (>= 0.9.6),
+ libnm-gtk0 (= ${binary:Version}),
+ network-manager (>= 0.9.8),
  policykit-1-gnome,
  gnome-icon-theme,
  dbus-x11
 Recommends:
  notification-daemon,
- mobile-broadband-provider-info
+ gnome-keyring,
+ mobile-broadband-provider-info,
+ iso-codes
 Suggests:
+ gnome-bluetooth,
+ network-manager-openconnect-gnome,
  network-manager-openvpn-gnome,
  network-manager-vpnc-gnome,
- network-manager-pptp-gnome,
- gnome-bluetooth
+ network-manager-pptp-gnome
+Breaks:
+ gnome-bluetooth (<< 3.0)
 Description: network management framework (GNOME frontend)
  NetworkManager is a system network service that manages your network devices
  and connections, attempting to keep active network connectivity when
@@ -60,41 +74,13 @@ Description: network management framework (GNOME frontend)
  them. For encrypted networks it will prompt the user for the key/passphrase
  and it can optionally store them in the gnome-keyring.
 
-Package: network-manager-gnome-dbg
-Architecture: any
-Section: debug
-Priority: extra
-Depends:
- network-manager-gnome (= ${binary:Version}) | libnm-gtk0 (= ${binary:Version}),
- ${misc:Depends}
-Description: network management framework (debugging symbols)
- NetworkManager is a system network service that manages your network devices
- and connections, attempting to keep active network connectivity when
- available. It manages ethernet, WiFi, mobile broadband (WWAN), and PPPoE
- devices, and provides VPN integration with a variety of different VPN
- services.
- .
- This package contains detached debugging symbols.
-
 Package: libnm-gtk0
-Architecture: any
+Architecture: linux-any
 Section: libs
 Depends:
- libnm-gtk-common (>= ${source:Version}),
  ${shlibs:Depends},
  ${misc:Depends},
- policykit-1-gnome,
- dbus-x11
-Recommends:
- network-manager (>= 0.9.6),
- mobile-broadband-provider-info
-Suggests:
- network-manager-openvpn-gnome,
- network-manager-vpnc-gnome,
- network-manager-pptp-gnome,
- gnome-bluetooth
-Replaces: network-manager-gnome (<< 0.9.1.90-0ubuntu2)
-Breaks: network-manager-gnome (<< 0.9.1.90-0ubuntu2)
+ libnm-gtk-common (= ${source:Version})
 Description: network management framework (GNOME dialogs for wifi and mobile)
  NetworkManager is a system network service that manages your network devices
  and connections, attempting to keep active network connectivity when
@@ -102,15 +88,13 @@ Description: network management framework (GNOME dialogs for wifi and mobile)
  devices, and provides VPN integration with a variety of different VPN
  services.
  .
- This package contains libraries to use for displaying dialogs for wireless
- or mobile connections.
+ This library provides Gtk+ dialogs for NetworkManager.
 
 Package: libnm-gtk-common
 Architecture: all
-Section: gnome
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Replaces: network-manager-gnome (<< 0.9.1.90-0ubuntu2)
-Breaks: network-manager-gnome (<< 0.9.1.90-0ubuntu2)
+Section: libs
+Depends:
+ ${misc:Depends}
 Description: network management framework (common files for wifi and mobile)
  NetworkManager is a system network service that manages your network devices
  and connections, attempting to keep active network connectivity when
@@ -118,19 +102,21 @@ Description: network management framework (common files for wifi and mobile)
  devices, and provides VPN integration with a variety of different VPN
  services.
  .
- This package contains common files to use for displaying dialogs for wireless
- or mobile connections.
+ This package contains data files used by libnm-gtk.
 
 Package: libnm-gtk-dev
-Architecture: any
+Architecture: linux-any
 Section: libdevel
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
  libnm-gtk0 (= ${binary:Version}),
- network-manager (>= 0.9.6),
- policykit-1-gnome,
- dbus-x11
+ gir1.2-nmgtk-1.0 (= ${binary:Version}),
+ network-manager-dev (>= 0.9),
+ libnm-util-dev (>= 0.9),
+ libnm-glib-dev (>= 0.9),
+ libgtk-3-dev,
+ libdbus-glib-1-dev
 Description: network management framework (dialogs development libraries)
  NetworkManager is a system network service that manages your network devices
  and connections, attempting to keep active network connectivity when
@@ -140,3 +126,22 @@ Description: network management framework (dialogs development libraries)
  .
  This package contains development libraries to use when building applications
  that need to display dialogs for wireless or mobile connections.
+
+Package: gir1.2-nmgtk-1.0
+Section: introspection
+Architecture: linux-any
+Depends:
+ ${gir:Depends},
+ ${shlibs:Depends},
+ ${misc:Depends}
+Description: GObject introspection data for libnm-gtk
+ NetworkManager is a system network service that manages your network devices
+ and connections, attempting to keep active network connectivity when
+ available. It manages ethernet, WiFi, mobile broadband (WWAN), and PPPoE
+ devices, and provides VPN integration with a variety of different VPN
+ services.
+ .
+ This package contains introspection data for libnm-gtk.
+ .
+ It can be used by packages using the GIRepository format to generate
+ dynamic bindings.
