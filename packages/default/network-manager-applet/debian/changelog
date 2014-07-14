@@ -1,3 +1,14 @@
+network-manager-applet (0.9.8.8-0ubuntu4.2+opinsys1) trusty; urgency=medium
+
+  * debian/patches/opinsys-allow-user-to-modify-connection-settings.patch:
+    allow users to modify connection settings
+
+  * debian/patches/11-user-connections.patch: dropped in favour of
+    our patch, because we do not want to use gnome-keyring, it causes
+    confusion amongst our users.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Mon, 14 Jul 2014 12:03:59 +0300
+
 network-manager-applet (0.9.8.8-0ubuntu4.2) trusty-proposed; urgency=medium
 
   * Bring back Autostart Condition, we don't want nm-applet running in a
