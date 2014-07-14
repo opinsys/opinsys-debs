@@ -70,3 +70,9 @@ override_dh_builddeb:
 	dh_builddeb -- -Zxz
 
 override_dh_auto_test:
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+.PHONY: get-orig-source
+get-orig-source:
+	uscan --download-current-version
+	tar -J -x -f ../network-manager-applet_$(SRC_VERSION).orig.tar.xz --strip-components=1 -C .
