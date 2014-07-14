@@ -1,0 +1,26 @@
+Description: Allow user to modify connection settings
+Author: Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>
+--- network-manager-applet-0.9.6.2.orig/src/applet-device-wifi.c
++++ network-manager-applet-0.9.6.2/src/applet-device-wifi.c
+@@ -651,6 +651,21 @@ _do_new_auto_connection (NMApplet *apple
+ 		}
+ 	} else {
+ 		/* Everything else can just get activated right away */
++
++		/* By default network-manager uses system wide permissions for all 
++		   automatically created wifi connections. This requires users to 
++		   have org.freedesktop.NetworkManager.settings.modify.system 
++		   permissions, which gives them right to modify also connections 
++		   created by other users. Here we change the connection permissions 
++		   only to the active user so that we do not need to give system 
++		   permissions to all users. By Veli-Matti Lintu / Opinsys Oy. */
++		s_con = (NMSettingConnection *) nm_setting_connection_new ();
++		uuid = nm_utils_uuid_generate ();
++		g_object_set (s_con, NM_SETTING_CONNECTION_UUID, uuid, NULL);
++		g_free (uuid);
++		nm_setting_connection_add_permission (s_con, "user", g_get_user_name (), NULL);
++		nm_connection_add_setting (connection, NM_SETTING (s_con));
++
+ 		callback (connection, TRUE, FALSE, callback_data);
+ 	}
+ }
