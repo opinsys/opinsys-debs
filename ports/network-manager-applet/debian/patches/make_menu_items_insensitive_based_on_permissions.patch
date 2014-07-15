@@ -9,11 +9,11 @@ Subject: Make sure the behavior for policykit-restricted actions is
  src/applet.c             |   35 +++++++++++++++++++++++++++++++++--
  4 files changed, 114 insertions(+), 2 deletions(-)
 
-Index: b/src/applet.c
+Index: network-manager-applet/src/applet.c
 ===================================================================
---- a/src/applet.c
-+++ b/src/applet.c
-@@ -87,6 +87,8 @@ extern gboolean shell_debug;
+--- network-manager-applet.orig/src/applet.c	2014-07-15 15:59:07.000000000 +0300
++++ network-manager-applet/src/applet.c	2014-07-15 16:03:20.000000000 +0300
+@@ -89,6 +89,8 @@
  
  G_DEFINE_TYPE(NMApplet, nma, G_TYPE_OBJECT)
  
@@ -22,7 +22,7 @@ Index: b/src/applet.c
  /********************************************************************/
  /* Temporary dbus interface stuff */
  
-@@ -1602,7 +1604,10 @@ nma_menu_device_get_menu_item (NMDevice
+@@ -1590,7 +1592,10 @@
  		                       G_CALLBACK (applet_device_disconnect_db),
  		                       info,
  		                       (GClosureNotify) applet_device_info_destroy, 0);
@@ -34,7 +34,7 @@ Index: b/src/applet.c
  		break;
  	}
  	default:
-@@ -1814,12 +1819,24 @@ nma_menu_add_vpn_submenu (GtkWidget *men
+@@ -1789,12 +1794,24 @@
  	item = GTK_MENU_ITEM (gtk_menu_item_new_with_mnemonic (_("_Configure VPN...")));
  	g_signal_connect (item, "activate", G_CALLBACK (nma_menu_configure_vpn_item_activate), applet);
  	gtk_menu_shell_append (GTK_MENU_SHELL (vpn_menu), GTK_WIDGET (item));
@@ -60,7 +60,7 @@ Index: b/src/applet.c
  
  	g_slist_free (list);
  }
-@@ -2089,6 +2106,20 @@ nma_context_menu_update (NMApplet *apple
+@@ -2058,6 +2075,20 @@
  		gtk_widget_show_all (applet->wimax_enabled_item);
  	else
  		gtk_widget_hide (applet->wimax_enabled_item);
@@ -81,11 +81,11 @@ Index: b/src/applet.c
  }
  
  static void
-Index: b/src/applet-device-wifi.c
+Index: network-manager-applet/src/applet-device-wifi.c
 ===================================================================
---- a/src/applet-device-wifi.c
-+++ b/src/applet-device-wifi.c
-@@ -94,6 +94,8 @@ nma_menu_add_hidden_network_item (GtkWid
+--- network-manager-applet.orig/src/applet-device-wifi.c	2014-07-15 15:59:07.000000000 +0300
++++ network-manager-applet/src/applet-device-wifi.c	2014-07-15 16:03:20.000000000 +0300
+@@ -93,6 +93,8 @@
  {
  	GtkWidget *menu_item;
  	GtkWidget *label;
@@ -94,7 +94,7 @@ Index: b/src/applet-device-wifi.c
  
  	menu_item = gtk_menu_item_new ();
  	label = gtk_label_new_with_mnemonic (_("_Connect to Hidden Wi-Fi Network..."));
-@@ -104,6 +106,33 @@ nma_menu_add_hidden_network_item (GtkWid
+@@ -103,6 +105,33 @@
  	g_signal_connect_swapped (menu_item, "activate",
  	                          G_CALLBACK (applet_wifi_connect_to_hidden_network),
  	                          applet);
@@ -128,20 +128,20 @@ Index: b/src/applet-device-wifi.c
  }
  
  gboolean
-Index: b/src/applet-device-cdma.c
+Index: network-manager-applet/src/applet-device-cdma.c
 ===================================================================
---- a/src/applet-device-cdma.c
-+++ b/src/applet-device-cdma.c
-@@ -328,6 +328,8 @@ cdma_add_menu_item (NMDevice *device,
- #ifdef ENABLE_INDICATOR
- 	GtkWidget *signal_icon;
- #endif
+--- network-manager-applet.orig/src/applet-device-cdma.c	2014-07-15 15:59:07.000000000 +0300
++++ network-manager-applet/src/applet-device-cdma.c	2014-07-15 16:03:39.669728894 +0300
+@@ -235,6 +235,8 @@
+ 	char *text;
+ 	GtkWidget *item;
+ 	GSList *connections, *all, *iter;
 +	gboolean allowed;
 +	NMClientPermissionResult perm;
  
  	info = g_object_get_data (G_OBJECT (device), "devinfo");
  
-@@ -439,8 +441,32 @@ cdma_add_menu_item (NMDevice *device,
+@@ -312,8 +314,32 @@
  				}
  			}
  		} else {
@@ -174,20 +174,20 @@ Index: b/src/applet-device-cdma.c
  			add_connection_item (device, NULL, item, menu, applet);
  		}
  	}
-Index: b/src/applet-device-gsm.c
+Index: network-manager-applet/src/applet-device-gsm.c
 ===================================================================
---- a/src/applet-device-gsm.c
-+++ b/src/applet-device-gsm.c
-@@ -383,6 +383,8 @@ gsm_add_menu_item (NMDevice *device,
- #ifdef ENABLE_INDICATOR
- 	GtkWidget *signal_icon;
- #endif
+--- network-manager-applet.orig/src/applet-device-gsm.c	2014-07-15 15:59:07.000000000 +0300
++++ network-manager-applet/src/applet-device-gsm.c	2014-07-15 16:03:20.000000000 +0300
+@@ -291,6 +291,8 @@
+ 	char *text;
+ 	GtkWidget *item;
+ 	GSList *connections, *all, *iter;
 +	gboolean allowed;
 +	NMClientPermissionResult perm;
  
  	info = g_object_get_data (G_OBJECT (device), "devinfo");
  
-@@ -496,9 +498,33 @@ gsm_add_menu_item (NMDevice *device,
+@@ -368,9 +370,33 @@
  				}
  			}
  		} else {
