@@ -1,3 +1,9 @@
+network-manager-applet (0.9.8.8-0ubuntu4.2+opinsys3) trusty; urgency=medium
+
+  * Do not use appindicator, because it renders empty menus sometimes.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 15 Jul 2014 16:20:54 +0300
+
 network-manager-applet (0.9.8.8-0ubuntu4.2+opinsys2) trusty; urgency=medium
 
   * debian/patches/opinsys-do-not-save-to-keyring.patch: added to
