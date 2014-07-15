@@ -21,3 +21,4 @@ set_atk_relations.patch
 11-user-connections.patch
 ubuntu_dont_autostart_under_GNOME.patch
 opinsys-allow-user-to-modify-connection-settings.patch
+opinsys-do-not-save-to-keyring.patch

@@ -1,0 +1,77 @@
+Description: Do not use keyring for storing passwords
+ The usage of keyring confuses our users, we do not want to use it, at
+ least for now. There is also a major problem related to password
+ changes: if the default keyring is set to be unlocked automatically
+ during login and user changes his/her password, keyring will prompt for
+ keyring password on every login until it is unlocked. Now if the user
+ has forgotten the keyring password, the only way out would be to delete
+ the default keyring and create it again, this time bound to the newly
+ changed password.
+ .
+
+ This patch changes network manager applet to use the keyring daemon
+ only for asking the password, not storing it. Passwords are saved by
+ network manager in system connection files.
+ .
+ network-manager-applet (0.9.8.8-0ubuntu4.2+opinsys1) trusty; urgency=medium
+ .
+   * debian/patches/opinsys-allow-user-to-modify-connection-settings.patch:
+     allow users to modify connection settings
+ .
+   * debian/patches/11-user-connections.patch: dropped in favour of
+     our patch, because we do not want to use gnome-keyring, it causes
+     confusion amongst our users.
+Author: Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>
+Index: network-manager-applet/src/applet-agent.c
+===================================================================
+--- network-manager-applet.orig/src/applet-agent.c	2014-07-15 12:23:40.556609649 +0300
++++ network-manager-applet/src/applet-agent.c	2014-07-15 12:24:18.236726841 +0300
+@@ -188,8 +188,6 @@
+ 			while (g_hash_table_iter_next (&iter, (gpointer) &setting_name, NULL))
+ 				nm_connection_update_secrets (dupl, setting_name, secrets, NULL);
+ 
+-			/* And save updated secrets to the keyring */
+-			nm_secret_agent_save_secrets (NM_SECRET_AGENT (self), dupl, get_save_cb, NULL);
+ 			g_object_unref (dupl);
+ 		}
+ 
+@@ -726,14 +724,6 @@
+               NMSecretAgentSaveSecretsFunc callback,
+               gpointer callback_data)
+ {
+-	AppletAgentPrivate *priv = APPLET_AGENT_GET_PRIVATE (agent);
+-	Request *r;
+-
+-	r = request_new (agent, connection, connection_path, NULL, NULL, FALSE, NULL, callback, NULL, callback_data);
+-	g_hash_table_insert (priv->requests, GUINT_TO_POINTER (r->id), r);
+-
+-	/* First delete any existing items in the keyring */
+-	nm_secret_agent_delete_secrets (agent, connection, save_delete_cb, r);
+ }
+ 
+ /*******************************************************/
+@@ -774,24 +764,6 @@
+                 NMSecretAgentDeleteSecretsFunc callback,
+                 gpointer callback_data)
+ {
+-	AppletAgentPrivate *priv = APPLET_AGENT_GET_PRIVATE (agent);
+-	Request *r;
+-	NMSettingConnection *s_con;
+-	const char *uuid;
+-
+-	r = request_new (agent, connection, connection_path, NULL, NULL, FALSE, NULL, NULL, callback, callback_data);
+-	g_hash_table_insert (priv->requests, GUINT_TO_POINTER (r->id), r);
+-
+-	s_con = nm_connection_get_setting_connection (connection);
+-	g_assert (s_con);
+-	uuid = nm_setting_connection_get_uuid (s_con);
+-	g_assert (uuid);
+-
+-	secret_password_clear (&network_manager_secret_schema, r->cancellable,
+-	                       delete_find_items_cb, r,
+-	                       KEYRING_UUID_TAG, uuid,
+-	                       NULL);
+-	r->keyring_calls++;
+ }
+ 
+ void
