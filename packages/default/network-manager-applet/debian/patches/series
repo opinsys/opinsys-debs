@@ -8,14 +8,14 @@ applet-wifi-menu-before-vpn.patch
 clear-notification-actions.patch
 key-certificate-extensions.patch
 lp829673_gconf_hide_applet.patch
-nm-applet-use-indicator.patch
+# nm-applet-use-indicator.patch
 position_dialogs_to_center_of_the_screen.patch
 make_menu_items_insensitive_based_on_permissions.patch
 hide_policy_items_env_var.patch
 applet_adhoc_use_wpa_rsn_part1.patch
 lp1048516_dont_req_keyring_in_greeter.patch
 lp1048520_delay_pin_dialog_in_greeter.patch
-rebuild_menu_after_init.patch
+# rebuild_menu_after_init.patch
 0001_Move_on_with_enter_in_the_country_page_of_the_new_mobile_wizard.patch
 set_atk_relations.patch
 11-user-connections.patch
