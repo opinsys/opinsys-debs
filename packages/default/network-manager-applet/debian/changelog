@@ -1,3 +1,13 @@
+network-manager-applet (0.9.8.8-0ubuntu4.2+opinsys2) trusty; urgency=medium
+
+  * debian/patches/opinsys-do-not-save-to-keyring.patch: added to
+    disable keyring usage
+
+  * debian/patches/11-user-connections.patch: re-applied because it
+    did not disable keyring usage
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 15 Jul 2014 12:29:04 +0300
+
 network-manager-applet (0.9.8.8-0ubuntu4.2+opinsys1) trusty; urgency=medium
 
   * debian/patches/opinsys-allow-user-to-modify-connection-settings.patch:
