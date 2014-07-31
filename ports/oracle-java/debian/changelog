@@ -1,3 +1,9 @@
+oracle-java (1.7.65-0+opinsys1) quantal; urgency=medium
+
+  * Update to Java 7u65
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Thu, 31 Jul 2014 11:03:35 +0300
+
 oracle-java (1.7.60-0+opinsys1) quantal; urgency=low
 
   * Update to Java 7u60
