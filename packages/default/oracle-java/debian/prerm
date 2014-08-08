@@ -8,7 +8,7 @@ version=jre1.7.0_67
 
 update-alternatives --remove \
   mozilla-javaplugin.so \
-  /opt/java/${version}/jre/lib/i386/libnpjp2.so
+  /opt/java/${version}/lib/i386/libnpjp2.so
 
 update-alternatives --remove \
   javaws \
