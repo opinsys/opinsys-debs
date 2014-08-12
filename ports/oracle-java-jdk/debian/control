@@ -1,4 +1,4 @@
-Source: oracle-java
+Source: oracle-java-jdk
 Section: misc
 Priority: extra
 Maintainer: Opinsys Developers <dev@opinsys.fi>
@@ -6,8 +6,8 @@ Build-Depends: debhelper (>= 8.0.0)
 Standards-Version: 3.9.3
 Homepage: http://www.oracle.com/technetwork/java/javase/downloads/index.html
 
-Package: oracle-java
+Package: oracle-java-jdk
 Architecture: i386
 Depends: ${misc:Depends}
-Description: Oracle Java
- Oracle Java.
+Description: Oracle Java JDK
+ Oracle Java JDK.

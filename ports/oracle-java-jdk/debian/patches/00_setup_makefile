@@ -1,10 +1,10 @@
-Index: oracle-java/Makefile
+Index: oracle-java-jdk/Makefile
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
 +++ oracle-java/Makefile	2014-01-16 11:17:50.407458588 +0200
 @@ -0,0 +1,11 @@
 +BINDIR = opt/java
-+DISTFILE = jdk-7u65-linux-i586.tar.gz
++DISTFILE = jdk-7u67-linux-i586.tar.gz
 +
 +all:
 +	mkdir -p $(BINDIR)
