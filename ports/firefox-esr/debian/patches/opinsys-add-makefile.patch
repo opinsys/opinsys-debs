@@ -1,0 +1,13 @@
+diff -ruN firefox-esr.old/Makefile firefox-esr/Makefile
+--- firefox-esr.old/Makefile	1970-01-01 03:00:00.000000000 +0300
++++ firefox-esr/Makefile	2014-08-15 11:27:27.319366871 +0300
+@@ -0,0 +1,9 @@
++all:
++
++installdirs:
++	mkdir -p $(DESTDIR)/opt
++
++install: installdirs
++	cp -a opt $(DESTDIR)/
++
++clean:
