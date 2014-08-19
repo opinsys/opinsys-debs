@@ -1,0 +1,147 @@
+## 38_kbsd.patch by Petr Salinger <Petr.Salinger@seznam.cz>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: GNU/kFreeBSD support. bz#356011
+## DP: Added Hurd support.
+
+Index: nss/nss/lib/freebl/unix_rand.c
+===================================================================
+--- nss.orig/nss/lib/freebl/unix_rand.c
++++ nss/nss/lib/freebl/unix_rand.c
+@@ -156,7 +156,8 @@ static SECStatus RNG_kstat(PRUint32* fed
+ 
+ #if defined(SCO) || defined(UNIXWARE) || defined(BSDI) || defined(FREEBSD) \
+     || defined(NETBSD) || defined(DARWIN) || defined(OPENBSD) \
+-    || defined(NTO) || defined(__riscos__)
++    || defined(NTO) || defined(__riscos__) || defined(__GNU__) \
++    || defined(__FreeBSD_kernel__) || defined(__NetBSD_kernel__)
+ #include <sys/times.h>
+ 
+ #define getdtablesize() sysconf(_SC_OPEN_MAX)
+Index: nss/nss/lib/softoken/softoken.h
+===================================================================
+--- nss.orig/nss/lib/softoken/softoken.h
++++ nss/nss/lib/softoken/softoken.h
+@@ -184,7 +184,7 @@ extern PRBool sftk_fatalError;
+ 
+ #define CHECK_FORK_MIXED
+ 
+-#elif defined(LINUX)
++#elif defined(LINUX) || defined (__GLIBC__)
+ 
+ #define CHECK_FORK_PTHREAD
+ 
+Index: nss/nss/lib/ssl/sslmutex.c
+===================================================================
+--- nss.orig/nss/lib/ssl/sslmutex.c
++++ nss/nss/lib/ssl/sslmutex.c
+@@ -56,7 +56,7 @@ static SECStatus single_process_sslMutex
+     return SECSuccess;
+ }
+ 
+-#if defined(LINUX) || defined(AIX) || defined(BEOS) || defined(BSDI) || (defined(NETBSD) && __NetBSD_Version__ < 500000000) || defined(OPENBSD)
++#if defined(LINUX) || defined(AIX) || defined(BEOS) || defined(BSDI) || (defined(NETBSD) && __NetBSD_Version__ < 500000000) || defined(OPENBSD) || defined(__GLIBC__)
+ 
+ #include <unistd.h>
+ #include <fcntl.h>
+Index: nss/nss/lib/ssl/sslmutex.h
+===================================================================
+--- nss.orig/nss/lib/ssl/sslmutex.h
++++ nss/nss/lib/ssl/sslmutex.h
+@@ -50,7 +50,7 @@ typedef struct
+ 
+ typedef int    sslPID;
+ 
+-#elif defined(LINUX) || defined(AIX) || defined(BEOS) || defined(BSDI) || (defined(NETBSD) && __NetBSD_Version__ < 500000000) || defined(OPENBSD)
++#elif defined(LINUX) || defined(AIX) || defined(BEOS) || defined(BSDI) || (defined(NETBSD) && __NetBSD_Version__ < 500000000) || defined(OPENBSD) || defined(__GLIBC__)
+ 
+ #include <sys/types.h>
+ #include "prtypes.h"
+Index: nss/nss/coreconf/arch.mk
+===================================================================
+--- nss.orig/nss/coreconf/arch.mk
++++ nss/nss/coreconf/arch.mk
+@@ -122,6 +122,14 @@ ifeq ($(OS_ARCH),Linux)
+     ifneq ($(words $(OS_RELEASE)),1)
+ 	OS_RELEASE := $(word 1,$(OS_RELEASE)).$(word 2,$(OS_RELEASE))
+     endif
++    KERNEL = linux
++endif
++
++# This check must be last.  Since all uses of OS_ARCH that follow affect only
++# userland, we can merge other Glibc systems with Linux here.
++ifneq (, $(filter GNU GNU_%, $(OS_ARCH)))
++OS_ARCH = Linux
++OS_RELEASE = 2.6
+ endif
+ 
+ #
+Index: nss/nss/coreconf/Linux.mk
+===================================================================
+--- nss.orig/nss/coreconf/Linux.mk
++++ nss/nss/coreconf/Linux.mk
+@@ -100,7 +100,7 @@ ifneq ($(OS_TARGET),Android)
+ LIBC_TAG		= _glibc
+ endif
+ 
+-ifeq ($(OS_RELEASE),2.0)
++ifeq ($(KERNEL)-$(OS_RELEASE),linux-2.0)
+ 	OS_REL_CFLAGS	+= -DLINUX2_0
+ 	MKSHLIB		= $(CC) -shared -Wl,-soname -Wl,$(@:$(OBJDIR)/%.so=%.so) $(RPATH)
+ 	ifdef MAPFILE
+@@ -130,14 +130,21 @@ ifeq ($(USE_PTHREADS),1)
+ OS_PTHREAD = -lpthread 
+ endif
+ 
+-OS_CFLAGS		= $(DSO_CFLAGS) $(OS_REL_CFLAGS) $(ARCHFLAG) -Wall -Werror-implicit-function-declaration -Wno-switch -pipe -ffunction-sections -fdata-sections -DLINUX -Dlinux -DHAVE_STRERROR
++OS_CFLAGS		= $(DSO_CFLAGS) $(OS_REL_CFLAGS) $(ARCHFLAG) -Wall -Werror-implicit-function-declaration -Wno-switch -pipe -ffunction-sections -fdata-sections -DHAVE_STRERROR
++ifeq ($(KERNEL),linux)
++OS_CFLAGS		+= -DLINUX -Dlinux
++endif
+ OS_LIBS			= $(OS_PTHREAD) -ldl -lc
+ 
+ ifdef USE_PTHREADS
+ 	DEFINES		+= -D_REENTRANT
+ endif
+ 
+-ARCH			= linux
++ifeq ($(KERNEL),linux)
++	ARCH		= linux
++else
++	ARCH		= gnu
++endif
+ 
+ DSO_CFLAGS		= -fPIC
+ DSO_LDOPTS		= -shared $(ARCHFLAG) -Wl,--gc-sections
+@@ -154,7 +161,7 @@ ifdef _SBOX_DIR
+ LDFLAGS			+= -Wl,-rpath-link,/usr/lib:/lib
+ endif
+ 
+-# INCLUDES += -I/usr/include -Y/usr/include/linux
++# INCLUDES += -I/usr/include
+ G++INCLUDES		= -I/usr/include/g++
+ 
+ #
+@@ -189,7 +196,9 @@ RPATH = -Wl,-rpath,'$$ORIGIN:/opt/sun/pr
+ endif
+ endif
+ 
++ifeq ($(KERNEL), linux)
+ OS_REL_CFLAGS   += -DLINUX2_1
++endif
+ MKSHLIB         = $(CC) $(DSO_LDOPTS) -Wl,-soname -Wl,$(@:$(OBJDIR)/%.so=%.so) $(RPATH)
+ 
+ ifdef MAPFILE
+Index: nss/nss/coreconf/config.mk
+===================================================================
+--- nss.orig/nss/coreconf/config.mk
++++ nss/nss/coreconf/config.mk
+@@ -31,7 +31,7 @@ endif
+ #######################################################################
+ 
+ TARGET_OSES = FreeBSD BSD_OS NetBSD OpenUNIX OS2 QNX Darwin BeOS OpenBSD \
+-              AIX RISCOS WINNT WIN95 Linux Android
++              AIX RISCOS WINNT WIN95 Linux Android GNU GNU_%
+ 
+ ifeq (,$(filter-out $(TARGET_OSES),$(OS_TARGET)))
+ include $(CORE_DEPTH)/coreconf/$(OS_TARGET).mk
