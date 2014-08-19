@@ -841,6 +841,13 @@ public class UserList : GreeterList
 
     public void add_user (string name, string label, string? background = null, bool is_active = false, bool has_messages = false, string? session = null)
     {
+        var exclude_prefixes = UGSettings.get_strv (UGSettings.KEY_EXCLUDE_PREFIXES);
+
+        foreach (var prefix in exclude_prefixes) {
+            if (name.has_prefix(prefix))
+                return;
+        }
+
         var e = find_entry (name) as UserPromptBox;
         if (e == null)
         {

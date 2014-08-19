@@ -102,5 +102,9 @@
       <default>''</default>
       <summary>Default user to be selected in greeter</summary>
     </key>
+    <key name="exclude-prefixes" type="as">
+      <default>[]</default>
+      <summary>Exclude usernames that start with any of the given strings</summary>
+    </key>
   </schema>
 </schemalist>
