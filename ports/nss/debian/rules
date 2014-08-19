@@ -173,3 +173,9 @@ override_dh_builddeb:
 
 %:
 	dh $@
+
+DEB_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)/\1/p')
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+get-orig-source:
+	wget http://archive.ubuntu.com/ubuntu/pool/main/n/nss/nss_3.16.3-1ubuntu1.debian.tar.xz -O ../nss_$(SRC_VERSION).orig.tar.xz
+	tar -J -x -f ../nss_$(SRC_VERSION).orig.tar.xz --strip-components=1 -C .
