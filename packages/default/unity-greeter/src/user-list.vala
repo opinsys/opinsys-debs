@@ -81,6 +81,7 @@ public class UserList : GreeterList
             }
 
             var hidden_users = UGSettings.get_strv (UGSettings.KEY_HIDDEN_USERS);
+
             if (!value)
             {
                 foreach (var username in hidden_users)
@@ -1020,6 +1021,13 @@ public class UserList : GreeterList
                 set_active_entry (UnityGreeter.singleton.select_user_hint ());
             else if (last_user != null)
                 set_active_entry (last_user);
+
+            var default_user = UGSettings.get_string (UGSettings.KEY_DEFAULT_USER);
+
+            if (default_user != null) {
+                debug("SET DEFAULT USER: %s", default_user);
+                set_active_entry (default_user);
+            }
         }
     }
 

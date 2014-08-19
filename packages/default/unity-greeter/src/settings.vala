@@ -41,6 +41,7 @@ public class UGSettings
     public static const string KEY_INDICATORS = "indicators";
     public static const string KEY_HIDDEN_USERS = "hidden-users";
     public static const string KEY_IDLE_TIMEOUT = "idle-timeout";    
+    public static const string KEY_DEFAULT_USER = "default-user";
 
     public static bool get_boolean (string key)
     {

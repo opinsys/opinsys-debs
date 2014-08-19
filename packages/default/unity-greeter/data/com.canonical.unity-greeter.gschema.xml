@@ -98,5 +98,9 @@
       <default>300</default>
       <summary>Number of seconds of inactivity before blanking the screen. Set to 0 to never timeout.</summary>
     </key>
+    <key name="default-user" type="s">
+      <default>''</default>
+      <summary>Default user to be selected in greeter</summary>
+    </key>
   </schema>
 </schemalist>
