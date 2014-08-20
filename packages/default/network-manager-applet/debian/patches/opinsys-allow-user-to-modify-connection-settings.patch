@@ -1,10 +1,8 @@
 Description: Allow user to modify connection settings
 Author: Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>
-Index: network-manager-applet/src/applet-device-wifi.c
-===================================================================
---- network-manager-applet.orig/src/applet-device-wifi.c	2014-07-15 15:26:01.717485563 +0300
-+++ network-manager-applet/src/applet-device-wifi.c	2014-07-15 15:26:01.713485548 +0300
-@@ -547,6 +547,21 @@
+--- network-manager-applet-0.9.6.2.orig/src/applet-device-wifi.c
++++ network-manager-applet-0.9.6.2/src/applet-device-wifi.c
+@@ -651,6 +651,21 @@ _do_new_auto_connection (NMApplet *apple
  		}
  	} else {
  		/* Everything else can just get activated right away */

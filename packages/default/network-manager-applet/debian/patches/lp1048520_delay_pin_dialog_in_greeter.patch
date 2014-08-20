@@ -6,11 +6,11 @@ Subject: Delay showing the pin dialog in greeter mode; only show it when
  src/applet-device-gsm.c |  128 ++++++++++++++++++++++++++++++++++++++++++++++--
  1 file changed, 123 insertions(+), 5 deletions(-)
 
-Index: network-manager-applet/src/applet-device-gsm.c
+Index: b/src/applet-device-gsm.c
 ===================================================================
---- network-manager-applet.orig/src/applet-device-gsm.c	2014-07-15 15:24:15.000000000 +0300
-+++ network-manager-applet/src/applet-device-gsm.c	2014-07-15 15:24:15.000000000 +0300
-@@ -95,6 +95,8 @@
+--- a/src/applet-device-gsm.c
++++ b/src/applet-device-gsm.c
+@@ -96,6 +96,8 @@ typedef struct {
  	gboolean skip_reg_poll;
  	gboolean skip_signal_poll;
  
@@ -19,7 +19,7 @@ Index: network-manager-applet/src/applet-device-gsm.c
  	/* Unlock dialog stuff */
  	GtkWidget *dialog;
  	GCancellable *cancellable;
-@@ -102,6 +104,7 @@
+@@ -103,6 +105,7 @@ typedef struct {
  
  static void unlock_dialog_destroy (GsmDeviceInfo *info);
  static void check_start_polling (GsmDeviceInfo *info);
@@ -27,7 +27,7 @@ Index: network-manager-applet/src/applet-device-gsm.c
  
  typedef struct {
  	NMApplet *applet;
-@@ -194,10 +197,117 @@
+@@ -195,10 +198,117 @@ applet_gsm_connect_network (NMApplet *ap
  	}
  }
  
@@ -145,7 +145,7 @@ Index: network-manager-applet/src/applet-device-gsm.c
  
  	applet_menu_item_activate_helper (info->device,
  	                                  info->connection,
-@@ -843,9 +953,11 @@
+@@ -887,9 +997,11 @@ keyring_pin_check_cb (GObject *source,
  	list = secret_service_search_finish (NULL, result, &error);
  
  	if (!list) {
@@ -160,7 +160,7 @@ Index: network-manager-applet/src/applet-device-gsm.c
  		return;
  	}
  
-@@ -923,8 +1035,10 @@
+@@ -967,8 +1079,10 @@ simid_reply (DBusGProxy *proxy, DBusGPro
  			                       info->cancellable, keyring_pin_check_cb, info);
  			g_hash_table_unref (attrs);
  		} else {
@@ -173,7 +173,7 @@ Index: network-manager-applet/src/applet-device-gsm.c
  		}
  	}
  
-@@ -1165,6 +1279,10 @@
+@@ -1213,6 +1327,10 @@ gsm_device_added (NMDevice *device, NMAp
  	info->bus = bus;
  	info->cancellable = g_cancellable_new ();
  
