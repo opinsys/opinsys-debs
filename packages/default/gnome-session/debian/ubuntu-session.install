@@ -1,0 +1,3 @@
+usr/share/xsessions/ubuntu.desktop
+usr/share/gnome-session/sessions/ubuntu.session
+debian/50-ubuntu.conf /usr/share/lightdm/lightdm.conf.d

@@ -1,0 +1,117 @@
+Source: gnome-session
+Section: gnome
+Priority: optional
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
+Uploaders: @GNOME_TEAM@
+Standards-Version: 3.9.3
+Build-Depends: cdbs (>= 0.4.41),
+               dh-autoreconf,
+               debhelper (>= 8),
+               gnome-pkg-tools (>= 0.13),
+               gnome-common,
+               intltool (>= 0.40.6),
+               libglib2.0-dev (>= 2.34.0),
+               libgtk-3-dev (>= 2.90.7),
+               libupower-glib-dev (>= 0.9.0),
+               libdbus-glib-1-dev (>= 0.76),
+               libjson-glib-dev (>= 0.10),
+               libnotify-dev (>= 0.7),
+               libgnome-desktop-3-dev (>= 3.7.90),
+               libsm-dev,
+               libsystemd-daemon-dev,
+               libsystemd-journal-dev,
+               libsystemd-login-dev (>= 183),
+               libice-dev,
+               libx11-dev,
+               libxt-dev,
+               libxau-dev,
+               libxext-dev,
+               libxcomposite-dev,
+               libgl1-mesa-dev,
+               libxtst-dev,
+               libxrender-dev,
+               xmlto,
+               xsltproc,
+               xtrans-dev
+Vcs-Bzr: http://bazaar.launchpad.net/~ubuntu-desktop/gnome-session/ubuntu
+
+Package: gnome-session
+Architecture: all
+Depends: ${misc:Depends},
+         gnome-settings-daemon (>= 3.0),
+         gnome-session-bin (>= ${binary:Version}),
+         gnome-session-bin (<< ${gnome:NextVersion}),
+         gnome-session-common (= ${binary:Version})
+Recommends: session-migration
+Suggests: gnome-user-guide,
+          desktop-base,
+          gnome-keyring
+Replaces: gnome-session-bin (<< 3.0),
+          gnome3-session
+Breaks: bug-buddy (<< 2.20),
+        xserver-xorg (<< 1:7.4),
+        gnome-power-manager (<< 2.28)
+Conflicts: gnome3-session
+Provides: x-session-manager,
+          gnome3-session
+Description: GNOME Session Manager - GNOME 3 session
+ The GNOME Session Manager is in charge of starting the core components
+ of the GNOME desktop, and applications that should be launched at
+ login time. It also features a way to save and restore currently
+ running applications.
+ .
+ This package contains the required components for the standard GNOME 3
+ session, based on the GNOME Shell. It can be started from a display
+ manager such as GDM, and requires 3D acceleration to work properly.
+
+Package: ubuntu-session
+Architecture: all
+Depends: ${misc:Depends},
+         unity-settings-daemon,
+         gnome-session-bin (>= ${binary:Version}),
+         gnome-session-bin (<< ${gnome:NextVersion}),
+         gnome-session-common (= ${binary:Version})
+Conflicts: gnome-session (<< 3.9.90-0ubuntu8),
+           ubuntu-settings (<< 14.04.4)
+Replaces: gnome-session (<< 3.9.90-0ubuntu8),
+          ubuntu-settings (<< 14.04.4)
+Recommends: session-migration
+Provides: x-session-manager
+Description: Ubuntu session
+ This package contains the required components for the standard Ubuntu session,
+ based on Unity. It can be started from a display manager such as LightDM.
+
+Package: gnome-session-bin
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+         dbus-x11,
+         gsettings-desktop-schemas,
+         upower (>= 0.9.0)
+Conflicts: gnome-session (<< 3.9.90-0ubuntu8)
+Description: GNOME Session Manager - Minimal runtime
+ The GNOME Session Manager is in charge of starting the core components
+ of the GNOME desktop, and applications that should be launched at
+ login time. It also features a way to save and restore currently
+ running applications.
+ .
+ This package contains the binaries for the GNOME Session Manager, but
+ no startup scripts. It is meant for those willing to start
+ gnome-session by hand with the components of their choice, and for
+ applications such as GDM that use gnome-session internally.
+
+Package: gnome-session-common
+Architecture: all
+Depends: ${misc:Depends}
+Replaces: gnome-session (<< 3.0),
+          gnome-session-bin (<< 3.0),
+          libgnomevfs2-common (<< 1:2.24.0-3)
+Description: GNOME Session Manager - common files
+ The GNOME Session Manager is in charge of starting the core components
+ of the GNOME desktop, and applications that should be launched at
+ login time. It also features a way to save and restore currently
+ running applications.
+ .
+ This package contains the translations, data files and startup scripts
+ which are common to the GNOME and GNOME fallback sessions.
