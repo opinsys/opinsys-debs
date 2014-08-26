@@ -9,6 +9,6 @@
 #80_new_upstream_session_dialog.patch
 95_dbus_request_shutdown.patch
 #101_screen_lock_on_suspend.patch
-98_shorten_phase_exit_timeout.patch
 103_kill_the_fail_whale.patch
 git_fix_wrong_unref_call.patch
+98_shorten_phase_exit_timeout.patch
