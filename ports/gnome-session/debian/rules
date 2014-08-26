@@ -17,3 +17,10 @@ LDFLAGS += -Wl,-z,defs -Wl,-O1 -Wl,--as-needed
 
 install/gnome-session-bin::
 	install -m 644 -D debian/gnome-session-bin.user-session.upstart debian/gnome-session-bin/usr/share/upstart/sessions/gnome-session.conf
+
+PACKAGE := $(shell dpkg-parsechangelog | sed -r -n 's/^Source: //p')
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -r -n 's/^Version: (([0-9]+):)?(.*)-.*/\3/p')
+get-orig-source:
+	wget -O ../$(PACKAGE)_$(SRC_VERSION).orig.tar.xz \
+	  http://archive.ubuntu.com/ubuntu/pool/main/g/$(PACKAGE)/$(PACKAGE)_$(SRC_VERSION).orig.tar.xz
+	tar -Jx -f ../$(PACKAGE)_$(SRC_VERSION).orig.tar.xz --strip-components=1
