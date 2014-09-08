@@ -1,2 +1,3 @@
 00-opinsys-add-opinsys-theme-to-available-themes.patch
 01-opinsys-remove-unity-stuff.patch
+02-opinsys-remove-updates-button.patch
