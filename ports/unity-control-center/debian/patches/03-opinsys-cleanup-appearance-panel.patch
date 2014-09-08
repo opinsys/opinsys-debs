@@ -1,0 +1,89 @@
+Index: unity-control-center/panels/appearance/appearance.ui
+===================================================================
+--- unity-control-center.orig/panels/appearance/appearance.ui	2014-09-08 12:42:14.654101859 +0300
++++ unity-control-center/panels/appearance/appearance.ui	2014-09-08 12:42:59.434444944 +0300
+@@ -61,6 +61,7 @@
+         <property name="visible">True</property>
+         <property name="can_focus">True</property>
+         <property name="border_width">12</property>
++        <property name="show_tabs">False</property>
+         <child>
+           <object class="GtkBox" id="appearance-panel">
+             <property name="visible">True</property>
+@@ -331,6 +332,7 @@
+                           <object class="GtkIconView" id="backgrounds-iconview">
+                             <property name="visible">True</property>
+                             <property name="can_focus">True</property>
++                            <property name="margin">0</property>
+                             <property name="row_spacing">0</property>
+                             <property name="column_spacing">0</property>
+                             <child>
+@@ -498,68 +500,6 @@
+                 <property name="position">2</property>
+               </packing>
+             </child>
+-            <child>
+-              <object class="GtkSeparator" id="unity-separator1">
+-                <property name="visible">True</property>
+-                <property name="can_focus">False</property>
+-                <property name="margin_left">5</property>
+-                <property name="margin_right">13</property>
+-              </object>
+-              <packing>
+-                <property name="expand">False</property>
+-                <property name="fill">True</property>
+-                <property name="position">3</property>
+-              </packing>
+-            </child>
+-            <child>
+-              <object class="GtkBox" id="unity-iconsize-box">
+-                <property name="visible">True</property>
+-                <property name="can_focus">False</property>
+-                <property name="spacing">12</property>
+-                <child>
+-                  <object class="GtkLabel" id="unity-iconsize-label">
+-                    <property name="visible">True</property>
+-                    <property name="can_focus">False</property>
+-                    <property name="xalign">0</property>
+-                    <property name="xpad">6</property>
+-                    <property name="label" translatable="yes">&lt;b&gt;Launcher icon size&lt;/b&gt;</property>
+-                    <property name="use_markup">True</property>
+-                    <accessibility>
+-                      <relation type="label-for" target="unity-iconsize-scale"/>
+-                    </accessibility>
+-                  </object>
+-                  <packing>
+-                    <property name="expand">False</property>
+-                    <property name="fill">True</property>
+-                    <property name="padding">6</property>
+-                    <property name="position">0</property>
+-                  </packing>
+-                </child>
+-                <child>
+-                  <object class="GtkScale" id="unity-iconsize-scale">
+-                    <property name="width_request">264</property>
+-                    <property name="visible">True</property>
+-                    <property name="can_focus">True</property>
+-                    <property name="margin_right">2</property>
+-                    <property name="round_digits">0</property>
+-                    <property name="digits">0</property>
+-                    <property name="value_pos">left</property>
+-                  </object>
+-                  <packing>
+-                    <property name="expand">False</property>
+-                    <property name="fill">True</property>
+-                    <property name="padding">9</property>
+-                    <property name="pack_type">end</property>
+-                    <property name="position">1</property>
+-                  </packing>
+-                </child>
+-              </object>
+-              <packing>
+-                <property name="expand">False</property>
+-                <property name="fill">True</property>
+-                <property name="position">4</property>
+-              </packing>
+-            </child>
+           </object>
+         </child>
+         <child type="tab">
