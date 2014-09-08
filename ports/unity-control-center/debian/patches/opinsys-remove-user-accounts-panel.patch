@@ -1,0 +1,14 @@
+Index: unity-control-center/panels/Makefile.am
+===================================================================
+--- unity-control-center.orig/panels/Makefile.am	2014-04-10 17:26:50.000000000 +0300
++++ unity-control-center/panels/Makefile.am	2014-09-08 15:18:36.334509190 +0300
+@@ -11,8 +11,7 @@
+ 	info \
+ 	sound \
+ 	keyboard \
+-	universal-access \
+-	user-accounts
++	universal-access
+ 
+ if BUILD_WACOM
+ SUBDIRS += wacom
