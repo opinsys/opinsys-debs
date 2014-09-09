@@ -1,13 +1,13 @@
 Index: vstloggerpro/usr/local/share/applications/LoggerPro.desktop
 ===================================================================
---- vstloggerpro.orig/usr/local/share/applications/LoggerPro.desktop	2013-01-11 20:59:03.000000000 +0200
-+++ vstloggerpro/usr/local/share/applications/LoggerPro.desktop	2014-01-20 15:04:14.950952538 +0200
-@@ -3,7 +3,7 @@
- Name=Logger Pro
- Comment=Measure. Analyze. Learn.
- Exec=loggerpro
+--- vstloggerpro.orig/usr/local/share/applications/LoggerPro.desktop	2014-09-09 13:38:05.807149731 +0300
++++ vstloggerpro/usr/local/share/applications/LoggerPro.desktop	2014-09-09 13:38:37.383312462 +0300
+@@ -5,7 +5,7 @@
+ Comment=Measure. Analyze. Learn
+ TryExec=loggerpro
+ Exec=loggerpro %F
 -Icon=loggerpro
 +Icon=/usr/local/share/icons/hicolor/48x48/apps/loggerpro.png
- MimeType=text/loggerpro
+ MimeType=application/x-vernier-lpdata;application/x-vernier-lldata;application/x-vernier-lqdata
  Terminal=false
- Type=Application
+ StartupNotify=true
