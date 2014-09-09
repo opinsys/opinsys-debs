@@ -1,3 +1,9 @@
+vstloggerpro (3.8.4.6-0+opinsys1) trusty; urgency=medium
+
+  * New upstream release.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 09 Sep 2014 09:50:58 +0300
+
 vstloggerpro (3.8.4.5-0+opinsys1) quantal; urgency=low
 
   * Initial release.
