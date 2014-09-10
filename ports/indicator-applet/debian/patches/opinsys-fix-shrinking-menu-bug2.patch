@@ -1,0 +1,55 @@
+Description: Fix shrinking menu bug
+
+ Menus in indicator-applet shrink to ridiculously small sizes when
+ menuitems are added to them dynamically when they are open. This is the
+ case for example with NetworkManager applet when new wireless networks
+ are found.
+ .
+
+ This patch fixes the problem by resizing the menu correctly when then
+ menu is opened second time. See the URL to the original GNOME bug
+ report below for details.
+ .
+Author: Sebastian Geiger
+
+---
+
+Origin: http://bazaar.launchpad.net/~lanoxx/indicator-applet/menuitemfix/revision/430
+Bug: https://bugzilla.gnome.org/show_bug.cgi?id=726030
+Bug-Ubuntu: https://launchpad.net/bugs/965953
+
+Index: indicator-applet/src/applet-main.c
+===================================================================
+--- indicator-applet.orig/src/applet-main.c	2014-09-10 10:45:56.741184127 +0300
++++ indicator-applet/src/applet-main.c	2014-09-10 10:52:51.080514117 +0300
+@@ -364,6 +364,22 @@
+   return;
+ }
+ 
++static void
++size_allocate (GtkWidget *widget, GtkAllocation *allocation) {
++        int height = 0;
++        if(GTK_IS_CONTAINER(widget)) {
++                GList *children = gtk_container_get_children(GTK_CONTAINER(widget));
++                GList *l;
++                for (l = children; l != NULL; l = l->next) {
++                        GtkAllocation ca;
++                        gtk_widget_get_allocation (l->data, &ca);
++                        height += ca.height;
++                }
++        }
++        allocation->height = height;
++        gtk_widget_set_allocation(widget, allocation);
++}
++
+ static GtkWidget*
+ create_menuitem (IndicatorObject * io, IndicatorObjectEntry * entry, GtkWidget * menubar)
+ {
+@@ -387,6 +403,7 @@
+   g_signal_connect(G_OBJECT(menuitem), "enter-notify-event", G_CALLBACK(entry_secondary_activated), NULL);
+   g_signal_connect(G_OBJECT(menuitem), "leave-notify-event", G_CALLBACK(entry_secondary_activated), NULL);
+   g_signal_connect(G_OBJECT(menuitem), "scroll-event", G_CALLBACK(entry_scrolled), NULL);
++  g_signal_connect(G_OBJECT(entry->menu), "size-allocate", G_CALLBACK(size_allocate), NULL);
+ 
+   if (entry->image != NULL) {
+     gtk_box_pack_start(GTK_BOX(box), GTK_WIDGET(entry->image), FALSE, FALSE, 1);
