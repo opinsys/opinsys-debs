@@ -1,3 +1,11 @@
+indicator-applet (12.10.2+14.04.20140403-0ubuntu1+opinsys2) trusty; urgency=medium
+
+  * Remove patch opinsys-fix-shrinking-menu-bug, it was not fixing
+    the bug properly.
+  * Add patch opinsys-fix-shrinking-menu-bug2.patch
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 10 Sep 2014 10:53:05 +0300
+
 indicator-applet (12.10.2+14.04.20140403-0ubuntu1+opinsys1) trusty; urgency=low
 
   * Forward-port two old patches
