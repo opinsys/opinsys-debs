@@ -5,9 +5,8 @@ Description: Fix shrinking menu bug
  case for example with NetworkManager applet when new wireless networks
  are found.
  .
-
- This patch fixes the problem by resizing the menu correctly when then
- menu is opened second time. See the URL to the original GNOME bug
+ This patch fixes the problem by resizing the menu correctly when the
+ menu is opened second time. See the URL of the original GNOME bug
  report below for details.
  .
 Author: Sebastian Geiger
