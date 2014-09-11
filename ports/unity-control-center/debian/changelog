@@ -1,3 +1,14 @@
+unity-control-center (14.04.3+14.04.20140410-0ubuntu1+opinsys1) trusty; urgency=medium
+
+  * Removed Unity-specific settings from display panel
+  * Removed Dash legal notices from info panel
+  * Removed Unity-specific settings from appearance panel
+  * Removed update button from info panel
+  * Removed user accounts panel
+  * Added Opinsys-modified Radiance-theme to theme list
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Thu, 11 Sep 2014 14:51:41 +0300
+
 unity-control-center (14.04.3+14.04.20140410-0ubuntu1) trusty; urgency=low
 
   [ Sebastien Bacher ]
