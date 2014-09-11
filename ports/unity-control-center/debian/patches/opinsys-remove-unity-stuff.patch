@@ -1,7 +1,7 @@
 Index: unity-control-center/panels/display/display-capplet.ui
 ===================================================================
---- unity-control-center.orig/panels/display/display-capplet.ui	2014-04-10 17:26:50.000000000 +0300
-+++ unity-control-center/panels/display/display-capplet.ui	2014-09-08 11:25:53.636742265 +0300
+--- unity-control-center.orig/panels/display/display-capplet.ui	2014-09-11 10:24:12.780309148 +0300
++++ unity-control-center/panels/display/display-capplet.ui	2014-09-11 10:24:48.188476666 +0300
 @@ -1,4 +1,5 @@
 -<?xml version="1.0"?>
 +<?xml version="1.0" encoding="UTF-8"?>
@@ -135,15 +135,7 @@ Index: unity-control-center/panels/display/display-capplet.ui
                                  <property name="position">1</property>
                                </packing>
                              </child>
-@@ -232,7 +256,6 @@
-                         </child>
-                         <child>
-                           <object class="GtkLabel" id="general_options_label">
--                            <property name="visible">True</property>
-                             <property name="can_focus">False</property>
-                             <property name="xalign">0</property>
-                             <property name="ypad">5</property>
-@@ -249,8 +272,16 @@
+@@ -249,6 +273,15 @@
                            </packing>
                          </child>
                          <child>
@@ -157,11 +149,9 @@ Index: unity-control-center/panels/display/display-capplet.ui
 +                        </child>
 +                        <child>
                            <object class="GtkLabel" id="launcher_placement_label">
--                            <property name="visible">True</property>
+                             <property name="visible">True</property>
                              <property name="can_focus">False</property>
-                             <property name="xalign">1</property>
-                             <property name="label" translatable="yes">L_auncher placement</property>
-@@ -261,17 +292,16 @@
+@@ -261,17 +294,16 @@
                              </style>
                            </object>
                            <packing>
@@ -181,15 +171,7 @@ Index: unity-control-center/panels/display/display-capplet.ui
                              <property name="can_focus">False</property>
                              <property name="xalign">1</property>
                              <property name="label" translatable="yes">S_ticky edges</property>
-@@ -324,7 +354,6 @@
-                         </child>
-                         <child>
-                           <object class="GtkHBox" id="launcher_placement_hbox">
--                            <property name="visible">True</property>
-                             <property name="can_focus">False</property>
-                             <property name="margin_bottom">1</property>
-                             <property name="spacing">12</property>
-@@ -350,7 +379,6 @@
+@@ -350,7 +382,6 @@
                                <packing>
                                  <property name="expand">False</property>
                                  <property name="fill">False</property>
@@ -197,7 +179,7 @@ Index: unity-control-center/panels/display/display-capplet.ui
                                  <property name="position">1</property>
                                </packing>
                              </child>
-@@ -365,7 +393,6 @@
+@@ -365,7 +396,6 @@
                          </child>
                          <child>
                            <object class="GtkHBox" id="stickyedge_hbox">
@@ -205,7 +187,7 @@ Index: unity-control-center/panels/display/display-capplet.ui
                              <property name="can_focus">False</property>
                              <property name="margin_bottom">1</property>
                              <property name="spacing">12</property>
-@@ -378,7 +405,6 @@
+@@ -378,7 +408,6 @@
                                <packing>
                                  <property name="expand">False</property>
                                  <property name="fill">False</property>
@@ -213,7 +195,7 @@ Index: unity-control-center/panels/display/display-capplet.ui
                                  <property name="position">1</property>
                                </packing>
                              </child>
-@@ -393,25 +419,27 @@
+@@ -393,25 +422,27 @@
                          </child>
                          <child>
                            <object class="GtkLabel" id="ui_scale_label">
@@ -245,7 +227,7 @@ Index: unity-control-center/panels/display/display-capplet.ui
                              <child>
                                <object class="GtkHScale" id="ui_scale">
                                  <property name="visible">True</property>
-@@ -433,8 +461,10 @@
+@@ -433,8 +464,10 @@
                            </packing>
                          </child>
                          <child>
@@ -257,7 +239,7 @@ Index: unity-control-center/panels/display/display-capplet.ui
                              <property name="can_focus">False</property>
                              <property name="xalign">0</property>
                              <property name="label" translatable="yes">Scale all window _contents to match:</property>
-@@ -451,7 +481,7 @@
+@@ -451,7 +484,7 @@
                          </child>
                          <child>
                            <object class="GtkHBox" id="ui_scale_monitor_combo_hbox">
@@ -266,7 +248,7 @@ Index: unity-control-center/panels/display/display-capplet.ui
                              <child>
                                <object class="GtkComboBox" id="ui_scale_monitor_combo">
                                  <property name="visible">True</property>
-@@ -486,6 +516,9 @@
+@@ -486,6 +519,9 @@
                              <property name="y_options"/>
                            </packing>
                          </child>
