@@ -1,0 +1,6 @@
+dymo-cups-drivers (1.4.0-0+opinsys1) trusty; urgency=medium
+
+  * Initial package.
+    - upstream source obtained from http://download.dymo.com/Software/Linux/dymo-cups-drivers-1.4.0.tar.gz
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 16 Sep 2014 13:51:31 +0300
