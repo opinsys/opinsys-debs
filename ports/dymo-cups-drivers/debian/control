@@ -7,7 +7,7 @@ Standards-Version: 3.9.5
 Homepage: https://dymo.custhelp.com/app/answers/detail/a_id/101
 
 Package: dymo-cups-drivers
-Architecture: i386
+Architecture: any
 Depends: ${misc:Depends}
 Description: DYMO SDK and CUPS drivers
  The DYMO SDK for Linux contains Linux drivers for the LabelWriter and
