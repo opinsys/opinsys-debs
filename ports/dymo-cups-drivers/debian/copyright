@@ -1,0 +1,11 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: dymo-cups-drivers
+Source: https://dymo.custhelp.com/app/answers/detail/a_id/101
+
+Files: *
+Copyright: 2008 Sanford L.P.
+License: GPL-2+
+
+Files: debian/*
+Copyright: 2014 Opinsys Oy
+License: GPL-2+
