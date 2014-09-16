@@ -1,0 +1,37 @@
+Source: dymo-cups-drivers
+Section: text
+Priority: optional
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8), libcupsimage2-dev
+Standards-Version: 3.9.5
+Homepage: https://dymo.custhelp.com/app/answers/detail/a_id/101
+
+Package: dymo-cups-drivers
+Architecture: i386
+Depends: ${misc:Depends}
+Description: DYMO SDK and CUPS drivers
+ The DYMO SDK for Linux contains Linux drivers for the LabelWriter and
+ LabelManager product lines. The drivers conform to the CUPS (Common
+ UNIX Printing System) standard. The SDK also includes documentation,
+ driver source code and examples of use.
+ .
+ The following products are supported:
+ .
+ LabelWriter 450
+ LabelWriter 450 Turbo
+ LabelWriter 450 Twin Turbo
+ LabelWriter 450 DUO
+ LabelWriter 4XL
+ LabelWriter 400
+ LabelWriter 400 Turbo
+ LabelWriter DUO
+ LabelWriter Twin Turbo
+ LabelWriter 310 (models 90966, 93029 & 93034 ONLY)
+ LabelWriter 315 (model 90975 ONLY)
+ LabelWriter 320 (models 90892, 93031 & 93036 ONLY)
+ LabelWriter 330 (model 90891 & 93037 USB ONLY)
+ LabelWriter 330 Turbo (models 90884, 93033 & 93038, USB ONLY)
+ LabelMANAGER 450
+ LabelMANAGER PC II
+ LabelPOINT 350
+ .
