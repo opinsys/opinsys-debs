@@ -1,4 +1,4 @@
-Snap4Arduino (1.0.3-0+opinsys1) quantal; urgency=low
+snap4arduino (1.0.3-0+opinsys1) quantal; urgency=low
 
   * Initial package.
     - upstream source from https://github.com/opinsys/Snap4Arduino/tree/teddybear

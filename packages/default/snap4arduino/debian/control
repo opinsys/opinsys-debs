@@ -1,4 +1,4 @@
-Source: Snap4Arduino
+Source: snap4arduino
 Section: utils
 Priority: extra
 Maintainer: Jouni Korhonen <jouni.korhonen@opinsys.fi>
@@ -6,8 +6,8 @@ Build-Depends: debhelper (>= 8)
 Standards-Version: 1.0.3-alpha
 Homepage: https://github.com/opinsys/Snap4Arduino/tree/teddybear
 
-Package: Snap4Arduino
+Package: snap4arduino
 Architecture: i386
 Depends: ${misc:Depends}
-Description: Snap4Arduino
+Description: snap4arduino
  Snap4Arduino lets you interact with your Arduino board from within Snap!
