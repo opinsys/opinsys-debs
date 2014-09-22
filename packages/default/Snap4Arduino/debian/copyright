@@ -1,0 +1,15 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Snap4Arduino
+Source: https://github.com/opinsys/Snap4Arduino/tree/teddybear
+
+Files: *
+Copyright: 2014, Jens Mönig <jens@moenig.org>
+           2014, Brian Harvey <bh@cs.berkeley.edu>
+           2014, Bernat Romagosa <bromagosa@dosta.net>
+           2014, Ernesto Laval <ernesto.laval@gmail.com>
+           2014, Opinsys Oy
+License: GPL-3+
+
+Files: debian/*
+Copyright: 2014 Opinsys Oy
+License: GPL-3+
