@@ -19,6 +19,6 @@ override_dh_strip:
 PACKAGE := $(shell dpkg-parsechangelog | sed -r -n 's/^Source: //p')
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -r -n 's/^Version: (([0-9]+):)?(.*)-.*/\3/p')
 get-orig-source:
-	wget https://github.com/opinsys/Snap4Arduino/blob/teddybear/release/gnu/Snap4Arduino.tar.gz?raw=true \
+	wget https://github.com/opinsys/Snap4Arduino/blob/teddybear/release/gnu/Snap4Arduino.tar.gz?raw=true -O \
 		../$(PACKAGE)_$(SRC_VERSION).orig.tar.gz
 	tar -z -x -f ../$(PACKAGE)_$(SRC_VERSION).orig.tar.gz --strip-components=1
