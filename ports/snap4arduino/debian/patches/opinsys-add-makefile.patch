@@ -7,6 +7,6 @@ Index: snap4arduino/Makefile
 +
 +install:
 +	mkdir -p $(DESTDIR)/opt/Snap4Arduino
-+	cp -a nw app.nw Snap4Arduino $(DESTDIR)/opt/Snap4Arduino
++	cp -a nw nw.pak app.nw Snap4Arduino $(DESTDIR)/opt/Snap4Arduino
 +
 +clean:
