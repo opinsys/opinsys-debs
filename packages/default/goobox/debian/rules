@@ -85,7 +85,7 @@ ifneq "$(wildcard /usr/share/misc/config.guess)" ""
 	cp -f /usr/share/misc/config.guess config.guess
 endif
 	# autoreconf
-	CFLAGS="$(CFLAGS)" ./configure $(confflags) --prefix=/usr --mandir=\$${prefix}/share/man --sysconfdir=/etc
+	CFLAGS="$(CFLAGS)" ./configure $(confflags) --prefix=/usr --mandir=\$${prefix}/share/man --sysconfdir=/etc --disable-silent-rules
 
 build: build-arch build-indep
 
@@ -152,7 +152,7 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs ChangeLog
+	dh_installchangelogs ChangeLog debian/changelog.classic
 	dh_installdocs
 	dh_install
 	dh_installmenu
@@ -169,10 +169,4 @@ binary-arch: build install
 	dh_builddeb -- -Zxz
 
 binary: binary-indep binary-arch
-
-SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
-get-orig-source:
-	wget http://archive.ubuntu.com/ubuntu/pool/universe/g/goobox/goobox_3.2.1.orig.tar.xz -O ../goobox_3.2.1.orig.tar.xz
-	tar -J -x -f ../goobox_$(SRC_VERSION).orig.tar.xz --strip-components=1 -C .
-
-.PHONY: build clean binary-indep binary-arch binary install get-orig-source
+.PHONY: build clean binary-indep binary-arch binary install
