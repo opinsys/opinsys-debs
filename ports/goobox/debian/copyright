@@ -1,167 +1,1626 @@
-This package was debianized by Dan Korostelev <nadako@gmail.com> on
-Tue,  2 Nov 2004 01:02:47 +0300.
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: goobox
+Upstream-Contact: Paolo Bacchilega <paobac@src.gnome.org>
+                  Paolo Bacchilega  <paobac@svn.gnome.org>
+                  Paolo Bacchilega  <paobac@cvs.gnome.org>
+Source: http://ftp.gnome.org/pub/GNOME/sources/goobox/
 
-It was downloaded from <http://ftp.gnome.org/pub/GNOME/sources/goobox/>.
-SVN versions were obtained from checkouts of <http://svn.gnome.org/svn/goobox>.
+Files: *
+Copyright: 2004-2013 Paolo Bacchilega <paobac@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
 
-Copyright Holder: Paolo Bacchilega <paobac@src.gnome.org>
+Files: configure.ac
+Copyright: 2009-2013 Paolo Bacchilega <paobac@src.gnome.org>
+           2012 György Balló <ballogy@freestart.hu>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
 
-License:
+Files: COPYING
+Copyright: 1989,1991 Free Software Foundation, Inc.
+           2004 Paolo Bacchilega <paobac@src.gnome.org>
+License: RESTRICTED
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
 
-	Copyright (C) 2004-2013 Paolo Bacchilega <paobac@src.gnome.org>
+Files: git.mk
+Copyright: 2009,2011 Paolo Bacchilega <paobac@src.gnome.org>
+           2009 Red Hat Inc.
+           2009 Behdad Esfahbod
+License: FREECOPY
+ Copying and distribution of this file, with or without modification,
+ are permitted in any medium without royalty provided the copyright
+ notice and this notice are preserved.
 
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+Files: INSTALL
+Copyright: 1994-1996,1999-2002,2004-2008 Free Software Foundation, Inc.
+           2004,2005,2009 Paolo Bacchilega <paobac@src.gnome.org>
+License: FREEDOC
+ This file is free documentation; the Free Software Foundation gives
+ unlimited permission to copy, distribute and modify it.
+ 
+Files: Makefile.am
+Copyright: 2004,2005,2007,2009,2012 Paolo Bacchilega <paobac@src.gnome.org>
+           2005 ommi Vainikainen
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	GNU General Public License for more details.
+Files: copy-n-paste/*
+Copyright: 2007 Novell, Inc.
+           2009-2011 Paolo Bacchilega <paobac@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+Files: copy-n-paste/eggdesktopfile.c
+Copyright: 1999,2000 Red Hat Inc.
+           2001 George Lebl
+           2007 Novell, Inc.
+           2009,2011 Paolo Bacchilega <paobac@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
 
-On Debian systems, the complete text of the GNU General Public License
-version 2 can be found in the file /usr/share/common-licenses/GPL-2,
-whereas version 3 can be found in the file /usr/share/common-licenses/GPL-3.
+Files: copy-n-paste/Makefile.am
+Copyright: 2009,2011,2013 Paolo Bacchilega <paobac@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
 
+Files: data/org.gnome.Goobox.gschema.xml.in
+Copyright: 2011,2012 Paolo Bacchilega <paobac@src.gnome.org>
+           2011 Free Software Foundation
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+ 
+Files: help/ChangeLog
+Copyright: 2005 Paolo Bacchilega <paobac@src.gnome.org>
+           2006 Daniel Nylander <po@danielnylander.se>
+           2007 Jorge Gonzalez Gonzalez <jorgegonz@src.gnome.org>
+           2007 Jordi Mas <jmas@softcatala.org>
+           2007 Jose Sanchez Moreno
+           2007 Joan Duran <jodufi@gmail.com>
+           2007 Yannig MARCHEGAY <ymarcheg@src.gnome.org>
+           2008 Claude Paroz <claude@2xlibre.net>
+           2008 Jens Seidel <jseidel@src.gnome.org>
+           2008 Helge Kreutzmann <debian@helgefjell.de>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
 
-Goobox uses code, documents, translations ... from the following 
-people/organisations:
-Eazel, Inc.                               (C) 2000, 2001.
-Free Software Foundation, Inc.            (C) 1989, 1991, 1994-1996, 1999-2010.
-The GNOME Foundation                      (C) 2004-2005.
-Gnome i18n Project for Vietnamese         (C) 2005.
-GNOME PL Team <translators@gnomepl.org>   (C) 2005.
-Red Hat, Inc.                             (C) 2002
+Files: help/Makefile.am
+Copyright: 2005,2009,2011,2012 Paolo Bacchilega <paobac@src.gnome.org>
+           2005 Tommi Vainikainen
+           2006 Daniel Nylander <po@danielnylander.se>
+           2007 Jorge Gonzalez Gonzalez <jorgegonz@src.gnome.org>
+           2007 Jose Sanchez Moreno
+           2007 Jordi Mas <jmas@softcatala.org>
+           2007 Yannig MARCHEGAY <ymarcheg@src.gnome.org>
+           2008 Claude Paroz <claude@2xlibre.net>
+           2008 Jens Seidel <jseidel@src.gnome.org>
+           2008 Helge Kreutzmann <debian@helgefjell.de>
+           2010 Petr Kovar <pknbe@volny.cz>
+           2010 Ondrej Pohl
+           2010 Matej Urban◈i◈ <mateju@svn.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
 
-Adam Weinberger <adamw@gnome.org>         (C) 2004, 2005.
-Adrian Guniš <andygun696@gmail.com>       (C) 2008, 2010.
-Alessio Frusciante <algol@src.gnome.org>  (C) 2005-2007.
-Alexandre Franke <alexandre.franke@gmail.com>  (C) 2011.
-Alexander Larsson <alexl@redhat.com>      (C) 2002.
-Alexander Nedotsukov <bland@FreeBSD.org>  (C) 2004
-Alexander Shopov <ash@contact.bg>         (C) 2005.
-Alexandre Prokoudine <alexandre.prokoudine@gmail.com> (C) 2005.
-Amanpreet Singh Alam <aalam@redhat.com>   (C) 2004.
-Anders Carlsson <andersca@gnu.org>        (C) 2002.
-Andika Triwidada <andika@gmail.com>       (C) 2010, 2012.
-Andrea Zagli <azagli@inwind.it>           (C) 2005-2007, 2010.
-Andrej Žnidarši◈ <andrej.znidarsic@gmail.com>  (C) 2009-2012.
-Andrew Munkres <amunkres@nyx.net>         (C) 2011.
-Arafat Medini <lumina@silverpen.de>       (C) 2004.
-Aron Xu <aronxu@gnome.org>                (C) 2010.
-Artur Flinta <aflinta@svn.gnome.org>      (C) 2005, 2007.
-Balázs Úr <urbalazs@src.gnome.org>        (C) 2013.
-Baptiste Mille-Mathias <bmm80@free.fr>    (C) 2004.
-Bastien Nocera <hadess@hadess.net>        (C) 2002.
-Bruno Brouard <annoa.b@gmail.com>         (C) 2007, 2008, 2010, 2012.
-Changwoo Ryu <cwryu@debian.org>           (C) 2005.
-Christian Kirbach <Christian.Kirbach@googlemail.com>  (C) 2009, 2011.
-Christian Rose <menthos@menthos.com>      (C) 2004, 2005.
-Christophe Merlet <redfox@src.gnome.org>  (C) 2005, 2006.
-Claude Paroz <claude@2xlibre.net>         (C) 2008, 2010.
-Clytie Siddall <clytie@riverland.net.au>  (C) 2005-2007.
-Cody Russell                              (C) 2009.
-Colin Walters <walters@debian.org>        (C) 2002, 2003.
-Daniel Mustieles <daniel.mustieles@gmail.com> (C) 2011, 2012.
-Daniel Nylander <dnylande@src.gnome.org>  (C) 2006, 2007, 2009, 2010, 2012.
-David Lodge <dave@cirt.net>               (C) 2005-2007.
-Dimitris Glezos <dimitris@glezos.com>     (C) 2006.
-Dimitris Spingos <dmtrs32@gmail.com>      (C) 2013.
-Djavan Fagundes <djavan@comum.org>        (C) 2008, 2010.
-Djihed Afifi <djihed@gmail.com>           (C) 2006, 2008.
-Duarte Loreto <happyguy_pt@hotmail.com>   (C) 2004.
-du baodao <centerpoint@139.com>           (C) 2010.
-Elian Myftiu <elian@alblinux.net>         (C) 2005.
-Enrique Matias Sanchez <cronopios@gmail.com> (C) 2004.
-Felix Riemann <friemann@gnome.org>        (C) 2006-2009.
-Fran Diéguez <fran.dieguez@mabishu.com>   (C) 2012.
-Francisco Javier F. Serrador <serrador@openshine.com> (C) 2004-2006.
-Frank Arnold <farnold@cvs.gnome.org>      (C) 2005.
-Funda Wang <fundawang@linux.net.cn>       (C) 2004, 2005.
-Gabor Kelemen <kelemeng@gnome.hu>         (C) 2005, 2006, 2010.
-Giannis Katsampiris                       (C) 2008.
-GNOME HK Team                             (C) 2005.
-György Balló <ballogy@freestart.hu>       (C) 2012.
-Helge Kreutzmann <debian@helgefjell.de>   (C) 2005, 2008, 2009.
-Hendrik Brandt <heb@gnome-de.org>         (C) 2004, 2005.
-Hendrik Richter <hendrikr@gnome.org>      (C) 2006.
-Ilkka Tuohela <ituohela@src.gnome.org>    (C) 2004-2008.
-Imam Musthaqim <userindesign@gmail.com>   (C) 2009.
-Iñaki Larrañagai Murgoitio <dooteo@euskalgnu.org> (C) 2005-2008, 2010.
-Irshad Abibouraguimane                    (C) 2008.
-James Westby                              (C) 2009.
-Jaydeep Bhusal <zaydeep@hotmail.com>      (C) 2005.
-Joan Duran <jodufi@gmail.com>             (C) 2007, 2008.
-Joe Hansen <joedalton2@yahoo.dk>          (C) 2010.
-Jonathan Ernst <jonathan@ernstfamily.ch>  (C) 2006.
-Jordi Mas <jmas@softcatala.org>           (C) 2007.
-Jorge González <jorgegonz@svn.gnome.org>  (C) 2007, 2009, 2010.
-Jorn Baayen <jorn@nl.linux.org>           (C) 2002, 2003.
-José Sánchez Moreno <jose@oxigenow.com>   (C) 2007.
-Julien Hardelin <jhardlin@wanadoo.fr>     (C) 2010, 2011.
-Julien Hardelin <jhardlin@orange.fr>      (C) 2010, 2011.
-Kjartan Maraas <kmaraas@gnome.org>        (C) 2003-2006.
-Kostas Papadimas <pkst@src.gnome.org>     (C) 2004, 2005.
-Kostas <pkst@gmx.net>                     (C) 2005.
-Leonardo Ferreira Fontenelle <leonardof@gnome.org> (C) 2008.
-Mahesh subedi <submanesh@hotmail.com>     (C) 2006.
-Marek ◈ernocký <marek@manet.cz>           (C) 2011.
-Mario Blättermann <mariobl@gnome.org>     (C) 2009-2011.
-Matej Urban♦i♦ <mateju@svn.gnome.org>     (C) 2009, 2010.
-Matej Urban■i■ <mateju@svn.gnome.org>     (C) 2012.
-Mateus Zenaide <matzenh@gmail.com>        (C) 2011.
-Martin Willemoes Hansen <mwh@sysrq.dk>    (C) 2005.
-Mikel Olasagasti <hey_neken@mundurat.net> (C) 2004, 2005.
-Miloslav Trmac <mitr@volny.cz>            (C) 2005.
-Nickolay V. Shmyrev <nshmyrev@src.gnome.org> (C) 2005.
-Ond♦ej Pohl <pohlondrej@seznam.cz>        (C) 2010.
-Paolo Borelli                             (C) 2004.
-Pawan Chitrakar <pachimho@src.gnome.org>  (C) 2005, 2006, 2008.
-Pema Geyleg <pgeyleg@src.gnome.org>       (C) 2007.
-Peter de Wachter <pdewacht@gmail.com>     (C) 2008.
-Petr Kovar <pknbe@volny.cz>               (C) 2010.
-Piotr Dr■g <piotrdrag@gmail.com>          (C) 2012.
-Raivis Dejus <orvils@gmail.com>           (C) 2007.
-Ramiro Estrugo <ramiro@eazel.com>         (C) 2000, 2001.
-Raphael Higino <raphaelh@uai.com.br>      (C) 2005.
-Ricardo Fernandez Pascual                 (C) 2003.
-Ronald S. Bultje <rbultje@ronald.bitfreak.net> (C) 2005.
-Rostislav Raykov <zbrox@i-space.org>      (C) 2005.
-Stéphane Raimbault <stephane.raimbault@gmail.com> (C) 2008.
-Steve Murphy <murf@e-tools.com>           (C) 2005.
-Takeshi AIHANA <takeshi.aihana@gmail.com> (C) 2004, 2005, 2007, 2009-2012.
-Tino Meinen <a.t.meinen@chello.nl>        (C) 2004-2006.
-Tommi Vainikainen <Tommi.Vainikainen@iki.fi> (C) 2004-2005.
-Valek Filippov <frob at df dot ru>        (C) 2006.
-Vincent van Adrighem <adrighem@gnome.org> (C) 2004-2006.
-Woodman Tuen <wmtuen@gmail.com>           (C) 2005.
-Yannig Marchegay (Kokoyaya) <yannig@marchegay.org> (C) 2007.
-Yannig MARCHEGAY <ymarcheg@src.gnome.org> (C) 2006-2008.
-Yinghua Wang <wantinghard@gmail.com>      (C) 2011.
-Yosef Or Boczko <yosefor3@walla.com>      (C) 2013.
-Young-Ho Cha <ganadist@mizi.com>          (C) 2004.
-yumkee lhamo <yumkeyl08@hotmail.com>      (C) 2007.
-Žygimantas Beru■ka <uid0@akl.lt>          (C) 2004-2005.
+Files: help/C/*
+Copyright: 2005,2011 Paolo Bacchilega <paobac@src.gnome.org>
+License: CC-BY-SA-3.0-EXCEPTION
+ This work is licensed under a Creative Commons
+ Attribution-Share Alike 3.0 Unported License
+ .
+ As a special exception, the copyright holders give you permission to copy,
+ modify, and distribute the example code contained in this document under the
+ terms of your choosing, without restriction.
+ .
+ The plain license can be found at
+ href="http://creativecommons.org/licenses/by-sa/3.0/
 
-The following files are released under a different license than the main 
-program (i.e. not GPL 2 or any later version):
-COPYING:          permission to copy and distribute verbatim copies
-INSTALL:          unlimited permission to copy, distribute and modify
-po/fr.po:         GNU General Public License Version 2
-		  intended to relicence to goobox license
-po/nb.po:         same license as the sound-juicer package
-help/ca/ca.po:    GNU Free Documentation License (GFDL), Version 1.1 or later
+Files: help/ca/ca.po
+Copyright: 2007 Jordi Mas <jmas@softcatala.org>
+           2007 Joan Duran <jodufi@gmail.com>
+License: CC-BY-SA-3.0-EXCEPTION
+ This work is licensed under a Creative Commons
+ Attribution-Share Alike 3.0 Unported License
+ .
+ As a special exception, the copyright holders give you permission to copy,
+ modify, and distribute the example code contained in this document under the
+ terms of your choosing, without restriction.
+ .
+ The plain license can be found at
+ href="http://creativecommons.org/licenses/by-sa/3.0/
+ 
+Files: help/cs/cs.po
+Copyright: 2008,2010 Petr Kovar <pknbe@volny.cz>
+           2008,2010 Adrian Guniš <andygun696@gmail.com>
+           2010 Ond◈ej Pohl <pohlondrej@seznam.cz>
+           2011-2013 Marek ◈ernocký <marek@manet.cz>
+License: CC-BY-SA-3.0-EXCEPTION
+ This work is licensed under a Creative Commons
+ Attribution-Share Alike 3.0 Unported License
+ .
+ As a special exception, the copyright holders give you permission to copy,
+ modify, and distribute the example code contained in this document under the
+ terms of your choosing, without restriction.
+ .
+ The plain license can be found at
+ href="http://creativecommons.org/licenses/by-sa/3.0/
+ 
+Files: help/de/de.po
+Copyright: 2008 Jens Seidel <jseidel@src.gnome.org>
+	   2008,2009 Helge Kreutzmann <debian@helgefjell.de>
+           2009 Christian Kirbach <Christian.Kirbach@googlemail.com>
+           2009,2011,2013 Mario Blättermann <mariobl@gnome.org>
+License: CC-BY-SA-3.0-EXCEPTION
+ This work is licensed under a Creative Commons
+ Attribution-Share Alike 3.0 Unported License
+ .
+ As a special exception, the copyright holders give you permission to copy,
+ modify, and distribute the example code contained in this document under the
+ terms of your choosing, without restriction.
+ .
+ The plain license can be found at
+ href="http://creativecommons.org/licenses/by-sa/3.0/
 
-The Debian packaging is copyrighted by Dan Korostelev <nadako@gmail.com> 
-(2004-2005), Steve Langasek <vorlon@debian.org> (2006), Matej Vela 
-<vela@debian.org> (2006), Daniel Baumann <daniel@debian.org> (2006-2007) and 
-Helge Kreutzmann <debian@helgefjell.de> (2006-2013). It is distributed under 
-the same license as the goobox program.
+Files: help/es/es.po
+Copyright: 2007 Jose Sanchez Moreno <jose@oxigenow.com>
+           2007,2010 Jorge Gonzalez Gonzalez <jorgegonz@src.gnome.org>
+	   2009,2010 Jorge González <jorgegonz@svn.gnome.org>
+	   2011,2012 Daniel Mustieles <daniel.mustieles@gmail.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
 
+Files: help/fr/fr.po
+Copyright: 2007 Bruno Brouard <annoa.b@gmail.com>
+           2008,2010 Claude Paroz <claude@2xlibre.net>
+           2010-2012 Julien Hardelin <jhardlin@orange.fr>
+           2011-2013 Alexandre Franke <alexandre.franke@gmail.com>
+License: CC-BY-SA-3.0-EXCEPTION
+ This work is licensed under a Creative Commons
+ Attribution-Share Alike 3.0 Unported License
+ .
+ As a special exception, the copyright holders give you permission to copy,
+ modify, and distribute the example code contained in this document under the
+ terms of your choosing, without restriction.
+ .
+ The plain license can be found at
+ href="http://creativecommons.org/licenses/by-sa/3.0/
 
-po/oc.po:         license (GPL 2+) confirmed by private e-mail exchange 2011-08-24
+Files: help/oc/oc.po
+Copyright: 2007 Yannig MARCHEGAY <ymarcheg@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: help/sl/sl.po
+Copyright: 2010 Matej Urban◈i◈ <mateju@svn.gnome.org>
+	   2012 Andrej Žnidarši◈ <andrej.znidarsic@gmail.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: help/sv/sv.po
+Copyright: 2006,2007 Daniel Nylander <po@danielnylander.se>
+License: CC-BY-SA-3.0-EXCEPTION
+ This work is licensed under a Creative Commons
+ Attribution-Share Alike 3.0 Unported License
+ .
+ As a special exception, the copyright holders give you permission to copy,
+ modify, and distribute the example code contained in this document under the
+ terms of your choosing, without restriction.
+ .
+ The plain license can be found at
+ href="http://creativecommons.org/licenses/by-sa/3.0/
+
+Files: po/ar.po
+Copyright: 2004 Arafat Medini <lumina@silverpen.de>
+	   2006,2008 Djihed Afifi <djihed@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/bg.po
+Copyright: 2005 Alexander Shopov <ash@contact.bg>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/ca.po
+Copyright: 2007 Josep Puigdemont i Casamajó <joseppc@src.gnome.org>
+           2007,2008 Joan Duran <jodufi@gmail.com>
+           2007 Jordi Mas <jmas@softcatala.org>
+           2008 Gil Forcada Codinachs <gforcada@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/ChangeLog
+Copyright: 2004,2005 Adam Weinberger <adamw@src.gnome.org>
+           2008 Adrian Gunis
+           2005,2006,2007 Alessio Frusciante <algol@src.gnome.org>
+           2005 Alexander Shopov <ash@contact.bg>
+           2005 Alexandre Prokoudine
+           2004 Amanpreet Singh Alam <aman@src.gnome.org>
+           2004 Arafat Medini <lumina@silverpen.de>
+           2005,2007 Artur Flinta <aflinta@cvs.gnome.org>
+           2005 Changwoo Ryu <cwryu@debian.org>
+           2004,2005 Christian Rose <menthos@menthos.com>
+           2005,2006 Christophe Merlet <redfox@src.gnome.org>
+           2005,2006,2007 Clytie Siddall <clyties@src.gnome.org>
+           2006,2007 Daniel Nylander  <po@danielnylander.se>
+           2004 Danilo Šegan <danilo@src.gnome.org>
+           2005,2006,2007 David Lodge <dave@cirt.net>
+           2008 Djavan Fagundes
+           2006,2008 Djihed Afifi <djihed@src.gnome.org>
+           2004 Duarte Loreto <happyguy_pt@hotmail.com>
+           2005 Elian Myftiu
+           2004,2005 Francisco Javier F. Serrador <serrador@cvs.gnome.org>
+           2005 Frank Arnold <farnold@cvs.gnome.org>
+           2004,2005 Funda Wang <fwang@src.gnome.org>
+           2005,2006 Gabor Kelemen
+           2008 Gil Forcada Codinachs <gforcada@src.gnome.org>
+           2005 GNOME HK Team
+           2005 GNOME PL Team
+           2009 Helge Kreutzmann <debian@helgefjell.de>
+           2004,2005 Hendrik Brandt <heb@gnome-de.org>
+           2006 Hendrik Richter <hendrikr@gnome.org>
+           2005-2008 Inaki Larranaga Murgoitio <dooteo@euskalgnu.org>
+           2005-2008 Ilkka Tuohela <ituohela@src.gnome.org>
+           2008 Irshad Abibouraguimane
+           2006,2008 Jens Seidel <jseidel@src.gnome.org>
+           2007 Joan Duran <jodufi@gmail.com>
+           2007 Jordi Mas <jmas@softcatala.org>
+           2007 Jorge Gonzalez Gonzalez <jorgegonz@src.gnome.org>
+           2007 Josep Puigdemont i Casamajó <joseppc@src.gnome.org>
+           2005 Kjartan Maraas <kmaraas@gnome.org>
+           2004-2006,2008 Kostas Papadimas <pkst@src.gnome.org>
+           2005 Kwok-Koon Cheung <baddog@src.gnome.org>
+           2005 Laurent Dhima <laurenti@alblinux.net>
+           2005 Laszlo Dvornik <dvornik@gnome.hu>
+           2008 Leonardo Ferreira Fontenelle <leonardof@gnome.org>
+           2005 Martin Willemoes Hansen <mwh@src.gnome.org>
+           2005 Miloslav Trmac <mitr@volny.cz>
+           2005,2006 Nickolay V. Shmyrev <nshmyrev@src.gnome.org>
+           2004,2005,2007,2008 Paolo Bacchilega <paobac@src.gnome.org>
+           2005,2006,2008 Pawan Chitrakar <pachimho@src.gnome.org>
+           2006,2007 Pema Geyleg <pgeyleg@src.gnome.org>
+           2008 Petr Ková◈ <pmkovar@src.gnome.org>
+           2007 Raivis Dejus <rdejus@src.gnome.org>
+           2005 Raphael Higino <raphaelh@src.gnome.org>
+           2005 Rostislav Raykov <zbrox@i-space.org>
+           2008 Stéphane Raimbault <stephaner@src.gnome.org>
+           2005 Steven Michael Murphy <smurphy@src.gnome.org>
+           2004,2005,2007 Takeshi AIHANA <aihana@gnome.gr.jp>
+           2004,2005,2006 Tino Meinen
+           2004,2005 Tommi Vainikainen <tvainika@src.gnome.org>
+           2006 Valek Filippov <frob@df.ru>
+           2004,2005,2006 Vincent van Adrighem <adrighem@gnome.org>
+           2007 Yannig MARCHEGAY <ymarcheg@src.gnome.org>
+           2004,2005 Žygimantas Beru◈ka <uid0@akl.lt>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/cs.po
+Copyright: 2008,2010 Adrian Gunis
+           2010 Adrian Guniš <andygun@seznam.cz>
+           2011-2013 Marek ◈ernocký <marek@manet.cz>
+           2005 Miloslav Trmac <mitr@volny.cz>
+           2008 Petr Ková◈ <pmkovar@src.gnome.org>
+           2008,2010 Petr Kovar <pknbe@volny.cz>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/da.po
+Copyright: 2005 Martin Willemoes Hansen <mwh@src.gnome.org>
+           2010 Joe Hansen <joedalton2@yahoo.dk>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/de.po
+Copyright: 2005 Frank Arnold <farnold@cvs.gnome.org>
+           2011,2013 Christian Kirbach <Christian.Kirbach@googlemail.com>
+           2008,2009 Helge Kreutzmann <debian@helgefjell.de>
+           2004,2005 Hendrik Brandt  <heb@gnome-de.org>
+           2006 Hendrik Richter <hendrikr@gnome.org>
+           2006,2008 Jens Seidel <jseidel@src.gnome.org>
+           2009-2011 Mario Blättermann <mariobl@gnome.org>
+           2005 Paolo Bacchilega <paobac@cvs.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/dz.po
+Copyright: 2007 yumkee lhamo <yumkeyl08@hotmail.com> 
+           2006,2007 Pema Geyleg <pgeyleg@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/el.po
+Copyright: 2006 Dimitris Glezos <dimitris@glezos.com>
+           2008 Giannis Katsampiris <giannis1_86@hotmail.com>
+           2004-2006,2008 Kostas Papadimas <pkst@src.gnome.org>
+           2013 Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/en_CA.po
+Copyright: 2004,2005 Adam Weinberger <adamw@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/en_GB.po
+Copyright: 2005-2007 David Lodge <dave@cirt.net>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/es.po
+Copyright: 2011-2013 Daniel Mustieles <daniel.mustieles@gmail.com>
+           2004-2006 Francisco Javier F. Serrador <serrador@cvs.gnome.org>
+           2007,2009,2010 Jorge Gonzalez Gonzalez <jorgegonz@src.gnome.org>
+           2007 José Sánchez Moreno <jose@oxigenow.com>
+           2004 Enrique Matias Sanchez <cronopios@gmail.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/eu.po
+Copyright: 2005-2008,2010 Inaki Larranaga Murgoitio <dooteo@euskalgnu.org>
+           2004,2005 Mikel Olasagasti <hey_neken@mundurat.net>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/fi.po
+Copyright: 2013 Jiri Grönroos <jiri.gronroos+l10n@iki.fi>.
+           2013 Timo Jyrinki <timo.jyrinki@canonical.com>
+           2006-2008 Ilkka Tuohela <ituohela@src.gnome.org>
+           2004,2005 Tommi Vainikainen <tvainika@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/fr.po
+Copyright: 2011-2013 Alexandre Franke <alexandre.franke@gmail.com>
+           2005,2006 Christophe Merlet <redfox@src.gnome.org>
+           2010 Claude Paroz <claude@2xlibre.net>
+           2008 Stéphane Raimbault <stephane.raimbault@gmail.com>
+           2004 Baptiste Mille-Mathias <bmm80@free.fr>
+           2006 Jonathan Ernst <jonathan@ernstfamily.ch>, 2006.
+           2007,2008 Irshad Abibouraguimane <irs_ab@hotmail.com>
+           2010,2011 Julien Hardelin <jhardlin@wanadoo.fr>
+           2007,2008,2010,2012 Bruno Brouard <annoa.b@gmail.com>
+License: GPL-2
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; version 2 of the License.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/gl.po
+Copyright: 2012 Fran Diéguez <fran.dieguez@mabishu.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/hu.po
+Copyright: 2013 Balázs Úr <urbalazs@src.gnome.org>
+           2005,2006,2010 Gabor Kelemen  <kelemeng@gnome.hu>
+           2005 Laszlo Dvornik <dvornik@gnome.hu>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/id.po
+Copyright: 2010,2012 Andika Triwidada <andika@gmail.com>
+           2012 Imam Musthaqim
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/it.po
+Copyright: 2005-2007,2010 Andrea Zagli <azagli@libero.it>
+           2005-2007 Alessio Frusciante <algol@src.gnome.org>
+           2008 Paolo Bacchilega <paobac@svn.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/ja.po
+Copyright: 2004,2005,2007,2009-2011 Takeshi AIHANA <takeshi.aihana@gmail.com>
+           2012 Jiro Matsuzawa <jmatsuzawa@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/ko.po
+Copyright: 2004 Young-Ho Cha <ganadist@mizi.com>
+           2005 Changwoo Ryu <cwryu@debian.org>
+           2009 Paolo Bacchilega <paobac@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/LINGUAS
+Copyright:  2010 Andika Triwidada <andika@gmail.com>
+            2012 Daniel ◈erb◈nescu <daniel@serbanescu.dk>
+            2012 Fran Diéguez <fran.dieguez@mabishu.com>
+            2010 Imam Musthaqim
+            2009 Matej Urban◈i◈ <mateju@svn.gnome.org>
+            2013 M◈poc◈a◈ H◈◈o◈◈◈ <miroslavnikolic@rocketmail.com>
+            2007 Paolo Bacchilega <paobac@cvs.gnome.org>
+            2007 Raivis Dejus <rdejus@src.gnome.org>
+            2007 Yannig MARCHEGAY <ymarcheg@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/lt.po
+Copyright: 2013 Aurimas ◈ernius <aurisc4@gmail.com>
+           2004,2005 Žygimantas Beru◈ka <uid0@akl.lt>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/lv.po
+Copyright: 2007 Raivis Dejus <rdejus@src.gnome.org>
+           2013 Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/nb.po
+Copyright: 2003-2006 Kjartan Maraas <kmaraas@gnome.org>
+License: GPL-2
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; version 2 of the License.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+ .
+ This file is licensed as the sound-juicer package.
+
+Files: po/ne.po
+Copyright: 2009 Paolo Bacchilega <paobac@src.gnome.org>
+           2005,2006,2008 Pawan Chitrakar <pachimho@src.gnome.org>
+           2007 Shyam Krishna Bal <balshyam24@yahoo.com>, 2007
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/nl.po
+Copyright: 2004-2006 Tino Meinen
+           2004-2006 Vincent van Adrighem <adrighem@gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/oc.po
+Copyright: 2006-2008 Yannig MARCHEGAY <ymarcheg@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+ .
+ license (GPL 2+) confirmed by private e-mail exchange 2011-08-24
+
+Files: po/pa.po
+Copyright: 2004 Amanpreet Singh Alam <aman@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/pl.po
+Copyright: 2005-2007 Artur Flinta <aflinta@cvs.gnome.org>
+           2005,2007 GNOME PL Team
+           2012-2014 Aviary.pl <gnomepl@aviary.pl>
+           2012,2014 Piotr Dr◈g <piotrdrag@gmail.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/POTFILES.in
+Copyright: 2004 Danilo Šegan <danilo@src.gnome.org>
+           2007 Daniel Nylander <dnylande@src.gnome.org>
+           2007 Felix Riemann
+           2005 Martin Willemoes Hansen <mwh@src.gnome.org>
+           2004,2007,2009,2011-2013 Paolo Bacchilega <paobac@cvs.gnome.org>
+           2012 Piotr Dr◈g <piotrdrag@gmail.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/pt_BR.po
+Copyright: 2008,2010 Djavan Fagundes <djavan@comum.org>
+           2013,2014 Enrico Nicoletto <liverig@gmail.com>
+           2008 Leonardo Ferreira Fontenelle <leonardof@gnome.org>
+           2011 Mateus Zenaide <matzenh@gmail.com>
+           2005 Raphael Higino <raphaelh@src.gnome.org>
+	   2013,2014 Rafael Ferreira <rafael.f.f1@gmail.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/pt.po
+Copyright: 2004 Duarte Loreto <happyguy_pt@hotmail.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/ro.po
+Copyright: 2012 Daniel ◈erb◈nescu <daniel@serbanescu.dk>
+           2010 Szabo Roland <rolisz@gmail.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/ru.po
+Copyright: 2005 Alexandre Prokoudine <alexandre.prokoudine@gmail.com>
+           2005,2006 Nickolay V. Shmyrev <nshmyrev@src.gnome.org>
+           2005 Paolo Bacchilega <paobac@cvs.gnome.org>
+           2006 Valek Filippov <frob@df.ru>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/rw.po
+Copyright: 2005 Steven Michael Murphy <smurphy@src.gnome.org>
+           2005 Philibert Ndandali <ndandali@yahoo.fr>
+           2005 Viateur MUGENZI <muvia1@yahoo.fr>
+           2005 Noëlla Mupole <s24211045@tuks.co.za>
+           2005 Carole Karema <karemacarole@hotmail.com>
+           2005 JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>
+           2005 Augustin KIBERWA  <akiberwa@yahoo.co.uk>
+           2005 Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/sl.po
+Copyright: 2009-2011 Andrej Žnidarši◈ <andrej.znidarsic@gmail.com>
+           2010,2012 Matej Urban◈i◈ <mateju@svn.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/sq.po
+Copyright: 2005 Laurent Dhima <laurenti@alblinux.net>
+           2005 Elian Myftiu <elian@alblinux.net>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/sr@latin.po
+Copyright: 2013 M◈poc◈a◈ H◈◈o◈◈◈ <miroslavnikolic@rocketmail.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/sr.po
+Copyright: 2013 M◈poc◈a◈ H◈◈o◈◈◈ <miroslavnikolic@rocketmail.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/sv.po
+Copyright: 2004,2005 Christian Rose <menthos@menthos.com>
+           2006,2007,2009,2010,2012 Daniel Nylander <po@danielnylander.se>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/vi.po
+Copyright: 2005-2007 Clytie Siddall <clyties@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/zh_CN.po
+Copyright: 2010 Aron Xu <aronxu@gnome.org>
+           2004,2005 Funda Wang <fwang@src.gnome.org>
+           2011 Yinghua Wang <wantinghard@gmail.com>
+           2010 du baodao <centerpoint@139.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: po/zh_TW.po
+Copyright: 2005 GNOME HK Team
+           2005 Kwok-Koon Cheung <baddog@src.gnome.org>
+           2005 Woodman Tuen <wmtuen@gmail.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/actions.c
+Copyright: 2009 Helge Kreutzmann <debian@helgefjell.de>
+           2004,2005,2007-2009,2011,2012 Paolo Bacchilega <paobac@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/actions.h
+Copyright: 2009 Felix Riemann <friemann@gnome.org>
+           2004,2005,2007,2012 Paolo Bacchilega <paobac@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/album-info.c
+Copyright: 2008 Felix Riemann
+           2007,2008,2010-2013 Paolo Bacchilega <paobac@cvs.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/dlg-extract.c
+Copyright: 2007 Felix Riemann
+           2004,2005,2007,2009,2011,2012 Paolo Bacchilega <paobac@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/dlg-preferences.c
+Copyright: 2007 Felix Riemann
+           2004,2005,2007-2013 Paolo Bacchilega <paobac@src.gnome.org>
+           2008 Peter De Wachter
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/dlg-ripper.c
+Copyright: 2007 Felix Riemann
+           2004,2005,2007,2008,2010-2013 Paolo Bacchilega <paobac@src.gnome.org>
+           2008 Peter De Wachter
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/goo-player-bar.c
+Copyright: 2012,2013 Paolo Bacchilega <paobac@src.gnome.org>
+           2013 Yosef Or Boczko <yosefor3@walla.com>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/goo-player.c
+Copyright: 2007,2009 Felix Riemann
+           2004,2007,2009-2013 Paolo Bacchilega <paobac@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/goo-player-info.c
+Copyright: 2004,2005,2007-2013 Paolo Bacchilega <paobac@src.gnome.org>
+           2004 Alexander Nedotsukov <bland@FreeBSD.org>
+           2007,2009 Felix Riemann
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/goo-player-info.h
+Copyright: 2004,2007,2009,2011-2012 Paolo Bacchilega <paobac@src.gnome.org>
+           2007 Felix Riemann
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/goo-stock.c src/goo-stock.h
+Copyright: 2013 Yosef Or Boczko <yosefor3@walla.com>
+           2004,2005,2007,2011 Paolo Bacchilega <paobac@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/goo-window.c
+Copyright: 2004,2005,2007-2013 Paolo Bacchilega <paobac@src.gnome.org>
+           2004 Alexander Nedotsukov <bland@FreeBSD.org> *******************
+           2005 Tommi Vainikainen
+           2005 Helge Kreutzmann <debian@helgefjell.de>
+           2007-2009 Felix Riemann
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/gtk-file-chooser-preview.h
+Copyright: 2009 Felix Riemann <friemann@gnome.org> **************
+           2004 Paolo Bacchilega <paobac@src.gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/main.c
+Copyright: 2004-2007,2009-2013 Paolo Bacchilega <paobac@src.gnome.org>
+           2006 Felix Riemann
+           2009 Cody Russell
+           2009 James Westby
+           2012 György Balló <ballogy@freestart.hu>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/Makefile.am
+Copyright: 2004,2005,2007,2009,2011-2013 Paolo Bacchilega <paobac@src.gnome.org>
+           2004 Alexander Nedotsukov <bland AT FreeBSD DOT org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/metadata.c
+Copyright: 2007,2011-2013 Paolo Bacchilega <paobac@cvs.gnome.org>
+           2013 Johannes Dewender <gnome@JonnyJD.net>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/preferences.h
+Copyright: 2004,2005,2007,2009,2011,2012 Paolo Bacchilega <paobac@cvs.gnome.org>
+           2009 Felix Riemann <friemann@gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/track-info.c
+Copyright: 2004,2007-2009,2013 Paolo Bacchilega <paobac@cvs.gnome.org>
+           2008 Felix Riemann <friemann@gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: src/ui.h
+Copyright: 2004-2007,2009,2011,2012 Paolo Bacchilega <paobac@cvs.gnome.org>
+           2006 Felix Riemann <friemann@gnome.org>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
+
+Files: debian/*
+Copyright: 2004,2005 Dan Korostelev <nadako@gmail.com>
+           2006 Steve Langasek <vorlon@debian.org>
+	   2006 Matej Vela <vela@debian.org>
+	   2006,2007 Daniel Baumann <daniel@debian.org>
+	   2006-2014 Helge Kreutzmann <debian@helgefjell.de>
+License: GPL-2+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ /usr/share/common-licenses/GPL-2
