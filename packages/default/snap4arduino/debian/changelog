@@ -1,3 +1,9 @@
+snap4arduino (1.0.3.opinsys2-0+opinsys1) trusty; urgency=medium
+
+  * Remove test code
+
+ -- Jouni Korhonen <jokor@bittivasara.toimisto.opinsys.fi>  Wed, 24 Sep 2014 10:28:06 +0300
+
 snap4arduino (1.0.3.opinsys1-0+opinsys1) trusty; urgency=medium
 
   * Fine-tune UI
