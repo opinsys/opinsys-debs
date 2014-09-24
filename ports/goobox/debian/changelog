@@ -1,3 +1,9 @@
+goobox (3.2.1-2+opinsys2) trusty; urgency=medium
+
+  * Fixed playlist fixed size.
+
+ -- Petri Toivola <ptoivola@opinsys.fi>  Wed, 24 Sep 2014 11:08:56 +0300
+
 goobox (3.2.1-2+opinsys1) quantal; urgency=low
 
   * Loosen build-dep on libgtk-3.0-dev (>= 3.6)
