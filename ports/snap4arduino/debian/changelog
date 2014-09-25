@@ -1,3 +1,9 @@
+snap4arduino (1.0.3.opinsys3-0+opinsys1) trusty; urgency=medium
+
+  * Rebase by the origin and fine-tune UI
+
+ -- Jouni Korhonen <jokor@bittivasara.toimisto.opinsys.fi>  Thu, 25 Sep 2014 14:15:07 +0300
+
 snap4arduino (1.0.3.opinsys2-0+opinsys1) trusty; urgency=medium
 
   * Remove test code
