@@ -86,3 +86,8 @@ debian/stamp-post-patches:
 	       -e 's/; flat-volumes = yes/flat-volumes = no/' \
 	       $(CURDIR)/src/daemon/daemon.conf.in
 	touch debian/stamp-post-patches
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+get-orig-source:
+	wget http://archive.ubuntu.com/ubuntu/pool/main/p/pulseaudio/pulseaudio_$(SRC_VERSION).orig.tar.gz -O ../pulseaudio_$(SRC_VERSION).orig.tar.gz
+	tar -zxf ../pulseaudio_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
