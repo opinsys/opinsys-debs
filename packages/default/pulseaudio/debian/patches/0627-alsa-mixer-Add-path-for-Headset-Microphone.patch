@@ -1,0 +1,187 @@
+From 560ce5ece08201312cadad1d70af133d526d3280 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Thu, 14 Mar 2013 09:14:34 +0100
+Subject: [PATCH] alsa-mixer: Add path for Headset Microphone
+
+In kernel 3.10, some devices will have the "Headset Microphone" name
+to indicate that the mic is part of a mic + headphone combo, i e, a headset.
+---
+ src/Makefile.am                                    |    1 +
+ src/modules/alsa/alsa-mixer.c                      |    1 +
+ .../alsa/mixer/paths/analog-input-headset-mic.conf |   99 ++++++++++++++++++++
+ src/modules/alsa/mixer/profile-sets/default.conf   |    4 +-
+ .../alsa/mixer/profile-sets/extra-hdmi.conf        |    4 +-
+ 5 files changed, 105 insertions(+), 4 deletions(-)
+ create mode 100644 src/modules/alsa/mixer/paths/analog-input-headset-mic.conf
+
+Index: pulseaudio-1.1/src/modules/alsa/alsa-mixer.c
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/alsa/alsa-mixer.c	2013-07-29 15:26:34.000000000 +0200
++++ pulseaudio-1.1/src/modules/alsa/alsa-mixer.c	2013-07-29 15:27:21.778311757 +0200
+@@ -2379,6 +2379,7 @@
+         { "analog-input-microphone-rear",     N_("Rear Microphone") },
+         { "analog-input-microphone-dock",     N_("Dock Microphone") },
+         { "analog-input-microphone-internal", N_("Internal Microphone") },
++        { "analog-input-microphone-headset",  N_("Headset Microphone") },
+         { "analog-input-linein",        N_("Line In") },
+         { "analog-input-radio",         N_("Radio") },
+         { "analog-input-video",         N_("Video") },
+Index: pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-input-headset-mic.conf
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-input-headset-mic.conf	2013-07-29 15:27:21.782311757 +0200
+@@ -0,0 +1,99 @@
++# This file is part of PulseAudio.
++#
++# PulseAudio is free software; you can redistribute it and/or modify
++# it under the terms of the GNU Lesser General Public License as
++# published by the Free Software Foundation; either version 2.1 of the
++# License, or (at your option) any later version.
++#
++# PulseAudio is distributed in the hope that it will be useful, but
++# WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++# General Public License for more details.
++#
++# You should have received a copy of the GNU Lesser General Public License
++# along with PulseAudio; if not, write to the Free Software Foundation,
++# Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
++
++; For devices where a 'Headset Mic' or 'Headset Mic Boost' element exists
++;
++; See analog-output.conf.common for an explanation on the directives
++
++[General]
++priority = 87
++name = analog-input-microphone-headset
++
++[Jack Headset Mic]
++required-any = any
++
++[Jack Headset Mic Phantom]
++state.plugged = unknown
++state.unplugged = unknown
++required-any = any
++
++[Element Headset Mic Boost]
++required-any = any
++switch = select
++volume = merge
++override-map.1 = all
++override-map.2 = all-left,all-right
++
++[Element Headset Mic]
++required-any = any
++switch = mute
++volume = merge
++override-map.1 = all
++override-map.2 = all-left,all-right
++
++[Element Capture]
++switch = mute
++volume = merge
++override-map.1 = all
++override-map.2 = all-left,all-right
++
++[Element Input Source]
++enumeration = select
++
++[Option Input Source:Headset Mic]
++name = Headset Microphone
++required-any = any
++
++[Element Capture Source]
++enumeration = select
++
++[Option Capture Source:Headset Mic]
++name = Headset Microphone
++required-any = any
++
++[Element Front Mic]
++switch = off
++volume = off
++
++[Element Internal Mic]
++switch = off
++volume = off
++
++[Element Rear Mic]
++switch = off
++volume = off
++
++[Element Dock Mic]
++switch = off
++volume = off
++
++[Element Dock Mic Boost]
++switch = off
++volume = off
++
++[Element Internal Mic Boost]
++switch = off
++volume = off
++
++[Element Front Mic Boost]
++switch = off
++volume = off
++
++[Element Rear Mic Boost]
++switch = off
++volume = off
++
++.include analog-input-mic.conf.common
+Index: pulseaudio-1.1/src/Makefile.am
+===================================================================
+--- pulseaudio-1.1.orig/src/Makefile.am	2013-07-29 15:26:34.000000000 +0200
++++ pulseaudio-1.1/src/Makefile.am	2013-07-29 15:28:38.078313495 +0200
+@@ -1096,6 +1096,8 @@
+ 		modules/alsa/mixer/paths/analog-input-mic.conf \
+ 		modules/alsa/mixer/paths/analog-input-dock-mic.conf \
+ 		modules/alsa/mixer/paths/analog-input-front-mic.conf \
++		modules/alsa/mixer/paths/analog-input-headphone-mic.conf \
++		modules/alsa/mixer/paths/analog-input-headset-mic.conf \
+ 		modules/alsa/mixer/paths/analog-input-internal-mic.conf \
+ 		modules/alsa/mixer/paths/analog-input-internal-mic-always.conf \
+ 		modules/alsa/mixer/paths/analog-input-rear-mic.conf \
+Index: pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/default.conf
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/alsa/mixer/profile-sets/default.conf	2013-07-29 15:26:44.000000000 +0200
++++ pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/default.conf	2013-07-29 15:30:02.594315420 +0200
+@@ -102,14 +102,14 @@
+ device-strings = hw:%f
+ channel-map = mono
+ paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
+-paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
++paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line analog-input-headset-mic
+ priority = 1
+ 
+ [Mapping analog-stereo]
+ device-strings = front:%f hw:%f
+ channel-map = left,right
+ paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
+-paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line analog-input-headphone-mic
++paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line analog-input-headphone-mic analog-input-headset-mic
+ priority = 10
+ 
+ [Mapping analog-surround-40]
+Index: pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/extra-hdmi.conf
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/alsa/mixer/profile-sets/extra-hdmi.conf	2013-07-29 15:26:44.000000000 +0200
++++ pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/extra-hdmi.conf	2013-07-29 15:31:20.206317187 +0200
+@@ -28,14 +28,14 @@
+ device-strings = hw:%f
+ channel-map = mono
+ paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
+-paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
++paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line analog-input-headset-mic
+ priority = 1
+ 
+ [Mapping analog-stereo]
+ device-strings = front:%f hw:%f
+ channel-map = left,right
+ paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
+-paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line analog-input-headphone-mic
++paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line analog-input-headphone-mic analog-input-headset-mic
+ priority = 10
+ 
+ [Mapping analog-surround-40]

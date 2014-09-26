@@ -1,9 +1,17 @@
-pulseaudio (1:1.1-0ubuntu15.3+opinsys1) precise; urgency=low
+pulseaudio (1:1.1-0ubuntu15.4+opinsys1) precise; urgency=low
 
   * Turn off x86-specific optimizations (on some machines pulseaudio
     is completely broken because of those).
 
  -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Thu, 13 Jun 2013 16:22:51 +0200
+
+pulseaudio (1:1.1-0ubuntu15.4) precise-proposed; urgency=low
+
+  * 0626/0627/0628-alsa-mixer patches:
+    Add better support for new machines with headphone-or-mic jacks, and
+    headset jacks without individual jack detection. (LP: #1169143)
+
+ -- David Henningsson <david.henningsson@canonical.com>  Mon, 29 Jul 2013 15:34:12 +0200
 
 pulseaudio (1:1.1-0ubuntu15.3) precise-proposed; urgency=low
 

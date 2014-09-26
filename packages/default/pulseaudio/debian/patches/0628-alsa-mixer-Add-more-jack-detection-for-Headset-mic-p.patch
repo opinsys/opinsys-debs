@@ -1,0 +1,39 @@
+From ff96c63a3eccb0ed948edddc1dbc475ac6b50741 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Fri, 12 Apr 2013 11:56:17 +0200
+Subject: [PATCH] alsa-mixer: Add more jack detection for Headset mic path
+
+On some machines which has a headset jack, the headset mic does not have its own
+jack detection. Then we can look at the headphone jack to get some indication:
+We know that if the headphone is unplugged, so is the headset mic. The opposite
+is not guaranteed since the user might have plugged in a headphone, not a headset.
+
+Also, there exist multi-function jacks which support both Headphone, Mic in headphone jack
+and Headset Mic. In this case the jack name will be "Headphone Mic", not "Headphone", so
+we need to include this name too.
+
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ .../alsa/mixer/paths/analog-input-headset-mic.conf |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/src/modules/alsa/mixer/paths/analog-input-headset-mic.conf b/src/modules/alsa/mixer/paths/analog-input-headset-mic.conf
+index 810c85f..9a9dc35 100644
+--- a/src/modules/alsa/mixer/paths/analog-input-headset-mic.conf
++++ b/src/modules/alsa/mixer/paths/analog-input-headset-mic.conf
+@@ -30,6 +30,12 @@ state.plugged = unknown
+ state.unplugged = unknown
+ required-any = any
+ 
++[Jack Headphone]
++state.plugged = unknown
++
++[Jack Headphone Mic]
++state.plugged = unknown
++
+ [Element Headset Mic Boost]
+ required-any = any
+ switch = select
+-- 
+1.7.9.5
+

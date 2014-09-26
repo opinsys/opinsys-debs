@@ -63,6 +63,9 @@
 0623-resampler-Fix-volume-on-downmix-to-mono.patch
 0624-alsa-mixer-Add-Phantom-Jack-support.patch
 0625-alsa-mixer-Add-a-few-more-machines-to-internal-mic-w.patch
+0626-alsa-mixer-Add-Headphone-Mic-support-for-3-pin-ASUS-.patch
+0627-alsa-mixer-Add-path-for-Headset-Microphone.patch
+0628-alsa-mixer-Add-more-jack-detection-for-Headset-mic-p.patch
 
 # Opinsys-patches
 0699-turn-off-x86-optimizations.patch

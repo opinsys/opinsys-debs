@@ -1,0 +1,194 @@
+From 7369a53ab5f606e87a3cd1cd4eebd40226bab090 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Thu, 28 Jun 2012 16:03:17 +0200
+Subject: [PATCH] alsa-mixer: Add "Headphone Mic" support for 3-pin ASUS
+ netbooks
+
+Some ASUS netbooks, such as the 1015 CX, have only one 3.5 mm jack,
+but it can be used either as a headphone or as a mic (but not both
+simultaneously).
+
+This patch adds support for the "Headphone Mic" path that is used
+on these devices, so that we can use the jack as an external mic, and
+doing so without muting the speaker.
+
+BugLink: https://bugs.launchpad.net/bugs/1018262
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ .../mixer/paths/analog-input-headphone-mic.conf    |  103 ++++++++++++++++++++
+ .../mixer/paths/analog-input-internal-mic.conf     |    8 ++
+ .../alsa/mixer/paths/analog-output-headphones.conf |    5 +
+ src/modules/alsa/mixer/profile-sets/default.conf   |    2 +-
+ .../alsa/mixer/profile-sets/extra-hdmi.conf        |    2 +-
+ 5 files changed, 118 insertions(+), 2 deletions(-)
+ create mode 100644 src/modules/alsa/mixer/paths/analog-input-headphone-mic.conf
+
+Index: pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-input-headphone-mic.conf
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-input-headphone-mic.conf	2013-07-29 15:26:44.170310900 +0200
+@@ -0,0 +1,103 @@
++# This file is part of PulseAudio.
++#
++# PulseAudio is free software; you can redistribute it and/or modify
++# it under the terms of the GNU Lesser General Public License as
++# published by the Free Software Foundation; either version 2.1 of the
++# License, or (at your option) any later version.
++#
++# PulseAudio is distributed in the hope that it will be useful, but
++# WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++# General Public License for more details.
++#
++# You should have received a copy of the GNU Lesser General Public License
++# along with PulseAudio; if not, write to the Free Software Foundation,
++# Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
++
++; For some ASUS netbooks that have one jack that can be either a Headphone
++; *or* a mic. This path will be active only when it is used as a mic.
++;
++; See analog-output.conf.common for an explanation on the directives
++
++[General]
++priority = 87
++name = analog-input-microphone
++
++[Jack Headphone Mic]
++required-any = any
++state.plugged = unknown
++
++[Element Headphone Mic Boost]
++required-any = any
++switch = select
++volume = merge
++override-map.1 = all
++override-map.2 = all-left,all-right
++
++[Element Headphone Mic]
++required-any = any
++switch = mute
++volume = merge
++override-map.1 = all
++override-map.2 = all-left,all-right
++
++[Element Capture]
++switch = mute
++volume = merge
++override-map.1 = all
++override-map.2 = all-left,all-right
++
++[Element Input Source]
++enumeration = select
++
++[Option Input Source:Headphone Mic]
++name = analog-input-microphone
++required-any = any
++
++[Element Capture Source]
++enumeration = select
++
++[Option Capture Source:Headphone Mic]
++name = analog-input-microphone
++required-any = any
++
++; Make sure the internal speakers are not auto-muted when you plug a mic in
++[Element Auto-Mute Mode]
++enumeration = select
++
++[Option Auto-Mute Mode:Disabled]
++name = analog-input-microphone
++
++[Element Front Mic]
++switch = off
++volume = off
++
++[Element Internal Mic]
++switch = off
++volume = off
++
++[Element Rear Mic]
++switch = off
++volume = off
++
++[Element Dock Mic]
++switch = off
++volume = off
++
++[Element Dock Mic Boost]
++switch = off
++volume = off
++
++[Element Internal Mic Boost]
++switch = off
++volume = off
++
++[Element Front Mic Boost]
++switch = off
++volume = off
++
++[Element Rear Mic Boost]
++switch = off
++volume = off
++
++.include analog-input-mic.conf.common
+Index: pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf	2013-07-29 15:26:34.754310686 +0200
++++ pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-input-internal-mic.conf	2013-07-29 15:26:44.170310900 +0200
+@@ -127,6 +127,14 @@
+ switch = off
+ volume = off
+ 
++[Element Headphone Mic]
++switch = off
++volume = off
++
++[Element Headphone Mic Boost]
++switch = off
++volume = off
++
+ [Element Mic Boost]
+ switch = off
+ volume = off
+Index: pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-output-headphones.conf
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/alsa/mixer/paths/analog-output-headphones.conf	2013-07-29 15:26:34.730310685 +0200
++++ pulseaudio-1.1/src/modules/alsa/mixer/paths/analog-output-headphones.conf	2013-07-29 15:26:44.170310900 +0200
+@@ -28,6 +28,11 @@
+ [Jack Headphone]
+ required-any = any
+ 
++# This jack can be either a headphone *or* a mic. Used on some ASUS netbooks.
++[Jack Headphone Mic]
++required-any = any
++state.plugged = unknown
++
+ [Element Hardware Master]
+ switch = mute
+ volume = merge
+Index: pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/default.conf
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/alsa/mixer/profile-sets/default.conf	2013-07-29 15:26:34.634310683 +0200
++++ pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/default.conf	2013-07-29 15:26:44.174310900 +0200
+@@ -109,7 +109,7 @@
+ device-strings = front:%f hw:%f
+ channel-map = left,right
+ paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
+-paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
++paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line analog-input-headphone-mic
+ priority = 10
+ 
+ [Mapping analog-surround-40]
+Index: pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/extra-hdmi.conf
+===================================================================
+--- pulseaudio-1.1.orig/src/modules/alsa/mixer/profile-sets/extra-hdmi.conf	2013-07-29 15:26:34.634310683 +0200
++++ pulseaudio-1.1/src/modules/alsa/mixer/profile-sets/extra-hdmi.conf	2013-07-29 15:26:44.174310900 +0200
+@@ -35,7 +35,7 @@
+ device-strings = front:%f hw:%f
+ channel-map = left,right
+ paths-output = analog-output analog-output-speaker analog-output-desktop-speaker analog-output-headphones analog-output-headphones-2 analog-output-mono analog-output-lfe-on-mono
+-paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line
++paths-input = analog-input-front-mic analog-input-rear-mic analog-input-internal-mic analog-input-dock-mic analog-input analog-input-mic analog-input-linein analog-input-aux analog-input-video analog-input-tvtuner analog-input-fm analog-input-mic-line analog-input-headphone-mic
+ priority = 10
+ 
+ [Mapping analog-surround-40]
