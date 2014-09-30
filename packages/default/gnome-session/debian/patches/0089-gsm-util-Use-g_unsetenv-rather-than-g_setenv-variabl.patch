@@ -1,0 +1,34 @@
+From c9fd5b00cbf5b0b7820325e21dfcbe8f251cf7d2 Mon Sep 17 00:00:00 2001
+From: Colin Walters <walters@verbum.org>
+Date: Mon, 21 Oct 2013 16:11:28 -0400
+Subject: [PATCH 089/124] gsm-util: Use g_unsetenv() rather than
+ g_setenv(variable, NULL)
+
+This way we don't emit a critical with newer glibs.
+
+See https://bugzilla.gnome.org/show_bug.cgi?id=704593
+
+https://bugzilla.gnome.org/show_bug.cgi?id=710582
+---
+ gnome-session/gsm-util.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/gnome-session/gsm-util.c b/gnome-session/gsm-util.c
+index b4036f6..a2fe354 100644
+--- a/gnome-session/gsm-util.c
++++ b/gnome-session/gsm-util.c
+@@ -537,7 +537,10 @@ gsm_util_setenv (const char *variable,
+ {
+         GError *bus_error;
+ 
+-        g_setenv (variable, value, TRUE);
++        if (!value)
++                g_unsetenv (variable);
++        else
++                g_setenv (variable, value, TRUE);
+ 
+         bus_error = NULL;
+ 
+-- 
+1.9.1
+

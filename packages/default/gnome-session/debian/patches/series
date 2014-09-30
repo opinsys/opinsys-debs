@@ -11,4 +11,8 @@
 #101_screen_lock_on_suspend.patch
 103_kill_the_fail_whale.patch
 git_fix_wrong_unref_call.patch
-98_shorten_phase_exit_timeout.patch
+
+0089-gsm-util-Use-g_unsetenv-rather-than-g_setenv-variabl.patch
+0093-Fix-a-possible-crash-in-the-presence-interface.patch
+0104_commandline_option_disable-acceleration-check.patch
+0105_gsm-presence-check-also-monitor.patch

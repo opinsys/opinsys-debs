@@ -1,3 +1,35 @@
+gnome-session (3.9.90-0ubuntu14.01~eugenesan~trusty4) trusty; urgency=medium
+
+  * Add option to disable acceleration check and make it defailt for fall/flashback:
+    - 0104_commandline_option_disable-acceleration-check.patch
+  * Fix crash in environments without monitor reporting IDLE state:
+    - 0105_gsm-presence-check-also-monitor.patch
+  * Import upstream stability patches:
+    - 0089-gsm-util-Use-g_unsetenv-rather-than-g_setenv-variabl.patch
+    - 0093-Fix-a-possible-crash-in-the-presence-interface.patch
+
+ -- Eugene San (eugenesan) <eugenesan@gmail.com>  Mon, 22 Sep 2014 21:48:49 +0300
+
+gnome-session (3.9.90-0ubuntu14) trusty; urgency=medium
+
+  [ Iain Lane ]
+  * Don't set GNOME_DESKTOP_SESSION_ID in the user session job. We're doing
+    that in xsession-init.conf now as it needs to happen at the root of the
+    session, which gnome-session used to be.
+
+  [ Robert Ancell ]
+  * debian/defaults.list:
+    - Fix typos, thanks to Cengiz Can for the patch (LP: #1367708)
+
+ -- Iain Lane <iain.lane@canonical.com>  Tue, 16 Sep 2014 13:36:52 +0100
+
+gnome-session (3.9.90-0ubuntu13) trusty; urgency=medium
+
+  * 50_ubuntu_sessions.patch: Don't set compiz as one of the
+    RequiredComponents, it uses upstart. (LP: #1308800)
+
+ -- Marco Trevisan (Treviño) <mail@3v1n0.net>  Wed, 04 Jun 2014 14:26:54 +0200
+
 gnome-session (3.9.90-0ubuntu12) trusty; urgency=medium
 
   * gnome-session-bin.user-session.upstart: Use XDG_CURRENT_DESKTOP

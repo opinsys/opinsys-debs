@@ -4,9 +4,6 @@ author "Stéphane Graber <stgraber@ubuntu.com>"
 start on started dbus and xsession SESSIONTYPE=gnome-session
 stop on starting gnome-session INSTANCE!=$XDG_CURRENT_DESKTOP
 
-env GNOME_DESKTOP_SESSION_ID=this-is-deprecated
-export GNOME_DESKTOP_SESSION_ID
-
 instance $XDG_CURRENT_DESKTOP
 
 emits desktop-start
