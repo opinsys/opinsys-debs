@@ -1,0 +1,10 @@
+--- a/gnome-session/gsm-presence.c
++++ b/gnome-session/gsm-presence.c
+@@ -181,6 +181,7 @@
+         }
+ 
+         if (presence->priv->idle_enabled
++            && presence->priv->idle_monitor > 0
+             && presence->priv->idle_timeout > 0) {
+                 presence->priv->idle_watch_id = gnome_idle_monitor_add_idle_watch (presence->priv->idle_monitor,
+                                                                                    presence->priv->idle_timeout,
