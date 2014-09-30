@@ -1,3 +1,10 @@
+gnome-session (3.9.90-0ubuntu14.01+opinsys1) trusty; urgency=medium
+
+  * Rebuild with our version number (the package contains our changes
+    as well).
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Tue, 30 Sep 2014 11:08:44 +0300
+
 gnome-session (3.9.90-0ubuntu14.01~eugenesan~trusty4) trusty; urgency=medium
 
   * Add option to disable acceleration check and make it defailt for fall/flashback:
