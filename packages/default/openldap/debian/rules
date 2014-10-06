@@ -143,6 +143,12 @@ override_dh_strip:
 	dh_strip -plibldap-2.4-2 --dbg-package=libldap-2.4-2-dbg
 	dh_strip -pslapd --dbg-package=slapd-dbg
 	dh_strip -Nlibldap-2.4-2 -Nslapd
+
+	# For some reason dh_strip mangles these so that they do not work anymore, so for now just link them without stripping
+	cp $(installdir)/usr/lib/ldap/smbkrb5pwd.so.0.0.1 debian/slapd-smbkrb5pwd/usr/lib/ldap/smbkrb5pwd.so.0.0.1
+	cp $(installdir)/usr/lib/ldap/smbkrb5pwd_srv.so.0.0.0 debian/slapd-smbkrb5pwd/usr/lib/ldap/smbkrb5pwd_srv.so.0.0.0
+	dh_strip -pslapd-smbkrb5pwd -Xsmbkrb5pwd
+
 	# hardlink these so not confined by apparmor; do this here and not
 	# in dh_link so that dh_strip doesn't get confused and put the wrong
 	# binary in the debug package.
