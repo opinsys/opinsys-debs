@@ -44,7 +44,9 @@ Debian-Specific Information
   tarred up into a single .tar file.  In order to create the Debian
   original upstream source (.orig.tar.gz), I untarred the parent tarball,
   checked the PGP signature, and used the contained tarball as the
-  upstream source.
+  upstream source.  Since krb5-1.7, a separate "krb5-appl" tarball contains
+  the kerberized client utilities (rlogin, rsh, etc.) with a similar
+  nested-tarball scheme.
 
   MIT Kerberos is built against the libcom_err and libss provided by the
   e2fsprogs source package.  It is built against the version of db
@@ -75,36 +77,5 @@ Debian-Specific Information
 
   This will cause an empty .k5login file to be put in the home directory
   of newly created users.
-
-krb524 AFS Conversion
-
-  The following section is only of use to Kerberos users who also use the
-  AFS distributed file system.
-
-  An alternate conversion is provided for AFS servers that support the
-  encrypted part of a krb5 ticket as an AFS token.  If krb524d is
-  converting a principal whose first component is afs and if the encrypted
-  part of the ticket fits in 344 bytes, then it will default to simply
-  returning the encrypted part of the ticket as a token.  If it turns out
-  that the AFS server does not support the ticket, then users will get an
-  unknown key version error and the krb524d must be configured to use v4
-  tickets for this AFS service.
-
-  The krb524d looks in the appdefaults section of krb5.conf for an
-  application called afs_krb5 to determine whether AFS principals support
-  encrypted ticket parts as tokens.  The following configuration fragment
-  says that afs/sipb.mit.edu@ATHENA.MIT.EDU supports the new token format
-  but afs@ATHENA.MIT.EDU and afs/athena.mit.edu@ATHENA.MIT.EDU do not.
-  Note that the default is to assume afs servers support the new format.
-
-    [appdefaults]
-    afs_krb5 = { 
-        ATHENA.MIT.EDU = {
-            # This stanza describes principals in the ATHENA.MIT.EDU realm
-            afs = false
-            afs/athena.mit.edu = false
-            afs/sipb.mit.edu = true
-        }
-    }
 
  -- Russ Allbery <rra@debian.org>, Fri Dec  2 21:05:05 2005

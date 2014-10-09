@@ -37,8 +37,8 @@ and 3DES keys.  This means that if you ever decide at some point in the
 future that you no longer have any services using older weaker enctypes,
 you can get the full security benefits of stronger encryption types by
 dropping the weaker ones from supported_enctypes in /etc/krb5kdc/kdc.conf.
-Note however, that for some services, like AFS and Zephyr, you may need to
-only create single DES keys.  You might do this by for example:
+Note however, that for some services, like AFS, you may need to only create
+single DES keys.  You might do this by for example:
 
     kadmin.local -e des-cbc-crc:normal -q "ktadd afs/ATHENA.MIT.EDU"
 

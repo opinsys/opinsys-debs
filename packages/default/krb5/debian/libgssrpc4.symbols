@@ -20,7 +20,7 @@ libgssrpc.so.4 libgssrpc4 #MINVER#
  gssrpc_bindresvport@gssrpc_4_MIT 1.6.dfsg.2
  gssrpc_callrpc@gssrpc_4_MIT 1.6.dfsg.2
  gssrpc_clnt_broadcast@gssrpc_4_MIT 1.6.dfsg.2
- gssrpc_clnt_create@gssrpc_4_MIT 1.6.dfsg.2
+ gssrpc_clnt_create@gssrpc_4_MIT 1.9+dfsg
  gssrpc_clnt_pcreateerror@gssrpc_4_MIT 1.6.dfsg.2
  gssrpc_clnt_perrno@gssrpc_4_MIT 1.6.dfsg.2
  gssrpc_clnt_perror@gssrpc_4_MIT 1.6.dfsg.2
@@ -62,10 +62,12 @@ libgssrpc.so.4 libgssrpc4 #MINVER#
  gssrpc_svc_sendreply@gssrpc_4_MIT 1.6.dfsg.2
  gssrpc_svc_unregister@gssrpc_4_MIT 1.6.dfsg.2
  gssrpc_svcauth_gss_get_principal@gssrpc_4_MIT 1.6.dfsg.2
+ gssrpc_svcauth_gss_set_log_badauth2_func@gssrpc_4_MIT 1.12~beta2+dfsg
  gssrpc_svcauth_gss_set_log_badauth_func@gssrpc_4_MIT 1.6.dfsg.2
  gssrpc_svcauth_gss_set_log_badverf_func@gssrpc_4_MIT 1.6.dfsg.2
  gssrpc_svcauth_gss_set_log_miscerr_func@gssrpc_4_MIT 1.6.dfsg.2
  gssrpc_svcauth_gss_set_svc_name@gssrpc_4_MIT 1.6.dfsg.2
+ gssrpc_svcauth_gssapi_set_log_badauth2_func@gssrpc_4_MIT 1.12~beta2+dfsg
  gssrpc_svcauth_gssapi_set_log_badauth_func@gssrpc_4_MIT 1.6.dfsg.2
  gssrpc_svcauth_gssapi_set_log_badverf_func@gssrpc_4_MIT 1.6.dfsg.2
  gssrpc_svcauth_gssapi_set_log_miscerr_func@gssrpc_4_MIT 1.6.dfsg.2
