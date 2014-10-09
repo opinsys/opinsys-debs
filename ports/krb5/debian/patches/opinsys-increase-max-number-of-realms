@@ -11,5 +11,5 @@ Author: Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>
 -#define KRB5_KDC_MAX_REALMS     32
 +#define KRB5_KDC_MAX_REALMS     512
  
- static krb5_context kdc_err_context;
  static const char *kdc_progname;
+
