@@ -1,3 +1,9 @@
+libverto (0.2.6-1opinsys1) trusty; urgency=medium
+
+  * Update to new upstream version
+
+ -- Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>  Thu, 09 Oct 2014 16:49:22 +0300
+
 libverto (0.2.4-1ubuntu2) trusty; urgency=medium
 
   * Build using dh-autoreconf.
