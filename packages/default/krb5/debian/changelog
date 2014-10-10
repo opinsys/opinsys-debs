@@ -1,4 +1,4 @@
-krb5 (1.12.1-0+opinsys1) precise; urgency=low
+krb5 (1.12.1-1opinsys1) precise; urgency=low
 
   * Update to new upstream version using debian packaging as base
   * Included additional patches:
