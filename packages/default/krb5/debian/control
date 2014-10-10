@@ -2,18 +2,17 @@ Source: krb5
 Section: net
 Priority: standard
 Build-Depends: debhelper (>= 8.1.3), byacc | bison,
- comerr-dev, docbook-to-man,
+ comerr-dev, docbook-to-man, doxygen,
  libkeyutils-dev [linux-any], libldap2-dev,
- libncurses5-dev, libssl-dev, ss-dev, 
- libverto-dev, pkg-config, texinfo
-Build-Depends-Indep: texinfo
-Standards-Version: 3.9.1
-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-XSBC-Original-Maintainer: Sam Hartman <hartmans@debian.org>
-Uploaders: Russ Allbery <rra@debian.org>
+ libncurses5-dev, libssl-dev,  ss-dev, 
+ libverto-dev (>= 0.2.4), pkg-config
+build-depends-indep: python-cheetah, python-lxml, python-sphinx, doxygen-latex
+Standards-Version: 3.9.5
+Maintainer: Sam Hartman <hartmans@debian.org>
+Uploaders: Russ Allbery <rra@debian.org>, Benjamin Kaduk <kaduk@mit.edu>
 Homepage: http://web.mit.edu/kerberos/
-VCS-Git: git://git.debian.org/git/pkg-k5-afs/debian-krb5.git
-VCS-Browser: http://git.debian.org/?p=pkg-k5-afs/debian-krb5.git
+VCS-Git: git://git.debian.org/git/pkg-k5-afs/debian-krb5-2013.git
+VCS-Browser: http://git.debian.org/?p=pkg-k5-afs/debian-krb5-2013.git
 
 Package: krb5-user
 Architecture: any
@@ -37,12 +36,10 @@ Package: krb5-kdc
 Architecture: any
 Priority: optional
 Depends: ${misc:Depends}, ${shlibs:Depends}, libkrb5-3 (= ${binary:Version}),
- libkadm5srv-mit8 (>= 1.10+dfsg~),
- krb5-config, krb5-user, lsb-base (>= 3.0-6),
+ libkadm5srv-mit9,
+ krb5-config, krb5-user, lsb-base (>= 3.0-6), libverto-libev1 | libverto-libevent1
 Suggests: openbsd-inetd | inet-superserver, krb5-admin-server,
  krb5-kdc-ldap (= ${binary:Version})
-Conflicts: krb5-doc (<= 1.6.dfsg.3-1)
-Replaces: krb5-doc (<= 1.6.dfsg.3-1)
 Description: MIT Kerberos key server (KDC)
  Kerberos is a system for authenticating users and services on a network.
  Kerberos is a trusted third-party service.  That means that there is a
@@ -100,8 +97,8 @@ Architecture: any
 Depends: ${misc:Depends}, libkrb5-3 (= ${binary:Version}),
  libk5crypto3 (= ${binary:Version}), libgssapi-krb5-2 (= ${binary:Version}),
  libgssrpc4 (= ${binary:Version}),
- libkadm5srv-mit8  (= ${binary:Version}),
- libkadm5clnt-mit8 (= ${binary:Version}),
+ libkadm5srv-mit9  (= ${binary:Version}),
+ libkadm5clnt-mit9 (= ${binary:Version}),
  comerr-dev, 
 Priority: optional
 Suggests: krb5-doc
@@ -162,7 +159,6 @@ Package: krb5-pkinit
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}, libkrb5-3 (= ${binary:Version})
 Suggests: opensc
-Replaces: libkrb53 (<= 1.6.dfsg.3~beta1-1)
 Priority: extra
 Multi-Arch: same
 Description: PKINIT plugin for MIT Kerberos
@@ -177,6 +173,24 @@ Description: PKINIT plugin for MIT Kerberos
  Kerberos tickets to be obtained using public-key credentials such as
  X.509 certificates or a smart card.  This plugin can be used by the
  client libraries and the KDC.  
+
+Package: krb5-otp
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, libkrad0 (= ${binary:Version})
+Priority: extra
+Multi-Arch: same
+Description: OTP plugin for MIT Kerberos
+ Kerberos is a system for authenticating users and services on a network.
+ Kerberos is a trusted third-party service.  That means that there is a
+ third party (the Kerberos server) that is trusted by all the entities on
+ the network (users and services, usually called "principals").
+ .
+ This is the MIT reference implementation of Kerberos V5.
+ .
+ This package contains a plugin for the OTP preauthentication method
+ (RFC 6560), which allows Kerberos tickets to be obtained using
+ One-Time Password authentication.  This plugin is for use on the KDC; the
+ client support is built in to libkrb5.
 
 Package: krb5-doc
 Architecture: all
@@ -198,13 +212,12 @@ Description: Documentation for MIT Kerberos
 
 Package: libkrb5-3
 Section: libs
-Replaces: libkrb53 (<<1.6.dfsg.4~beta1-7)
-Breaks: libkrb53 (<< 1.6.dfsg.4~beta1-9 ),
- sssd (<= 1.2.1-4.3), libsmbclient (<= 2:3.6.1-2)
+Breaks:  sssd (<= 1.2.1-4.3), libsmbclient (<= 2:3.6.1-2)
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends},
  libkrb5support0 (= ${binary:Version})
 Suggests: krb5-doc, krb5-user
+Conflicts: libkrb53
 Recommends: krb5-locales
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -221,13 +234,12 @@ Description: MIT Kerberos runtime libraries
 
 Package: libgssapi-krb5-2
 Section: libs
-Replaces: libkrb53 (<<1.6.dfsg.4~beta1-7)
-Breaks: libkrb53 (<< 1.8)
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}, libkrb5-3 (= ${binary:Version})
 Suggests: krb5-doc, krb5-user
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
+Breaks: libgssglue1 (<< 0.2-2)
 Description: MIT Kerberos runtime libraries - krb5 GSS-API Mechanism
  Kerberos is a system for authenticating users and services on a network.
  Kerberos is a trusted third-party service.  That means that there is a
@@ -258,7 +270,7 @@ Description: MIT Kerberos runtime libraries - GSS enabled ONCRPC
  This package contains an RPC library used by the Kerberos administrative
  programs and potentially other applications.
 
-Package: libkadm5srv-mit8
+Package: libkadm5srv-mit9
 Section: libs
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
@@ -276,7 +288,7 @@ Description: MIT Kerberos runtime libraries - KDC and Admin Server
  This package contains the runtime library used by Kerberos administrative
  servers.
 
-Package: libkadm5clnt-mit8
+Package: libkadm5clnt-mit9
 Section: libs
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
@@ -296,13 +308,13 @@ Description: MIT Kerberos runtime libraries - Administration Clients
 
 Package: libk5crypto3
 Section: libs
-Replaces: libkrb53 (<<1.6.dfsg.4~beta1-7)
-Breaks: libkrb53 (<< 1.6.dfsg.4~beta1-9 ), libkrb5-3 (<= 1.8~aa), libgssapi-krb5-2 (<= 1.10+dfsg~alpha1)
+Breaks: libkrb5-3 (<= 1.8~aa), libgssapi-krb5-2 (<= 1.10+dfsg~alpha1)
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Suggests: krb5-doc, krb5-user
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
+Conflicts: libkrb53
 Description: MIT Kerberos runtime libraries - Crypto Library
  Kerberos is a system for authenticating users and services on a network.
  Kerberos is a trusted third-party service.  That means that there is a
@@ -314,9 +326,9 @@ Description: MIT Kerberos runtime libraries - Crypto Library
  This package contains the runtime cryptography libraries used by
  applications and Kerberos clients.
 
-Package: libkdb5-6
+Package: libkdb5-7
 Section: libs
-Breaks:  libkadm5srv-mit8 (<< 1.10+dfsg~)
+Breaks:  libkadm5srv-mit8 (<< 1.11+dfsg~)
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Suggests: krb5-doc, krb5-user
@@ -334,8 +346,10 @@ Description: MIT Kerberos runtime libraries - Kerberos database
 
 Package: libkrb5support0
 Section: libs
-Replaces: libkrb53 (<<1.6.dfsg.4~beta1-7)
-Breaks: libkrb53 (<< 1.6.dfsg.4~beta1-9 )
+Breaks: libgssapi-krb5-2 (<< 1.12.1),
+ libkadm5srv-mit9 (<< 1.12.1), libkadm5clnt-mit9 (<< 1.12.1),
+ libk5crypto3 (<< 1.12.1), libkdb5-7 (<< 1.12.1)
+Conflicts: libkrb53
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Multi-Arch: same
@@ -350,6 +364,22 @@ Description: MIT Kerberos runtime libraries - Support library
  .
  This package contains an internal runtime support library used by other
  Kerberos libraries.
+
+Package: libkrad0
+Section: libs
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Description: MIT Kerberos runtime libraries - RADIUS library
+ Kerberos is a system for authenticating users and services on a network.
+ Kerberos is a trusted third-party service.  That means that there is a
+ third party (the Kerberos server) that is trusted by all the entities on
+ the network (users and services, usually called "principals").
+ .
+ This is the MIT reference implementation of Kerberos V5.
+ .
+ This package contains the internal support library for RADIUS functionality.
 
 Package: krb5-gss-samples
 Section: net
@@ -385,14 +415,16 @@ Description: Internationalization support for MIT Kerberos
  .
  This package contains internationalized messages for MIT Kerberos.
 
-Package: libkrb53
-Architecture: all
-Section: oldlibs
+Package: libkrad-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends},  libkrad0 (= ${binary:Version}),
+ comerr-dev, libverto-dev (>= 0.2.4)
 Priority: extra
-Depends: libkrb5-3, libk5crypto3, libgssapi-krb5-2, libkrb5support0, ${misc:Depends}
-Conflicts: libzephyr3-krb, zephyr-server-krb
-Breaks: kstart (<< 3.15), owl (<<2.2), krb5-user (<<1.7), krb5-ftpd (<<1.7), krb5-kdc (<<1.7), krb5-telnetd (<<1.7), krb5-rsh-server (<<1.7)
-Description: transitional package for MIT Kerberos libraries
- This package provides transitions to allow previously installed
- packages that do not depend on krb4 libraries to continue to
- function. This package may be removed if unneeded.
+Suggests: libkrb5-dev
+Replaces: libkrb5-dev (<< 1.12)
+Breaks: krb5-multidev (<<1.12), libkrb5-dev (<<1.12)
+Description: MIT Kerberos RADIUS Library Development
+ This package includes development headers for libkrad0, the MIT
+ Kerberos RADIUS library.  You should not use this RADIUS library in
+ packages unrelated to MIT Kerberos.

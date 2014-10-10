@@ -1,13 +1,12 @@
-Document: krb5-admin
-Title: Kerberos Version 5 Administrator's Guide
+Document: admin
+Title: Kerberos Administration Guide
 Author: MIT
-Abstract: Administration guide for MIT Kerberos Version 5.
+Abstract: Administration and installation guide for MIT Kerberos Version 5.
 Section: System/Security
 
 Format: HTML
-Index: /usr/share/doc/krb5-doc/krb5-admin.html
-Files: /usr/share/doc/krb5-doc/krb5-admin.html
+Index: /usr/share/doc/krb5-doc/admin/index.html
+Files: /usr/share/doc/krb5-doc/admin/*
 
-Format: Info
-Index: /usr/share/info/krb5-admin.info.gz
-Files: /usr/share/info/krb5-admin.info.gz
+Format: PDF
+Files: /usr/share/doc/krb5-doc/admin.pdf.gz
