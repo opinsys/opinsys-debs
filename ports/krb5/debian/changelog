@@ -1,46 +1,291 @@
-krb5 (1.10+dfsg~beta1-2ubuntu0.3+opinsys2) precise; urgency=low
+krb5 (1.12.1-1opinsys1) precise; urgency=low
 
-  * debian/patches/opinsys-increase-max-number-of-realms
+  * Update to new upstream version using debian packaging as base
+  * Included additional patches:
+    - debian/patches/opinsys-increase-max-number-of-realms
 
- -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 30 Oct 2013 14:11:52 +0200
+ -- Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>  Thus, 09 Oct 2014 14:23:33 +0300
 
-krb5 (1.10+dfsg~beta1-2ubuntu0.3+opinsys1) precise; urgency=low
+krb5 (1.12.1+dfsg-10) unstable; urgency=medium
 
-  * Do not start krb5-kdc at boot.
+  * Import upstream's patch for CVE-2014-5351, Closes: #762479
 
- -- Opinsys Developers <dev@opinsys.fi>  Mon, 11 Feb 2013 15:39:14 +0200
+ -- Benjamin Kaduk <kaduk@mit.edu>  Mon, 22 Sep 2014 14:53:33 -0400
 
-krb5 (1.10+dfsg~beta1-2ubuntu0.3) precise-security; urgency=low
+krb5 (1.12.1+dfsg-9) unstable; urgency=high
 
-  * SECURITY UPDATE: KDC heap corruption and crash vulnerabilities
-    - debian/patches/MITKRB5-SA-2012-001.patch: initialize pointers both
-      at allocation and assignment time
-    - CVE-2012-1015, CVE-2012-1014
-  * SECURITY UPDATE: denial of service in kadmind (LP: #1009422)
-    - debian/patches/krb5-CVE-2012-1013.patch: check for null password
-    - CVE-2012-1013
-  * SECURITY UPDATE: insufficient ACL checking on get_strings/set_string
-    - debian/patches/krb5-CVE-2012-1012.patch: make the access
-      controls for get_strings/set_string mirror those of
-      get_principal/modify_principal
-    - CVE-2012-1012
+  [ Jelmer Vernooij ]
+  * Reintroduce changes to move krb5-config into krb5-multidev:
+   + Provide -L and -I flags from krb5-config. Closes: #730837
+   + Ship krb5-config.mit binary in krb5-multidev., Closes: #745322
+   + Provide -L and -I flags from pkg-config files. Closes: #750041
+  * Use -isystem for include paths, to prevent the compiler from warning
+    about problems in them. Closes: #751760
 
- -- Steve Beattie <sbeattie@ubuntu.com>  Thu, 26 Jul 2012 14:29:35 -0700
+  [ Sam Hartman ]
+  * Reintroduce patches and accept proposed patches
+  * Update lintian source overrides because some of the BCP 78 hits are
+    false positives. We need to investigate cmac.c.
 
-krb5 (1.10+dfsg~beta1-2ubuntu0.2) precise-proposed; urgency=low
+ -- Sam Hartman <hartmans@debian.org>  Wed, 03 Sep 2014 23:14:34 -0400
 
-  * Re-introduce libkrb53 as a transitional package to libkrb5-3.
-    Also revert the Conflicts against libkrb53 to the old versioned
-    Break/Replaces. (LP: #1007314)
+krb5 (1.12.1+dfsg-8) unstable; urgency=high
 
- -- Stéphane Graber <stgraber@ubuntu.com>  Wed, 18 Jul 2012 17:41:48 -0400
+  [ Benjamin Kaduk ]
+  * Break old versions of libraries that consume libkrb5support0, which
+    had its export symbol list change in 1.12 without the dependencies
+    changing to reflect that.  Closes: #758288, Closes: #760149
+  * Fix the documentation build by explicitly mapping krb5.hin as a C file.
+    Closes: #759954
 
-krb5 (1.10+dfsg~beta1-2ubuntu0.1) precise-proposed; urgency=low
+  [ Jelmer Vernooij ]
+  * Provide -L and -I flags from pkg-config files. Closes: #750041
 
-  * debian/patches/preauth-context.patch: fix preauth context initialisation
-    (LP: #988520).
+ -- Benjamin Kaduk <kaduk@mit.edu>  Tue, 02 Sep 2014 16:57:47 -0400
 
- -- Robie Basak <robie.basak@ubuntu.com>  Tue, 15 May 2012 02:33:57 +0000
+krb5 (1.12.1+dfsg-7) unstable; urgency=high
+
+  * Apply upstream's patch for CVE-2014-4345 (MITKRB5-SA-2014-001), buffer
+    overrun in kadmind with LDAP backend, Closes: #757416
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Thu, 07 Aug 2014 18:33:37 -0400
+
+krb5 (1.12.1+dfsg-6) unstable; urgency=medium
+
+  [ Benjamin Kaduk ]
+  * Apply upstream's patch to switch to TAILQ macros instead of CIRCLEQ macros,
+    to work around an issue with certain gcc versions.  This is expected to
+    resolve Ubuntu bug (LP: #1347147).
+
+  [ Sam Hartman ]
+  * Include a quick and dirty patch so we build cleanly with -O3 fixing
+    incorrect may be uninitialized warnings.
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Tue, 29 Jul 2014 17:05:37 -0400
+
+krb5 (1.12.1+dfsg-5) unstable; urgency=high
+
+  * Apply upstream patches for CVE-2014-4343, CVE-2014-4344, Closes: #755520,
+    Closes: #755521
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Mon, 21 Jul 2014 17:27:10 -0400
+
+krb5 (1.12.1+dfsg-4) unstable; urgency=high
+
+  * Apply upstream patch for CVE-2014-4341, CVE-2014-4342, Closes: #753624,
+    Closes: #753625
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Fri, 11 Jul 2014 13:43:19 -0400
+
+krb5 (1.12.1+dfsg-3) unstable; urgency=high
+
+  * High urgency to revert some changes in the previous version that got
+    into testing.  Unfortunately moving krb5-config into krb5-multidev
+    breaks some -Werror builds, so we'll revert until we can work out what
+    to do, Closes: #751760
+  * Revert krb5-config to krb5-multidev, reintroduces: #745322
+  * Remove -I and -L from krb5-config, Reintroduces: #730837
+  * Remove pkgconfig paths that  include mit-kerberos, Reintroduces: #750041
+
+ -- Sam Hartman <hartmans@debian.org>  Mon, 16 Jun 2014 08:28:33 -0400
+
+krb5 (1.12.1+dfsg-2) unstable; urgency=low
+
+  [ Jelmer Vernooij ]
+  * Provide -L and -I flags from krb5-config. Closes: #730837
+  * Ship krb5-config.mit binary in krb5-multidev., Closes: #745322
+  * Provide -L and -I flags from pkg-config files. Closes: #750041
+
+  [ Sam Hartman ]
+  * Include upstream patch to load gss mechanisms from /etc/gss/mech.d,
+    Closes: #673680
+  * Sysconfdir explicitly set to /etc
+  * Include ubuntu change to permit libverto-libevent1 (not currently
+    built in Debian) as an alternative for the KDC.  For now just
+    reduces diff with Ubuntu.  Next libverto upload will probably start
+    building that for Debian too.
+  * Do not cause endless loop when a mechanism fails to include
+    gss_add_cred_from or other new methods (upstream #7926)
+  * Include /etc/gss/mech.d/README
+  * Low urgency to give extra time in unstable
+  * Update symbols for gss_indicate_mechs
+
+ -- Sam Hartman <hartmans@debian.org>  Wed, 04 Jun 2014 12:09:56 -0400
+
+krb5 (1.12.1+dfsg-1) unstable; urgency=low
+
+  [ Sam Hartman ]
+  * New upstream version
+  * Move gbp.conf to debian
+
+  [ Benjamin Kaduk ]
+  * Pull in upstream patch to put OTP sockets in /run by default
+  * Pull in upstream patch to avoid duplicate "/etc/krb5.conf" in profile
+    path, so we can safely set sysconfdir to /etc
+
+ -- Sam Hartman <hartmans@debian.org>  Thu, 20 Feb 2014 20:54:53 -0500
+
+krb5 (1.12+dfsg-2) unstable; urgency=low
+
+  * Split out libkrad-dev into its own package, Closes: #735323
+
+ -- Sam Hartman <hartmans@debian.org>  Mon, 27 Jan 2014 09:29:42 -0500
+
+krb5 (1.12+dfsg-1) experimental; urgency=low
+
+  [ Benjamin Kaduk ]
+  * New upstream release (closes: #730085, #728845, #637662, #729291).
+  * Update HURD compatibility patch (closes: #729191).
+  * Move pkgconfig files to krb5-multidev and avoid conflicts with
+    heimdal (closes: #730267).
+    
+ -- Benjamin Kaduk <kaduk@mit.edu>  Mon, 02 Dec 2013 12:25:43 -0500
+
+krb5 (1.12~alpha1+dfsg-1) experimental; urgency=low
+
+  [ Benjamin Kaduk ]
+  * New upstream release, Closes: #694988, #697954
+  * Build-depend on python-lxml, Closes: #725596
+  * Remove Debian versions from symbols
+  * Add myself to uploaders
+
+  [ Sam Hartman ]
+  * Build-depend on libverto-dev 0.2.4 to get verto_set_flags
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Mon, 28 Oct 2013 16:12:52 -0400
+
+krb5 (1.11.3+dfsg-3+nmu1) unstable; urgency=high
+
+  * Non-maintainer upload by the Security Team.
+  * Add python-lxml build dependency (closes: #725596).
+  * Fix cve-2013-1417: KDC daemon crash condition (closes: #730085).
+  * Fix cve-2013-1418: null pointer dereference issue (closes: #728845).
+
+ -- Michael Gilbert <mgilbert@debian.org>  Sat, 16 Nov 2013 23:40:00 +0000
+
+krb5 (1.11.3+dfsg-3) unstable; urgency=low
+
+
+  [ Benjamin Kaduk ]
+  * Update config.sub and config.guess, patch from upstream, Closes: #717840
+  * Update Brazillian Portugese Translation, thanks Fernando Ike,
+    Closes: #719726
+  * Bump the version of the gssrpc_clnt_create symbol.  The routine itself
+    was changed in a backwards-compatible way, but callers from the kadm5
+    libraries were changed to rely on the new behavior, Closes: #718275
+  * Add symbols files for the kadm5 libraries.  The KADM5 API version number
+    was increased for the 1.11 release but the corresponding library sonames
+    were not, so we must indicate the behavior change ourself, Closes: #716772
+
+  [ Sam Hartman ]
+  * krb5-kdc depends on libverto-libev1, work around for #652699
+  * Remove krb5-kdc conflict since it's more than one release cycle old
+  * Add Benjamin Kaduk to uploaders
+
+ -- Sam Hartman <hartmans@debian.org>  Sun, 25 Aug 2013 16:48:53 -0400
+
+krb5 (1.11.3+dfsg-2) experimental; urgency=low
+
+  * Run autoreconf to update configure based on aclocal patch
+
+ -- Sam Hartman <hartmans@debian.org>  Sat, 08 Jun 2013 22:00:50 -0400
+
+krb5 (1.11.3+dfsg-1) experimental; urgency=low
+
+  *  New upstream version
+      - Turns out 1.11.2+dfsg didn't include the pingpong fix, but this
+    does , Closes: #
+
+ -- Sam Hartman <hartmans@debian.org>  Fri, 07 Jun 2013 21:31:03 -0400
+
+krb5 (1.11.2+dfsg-2) experimental; urgency=low
+
+  * Import upstream's patch to not warn or error on variadic macros,
+    Closes: #709824
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Sat, 25 May 2013 16:06:48 -0400
+
+krb5 (1.11.2+dfsg-1) experimental; urgency=low
+
+  * New upstream version, Closes: #697662
+      - By not depending on texinfo, we avoid FTBFSing from its changes,
+      Closes: #708711
+  * Fix "usage of keytabs gives "Generic preauthentication failure while
+    getting initial credentials"" via upstream change to prefer keys in
+    the keytab
+    (Closes: #698534)
+  * Fixed upstream "kerberos password policy attributes missing from
+    kerberos.schema"  (Closes:
+    #655381)
+  * Remove arch-dep and arch-indep dependency in rules  (Closes: #708973)
+
+ -- Sam Hartman <hartmans@debian.org>  Thu, 23 May 2013 21:56:23 -0400
+
+krb5 (1.10.1+dfsg-5) unstable; urgency=low
+
+  * Import workaround for getaddrinfo bug from upstream.  Described in
+    upstream's RT 7124, addresses the main concern of #697662
+  * Correct CVE number for CVE-2012-1016 in changelog and patches, Closes:
+    #703457
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Mon, 25 Mar 2013 11:50:07 -0400
+
+krb5 (1.10.1+dfsg-4+nmu1) unstable; urgency=high
+
+  * Non-maintainer upload by the Security Team.
+  * Fix cve-2012-1016: null pointer derefence when handling a draft9 request
+    (closes: #702633).
+
+ -- Michael Gilbert <mgilbert@debian.org>  Fri, 15 Mar 2013 04:15:27 +0000
+
+krb5 (1.10.1+dfsg-4) unstable; urgency=high
+
+  * KDC null pointer dereference with PKINIT, CVE-2013-1415
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Fri, 15 Feb 2013 16:07:53 -0500
+
+krb5 (1.10.1+dfsg-3) unstable; urgency=low
+
+  * Kadmind crash only triggered by admin users, cve-2012-1013, Closes:
+    #687647
+  * Don't unload GSS-API plugins to avoid crashing applications that use
+    GSS-API on systems with plugins installed, Closes: #693741
+
+ -- Sam Hartman <hartmans@debian.org>  Mon, 19 Nov 2012 17:35:04 -0500
+
+krb5 (1.10.1+dfsg-2) unstable; urgency=high
+
+  * MITKRB5-SA-2012-001 [CVE-2012-1014 CVE-2012-1015] KDC frees
+    uninitialized pointers
+  * Break libgssglue1 << 0.2-2 for multiarch, Closes: #680612
+  * Don't free caller's principal in verify_init_creds, Closes: #512410
+
+ -- Sam Hartman <hartmans@debian.org>  Tue, 31 Jul 2012 08:20:09 -0400
+
+krb5 (1.10.1+dfsg-1) unstable; urgency=low
+
+  *  New Upstream Version
+    - Set display_name in gss_get_name_attribute, Closes: #658514
+  * Fix use counts on preauthentication, Closes: #670457
+  * Fix kadmin access controls, Closes: #670918
+  * Accept NMU with longer hostname, Closes: #657027
+  * Fix history from old databases, Closes: #660869
+  * Fix gcc 4.6.2 may be used uninitialized warnings/errors, Closes: #672075
+  * Check all keys in keytab for verifying credentials, Possibly fixes:
+    #669127
+  * Avoid multi-arch libpath in krb5-config, Closes: #642229
+      * Debconf translations:
+    - Turkish debconf Translation, Thanks Atila KOC, Closes: #659072
+    - Polish, thanks Michal/ Kul/ach, Closes: #658437
+
+ -- Sam Hartman <hartmans@debian.org>  Thu, 10 May 2012 16:32:13 -0400
+
+krb5 (1.10+dfsg~beta1-2.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Apply patch from Svante Signell to fix FTBFS on hurd-i386, Closes: #657027.
+
+ -- Samuel Thibault <sthibault@debian.org>  Thu, 26 Apr 2012 00:52:37 +0200
 
 krb5 (1.10+dfsg~beta1-2) unstable; urgency=low
 
@@ -85,6 +330,8 @@ krb5 (1.10+dfsg~alpha1-5) unstable; urgency=low
 
   * Add texinfo back to build depends: policy has been subverted by the
     evil forces of wishful thinking and forward progress
+  * Conflict: with libkrb53 again. The transition is over and we no longer
+    need that package.
 
  -- Sam Hartman <hartmans@debian.org>  Wed, 30 Nov 2011 09:09:55 -0500
 

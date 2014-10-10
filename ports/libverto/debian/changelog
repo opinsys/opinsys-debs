@@ -1,0 +1,52 @@
+libverto (0.2.6-1opinsys1) trusty; urgency=medium
+
+  * Update to new upstream version
+
+ -- Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>  Thu, 09 Oct 2014 16:49:22 +0300
+
+libverto (0.2.4-1ubuntu2) trusty; urgency=medium
+
+  * Build using dh-autoreconf.
+
+ -- Matthias Klose <doko@ubuntu.com>  Thu, 05 Dec 2013 23:30:34 +0100
+
+libverto (0.2.4-1ubuntu1) trusty; urgency=low
+
+  * Merge from Debian unstable.  Remaining changes:
+    - Build against libevent-dev in Ubuntu, not libev-dev.
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Tue, 12 Nov 2013 13:25:18 +0200
+
+libverto (0.2.4-1) unstable; urgency=low
+
+  * Update to new upstream
+  * New standards version
+  * Fix "libverto ftbfs on arm64" <update config.guess, config.sub
+    (Closes: #717838)
+
+ -- Sam Hartman <hartmans@debian.org>  Sun, 25 Aug 2013 16:20:13 -0400
+
+libverto (0.2.2-1ubuntu3) saucy; urgency=low
+
+  * Update config.{guess,sub} for Aarch64.
+
+ -- Matthias Klose <doko@ubuntu.com>  Tue, 23 Jul 2013 21:27:53 +0200
+
+libverto (0.2.2-1ubuntu2) quantal; urgency=low
+
+  * Rebuild for new armel compiler default of ARMv5t.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Fri, 05 Oct 2012 10:44:30 +0100
+
+libverto (0.2.2-1ubuntu1) precise; urgency=low
+
+  * Build against libevent-dev in Ubuntu, not libev-dev.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Tue, 20 Dec 2011 14:53:40 -0800
+
+libverto (0.2.2-1) unstable; urgency=low
+
+  * Initial release (Closes: #647740)  
+
+ -- Sam Hartman <hartmans@debian.org>  Sun, 27 Nov 2011 16:16:49 -0500
+
