@@ -346,9 +346,9 @@ Description: MIT Kerberos runtime libraries - Kerberos database
 
 Package: libkrb5support0
 Section: libs
-Breaks: libgssapi-krb5-2 (<< 1.12.1+dfsg-8),
- libkadm5srv-mit9 (<< 1.12.1+dfsg-8), libkadm5clnt-mit9 (<< 1.12.1+dfsg-8),
- libk5crypto3 (<< 1.12.1+dfsg-8), libkdb5-7 (<< 1.12.1+dfsg-8)
+Breaks: libgssapi-krb5-2 (<< 1.12.1),
+ libkadm5srv-mit9 (<< 1.12.1), libkadm5clnt-mit9 (<< 1.12.1),
+ libk5crypto3 (<< 1.12.1), libkdb5-7 (<< 1.12.1)
 Conflicts: libkrb53
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
@@ -422,8 +422,8 @@ Depends: ${misc:Depends},  libkrad0 (= ${binary:Version}),
  comerr-dev, libverto-dev (>= 0.2.4)
 Priority: extra
 Suggests: libkrb5-dev
-Replaces: libkrb5-dev (<< 1.12+dfsg-2)
-Breaks: krb5-multidev (<<1.12+dfsg-2), libkrb5-dev (<<1.12+dfsg-2)
+Replaces: libkrb5-dev (<< 1.12)
+Breaks: krb5-multidev (<<1.12), libkrb5-dev (<<1.12)
 Description: MIT Kerberos RADIUS Library Development
  This package includes development headers for libkrad0, the MIT
  Kerberos RADIUS library.  You should not use this RADIUS library in
