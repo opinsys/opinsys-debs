@@ -1,6 +1,6 @@
 diff -Nur openldap.orig/contrib/slapd-modules/smbkrb5pwd/LICENSE openldap/contrib/slapd-modules/smbkrb5pwd/LICENSE
 --- openldap.orig/contrib/slapd-modules/smbkrb5pwd/LICENSE	1970-01-01 00:00:00.000000000 +0000
-+++ openldap/contrib/slapd-modules/smbkrb5pwd/LICENSE	2014-10-15 15:47:22.886104000 +0000
++++ openldap/contrib/slapd-modules/smbkrb5pwd/LICENSE	2014-10-16 08:53:28.546104000 +0000
 @@ -0,0 +1,47 @@
 +The OpenLDAP Public License
 +  Version 2.8, 17 August 2003
@@ -51,7 +51,7 @@ diff -Nur openldap.orig/contrib/slapd-modules/smbkrb5pwd/LICENSE openldap/contri
 +distribute verbatim copies of this document is granted.
 diff -Nur openldap.orig/contrib/slapd-modules/smbkrb5pwd/Makefile openldap/contrib/slapd-modules/smbkrb5pwd/Makefile
 --- openldap.orig/contrib/slapd-modules/smbkrb5pwd/Makefile	1970-01-01 00:00:00.000000000 +0000
-+++ openldap/contrib/slapd-modules/smbkrb5pwd/Makefile	2014-10-15 15:47:22.886104000 +0000
++++ openldap/contrib/slapd-modules/smbkrb5pwd/Makefile	2014-10-16 08:53:28.546104000 +0000
 @@ -0,0 +1,70 @@
 +# $OpenLDAP: pkg/ldap/contrib/slapd-modules/smbk5pwd/Makefile,v 1.1.6.4 2009/10/02 21:16:53 quanah Exp $
 +# This work is part of OpenLDAP Software <http://www.openldap.org/>.
@@ -85,7 +85,7 @@ diff -Nur openldap.orig/contrib/slapd-modules/smbkrb5pwd/Makefile openldap/contr
 +
 +DEFS=
 +INCS=$(LDAP_INC) $(MIT_KRB5_INC) $(SSL_INC)
-+LIBS=$(MIT_KRB5_LIB) $(SSL_LIB)
++LIBS=$(MIT_KRB5_LIB) $(SSL_LIB) -lrt -lpthread
 +
 +MIT_KRB5_SRV_LIB=-lkadm5srv_mit
 +MIT_KRB5_CLNT_LIB=-lkadm5clnt_mit
@@ -125,7 +125,7 @@ diff -Nur openldap.orig/contrib/slapd-modules/smbkrb5pwd/Makefile openldap/contr
 +	$(LIBTOOL) --mode=install cp smbkrb5pwd_srv.la $(DESTDIR)$(moduledir)
 diff -Nur openldap.orig/contrib/slapd-modules/smbkrb5pwd/README openldap/contrib/slapd-modules/smbkrb5pwd/README
 --- openldap.orig/contrib/slapd-modules/smbkrb5pwd/README	1970-01-01 00:00:00.000000000 +0000
-+++ openldap/contrib/slapd-modules/smbkrb5pwd/README	2014-10-15 15:47:22.886104000 +0000
++++ openldap/contrib/slapd-modules/smbkrb5pwd/README	2014-10-16 08:53:28.546104000 +0000
 @@ -0,0 +1,171 @@
 +Documentation is available at: https://github.com/opinsys/smbkrb5pwd/wiki
 +
@@ -300,7 +300,7 @@ diff -Nur openldap.orig/contrib/slapd-modules/smbkrb5pwd/README openldap/contrib
 +<http://www.OpenLDAP.org/license.html>.
 diff -Nur openldap.orig/contrib/slapd-modules/smbkrb5pwd/smbkrb5pwd.c openldap/contrib/slapd-modules/smbkrb5pwd/smbkrb5pwd.c
 --- openldap.orig/contrib/slapd-modules/smbkrb5pwd/smbkrb5pwd.c	1970-01-01 00:00:00.000000000 +0000
-+++ openldap/contrib/slapd-modules/smbkrb5pwd/smbkrb5pwd.c	2014-10-15 15:47:22.886104000 +0000
++++ openldap/contrib/slapd-modules/smbkrb5pwd/smbkrb5pwd.c	2014-10-16 08:53:28.546104000 +0000
 @@ -0,0 +1,1018 @@
 +/* smbkrb5pwd.c - Overlay for managing Samba and MIT Kerberos passwords */
 +/* $OpenLDAP: pkg/ldap/contrib/slapd-modules/smbk5pwd/smbk5pwd.c,v 1.17.2.16 2009/08/17 21:49:00 quanah Exp $ */
