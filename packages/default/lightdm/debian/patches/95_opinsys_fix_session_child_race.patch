@@ -1,0 +1,13 @@
+Index: lightdm/src/session.c
+===================================================================
+--- lightdm.orig/src/session.c	2013-04-26 16:26:08.000000000 +0300
++++ lightdm/src/session.c	2013-04-26 16:27:00.000000000 +0300
+@@ -360,7 +360,7 @@
+     session->priv->username = g_strdup (username);
+ 
+     /* Run the child */
+-    session->priv->pid = fork ();
++    session->priv->pid = vfork ();
+     if (session->priv->pid < 0)
+     {
+         g_debug ("Failed to fork session child process: %s", strerror (errno));

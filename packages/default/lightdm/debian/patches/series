@@ -2,3 +2,4 @@
 04_language_handling.patch
 05_translate_guest_session_dialog.patch
 90_add_ignore_user_dmrc_configuration_option.patch
+95_opinsys_fix_session_child_race.patch
