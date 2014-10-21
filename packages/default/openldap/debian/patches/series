@@ -24,3 +24,4 @@ opinsys-increase-max-rewrite-passes
 opinsys-smbkrb5pwd
 opinsys-fix-smbkrb5pwd-makefile
 opinsys-fix-nssov-makefile
+opinsys-fix-passwd-sha2-makefile
