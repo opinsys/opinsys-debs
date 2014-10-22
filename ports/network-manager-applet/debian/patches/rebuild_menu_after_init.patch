@@ -1,0 +1,20 @@
+From: Mathieu Trudel-Lapierre <mathieu.trudel-lapierre@canonical.com>
+Subject: Force a menu update 30 seconds after the initialization is done.
+
+---
+ src/applet.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+Index: b/src/applet.c
+===================================================================
+--- a/src/applet.c
++++ b/src/applet.c
+@@ -3692,6 +3692,8 @@ setup_indicator_menu (NMApplet *applet)
+ 
+ 	app_indicator_set_menu(applet->app_indicator, GTK_MENU(applet->menu));
+ 
++	g_timeout_add_seconds (30, (GSourceFunc) applet_update_indicator_menu, applet);
++
+ 	return TRUE;
+ }
+ #endif /* ENABLE_INDICATOR */

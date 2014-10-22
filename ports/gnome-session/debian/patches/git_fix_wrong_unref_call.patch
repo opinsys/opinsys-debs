@@ -1,0 +1,32 @@
+Subject: shell: unref correct proxy on destroy
+
+gsm-shell.c tries to automatically clear it's reference to the
+EndSessionDialog proxy when the proxy is destroyed.
+
+It accidentally unrefs the wrong object though.  This commit
+fixes that by changing the open coded unref+nullify to g_clear_object
+
+I believe this will address this crasher:
+
+https://retrace.fedoraproject.org/faf/problems/1214348/
+
+https://bugzilla.gnome.org/show_bug.cgi?id=709221
+---
+diff --git a/gnome-session/gsm-shell.c b/gnome-session/gsm-shell.c
+index 450ca40..1c7f053 100644
+--- a/gnome-session/gsm-shell.c
++++ b/gnome-session/gsm-shell.c
+@@ -534,11 +534,7 @@ static void
+ on_end_session_dialog_proxy_destroyed (DBusGProxy *proxy,
+                                        GsmShell   *shell)
+ {
+-        /* FIXME - is this right? */
+-        if (shell->priv->end_session_dialog_proxy != NULL) {
+-                g_object_unref (shell->priv->proxy);
+-                shell->priv->end_session_dialog_proxy = NULL;
+-        }
++        g_clear_object (&shell->priv->end_session_dialog_proxy);
+ }
+ 
+ static gboolean
+

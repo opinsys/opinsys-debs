@@ -1,0 +1,84 @@
+oracle-java (1.7.71-0+opinsys1) trusty; urgency=medium
+
+  * Update to Java 7u71
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Thu, 16 Oct 2014 15:21:19 +0300
+
+oracle-java (1.7.67-0+opinsys1) quantal; urgency=medium
+
+  * Update to Java 7u67, switching from jdk to jre.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Fri, 08 Aug 2014 13:07:21 +0300
+
+oracle-java (1.7.65-0+opinsys1) quantal; urgency=medium
+
+  * Update to Java 7u65
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Thu, 31 Jul 2014 11:03:35 +0300
+
+oracle-java (1.7.60-0+opinsys1) quantal; urgency=low
+
+  * Update to Java 7u60
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Fri, 30 May 2014 10:03:07 +0300
+
+oracle-java (1.7.55-0+opinsys1ubuntu1) precise; urgency=low
+
+  * Update to Java 7u55
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 16 Apr 2014 08:55:10 +0300
+
+oracle-java (1.7.51-0+opinsys1) precise; urgency=low
+
+  * Update to Java 7u51
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Thu, 16 Jan 2014 11:14:35 +0200
+
+oracle-java (1.7.45-0+opinsys2) precise; urgency=low
+
+  * Fix version numbers to postinst and prerm
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Fri, 18 Oct 2013 13:00:45 +0300
+
+oracle-java (1.7.45-0+opinsys1) precise; urgency=low
+
+  * Update to Java 7u45
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Fri, 18 Oct 2013 09:20:51 +0300
+
+oracle-java (1.7.40-0+opinsys1) quantal; urgency=low
+
+  * Update to Java 7u40
+
+ -- Tuomas Räsänen <tuomasjjrasanen@opinsys.fi>  Wed, 18 Sep 2013 12:44:45 +0300
+
+oracle-java (1.7.25-0+opinsys1) quantal; urgency=low
+
+  * Update to Java 7u25
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 25 Apr 2013 14:47:19 +0300
+
+oracle-java (1.7.21-0+opinsys4) quantal; urgency=low
+
+  * Fix alternatives removal, really.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 25 Apr 2013 14:47:19 +0300
+
+oracle-java (1.7.21-0+opinsys3) quantal; urgency=low
+
+  * Fix alternatives removal.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 25 Apr 2013 14:10:42 +0300
+
+oracle-java (1.7.21-0+opinsys2) quantal; urgency=low
+
+  * Setup alternatives so that javaws and mozilla-plugin will take
+    priority, but other java things are not registered to alternatives.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 25 Apr 2013 13:50:32 +0300
+
+oracle-java (1.7.21-0+opinsys1) quantal; urgency=low
+
+  * Initial release.
+
+ -- Opinsys Developers <dev@opinsys.fi>  Wed, 24 Apr 2013 16:21:18 +0300

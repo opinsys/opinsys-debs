@@ -11,25 +11,26 @@ conditionally to running configure with --enable-indicator.
 ---
  configure.ac                  |    8 
  src/Makefile.am               |    2 
+ src/applet-device-broadband.c |    6 
  src/applet-device-bt.c        |   13 -
- src/applet-device-cdma.c      |   52 ++++
- src/applet-device-gsm.c       |   56 ++++-
- src/applet-device-wifi.c      |  328 +++++++++++++++++++++++++++++-
+ src/applet-device-cdma.c      |   46 ++++
+ src/applet-device-ethernet.c  |   13 -
+ src/applet-device-gsm.c       |   50 ++++
+ src/applet-device-wifi.c      |  328 ++++++++++++++++++++++++++++-
  src/applet-device-wimax.c     |   42 +++
- src/applet-device-wired.c     |   13 -
- src/applet.c                  |  457 +++++++++++++++++++++++++++++++++++-------
+ src/applet.c                  |  463 +++++++++++++++++++++++++++++++++++-------
  src/applet.h                  |   19 +
  src/gconf-helpers/Makefile.am |    2 
  src/mb-menu-item.c            |    3 
- src/mobile-helpers.c          |  139 ++++++++++++
- src/mobile-helpers.h          |   11 +
- 14 files changed, 1032 insertions(+), 113 deletions(-)
+ src/mobile-helpers.c          |  158 +++++++++++++-
+ src/mobile-helpers.h          |   19 +
+ 15 files changed, 1058 insertions(+), 114 deletions(-)
 
 Index: b/configure.ac
 ===================================================================
 --- a/configure.ac
 +++ b/configure.ac
-@@ -197,6 +197,14 @@ case "${with_bluetooth}" in
+@@ -203,6 +203,14 @@ case "${with_bluetooth}" in
  		;;
  esac
  
@@ -43,22 +44,22 @@ Index: b/configure.ac
 +
  AM_CONDITIONAL(HAVE_GBT, test x"$have_gbt" = "xyes")
  
- GLIB_CONFIG_NMA
+ dnl ModemManager1 with libmm-glib
 Index: b/src/Makefile.am
 ===================================================================
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
 @@ -7,6 +7,7 @@ nm_applet_CPPFLAGS = \
  	$(NMA_CFLAGS) \
- 	$(GNOME_KEYRING_CFLAGS) \
+ 	$(LIBSECRET_CFLAGS) \
  	$(NOTIFY_CFLAGS) \
 +	$(APPINDICATOR_CFLAGS) \
  	-DICONDIR=\""$(datadir)/icons"\"						\
  	-DUIDIR=\""$(uidir)"\"							\
  	-DBINDIR=\""$(bindir)"\"								\
-@@ -67,6 +68,7 @@ nm_applet_LDADD = \
+@@ -68,6 +69,7 @@ nm_applet_LDADD = \
  	$(NMA_LIBS) \
- 	$(GNOME_KEYRING_LIBS) \
+ 	$(LIBSECRET_LIBS) \
  	$(NOTIFY_LIBS) \
 +	$(APPINDICATOR_LIBS) \
  	${top_builddir}/src/marshallers/libmarshallers.la \
@@ -68,7 +69,7 @@ Index: b/src/applet-device-bt.c
 ===================================================================
 --- a/src/applet-device-bt.c
 +++ b/src/applet-device-bt.c
-@@ -154,7 +154,9 @@ bt_add_menu_item (NMDevice *device,
+@@ -149,7 +149,9 @@ bt_add_menu_item (NMDevice *device,
  
  	item = applet_menu_item_create_device_item_helper (device, applet, text);
  
@@ -78,7 +79,7 @@ Index: b/src/applet-device-bt.c
  	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
  	gtk_widget_show (item);
  
-@@ -209,15 +211,16 @@ bt_device_state_changed (NMDevice *devic
+@@ -200,15 +202,16 @@ bt_device_state_changed (NMDevice *devic
  	}
  }
  
@@ -97,7 +98,7 @@ Index: b/src/applet-device-bt.c
  	const char *id;
  
  	id = nm_device_get_iface (NM_DEVICE (device));
-@@ -240,14 +243,16 @@ bt_get_icon (NMDevice *device,
+@@ -231,14 +234,16 @@ bt_get_icon (NMDevice *device,
  		*tip = g_strdup_printf (_("Requesting a network address for '%s'..."), id);
  		break;
  	case NM_DEVICE_STATE_ACTIVATED:
@@ -120,7 +121,7 @@ Index: b/src/applet-device-cdma.c
 ===================================================================
 --- a/src/applet-device-cdma.c
 +++ b/src/applet-device-cdma.c
-@@ -324,6 +324,9 @@ cdma_add_menu_item (NMDevice *device,
+@@ -235,6 +235,9 @@ cdma_add_menu_item (NMDevice *device,
  	char *text;
  	GtkWidget *item;
  	GSList *connections, *all, *iter;
@@ -130,7 +131,7 @@ Index: b/src/applet-device-cdma.c
  
  	info = g_object_get_data (G_OBJECT (device), "devinfo");
  
-@@ -345,7 +348,9 @@ cdma_add_menu_item (NMDevice *device,
+@@ -252,7 +255,9 @@ cdma_add_menu_item (NMDevice *device,
  	}
  
  	item = applet_menu_item_create_device_item_helper (device, applet, text);
@@ -140,7 +141,7 @@ Index: b/src/applet-device-cdma.c
  	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
  	gtk_widget_show (item);
  	g_free (text);
-@@ -357,6 +362,7 @@ cdma_add_menu_item (NMDevice *device,
+@@ -264,6 +269,7 @@ cdma_add_menu_item (NMDevice *device,
  		s_con = nm_connection_get_setting_connection (active);
  		g_assert (s_con);
  
@@ -148,7 +149,7 @@ Index: b/src/applet-device-cdma.c
  		item = nm_mb_menu_item_new (nm_setting_connection_get_id (s_con),
  		                            info->quality_valid ? info->quality : 0,
  		                            info->provider_name,
-@@ -365,6 +371,21 @@ cdma_add_menu_item (NMDevice *device,
+@@ -272,6 +278,21 @@ cdma_add_menu_item (NMDevice *device,
  		                            cdma_state_to_mb_state (info),
  		                            info->modem_enabled,
  		                            applet);
@@ -170,7 +171,7 @@ Index: b/src/applet-device-cdma.c
  		gtk_widget_set_sensitive (GTK_WIDGET (item), TRUE);
  		add_connection_item (device, active, item, menu, applet);
  	}
-@@ -378,6 +399,7 @@ cdma_add_menu_item (NMDevice *device,
+@@ -285,6 +306,7 @@ cdma_add_menu_item (NMDevice *device,
  		}
  	} else {
  		/* Otherwise show idle registration state or disabled */
@@ -178,7 +179,7 @@ Index: b/src/applet-device-cdma.c
  		item = nm_mb_menu_item_new (NULL,
  		                            info->quality_valid ? info->quality : 0,
  		                            info->provider_name,
-@@ -386,6 +408,21 @@ cdma_add_menu_item (NMDevice *device,
+@@ -293,6 +315,21 @@ cdma_add_menu_item (NMDevice *device,
  		                            cdma_state_to_mb_state (info),
  		                            info->modem_enabled,
  		                            applet);
@@ -200,7 +201,7 @@ Index: b/src/applet-device-cdma.c
  		gtk_widget_set_sensitive (GTK_WIDGET (item), FALSE);
  		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
  	}
-@@ -451,15 +488,16 @@ cdma_device_state_changed (NMDevice *dev
+@@ -353,10 +390,12 @@ cdma_device_state_changed (NMDevice *dev
  	check_start_polling (info);
  }
  
@@ -214,37 +215,16 @@ Index: b/src/applet-device-cdma.c
                 char **tip,
                 NMApplet *applet)
  {
- 	NMSettingConnection *s_con;
--	GdkPixbuf *pixbuf = NULL;
- 	const char *id;
- 	CdmaDeviceInfo *info;
- 	gboolean mb_state;
-@@ -488,11 +526,14 @@ cdma_get_icon (NMDevice *device,
- 		break;
- 	case NM_DEVICE_STATE_ACTIVATED:
- 		mb_state = cdma_state_to_mb_state (info);
--		pixbuf = mobile_helper_get_status_pixbuf (info->quality,
-+		*out_pixbuf = mobile_helper_get_status_pixbuf (info->quality,
- 		                                          info->quality_valid,
- 		                                          mb_state,
- 		                                          cdma_act_to_mb_act (info),
- 		                                          applet);
-+		*out_indicator_icon = mobile_helper_get_quality_icon (info->quality_valid ?
-+									info->quality : 0,
-+									applet);
- 
- 		if ((mb_state != MB_STATE_UNKNOWN) && info->quality_valid) {
- 			gboolean roaming = (mb_state == MB_STATE_ROAMING);
-@@ -507,8 +548,6 @@ cdma_get_icon (NMDevice *device,
- 	default:
- 		break;
- 	}
--
--	return pixbuf;
- }
- 
- typedef struct {
-@@ -874,6 +913,9 @@ reg_state_changed_cb (DBusGProxy *proxy,
+@@ -368,6 +407,8 @@ cdma_get_icon (NMDevice *device,
+ 	return mobile_helper_get_icon (device,
+ 	                               state,
+ 	                               connection,
++	                               out_pixbuf,
++	                               out_indicator_icon,
+ 	                               tip,
+ 	                               applet,
+ 	                               cdma_state_to_mb_state (info),
+@@ -602,6 +643,9 @@ reg_state_changed_cb (DBusGProxy *proxy,
  	update_registration_state (info, cdma1x_state, evdo_state);
  	info->skip_reg_poll = TRUE;
  	applet_schedule_update_icon (info->applet);
@@ -258,15 +238,15 @@ Index: b/src/applet-device-gsm.c
 ===================================================================
 --- a/src/applet-device-gsm.c
 +++ b/src/applet-device-gsm.c
-@@ -43,6 +43,7 @@
+@@ -44,6 +44,7 @@
+ #include "applet.h"
  #include "applet-device-gsm.h"
  #include "utils.h"
- #include "nm-mobile-wizard.h"
 +#include "mobile-helpers.h"
  #include "applet-dialogs.h"
  #include "mb-menu-item.h"
  #include "nma-marshal.h"
-@@ -378,6 +379,9 @@ gsm_add_menu_item (NMDevice *device,
+@@ -291,6 +292,9 @@ gsm_add_menu_item (NMDevice *device,
  	char *text;
  	GtkWidget *item;
  	GSList *connections, *all, *iter;
@@ -276,7 +256,7 @@ Index: b/src/applet-device-gsm.c
  
  	info = g_object_get_data (G_OBJECT (device), "devinfo");
  
-@@ -399,7 +403,9 @@ gsm_add_menu_item (NMDevice *device,
+@@ -308,7 +312,9 @@ gsm_add_menu_item (NMDevice *device,
  	}
  
  	item = applet_menu_item_create_device_item_helper (device, applet, text);
@@ -286,7 +266,7 @@ Index: b/src/applet-device-gsm.c
  	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
  	gtk_widget_show (item);
  	g_free (text);
-@@ -411,6 +417,7 @@ gsm_add_menu_item (NMDevice *device,
+@@ -320,6 +326,7 @@ gsm_add_menu_item (NMDevice *device,
  		s_con = nm_connection_get_setting_connection (active);
  		g_assert (s_con);
  
@@ -294,7 +274,7 @@ Index: b/src/applet-device-gsm.c
  		item = nm_mb_menu_item_new (nm_setting_connection_get_id (s_con),
  		                            info->quality_valid ? info->quality : 0,
  		                            info->op_name,
-@@ -419,6 +426,21 @@ gsm_add_menu_item (NMDevice *device,
+@@ -328,6 +335,21 @@ gsm_add_menu_item (NMDevice *device,
  		                            gsm_state_to_mb_state (info),
  		                            info->modem_enabled,
  		                            applet);
@@ -316,7 +296,7 @@ Index: b/src/applet-device-gsm.c
  		gtk_widget_set_sensitive (GTK_WIDGET (item), TRUE);
  		add_connection_item (device, active, item, menu, applet);
  	}
-@@ -432,6 +454,7 @@ gsm_add_menu_item (NMDevice *device,
+@@ -341,6 +363,7 @@ gsm_add_menu_item (NMDevice *device,
  		}
  	} else {
  		/* Otherwise show idle registration state or disabled */
@@ -324,7 +304,7 @@ Index: b/src/applet-device-gsm.c
  		item = nm_mb_menu_item_new (NULL,
  		                            info->quality_valid ? info->quality : 0,
  		                            info->op_name,
-@@ -440,6 +463,23 @@ gsm_add_menu_item (NMDevice *device,
+@@ -349,6 +372,23 @@ gsm_add_menu_item (NMDevice *device,
  		                            gsm_state_to_mb_state (info),
  		                            info->modem_enabled,
  		                            applet);
@@ -348,7 +328,7 @@ Index: b/src/applet-device-gsm.c
  		gtk_widget_set_sensitive (GTK_WIDGET (item), FALSE);
  		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
  	}
-@@ -500,15 +540,16 @@ gsm_device_state_changed (NMDevice *devi
+@@ -409,10 +449,12 @@ gsm_device_state_changed (NMDevice *devi
  	check_start_polling (info);
  }
  
@@ -362,39 +342,18 @@ Index: b/src/applet-device-gsm.c
                char **tip,
                NMApplet *applet)
  {
- 	NMSettingConnection *s_con;
--	GdkPixbuf *pixbuf = NULL;
- 	const char *id;
- 	GsmDeviceInfo *info;
- 	guint32 mb_state;
-@@ -537,11 +578,14 @@ gsm_get_icon (NMDevice *device,
- 		break;
- 	case NM_DEVICE_STATE_ACTIVATED:
- 		mb_state = gsm_state_to_mb_state (info);
--		pixbuf = mobile_helper_get_status_pixbuf (info->quality,
-+		*out_pixbuf = mobile_helper_get_status_pixbuf (info->quality,
- 		                                          info->quality_valid,
- 		                                          mb_state,
- 		                                          gsm_act_to_mb_act (info),
- 		                                          applet);
-+		*out_indicator_icon = mobile_helper_get_quality_icon (info->quality_valid ?
-+								info->quality : 0,
-+								applet);
- 
- 		if ((mb_state != MB_STATE_UNKNOWN) && info->quality_valid) {
- 			gboolean roaming = (mb_state == MB_STATE_ROAMING);
-@@ -556,8 +600,6 @@ gsm_get_icon (NMDevice *device,
- 	default:
- 		break;
- 	}
--
--	return pixbuf;
- }
- 
- typedef struct {
-@@ -1558,6 +1600,10 @@ reg_info_changed_cb (DBusGProxy *proxy,
- 	g_free (info->op_name);
- 	info->op_name = parse_op_name (info, op_name, info->op_code);
+@@ -424,6 +466,8 @@ gsm_get_icon (NMDevice *device,
+ 	return mobile_helper_get_icon (device,
+ 	                               state,
+ 	                               connection,
++	                               out_pixbuf,
++	                               out_indicator_icon,
+ 	                               tip,
+ 	                               applet,
+ 	                               gsm_state_to_mb_state (info),
+@@ -1042,6 +1086,10 @@ reg_info_changed_cb (DBusGProxy *proxy,
+ 	                                                        op_name,
+ 	                                                        info->op_code);
  	info->skip_reg_poll = TRUE;
 +
 +#ifdef ENABLE_INDICATOR
@@ -415,7 +374,7 @@ Index: b/src/applet-device-wifi.c
  
  #include <nm-device.h>
  #include <nm-access-point.h>
-@@ -307,6 +308,135 @@ is_blacklisted_ssid (const GByteArray *s
+@@ -308,6 +309,135 @@ is_blacklisted_ssid (const GByteArray *s
  	return is_ssid_in_list (ssid, blacklisted_ssids);
  }
  
@@ -551,7 +510,7 @@ Index: b/src/applet-device-wifi.c
  static void
  clamp_ap_to_bssid (NMAccessPoint *ap, NMSettingWireless *s_wifi)
  {
-@@ -515,7 +645,11 @@ wireless_menu_item_activate (GtkMenuItem
+@@ -516,7 +646,11 @@ wifi_menu_item_activate (GtkMenuItem *it
  
  struct dup_data {
  	NMDevice *device;
@@ -563,7 +522,7 @@ Index: b/src/applet-device-wifi.c
  	char *hash;
  };
  
-@@ -531,19 +665,34 @@ find_duplicate (gpointer d, gpointer use
+@@ -532,19 +666,34 @@ find_duplicate (gpointer d, gpointer use
  	g_return_if_fail (data);
  	g_return_if_fail (data->hash);
  
@@ -598,9 +557,9 @@ Index: b/src/applet-device-wifi.c
  create_new_ap_item (NMDeviceWifi *device,
                      NMAccessPoint *ap,
                      struct dup_data *dup_data,
-@@ -552,7 +701,16 @@ create_new_ap_item (NMDeviceWifi *device
+@@ -553,7 +702,16 @@ create_new_ap_item (NMDeviceWifi *device
  {
- 	WirelessMenuItemInfo *info;
+ 	WifiMenuItemInfo *info;
  	GSList *iter;
 +#ifndef ENABLE_INDICATOR
  	NMNetworkMenuItem *item = NULL;
@@ -615,7 +574,7 @@ Index: b/src/applet-device-wifi.c
  	GSList *dev_connections = NULL;
  	GSList *ap_connections = NULL;
  	const GByteArray *ssid;
-@@ -563,18 +721,51 @@ create_new_ap_item (NMDeviceWifi *device
+@@ -564,18 +722,51 @@ create_new_ap_item (NMDeviceWifi *device
  	g_slist_free (dev_connections);
  	dev_connections = NULL;
  
@@ -669,7 +628,7 @@ Index: b/src/applet-device-wifi.c
  
  	g_object_set_data (G_OBJECT (item), "device", NM_DEVICE (device));
  
-@@ -632,7 +823,11 @@ create_new_ap_item (NMDeviceWifi *device
+@@ -633,7 +824,11 @@ create_new_ap_item (NMDeviceWifi *device
  	return item;
  }
  
@@ -681,7 +640,7 @@ Index: b/src/applet-device-wifi.c
  get_menu_item_for_ap (NMDeviceWifi *device,
                        NMAccessPoint *ap,
                        GSList *connections,
-@@ -656,14 +851,32 @@ get_menu_item_for_ap (NMDeviceWifi *devi
+@@ -657,14 +852,32 @@ get_menu_item_for_ap (NMDeviceWifi *devi
  	 */
  	dup_data.found = NULL;
  	dup_data.hash = g_object_get_data (G_OBJECT (ap), "hash");
@@ -714,7 +673,7 @@ Index: b/src/applet-device-wifi.c
  		return NULL;
  	}
  
-@@ -673,6 +886,7 @@ get_menu_item_for_ap (NMDeviceWifi *devi
+@@ -674,6 +887,7 @@ get_menu_item_for_ap (NMDeviceWifi *devi
  static gint
  sort_by_name (gconstpointer tmpa, gconstpointer tmpb)
  {
@@ -722,7 +681,7 @@ Index: b/src/applet-device-wifi.c
  	NMNetworkMenuItem *a = NM_NETWORK_MENU_ITEM (tmpa);
  	NMNetworkMenuItem *b = NM_NETWORK_MENU_ITEM (tmpb);
  	const char *a_ssid, *b_ssid;
-@@ -709,6 +923,44 @@ sort_by_name (gconstpointer tmpa, gconst
+@@ -710,6 +924,44 @@ sort_by_name (gconstpointer tmpa, gconst
  		return -1;
  
  	return 0;
@@ -767,7 +726,7 @@ Index: b/src/applet-device-wifi.c
  }
  
  /* Sort menu items for the top-level menu:
-@@ -720,6 +972,7 @@ sort_by_name (gconstpointer tmpa, gconst
+@@ -721,6 +973,7 @@ sort_by_name (gconstpointer tmpa, gconst
  static gint
  sort_toplevel (gconstpointer tmpa, gconstpointer tmpb)
  {
@@ -775,7 +734,7 @@ Index: b/src/applet-device-wifi.c
  	NMNetworkMenuItem *a = NM_NETWORK_MENU_ITEM (tmpa);
  	NMNetworkMenuItem *b = NM_NETWORK_MENU_ITEM (tmpb);
  	gboolean a_fave, b_fave;
-@@ -754,6 +1007,42 @@ sort_toplevel (gconstpointer tmpa, gcons
+@@ -755,6 +1008,42 @@ sort_toplevel (gconstpointer tmpa, gcons
  	 * both are unencrypted) just sort by name.
  	 */
  	return sort_by_name (a, b);
@@ -818,9 +777,9 @@ Index: b/src/applet-device-wifi.c
  }
  
  static void
-@@ -772,7 +1061,11 @@ wireless_add_menu_item (NMDevice *device
- 	gboolean wireless_enabled = TRUE;
- 	gboolean wireless_hw_enabled = TRUE;
+@@ -773,7 +1062,11 @@ wifi_add_menu_item (NMDevice *device,
+ 	gboolean wifi_enabled = TRUE;
+ 	gboolean wifi_hw_enabled = TRUE;
  	GSList *menu_items = NULL;  /* All menu items we'll be adding */
 +#ifndef ENABLE_INDICATOR
  	NMNetworkMenuItem *item, *active_item = NULL;
@@ -830,7 +789,7 @@ Index: b/src/applet-device-wifi.c
  	GtkWidget *widget;
  
  	wdev = NM_DEVICE_WIFI (device);
-@@ -810,7 +1103,9 @@ wireless_add_menu_item (NMDevice *device
+@@ -807,7 +1100,9 @@ wifi_add_menu_item (NMDevice *device,
  		if (active_ap) {
  			active_item = item = get_menu_item_for_ap (wdev, active_ap, connections, NULL, applet);
  			if (item) {
@@ -840,7 +799,7 @@ Index: b/src/applet-device-wifi.c
  				menu_items = g_slist_append (menu_items, item);
  
  				gtk_menu_shell_append (GTK_MENU_SHELL (menu), GTK_WIDGET (item));
-@@ -1105,6 +1400,9 @@ access_point_added_cb (NMDeviceWifi *dev
+@@ -1102,6 +1397,9 @@ access_point_added_cb (NMDeviceWifi *dev
  	                  applet);
  	
  	queue_avail_access_point_notification (NM_DEVICE (device));
@@ -850,7 +809,7 @@ Index: b/src/applet-device-wifi.c
  }
  
  static void
-@@ -1122,6 +1420,9 @@ access_point_removed_cb (NMDeviceWifi *d
+@@ -1119,6 +1417,9 @@ access_point_removed_cb (NMDeviceWifi *d
  	if (old == ap) {
  		g_object_set_data (G_OBJECT (device), ACTIVE_AP_TAG, NULL);
  		applet_schedule_update_icon (applet);
@@ -860,19 +819,19 @@ Index: b/src/applet-device-wifi.c
  	}
  }
  
-@@ -1268,16 +1569,17 @@ wireless_device_state_changed (NMDevice
+@@ -1265,16 +1566,17 @@ wifi_device_state_changed (NMDevice *dev
  	g_free (esc_ssid);
  }
  
 -static GdkPixbuf *
 +static void
- wireless_get_icon (NMDevice *device,
-                    NMDeviceState state,
-                    NMConnection *connection,
-+                   GdkPixbuf **out_pixbuf,
-+                   char **out_indicator_icon,
-                    char **tip,
-                    NMApplet *applet)
+ wifi_get_icon (NMDevice *device,
+                NMDeviceState state,
+                NMConnection *connection,
++               GdkPixbuf **out_pixbuf,
++               char **out_indicator_icon,
+                char **tip,
+                NMApplet *applet)
  {
  	NMSettingConnection *s_con;
  	NMAccessPoint *ap;
@@ -880,39 +839,39 @@ Index: b/src/applet-device-wifi.c
  	const char *id;
  	char *ssid = NULL;
  
-@@ -1310,22 +1612,25 @@ wireless_get_icon (NMDevice *device,
+@@ -1307,22 +1609,25 @@ wifi_get_icon (NMDevice *device,
  			strength = CLAMP (strength, 0, 100);
  
  			if (strength > 80)
--				pixbuf = nma_icon_check_and_load ("nm-signal-100", &applet->wireless_100_icon, applet);
-+				*out_pixbuf = nma_icon_check_and_load ("nm-signal-100", &applet->wireless_100_icon, applet);
+-				pixbuf = nma_icon_check_and_load ("nm-signal-100", &applet->wifi_100_icon, applet);
++				*out_pixbuf = nma_icon_check_and_load ("nm-signal-100", &applet->wifi_100_icon, applet);
  			else if (strength > 55)
--				pixbuf = nma_icon_check_and_load ("nm-signal-75", &applet->wireless_75_icon, applet);
-+				*out_pixbuf = nma_icon_check_and_load ("nm-signal-75", &applet->wireless_75_icon, applet);
+-				pixbuf = nma_icon_check_and_load ("nm-signal-75", &applet->wifi_75_icon, applet);
++				*out_pixbuf = nma_icon_check_and_load ("nm-signal-75", &applet->wifi_75_icon, applet);
  			else if (strength > 30)
--				pixbuf = nma_icon_check_and_load ("nm-signal-50", &applet->wireless_50_icon, applet);
-+				*out_pixbuf = nma_icon_check_and_load ("nm-signal-50", &applet->wireless_50_icon, applet);
+-				pixbuf = nma_icon_check_and_load ("nm-signal-50", &applet->wifi_50_icon, applet);
++				*out_pixbuf = nma_icon_check_and_load ("nm-signal-50", &applet->wifi_50_icon, applet);
  			else if (strength > 5)
--				pixbuf = nma_icon_check_and_load ("nm-signal-25", &applet->wireless_25_icon, applet);
-+				*out_pixbuf = nma_icon_check_and_load ("nm-signal-25", &applet->wireless_25_icon, applet);
+-				pixbuf = nma_icon_check_and_load ("nm-signal-25", &applet->wifi_25_icon, applet);
++				*out_pixbuf = nma_icon_check_and_load ("nm-signal-25", &applet->wifi_25_icon, applet);
  			else
--				pixbuf = nma_icon_check_and_load ("nm-signal-00", &applet->wireless_00_icon, applet);
-+				*out_pixbuf = nma_icon_check_and_load ("nm-signal-00", &applet->wireless_00_icon, applet);
+-				pixbuf = nma_icon_check_and_load ("nm-signal-00", &applet->wifi_00_icon, applet);
++				*out_pixbuf = nma_icon_check_and_load ("nm-signal-00", &applet->wifi_00_icon, applet);
 +
 +			*out_indicator_icon = get_best_icon_name_for_ap (ap, FALSE, FALSE);
  
  			ssid = get_ssid_utf8 (ap);
- 			*tip = g_strdup_printf (_("Wireless network connection '%s' active: %s (%d%%)"),
+ 			*tip = g_strdup_printf (_("Wi-Fi network connection '%s' active: %s (%d%%)"),
  			                        id, ssid, strength);
  			g_free (ssid);
  		} else {
--			pixbuf = nma_icon_check_and_load ("nm-signal-00", &applet->wireless_00_icon, applet);
+-			pixbuf = nma_icon_check_and_load ("nm-signal-00", &applet->wifi_00_icon, applet);
 +			*out_indicator_icon = g_strdup_printf ("nm-signal-00");
-+			*out_pixbuf = nma_icon_check_and_load ("nm-signal-00", &applet->wireless_00_icon, applet);
- 			*tip = g_strdup_printf (_("Wireless network connection '%s' active"), id);
++			*out_pixbuf = nma_icon_check_and_load ("nm-signal-00", &applet->wifi_00_icon, applet);
+ 			*tip = g_strdup_printf (_("Wi-Fi network connection '%s' active"), id);
  		}
  		break;
-@@ -1333,7 +1638,8 @@ wireless_get_icon (NMDevice *device,
+@@ -1330,7 +1635,8 @@ wifi_get_icon (NMDevice *device,
  		break;
  	}
  
@@ -922,11 +881,11 @@ Index: b/src/applet-device-wifi.c
  }
  
  static gboolean
-Index: b/src/applet-device-wired.c
+Index: b/src/applet-device-ethernet.c
 ===================================================================
---- a/src/applet-device-wired.c
-+++ b/src/applet-device-wired.c
-@@ -221,7 +221,9 @@ wired_add_menu_item (NMDevice *device,
+--- a/src/applet-device-ethernet.c
++++ b/src/applet-device-ethernet.c
+@@ -218,7 +218,9 @@ ethernet_add_menu_item (NMDevice *device
   	if (nm_device_get_capabilities (device) & NM_DEVICE_CAP_CARRIER_DETECT)
  		carrier = nm_device_ethernet_get_carrier (NM_DEVICE_ETHERNET (device));
  
@@ -936,33 +895,33 @@ Index: b/src/applet-device-wired.c
  	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
  	gtk_widget_show (item);
  
-@@ -274,15 +276,16 @@ wired_device_state_changed (NMDevice *de
+@@ -271,15 +273,16 @@ ethernet_device_state_changed (NMDevice
  	}
  }
  
 -static GdkPixbuf *
 +static void
- wired_get_icon (NMDevice *device,
-                 NMDeviceState state,
-                 NMConnection *connection,
-+                GdkPixbuf **out_pixbuf,
-+                char **out_indicator_icon,
-                 char **tip,
-                 NMApplet *applet)
+ ethernet_get_icon (NMDevice *device,
+                    NMDeviceState state,
+                    NMConnection *connection,
++                   GdkPixbuf **out_pixbuf,
++                   char **out_indicator_icon,
+                    char **tip,
+                    NMApplet *applet)
  {
  	NMSettingConnection *s_con;
 -	GdkPixbuf *pixbuf = NULL;
  	const char *id;
  
  	id = nm_device_get_iface (NM_DEVICE (device));
-@@ -305,14 +308,16 @@ wired_get_icon (NMDevice *device,
- 		*tip = g_strdup_printf (_("Requesting a wired network address for '%s'..."), id);
+@@ -302,14 +305,16 @@ ethernet_get_icon (NMDevice *device,
+ 		*tip = g_strdup_printf (_("Requesting an ethernet network address for '%s'..."), id);
  		break;
  	case NM_DEVICE_STATE_ACTIVATED:
--		pixbuf = nma_icon_check_and_load ("nm-device-wired", &applet->wired_icon, applet);
+-		pixbuf = nma_icon_check_and_load ("nm-device-wired", &applet->ethernet_icon, applet);
 +		*out_indicator_icon = g_strdup_printf ("nm-device-wired");
-+		*out_pixbuf = nma_icon_check_and_load (*out_indicator_icon, &applet->wired_icon, applet);
- 		*tip = g_strdup_printf (_("Wired network connection '%s' active"), id);
++		*out_pixbuf = nma_icon_check_and_load (*out_indicator_icon, &applet->ethernet_icon, applet);
+ 		*tip = g_strdup_printf (_("Ethernet network connection '%s' active"), id);
  		break;
  	default:
  		break;
@@ -978,7 +937,7 @@ Index: b/src/applet.c
 ===================================================================
 --- a/src/applet.c
 +++ b/src/applet.c
-@@ -498,6 +498,8 @@ add_and_activate_cb (NMClient *client,
+@@ -549,6 +549,8 @@ add_and_activate_cb (NMClient *client,
                       GError *error,
                       gpointer user_data)
  {
@@ -987,7 +946,7 @@ Index: b/src/applet.c
  	if (error) {
  		const char *text = _("Failed to add/activate connection");
  		char *err_text = g_strdup_printf ("(%d) %s", error->code,
-@@ -508,7 +510,8 @@ add_and_activate_cb (NMClient *client,
+@@ -559,7 +561,8 @@ add_and_activate_cb (NMClient *client,
  		g_free (err_text);
  	}
  
@@ -997,7 +956,7 @@ Index: b/src/applet.c
  }
  
  static void
-@@ -542,6 +545,8 @@ applet_menu_item_activate_helper_new_con
+@@ -593,6 +596,8 @@ applet_menu_item_activate_helper_new_con
  static void
  disconnect_cb (NMDevice *device, GError *error, gpointer user_data)
  {
@@ -1006,7 +965,7 @@ Index: b/src/applet.c
  	if (error) {
  		const char *text = _("Device disconnect failed");
  		char *err_text = g_strdup_printf ("(%d) %s", error->code,
-@@ -551,6 +556,9 @@ disconnect_cb (NMDevice *device, GError
+@@ -602,6 +607,9 @@ disconnect_cb (NMDevice *device, GError
  		utils_show_error_dialog (_("Disconnect failure"), text, err_text, FALSE, NULL);
  		g_free (err_text);
  	}
@@ -1016,7 +975,7 @@ Index: b/src/applet.c
  }
  
  void
-@@ -559,7 +567,7 @@ applet_menu_item_disconnect_helper (NMDe
+@@ -610,7 +618,7 @@ applet_menu_item_disconnect_helper (NMDe
  {
  	g_return_if_fail (NM_IS_DEVICE (device));
  
@@ -1025,7 +984,7 @@ Index: b/src/applet.c
  }
  
  static void
-@@ -632,7 +640,8 @@ applet_menu_item_add_complex_separator_h
+@@ -683,7 +691,8 @@ applet_menu_item_add_complex_separator_h
                                                 const gchar* label,
                                                 int pos)
  {
@@ -1035,7 +994,7 @@ Index: b/src/applet.c
  #if GTK_CHECK_VERSION(3,1,6)
  	GtkWidget *box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
  #else
-@@ -640,6 +649,8 @@ applet_menu_item_add_complex_separator_h
+@@ -691,6 +700,8 @@ applet_menu_item_add_complex_separator_h
  #endif
  	GtkWidget *xlabel = NULL;
  
@@ -1044,17 +1003,24 @@ Index: b/src/applet.c
  	if (label) {
  		xlabel = gtk_label_new (NULL);
  		gtk_label_set_markup (GTK_LABEL (xlabel), label);
-@@ -662,6 +673,9 @@ applet_menu_item_add_complex_separator_h
+@@ -713,10 +724,16 @@ applet_menu_item_add_complex_separator_h
  	              "child", box,
  	              "sensitive", FALSE,
  	              NULL);
-+#else
-+	menu_item = gtk_separator_menu_item_new ();
-+#endif /* ENABLE_INDICATOR */
++
  	if (pos < 0)
  		gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
  	else
-@@ -676,10 +690,13 @@ applet_new_menu_item_helper (NMConnectio
+ 		gtk_menu_shell_insert (GTK_MENU_SHELL (menu), menu_item, pos);
++#else
++	menu_item = gtk_separator_menu_item_new ();
++	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
++#endif /* ENABLE_INDICATOR */
++
+ 	return;
+ }
+ 
+@@ -727,10 +744,13 @@ applet_new_menu_item_helper (NMConnectio
  {
  	GtkWidget *item;
  	NMSettingConnection *s_con;
@@ -1068,7 +1034,7 @@ Index: b/src/applet.c
  	item = gtk_image_menu_item_new_with_label ("");
  	if (add_active && (active == connection)) {
  		/* Pure evil */
-@@ -692,9 +709,13 @@ applet_new_menu_item_helper (NMConnectio
+@@ -743,9 +763,13 @@ applet_new_menu_item_helper (NMConnectio
  		gtk_menu_item_set_label (GTK_MENU_ITEM (item), nm_setting_connection_get_id (s_con));
  
  	gtk_image_menu_item_set_always_show_image (GTK_IMAGE_MENU_ITEM (item), TRUE);
@@ -1082,7 +1048,7 @@ Index: b/src/applet.c
  #define TITLE_TEXT_R ((double) 0x5e / 255.0 )
  #define TITLE_TEXT_G ((double) 0x5e / 255.0 )
  #define TITLE_TEXT_B ((double) 0x5e / 255.0 )
-@@ -799,6 +820,8 @@ menu_title_item_expose (GtkWidget *widge
+@@ -850,6 +874,8 @@ menu_title_item_expose (GtkWidget *widge
  }
  #endif
  
@@ -1091,7 +1057,7 @@ Index: b/src/applet.c
  GtkWidget *
  applet_menu_item_create_device_item_helper (NMDevice *device,
                                              NMApplet *applet,
-@@ -808,11 +831,13 @@ applet_menu_item_create_device_item_help
+@@ -859,11 +885,13 @@ applet_menu_item_create_device_item_help
  
  	item = gtk_menu_item_new_with_mnemonic (text);
  	gtk_widget_set_sensitive (item, FALSE);
@@ -1105,7 +1071,7 @@ Index: b/src/applet.c
  	return item;
  }
  
-@@ -859,7 +884,12 @@ applet_do_notify (NMApplet *applet,
+@@ -910,7 +938,12 @@ applet_do_notify (NMApplet *applet,
  	g_return_if_fail (summary != NULL);
  	g_return_if_fail (message != NULL);
  
@@ -1117,8 +1083,8 @@ Index: b/src/applet.c
 +#endif /* ENABLE_INDICATOR */
  		return;
  
- 	escaped = utils_escape_notify_message (message);
-@@ -1143,6 +1173,7 @@ vpn_connection_state_changed (NMVPNConne
+ 	/* if we're not acting as a secret agent, don't notify either */
+@@ -1199,6 +1232,7 @@ vpn_connection_state_changed (NMVPNConne
  		clear_animation_timeout (applet);
  
  	applet_schedule_update_icon (applet);
@@ -1126,7 +1092,7 @@ Index: b/src/applet.c
  }
  
  static const char *
-@@ -1198,10 +1229,13 @@ activate_vpn_cb (NMClient *client,
+@@ -1254,10 +1288,13 @@ activate_vpn_cb (NMClient *client,
  	}
  
  	applet_schedule_update_icon (info->applet);
@@ -1140,7 +1106,7 @@ Index: b/src/applet.c
  static void
  nma_menu_vpn_item_clicked (GtkMenuItem *item, gpointer user_data)
  {
-@@ -1224,9 +1258,14 @@ nma_menu_vpn_item_clicked (GtkMenuItem *
+@@ -1280,9 +1317,14 @@ nma_menu_vpn_item_clicked (GtkMenuItem *
  		return;
  	}
  
@@ -1156,25 +1122,19 @@ Index: b/src/applet.c
  
  	s_con = nm_connection_get_setting_connection (connection);
  	info = g_malloc0 (sizeof (VPNActivateInfo));
-@@ -1619,6 +1658,8 @@ nma_menu_add_devices (GtkWidget *menu, N
+@@ -1668,8 +1710,10 @@ nma_menu_add_devices (GtkWidget *menu, N
+ 		active = applet_find_active_connection_for_device (device, applet, NULL);
+ 
  		dclass = get_device_class (device, applet);
- 		if (dclass)
+-		if (dclass)
++		if (dclass) {
  			dclass->add_menu_item (device, n_devices, active, menu, applet);
-+
-+		nma_menu_add_separator_item (menu);
++			nma_menu_add_separator_item (menu);
++		}
  	}
  
   out:
-@@ -1676,8 +1717,6 @@ nma_menu_add_vpn_submenu (GtkWidget *men
- 	GSList *list, *iter;
- 	int num_vpn_active = 0;
- 
--	nma_menu_add_separator_item (menu);
--
- 	vpn_menu = GTK_MENU (gtk_menu_new ());
- 
- 	item = GTK_MENU_ITEM (gtk_menu_item_new_with_mnemonic (_("_VPN Connections")));
-@@ -1696,13 +1735,20 @@ nma_menu_add_vpn_submenu (GtkWidget *men
+@@ -1745,13 +1789,20 @@ nma_menu_add_vpn_submenu (GtkWidget *men
  		NMConnection *connection = NM_CONNECTION (iter->data);
  		NMActiveConnection *active;
  		const char *name;
@@ -1195,7 +1155,7 @@ Index: b/src/applet.c
  
  		/* If no VPN connections are active, draw all menu items enabled. If
  		 * >= 1 VPN connections are active, only the active VPN menu item is
-@@ -1721,8 +1767,12 @@ nma_menu_add_vpn_submenu (GtkWidget *men
+@@ -1770,8 +1821,12 @@ nma_menu_add_vpn_submenu (GtkWidget *men
  			gtk_widget_set_sensitive (GTK_WIDGET (item), FALSE);
  
  		if (active) {
@@ -1208,7 +1168,7 @@ Index: b/src/applet.c
  		}
  
  		g_object_set_data_full (G_OBJECT (item), "connection", 
-@@ -1796,6 +1846,7 @@ nma_set_networking_enabled_cb (GtkWidget
+@@ -1845,6 +1900,7 @@ nma_set_networking_enabled_cb (GtkWidget
  }
  
  
@@ -1216,16 +1176,16 @@ Index: b/src/applet.c
  static void
  nma_set_notifications_enabled_cb (GtkWidget *widget, NMApplet *applet)
  {
-@@ -1818,6 +1869,7 @@ nma_set_notifications_enabled_cb (GtkWid
- 	                        PREF_SUPPRESS_WIRELESS_NETWORKS_AVAILABLE,
+@@ -1867,6 +1923,7 @@ nma_set_notifications_enabled_cb (GtkWid
+ 	                        PREF_SUPPRESS_WIFI_NETWORKS_AVAILABLE,
  	                        !state);
  }
 +#endif /* ENABLE_INDICATOR */
  
  /*
   * nma_menu_show_cb
-@@ -1906,7 +1958,9 @@ nma_context_menu_update (NMApplet *apple
- 	gboolean wireless_hw_enabled;
+@@ -1954,7 +2011,9 @@ nma_context_menu_update (NMApplet *apple
+ 	gboolean wifi_hw_enabled;
  	gboolean wwan_hw_enabled;
  	gboolean wimax_hw_enabled;
 +#ifndef ENABLE_INDICATOR
@@ -1234,7 +1194,7 @@ Index: b/src/applet.c
  	gboolean sensitive = FALSE;
  
  	state = nm_client_get_state (applet->nm_client);
-@@ -1966,6 +2020,7 @@ nma_context_menu_update (NMApplet *apple
+@@ -2014,6 +2073,7 @@ nma_context_menu_update (NMApplet *apple
  	gtk_widget_set_sensitive (GTK_WIDGET (applet->wimax_enabled_item),
  	                          wimax_hw_enabled && is_permission_yes (applet, NM_CLIENT_PERMISSION_ENABLE_DISABLE_WIMAX));
  
@@ -1242,15 +1202,15 @@ Index: b/src/applet.c
  	/* Enabled notifications */
  	g_signal_handler_block (G_OBJECT (applet->notifications_enabled_item),
  	                        applet->notifications_enabled_toggled_id);
-@@ -1977,6 +2032,7 @@ nma_context_menu_update (NMApplet *apple
+@@ -2025,6 +2085,7 @@ nma_context_menu_update (NMApplet *apple
  	gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (applet->notifications_enabled_item), notifications_enabled);
  	g_signal_handler_unblock (G_OBJECT (applet->notifications_enabled_item),
  	                          applet->notifications_enabled_toggled_id);
 +#endif /* ENABLE_INDICATOR */
  
- 	/* Don't show wifi-specific stuff if wireless is off */
+ 	/* Don't show wifi-specific stuff if wifi is off */
  	if (state != NM_STATE_ASLEEP) {
-@@ -2049,16 +2105,20 @@ applet_connection_info_cb (NMApplet *app
+@@ -2097,16 +2158,20 @@ applet_connection_info_cb (NMApplet *app
   * Generate the contextual popup menu.
   *
   */
@@ -1272,7 +1232,7 @@ Index: b/src/applet.c
  
  	/* 'Enable Networking' item */
  	applet->networking_enabled_item = gtk_check_menu_item_new_with_mnemonic (_("Enable _Networking"));
-@@ -2098,6 +2158,7 @@ static GtkWidget *nma_context_menu_creat
+@@ -2146,6 +2211,7 @@ static GtkWidget *nma_context_menu_creat
  
  	nma_menu_add_separator_item (GTK_WIDGET (menu));
  
@@ -1280,7 +1240,7 @@ Index: b/src/applet.c
  	/* Toggle notifications item */
  	applet->notifications_enabled_item = gtk_check_menu_item_new_with_mnemonic (_("Enable N_otifications"));
  	id = g_signal_connect (applet->notifications_enabled_item,
-@@ -2108,6 +2169,7 @@ static GtkWidget *nma_context_menu_creat
+@@ -2156,6 +2222,7 @@ static GtkWidget *nma_context_menu_creat
  	gtk_menu_shell_append (menu, applet->notifications_enabled_item);
  
  	nma_menu_add_separator_item (GTK_WIDGET (menu));
@@ -1288,7 +1248,7 @@ Index: b/src/applet.c
  
  	/* 'Connection Information' item */
  	applet->info_menu_item = gtk_image_menu_item_new_with_mnemonic (_("Connection _Information"));
-@@ -2129,6 +2191,7 @@ static GtkWidget *nma_context_menu_creat
+@@ -2177,6 +2244,7 @@ static GtkWidget *nma_context_menu_creat
  	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (applet->connections_menu_item), image);
  	gtk_menu_shell_append (menu, applet->connections_menu_item);
  
@@ -1296,7 +1256,7 @@ Index: b/src/applet.c
  	/* Separator */
  	nma_menu_add_separator_item (GTK_WIDGET (menu));
  
-@@ -2148,25 +2211,112 @@ static GtkWidget *nma_context_menu_creat
+@@ -2196,25 +2264,112 @@ static GtkWidget *nma_context_menu_creat
  	image = gtk_image_new_from_stock (GTK_STOCK_ABOUT, GTK_ICON_SIZE_MENU);
  	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), image);
  	gtk_menu_shell_append (menu, menu_item);
@@ -1389,13 +1349,13 @@ Index: b/src/applet.c
 +				return;
 +			}
 +			break;
- 	}
- 
++	}
++
 +	if (tip->len) {
 +		g_free (applet->tip);
 +		applet->tip = tip->str;
-+	}
-+
+ 	}
+ 
 +	g_free (new_tip);
 +	g_string_free (tip, FALSE);
 +
@@ -1413,7 +1373,7 @@ Index: b/src/applet.c
  	/* Ignore setting of the same icon as is already displayed */
  	if (applet->icon_layers[layer] == pixbuf)
  		return;
-@@ -2200,8 +2350,13 @@ foo_set_icon (NMApplet *applet, GdkPixbu
+@@ -2248,8 +2403,13 @@ foo_set_icon (NMApplet *applet, GdkPixbu
  
  	gtk_status_icon_set_from_pixbuf (applet->status_icon, pixbuf);
  	g_object_unref (pixbuf);
@@ -1428,7 +1388,7 @@ Index: b/src/applet.c
  
  NMRemoteConnection *
  applet_get_exported_connection_for_device (NMDevice *device, NMApplet *applet)
-@@ -2394,6 +2549,7 @@ foo_device_state_changed_cb (NMDevice *d
+@@ -2442,6 +2602,7 @@ foo_device_state_changed_cb (NMDevice *d
  	applet_common_device_state_changed (device, new_state, old_state, reason, applet);
  
  	applet_schedule_update_icon (applet);
@@ -1436,13 +1396,13 @@ Index: b/src/applet.c
  }
  
  static void
-@@ -2449,7 +2605,19 @@ foo_client_state_changed_cb (NMClient *c
+@@ -2498,8 +2659,20 @@ foo_client_state_changed_cb (NMClient *c
  	}
  
  	applet_schedule_update_icon (applet);
 +	applet_schedule_update_menu (applet);
-+}
-+
+ }
+ 
 +#ifdef ENABLE_INDICATOR
 +static void
 +foo_device_removed_cb (NMClient *client, NMDevice *device, gpointer user_data)
@@ -1451,12 +1411,13 @@ Index: b/src/applet.c
 +
 +	applet_schedule_update_icon (applet);
 +	applet_schedule_update_menu (applet);
- }
++}
 +#endif
- 
++
  static void
  foo_manager_running_cb (NMClient *client,
-@@ -2466,6 +2634,7 @@ foo_manager_running_cb (NMClient *client
+                         GParamSpec *pspec,
+@@ -2515,6 +2688,7 @@ foo_manager_running_cb (NMClient *client
  	}
  
  	applet_schedule_update_icon (applet);
@@ -1464,7 +1425,7 @@ Index: b/src/applet.c
  }
  
  #define VPN_STATE_ID_TAG "vpn-state-id"
-@@ -2495,6 +2664,7 @@ foo_active_connections_changed_cb (NMCli
+@@ -2544,6 +2718,7 @@ foo_active_connections_changed_cb (NMCli
  	}
  
  	applet_schedule_update_icon (applet);
@@ -1472,7 +1433,7 @@ Index: b/src/applet.c
  }
  
  static void
-@@ -2527,6 +2697,9 @@ foo_set_initial_state (gpointer data)
+@@ -2576,6 +2751,9 @@ foo_set_initial_state (gpointer data)
  	return FALSE;
  }
  
@@ -1482,7 +1443,7 @@ Index: b/src/applet.c
  static void
  foo_client_setup (NMApplet *applet)
  {
-@@ -2545,6 +2718,11 @@ foo_client_setup (NMApplet *applet)
+@@ -2594,6 +2772,11 @@ foo_client_setup (NMApplet *applet)
  	g_signal_connect (applet->nm_client, "device-added",
  	                  G_CALLBACK (foo_device_added_cb),
  	                  applet);
@@ -1494,9 +1455,9 @@ Index: b/src/applet.c
  	g_signal_connect (applet->nm_client, "notify::manager-running",
  	                  G_CALLBACK (foo_manager_running_cb),
  	                  applet);
-@@ -2564,10 +2742,12 @@ foo_client_setup (NMApplet *applet)
- 	applet_schedule_update_icon (applet);
- }
+@@ -2663,10 +2846,12 @@ mm1_client_setup (NMApplet *applet)
+ 
+ #endif /* WITH_MODEM_MANAGER_1 */
  
 -static GdkPixbuf *
 -applet_common_get_device_icon (NMDeviceState state, NMApplet *applet)
@@ -1510,7 +1471,7 @@ Index: b/src/applet.c
  	int stage = -1;
  
  	switch (state) {
-@@ -2586,25 +2766,32 @@ applet_common_get_device_icon (NMDeviceS
+@@ -2685,25 +2870,32 @@ applet_common_get_device_icon (NMDeviceS
  	}
  
  	if (stage >= 0) {
@@ -1555,7 +1516,7 @@ Index: b/src/applet.c
  }
  
  static char *
-@@ -2643,12 +2830,14 @@ get_tip_for_device_state (NMDevice *devi
+@@ -2742,12 +2934,14 @@ get_tip_for_device_state (NMDevice *devi
  	return tip;
  }
  
@@ -1573,7 +1534,7 @@ Index: b/src/applet.c
  	NMDeviceState state = NM_DEVICE_STATE_UNKNOWN;
  	NMADeviceClass *dclass;
  
-@@ -2673,19 +2862,13 @@ applet_get_device_icon_for_state (NMAppl
+@@ -2772,19 +2966,13 @@ applet_get_device_icon_for_state (NMAppl
  
  		connection = applet_find_active_connection_for_device (device, applet, NULL);
  		/* device class returns a referenced pixbuf */
@@ -1597,7 +1558,7 @@ Index: b/src/applet.c
  }
  
  static char *
-@@ -2741,7 +2924,7 @@ applet_update_icon (gpointer user_data)
+@@ -2840,7 +3028,7 @@ applet_update_icon (gpointer user_data)
  	NMApplet *applet = NM_APPLET (user_data);
  	GdkPixbuf *pixbuf = NULL;
  	NMState state;
@@ -1606,7 +1567,7 @@ Index: b/src/applet.c
  	NMVPNConnectionState vpn_state = NM_VPN_SERVICE_STATE_UNKNOWN;
  	gboolean nm_running;
  	NMActiveConnection *active_vpn = NULL;
-@@ -2756,38 +2939,61 @@ applet_update_icon (gpointer user_data)
+@@ -2855,38 +3043,61 @@ applet_update_icon (gpointer user_data)
  	if (!nm_running)
  		state = NM_STATE_UNKNOWN;
  
@@ -1673,7 +1634,7 @@ Index: b/src/applet.c
  			break;
  		case NM_VPN_CONNECTION_STATE_PREPARE:
  		case NM_VPN_CONNECTION_STATE_NEED_AUTH:
-@@ -2802,6 +3008,9 @@ applet_update_icon (gpointer user_data)
+@@ -2901,6 +3112,9 @@ applet_update_icon (gpointer user_data)
  			}
  
  			pixbuf = applet->vpn_connecting_icons[applet->animation_step];
@@ -1683,7 +1644,7 @@ Index: b/src/applet.c
  			applet->animation_step++;
  			if (applet->animation_step >= NUM_VPN_CONNECTING_FRAMES)
  				applet->animation_step = 0;
-@@ -2812,28 +3021,9 @@ applet_update_icon (gpointer user_data)
+@@ -2911,28 +3125,9 @@ applet_update_icon (gpointer user_data)
  
  		vpn_tip = get_tip_for_vpn (active_vpn, vpn_state, applet);
  	}
@@ -1715,7 +1676,7 @@ Index: b/src/applet.c
  
  	return FALSE;
  }
-@@ -3320,18 +3510,95 @@ status_icon_popup_menu_cb (GtkStatusIcon
+@@ -3403,18 +3598,95 @@ status_icon_popup_menu_cb (GtkStatusIcon
  	 * of the notification. 
  	 */
  
@@ -1811,8 +1772,8 @@ Index: b/src/applet.c
 +
  	if (!applet->status_icon)
  		return FALSE;
- 	if (shell_debug)
-@@ -3346,11 +3613,34 @@ setup_widgets (NMApplet *applet)
+ 
+@@ -3427,11 +3699,34 @@ setup_widgets (NMApplet *applet)
  	g_signal_connect (applet->status_icon, "popup-menu",
  			  G_CALLBACK (status_icon_popup_menu_cb), applet);
  
@@ -1851,18 +1812,9 @@ Index: b/src/applet.c
  }
  
  static void
-@@ -3497,6 +3787,8 @@ constructor (GType type,
- 	g_signal_connect (applet->gsettings, "changed::show-applet",
- 	                  G_CALLBACK (applet_gsettings_show_changed), applet);
- 
-+	foo_client_setup (applet);
-+
- 	/* Load pixmaps and create applet widgets */
- 	if (!setup_widgets (applet))
- 		goto error;
-@@ -3529,6 +3821,13 @@ constructor (GType type,
- 	}
- #endif
+@@ -3449,6 +3744,13 @@ applet_start_agent (NMApplet *applet)
+ 	if (applet->agent)
+ 		return;
  
 +#ifdef ENABLE_INDICATOR
 +	/* Watch for new connections */
@@ -1871,19 +1823,28 @@ Index: b/src/applet.c
 +	                  applet);
 +#endif /* ENABLE_INDICATOR */
 +
+ 	g_debug ("gnome-shell is not running, registering secret agent");
  	applet->agent = applet_agent_new ();
  	g_assert (applet->agent);
- 	g_signal_connect (applet->agent, APPLET_AGENT_GET_SECRETS,
-@@ -3557,8 +3856,6 @@ constructor (GType type,
+@@ -3584,6 +3886,8 @@ constructor (GType type,
+ 	g_signal_connect (applet->gsettings, "changed::show-applet",
+ 	                  G_CALLBACK (applet_gsettings_show_changed), applet);
+ 
++	foo_client_setup (applet);
++
+ 	/* Load pixmaps and create applet widgets */
+ 	if (!setup_widgets (applet))
+ 		goto error;
+@@ -3640,8 +3944,6 @@ constructor (GType type,
  	applet->wimax_class = applet_device_wimax_get_class (applet);
  	g_assert (applet->wimax_class);
  
 -	foo_client_setup (applet);
 -
- 	/* Track embedding to help debug issues where user has removed the
- 	 * notification area applet from the panel, and thus nm-applet too.
- 	 */
-@@ -3596,6 +3893,11 @@ static void finalize (GObject *object)
+ #if WITH_MODEM_MANAGER_1
+ 	mm1_client_setup (applet);
+ #endif
+@@ -3688,6 +3990,11 @@ static void finalize (GObject *object)
  	if (applet->update_icon_id)
  		g_source_remove (applet->update_icon_id);
  
@@ -1895,13 +1856,16 @@ Index: b/src/applet.c
  	if (applet->menu)
  		g_object_unref (applet->menu);
  	nma_icons_free (applet);
-@@ -3619,6 +3921,11 @@ static void finalize (GObject *object)
+@@ -3711,6 +4018,14 @@ static void finalize (GObject *object)
  	if (applet->status_icon)
  		g_object_unref (applet->status_icon);
  
 +#ifdef ENABLE_INDICATOR
 +	if (applet->app_indicator)
++	{
++		APP_INDICATOR_GET_CLASS(applet->app_indicator)->unfallback = NULL;
 +		g_object_unref (applet->app_indicator);
++	}
 +#endif
 +
  	if (applet->nm_client)
@@ -1922,7 +1886,7 @@ Index: b/src/applet.h
  #include <nm-connection.h>
  #include <nm-client.h>
  #include <nm-access-point.h>
-@@ -150,6 +154,11 @@ typedef struct
+@@ -163,6 +167,11 @@ typedef struct
  	guint			animation_id;
  
  	/* Direct UI elements */
@@ -1934,7 +1898,7 @@ Index: b/src/applet.h
  	GtkStatusIcon * status_icon;
  	int             icon_size;
  
-@@ -236,13 +245,15 @@ struct NMADeviceClass {
+@@ -249,13 +258,15 @@ struct NMADeviceClass {
  	                                        NMDeviceStateReason reason,
  	                                        NMApplet *applet);
  
@@ -1952,7 +1916,7 @@ Index: b/src/applet.h
  	                                        char **tip,
  	                                        NMApplet *applet);
  
-@@ -257,6 +268,10 @@ NMApplet *nm_applet_new (GMainLoop *loop
+@@ -270,6 +281,10 @@ NMApplet *nm_applet_new (GMainLoop *loop
  
  void applet_schedule_update_icon (NMApplet *applet);
  
@@ -1967,15 +1931,7 @@ Index: b/src/mobile-helpers.c
 ===================================================================
 --- a/src/mobile-helpers.c
 +++ b/src/mobile-helpers.c
-@@ -21,6 +21,7 @@
-  */
- 
- #include "mobile-helpers.h"
-+#include <glib/gi18n.h>
- 
- GdkPixbuf *
- mobile_helper_get_status_pixbuf (guint32 quality,
-@@ -35,7 +36,11 @@ mobile_helper_get_status_pixbuf (guint32
+@@ -44,7 +44,11 @@ mobile_helper_get_status_pixbuf (guint32
  
  	if (!quality_valid)
  		quality = 0;
@@ -1987,7 +1943,7 @@ Index: b/src/mobile-helpers.c
  
  	pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB,
  	                         TRUE,
-@@ -83,9 +88,14 @@ mobile_helper_get_status_pixbuf (guint32
+@@ -92,9 +96,14 @@ mobile_helper_get_status_pixbuf (guint32
  	return pixbuf;
  }
  
@@ -2000,12 +1956,12 @@ Index: b/src/mobile-helpers.c
  {
 +#ifndef ENABLE_INDICATOR
  	if (quality > 80)
- 		return nma_icon_check_and_load ("nm-signal-100", &applet->wireless_100_icon, applet);
+ 		return nma_icon_check_and_load ("nm-signal-100", &applet->wifi_100_icon, applet);
  	else if (quality > 55)
-@@ -96,7 +106,136 @@ mobile_helper_get_quality_icon (guint32
- 		return nma_icon_check_and_load ("nm-signal-25", &applet->wireless_25_icon, applet);
+@@ -105,7 +114,135 @@ mobile_helper_get_quality_icon (guint32
+ 		return nma_icon_check_and_load ("nm-signal-25", &applet->wifi_25_icon, applet);
  
- 	return nma_icon_check_and_load ("nm-signal-00", &applet->wireless_00_icon, applet);
+ 	return nma_icon_check_and_load ("nm-signal-00", &applet->wifi_00_icon, applet);
 +#else
 +	char *icon_name;
 +
@@ -2028,110 +1984,109 @@ Index: b/src/mobile-helpers.c
 +static const char *
 +get_tech_name (guint32 tech)
 +{
-+        switch (tech) {
-+        case MB_TECH_1XRTT:
-+                return _("CDMA");
-+        case MB_TECH_EVDO_REV0:
-+        case MB_TECH_EVDO_REVA:
-+                return _("EVDO");
-+        case MB_TECH_GSM:
-+                return _("GSM");
-+        case MB_TECH_GPRS:
-+                return _("GPRS");
-+        case MB_TECH_EDGE:
-+                return _("EDGE");
-+        case MB_TECH_UMTS:
-+                return _("UMTS");
-+        case MB_TECH_HSDPA:
-+                return _("HSDPA");
-+        case MB_TECH_HSUPA:
-+                return _("HSUPA");
-+        case MB_TECH_HSPA:
-+                return _("HSPA");
++	switch (tech) {
++	case MB_TECH_1XRTT:
++		return _("CDMA");
++	case MB_TECH_EVDO:
++		return _("EVDO");
++	case MB_TECH_GSM:
++		return _("GSM");
++	case MB_TECH_GPRS:
++		return _("GPRS");
++	case MB_TECH_EDGE:
++		return _("EDGE");
++	case MB_TECH_UMTS:
++		return _("UMTS");
++	case MB_TECH_HSDPA:
++		return _("HSDPA");
++	case MB_TECH_HSUPA:
++		return _("HSUPA");
++	case MB_TECH_HSPA:
++		return _("HSPA");
 +	case MB_TECH_HSPA_PLUS:
 +		return _("HSPA+");
 +	case MB_TECH_LTE:
 +		return _("LTE");
-+        default:
-+                break;
-+        }
-+        return NULL;
++	default:
++		break;
++	}
++	return NULL;
 +}
 +
 +char *
 +mobile_helper_get_connection_label (const char *connection_name,
-+				    const char *provider,
-+				    guint32 technology,
-+				    guint32 state)
++                                    const char *provider,
++                                    guint32 technology,
++                                    guint32 state)
 +{
 +	const char *tech_name;
 +	char *desc_string;
 +
-+        /* Construct the description string */
-+        tech_name = get_tech_name (technology);
-+        switch (state) {
-+        default:
-+        case MB_STATE_UNKNOWN:
-+                desc_string = g_strdup (_("not enabled"));
-+                break;
-+        case MB_STATE_IDLE:
-+                if (connection_name)
-+                        desc_string = g_strdup (connection_name);
-+                else
-+                        desc_string = g_strdup (_("not registered"));
-+                break;
-+        case MB_STATE_HOME:
-+                if (connection_name) {
-+                        if (provider && tech_name)
-+                                desc_string = g_strdup_printf ("%s (%s %s)", connection_name, provider, tech_name);
-+                        else if (provider || tech_name)
-+                                desc_string = g_strdup_printf ("%s (%s)", connection_name, provider ? provider : tech_name);
-+                        else
-+                                desc_string = g_strdup_printf ("%s", connection_name);
-+                } else {
-+                        if (provider) {
-+                                if (tech_name)
-+                                        desc_string = g_strdup_printf ("%s %s", provider, tech_name);
-+                                else
-+                                        desc_string = g_strdup_printf ("%s", provider);
-+                        } else {
-+                                if (tech_name)
-+                                        desc_string = g_strdup_printf (_("Home network (%s)"), tech_name);
-+                                else
-+                                        desc_string = g_strdup_printf (_("Home network"));
-+                        }
-+                }
-+                break;
-+        case MB_STATE_SEARCHING:
-+                if (connection_name)
-+                        desc_string = g_strdup (connection_name);
-+                else
-+                        desc_string = g_strdup (_("searching"));
-+                break;
-+        case MB_STATE_DENIED:
-+                desc_string = g_strdup (_("registration denied"));
-+                break;
-+        case MB_STATE_ROAMING:
-+                if (connection_name) {
-+                        if (tech_name)
-+                                desc_string = g_strdup_printf (_("%s (%s roaming)"), connection_name, tech_name);
-+                        else
-+                                desc_string = g_strdup_printf (_("%s (roaming)"), connection_name);
-+                } else {
-+                        if (provider) {
-+                                if (tech_name)
-+                                        desc_string = g_strdup_printf (_("%s (%s roaming)"), provider, tech_name);
-+                                else
-+                                        desc_string = g_strdup_printf (_("%s (roaming)"), provider);
-+                        } else {
-+                                if (tech_name)
-+                                        desc_string = g_strdup_printf (_("Roaming network (%s)"), tech_name);
-+                                else
-+                                        desc_string = g_strdup_printf (_("Roaming network"));
-+                        }
-+                }
-+                break;
-+        }
++	/* Construct the description string */
++	tech_name = get_tech_name (technology);
++	switch (state) {
++	default:
++	case MB_STATE_UNKNOWN:
++		desc_string = g_strdup (_("not enabled"));
++		break;
++	case MB_STATE_IDLE:
++		if (connection_name)
++			desc_string = g_strdup (connection_name);
++		else
++			desc_string = g_strdup (_("not registered"));
++		break;
++	case MB_STATE_HOME:
++		if (connection_name) {
++			if (provider && tech_name)
++				desc_string = g_strdup_printf ("%s (%s %s)", connection_name, provider, tech_name);
++ 			else if (provider || tech_name)
++				desc_string = g_strdup_printf ("%s (%s)", connection_name, provider ? provider : tech_name);
++			else
++				desc_string = g_strdup_printf ("%s", connection_name);
++		} else {
++			if (provider) {
++				if (tech_name)
++					desc_string = g_strdup_printf ("%s %s", provider, tech_name);
++				else
++					desc_string = g_strdup_printf ("%s", provider);
++			} else {
++				if (tech_name)
++					desc_string = g_strdup_printf (_("Home network (%s)"), tech_name);
++				else
++					desc_string = g_strdup_printf (_("Home network"));
++			}
++		}
++		break;
++	case MB_STATE_SEARCHING:
++		if (connection_name)
++			desc_string = g_strdup (connection_name);
++		else
++			desc_string = g_strdup (_("searching"));
++		break;
++	case MB_STATE_DENIED:
++		desc_string = g_strdup (_("registration denied"));
++		break;
++	case MB_STATE_ROAMING:
++		if (connection_name) {
++			if (tech_name)
++				desc_string = g_strdup_printf (_("%s (%s roaming)"), connection_name, tech_name);
++			else
++				desc_string = g_strdup_printf (_("%s (roaming)"), connection_name);
++		} else {
++			if (provider) {
++				if (tech_name)
++					desc_string = g_strdup_printf (_("%s (%s roaming)"), provider, tech_name);
++				else
++					desc_string = g_strdup_printf (_("%s (roaming)"), provider);
++			} else {
++				if (tech_name)
++					desc_string = g_strdup_printf (_("Roaming network (%s)"), tech_name);
++				else
++					desc_string = g_strdup_printf (_("Roaming network"));
++			}
++		}
++		break;
++	}
 +
 +	return desc_string;
  }
@@ -2139,11 +2094,63 @@ Index: b/src/mobile-helpers.c
  
  GdkPixbuf *
  mobile_helper_get_tech_icon (guint32 tech, NMApplet *applet)
+@@ -559,10 +696,12 @@ mobile_helper_get_secrets (NMDeviceModem
+ 
+ /********************************************************************/
+ 
+-GdkPixbuf *
++void
+ mobile_helper_get_icon (NMDevice *device,
+                         NMDeviceState state,
+                         NMConnection *connection,
++                        GdkPixbuf **out_pixbuf,
++                        char **out_indicator_icon,
+                         char **tip,
+                         NMApplet *applet,
+                         guint32 mb_state,
+@@ -571,7 +710,6 @@ mobile_helper_get_icon (NMDevice *device
+                         gboolean quality_valid)
+ {
+ 	NMSettingConnection *s_con;
+-	GdkPixbuf *pixbuf = NULL;
+ 	const char *id;
+ 
+ 	id = nm_device_get_iface (NM_DEVICE (device));
+@@ -594,11 +732,15 @@ mobile_helper_get_icon (NMDevice *device
+ 		*tip = g_strdup_printf (_("Requesting a network address for '%s'..."), id);
+ 		break;
+ 	case NM_DEVICE_STATE_ACTIVATED:
+-		pixbuf = mobile_helper_get_status_pixbuf (quality,
+-		                                          quality_valid,
+-		                                          mb_state,
+-		                                          mb_tech,
+-		                                          applet);
++		*out_pixbuf = mobile_helper_get_status_pixbuf (quality,
++		                                               quality_valid,
++		                                               mb_state,
++		                                               mb_tech,
++		                                               applet);
++
++		*out_indicator_icon = mobile_helper_get_quality_icon (quality_valid ?
++		                                                      quality : 0,
++		                                                      applet);
+ 
+ 		if ((mb_state != MB_STATE_UNKNOWN) && quality_valid) {
+ 			gboolean roaming = (mb_state == MB_STATE_ROAMING);
+@@ -613,8 +755,6 @@ mobile_helper_get_icon (NMDevice *device
+ 	default:
+ 		break;
+ 	}
+-
+-	return pixbuf;
+ }
+ 
+ /********************************************************************/
 Index: b/src/mobile-helpers.h
 ===================================================================
 --- a/src/mobile-helpers.h
 +++ b/src/mobile-helpers.h
-@@ -58,9 +58,20 @@ GdkPixbuf *mobile_helper_get_status_pixb
+@@ -62,10 +62,21 @@ GdkPixbuf *mobile_helper_get_status_pixb
                                              guint32 access_tech,
                                              NMApplet *applet);
  
@@ -2157,18 +2164,37 @@ Index: b/src/mobile-helpers.h
  
 +#ifdef ENABLE_INDICATOR
 +char *mobile_helper_get_connection_label (const char *connection_name,
-+					  const char *provider,
-+					  guint32 technology,
-+					  guint32 state);
++                                          const char *provider,
++                                          guint32 technology,
++                                          guint32 state);
 +#endif
 +
- #endif  /* APPLET_MOBILE_HELPERS_H */
+ /********************************************************************/
  
+ gboolean   mobile_helper_wizard (NMDeviceModemCapabilities capabilities,
+@@ -97,9 +108,17 @@ gboolean mobile_helper_get_secrets (NMDe
+ 
+ /********************************************************************/
+ 
++#ifndef ENABLE_INDICATOR
+ GdkPixbuf *mobile_helper_get_icon (NMDevice *device,
++#else
++void mobile_helper_get_icon (NMDevice *device,
++#endif
+                                    NMDeviceState state,
+                                    NMConnection *connection,
++#ifdef ENABLE_INDICATOR
++                                   GdkPixbuf **out_pixbuf,
++                                   char **out_indicator_icon,
++#endif
+                                    char **tip,
+                                    NMApplet *applet,
+                                    guint32 mb_state,
 Index: b/src/mb-menu-item.c
 ===================================================================
 --- a/src/mb-menu-item.c
 +++ b/src/mb-menu-item.c
-@@ -184,11 +184,14 @@ nm_mb_menu_item_new (const char *connect
+@@ -183,11 +183,14 @@ nm_mb_menu_item_new (const char *connect
  		gtk_label_set_text (GTK_LABEL (priv->desc), priv->desc_string);
  	}
  
@@ -2192,16 +2218,16 @@ Index: b/src/gconf-helpers/Makefile.am
  	$(GTK_CFLAGS) \
  	$(NMA_CFLAGS) \
 +	$(APPINDICATOR_CFLAGS) \
- 	$(GCONF_CFLAGS) \
- 	$(GNOME_KEYRING_CFLAGS) \
+ 	$(MIGRATION_CFLAGS) \
  	$(DISABLE_DEPRECATED)
-@@ -23,6 +24,7 @@ libgconf_helpers_la_CPPFLAGS = \
- libgconf_helpers_la_LIBADD = \
- 	$(GTK_LIBS) \
- 	$(NMA_LIBS) \
-+	$(APPINDICATOR_LIBS) \
- 	$(GCONF_LIBS) \
- 	$(GNOME_KEYRING_LIBS)
+ 
+@@ -34,6 +35,7 @@ libgconf_helpers_test_la_CPPFLAGS = \
+ 	-I$(top_srcdir)/src/utils \
+ 	$(GTK_CFLAGS) \
+ 	$(NMA_CFLAGS) \
++	$(APPINDICATOR_CFLAGS) \
+ 	$(MIGRATION_CFLAGS) \
+ 	$(DISABLE_DEPRECATED)
  
 Index: b/src/applet-device-wimax.c
 ===================================================================
@@ -2210,11 +2236,11 @@ Index: b/src/applet-device-wimax.c
 @@ -36,6 +36,7 @@
  #include "applet.h"
  #include "applet-device-wimax.h"
- #include "utils.h"
-+#include "mobile-helpers.h"
  #include "applet-dialogs.h"
++#include "mobile-helpers.h"
  #include "nma-marshal.h"
  #include "mb-menu-item.h"
+ #include "nm-ui-utils.h"
 @@ -141,9 +142,14 @@ new_nsp_menu_item (NMDeviceWimax *device
  {
  	GtkWidget *item;
@@ -2247,7 +2273,7 @@ Index: b/src/applet-device-wimax.c
  	gtk_widget_set_sensitive (GTK_WIDGET (item), TRUE);
  
  	info = g_slice_new0 (WimaxMenuItemInfo);
-@@ -305,7 +321,12 @@ wimax_add_menu_item (NMDevice *device,
+@@ -301,7 +317,12 @@ wimax_add_menu_item (NMDevice *device,
  static void
  nsp_quality_changed (NMWimaxNsp *nsp, GParamSpec *pspec, gpointer user_data)
  {
@@ -2261,7 +2287,7 @@ Index: b/src/applet-device-wimax.c
  }
  
  static NMWimaxNsp *
-@@ -367,8 +388,12 @@ active_nsp_changed_cb (NMDeviceWimax *de
+@@ -363,8 +384,12 @@ active_nsp_changed_cb (NMDeviceWimax *de
  	if (!s_wimax)
  		return;
  
@@ -2275,7 +2301,7 @@ Index: b/src/applet-device-wimax.c
  }
  
  static void
-@@ -384,6 +409,9 @@ nsp_removed_cb (NMDeviceWimax *device,
+@@ -380,6 +405,9 @@ nsp_removed_cb (NMDeviceWimax *device,
  	if (old == nsp) {
  		g_object_set_data (G_OBJECT (device), ACTIVE_NSP_TAG, NULL);
  		applet_schedule_update_icon (applet);
@@ -2285,7 +2311,7 @@ Index: b/src/applet-device-wimax.c
  	}
  }
  
-@@ -432,15 +460,16 @@ wimax_device_state_changed (NMDevice *de
+@@ -423,15 +451,16 @@ wimax_device_state_changed (NMDevice *de
  	}
  }
  
@@ -2304,7 +2330,7 @@ Index: b/src/applet-device-wimax.c
  	const char *id;
  	NMWimaxNsp *nsp;
  	guint32 quality = 0;
-@@ -474,7 +503,7 @@ wimax_get_icon (NMDevice *device,
+@@ -465,7 +494,7 @@ wimax_get_icon (NMDevice *device,
  		break;
  	case NM_DEVICE_STATE_ACTIVATED:
  		roaming = (nsp_type == NM_WIMAX_NSP_NETWORK_TYPE_ROAMING_PARTNER);
@@ -2313,7 +2339,7 @@ Index: b/src/applet-device-wimax.c
  		                                          TRUE,
  		                                          nsp_type_to_mb_state (nsp_type),
  		                                          MB_TECH_WIMAX,
-@@ -483,12 +512,11 @@ wimax_get_icon (NMDevice *device,
+@@ -474,12 +503,11 @@ wimax_get_icon (NMDevice *device,
  		                        id, quality,
  		                        roaming ? ", " : "",
  		                        roaming ? _("roaming") : "");
@@ -2327,3 +2353,30 @@ Index: b/src/applet-device-wimax.c
  }
  
  static gboolean
+Index: b/src/applet-device-broadband.c
+===================================================================
+--- a/src/applet-device-broadband.c
++++ b/src/applet-device-broadband.c
+@@ -620,10 +620,12 @@ broadband_act_to_mb_act (BroadbandDevice
+ 	return MB_TECH_UNKNOWN;
+ }
+ 
+-static GdkPixbuf *
++static void
+ get_icon (NMDevice *device,
+           NMDeviceState state,
+           NMConnection *connection,
++          GdkPixbuf **out_pixbuf,
++          char **out_indicator_icon,
+           char **tip,
+           NMApplet *applet)
+ {
+@@ -635,6 +637,8 @@ get_icon (NMDevice *device,
+ 	return mobile_helper_get_icon (device,
+ 	                               state,
+ 	                               connection,
++	                               out_pixbuf,
++	                               out_indicator_icon,
+ 	                               tip,
+ 	                               applet,
+ 	                               broadband_state_to_mb_state (info),

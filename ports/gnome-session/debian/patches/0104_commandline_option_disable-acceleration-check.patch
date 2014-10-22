@@ -1,0 +1,93 @@
+From 909cec94ed4ab8de87a588447f634777ad52dea5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Alberts=20Muktup=C4=81vels?= <alberts.muktupavels@gmail.com>
+Date: Tue, 3 Jun 2014 23:15:43 +0300
+Subject: [PATCH] Add new commandline option - disable-acceleration-check
+
+---
+ gnome-session/main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/gnome-session/main.c
++++ b/gnome-session/main.c
+@@ -58,6 +58,7 @@
+ static gboolean show_version = FALSE;
+ static gboolean debug = FALSE;
+ static gboolean please_fail = FALSE;
++static gboolean disable_acceleration_check = FALSE;
+ 
+ static DBusGProxy *bus_proxy = NULL;
+ 
+@@ -288,6 +289,7 @@
+                 { "version", 0, 0, G_OPTION_ARG_NONE, &show_version, N_("Version of this application"), NULL },
+                 /* Translators: the 'fail whale' is the black dialog we show when something goes seriously wrong */
+                 { "whale", 0, 0, G_OPTION_ARG_NONE, &please_fail, N_("Show the fail whale dialog for testing"), NULL },
++                { "disable-acceleration-check", 0, 'x', G_OPTION_ARG_NONE, &disable_acceleration_check, N_("Disable hardware acceleration check"), N_("DISABLE_ACCELERATION_CHECK") },
+                 { NULL, 0, 0, 0, NULL, NULL, NULL }
+         };
+ 
+@@ -296,8 +298,34 @@
+                 gsm_util_init_error (TRUE, "%s", error->message);
+         }
+ 
++
++        bindtextdomain (GETTEXT_PACKAGE, LOCALE_DIR);
++        bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
++        textdomain (GETTEXT_PACKAGE);
++
++        error = NULL;
++        gtk_init_with_args (&argc, &argv,
++                            (char *) _(" - the GNOME session manager"),
++                            entries, GETTEXT_PACKAGE,
++                            &error);
++        if (error != NULL) {
++                g_warning ("%s", error->message);
++                exit (1);
++        }
++
++        g_debug ("Forced fail whale state: %s", please_fail ? "on" : "off");
++        g_debug ("Acceleration check state: %s", disable_acceleration_check ? "off" : "on");
++
++        /* Disable GL check for flashback session */
++        if (!IS_STRING_EMPTY (opt_session_name) && ((strcmp (opt_session_name, "gnome-flashback") == 0) || (strcmp (opt_session_name, "gnome-fallback") == 0))) {
++                disable_acceleration_check = TRUE;
++                g_warning ("Disabling acceleration check for session %s", opt_session_name);
++        } else {
++                g_debug ("Not disabling acceleration check for session %s", opt_session_name);
++        }
++
+         /* Check GL, if it doesn't work out then force software fallback */
+-        if (!check_gl (&error)) {
++        if (!disable_acceleration_check && !check_gl (&error)) {
+                 gl_failed = TRUE;
+ 
+                 g_debug ("hardware acceleration check failed: %s",
+@@ -315,20 +343,6 @@
+                 }
+         }
+ 
+-        bindtextdomain (GETTEXT_PACKAGE, LOCALE_DIR);
+-        bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+-        textdomain (GETTEXT_PACKAGE);
+-
+-        error = NULL;
+-        gtk_init_with_args (&argc, &argv,
+-                            (char *) _(" - the GNOME session manager"),
+-                            entries, GETTEXT_PACKAGE,
+-                            &error);
+-        if (error != NULL) {
+-                g_warning ("%s", error->message);
+-                exit (1);
+-        }
+-
+         if (show_version) {
+                 g_print ("%s %s\n", argv [0], VERSION);
+                 exit (0);
+@@ -350,7 +364,7 @@
+         }
+ #endif
+ 
+-        if (gl_failed) {
++        if (!disable_acceleration_check && gl_failed) {
+                 gsm_fail_whale_dialog_we_failed (FALSE, TRUE, NULL);
+                 gtk_main ();
+                 exit (1);

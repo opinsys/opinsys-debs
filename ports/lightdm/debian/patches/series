@@ -1,8 +1,4 @@
 01_transition_ubuntu2d_ubuntu_desktop.patch
-02_disable_tests.patch
-03_launch_dbus.patch
-04_language_options.patch
-05_add_xserver_core_option.patch
-08_lp1059510.patch
-09_lp577919-fix-chromium-launch.patch
-opinsys-fix-session-child-race.patch
+04_language_handling.patch
+05_translate_guest_session_dialog.patch
+90_add_ignore_user_dmrc_configuration_option.patch

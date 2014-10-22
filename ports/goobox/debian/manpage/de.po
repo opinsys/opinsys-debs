@@ -1,79 +1,69 @@
 # Translation of goobox manpage templates to German
-# Copyright (C) Helge Kreutzmann <debian@helgefjell.de>, 2007, 2009.
+# Copyright (C) Helge Kreutzmann <debian@helgefjell.de>, 2007, 2009, 2014.
 # This file is distributed under the same license as the goobox package.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: goobox 2.1.1-4\n"
-"POT-Creation-Date: 2010-02-27 19:49+0100\n"
-"PO-Revision-Date: 2009-12-27 12:45+0100\n"
+"Project-Id-Version: goobox 3.2.1-6\n"
+"POT-Creation-Date: 2014-01-15 19:41+0000\n"
+"PO-Revision-Date: 2014-02-08 14:16+0100\n"
 "Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-# type: definition of entity &dhfirstname;
 #. type: definition of entity &dhfirstname;
 #, no-wrap
 msgid "<firstname>Dan</firstname>"
 msgstr "<firstname>Dan</firstname>"
 
-# type: definition of entity &dhsurname;
 #. type: definition of entity &dhsurname;
 #, no-wrap
 msgid "<surname>Korostelev</surname>"
 msgstr "<surname>Korostelev</surname>"
 
-# type: definition of entity &dhufirstname;
 #. type: definition of entity &dhufirstname;
 #, no-wrap
 msgid "<firstname>Helge</firstname>"
 msgstr "<firstname>Helge</firstname>"
 
-# type: definition of entity &dhusurname;
 #. type: definition of entity &dhusurname;
 #, no-wrap
 msgid "<surname>Kreutzmann</surname>"
 msgstr "<surname>Kreutzmann</surname>"
 
-# type: definition of entity &dhdate;
 #. type: definition of entity &dhdate;
 #, no-wrap
-msgid "<date>November 30, 2009</date>"
-msgstr "<date>30. November 2009</date>"
+msgid "<date>January 12, 2014</date>"
+msgstr "<date>12. Januar 2014</date>"
 
-# type: definition of entity &dhsection;
 #. type: definition of entity &dhsection;
 #, no-wrap
 msgid "<manvolnum>1</manvolnum>"
 msgstr "<manvolnum>1</manvolnum>"
 
-# type: definition of entity &dhemail;
 #. type: definition of entity &dhemail;
 #, no-wrap
 msgid "<email>dan@ats.energo.ru</email>"
 msgstr "<email>dan@ats.energo.ru</email>"
 
-# type: definition of entity &dhuemail;
 #. type: definition of entity &dhuemail;
 #, no-wrap
 msgid "<email>debian@helgefjell.de</email>"
 msgstr "<email>debian@helgefjell.de</email>"
 
-# type: definition of entity &dhusername;
 #. type: definition of entity &dhusername;
 #, no-wrap
 msgid "Dan Korostelev"
 msgstr "Dan Korostelev"
 
-# type: definition of entity &dhuusername;
 #. type: definition of entity &dhuusername;
 #, no-wrap
 msgid "Helge Kreutzmann"
 msgstr "Helge Kreutzmann"
 
-# type: definition of entity &dhucpackage;
 #. type: definition of entity &dhucpackage;
 #, no-wrap
 msgid "<refentrytitle>GOOBOX</refentrytitle>"
@@ -84,25 +74,21 @@ msgstr "<refentrytitle>GOOBOX</refentrytitle>"
 msgid "<command>goobox</command>"
 msgstr "<command>goobox</command>"
 
-# type: definition of entity &debian;
 #. type: definition of entity &debian;
 #, no-wrap
 msgid "<productname>Debian</productname>"
 msgstr "<productname>Debian</productname>"
 
-# type: definition of entity &gnu;
 #. type: definition of entity &gnu;
 #, no-wrap
 msgid "<acronym>GNU</acronym>"
 msgstr "<acronym>GNU</acronym>"
 
-# type: definition of entity &gpl;
 #. type: definition of entity &gpl;
 #, no-wrap
 msgid "&gnu; <acronym>GPL</acronym>"
 msgstr "&gnu; <acronym>GPL</acronym>"
 
-# type: <address></address>
 #. type: <address></address>
 #: debian/manpage/goobox.en.sgml:23
 #, no-wrap
@@ -115,26 +101,22 @@ msgstr ""
 "\t    &dhemail; und &dhuemail;\n"
 "\t"
 
-# type: <author></author>
 #. type: <author></author>
 #: debian/manpage/goobox.en.sgml:31
 msgid "&dhfirstname; &dhsurname;"
 msgstr "&dhfirstname; &dhsurname;"
 
-# type: <copyright><holder>
 #. type: <copyright><holder>
 #: debian/manpage/goobox.en.sgml:36
-msgid "<year>2004, 2007, 2009</year>"
-msgstr "<year>2004, 2007, 2009</year>"
+msgid "<year>2004, 2007, 2009, 2014</year>"
+msgstr "<year>2004, 2007, 2009, 2014</year>"
 
-# type: <holder></holder>
 #. type: <holder></holder>
 #: debian/manpage/goobox.en.sgml:36
 #, no-wrap
 msgid "&dhusername; and &dhuusername;"
 msgstr "&dhusername; und &dhuusername;"
 
-# type: <refentrytitle></refentrytitle>
 #. type: <refentrytitle></refentrytitle>
 #: debian/manpage/goobox.en.sgml:41
 #, no-wrap
@@ -149,14 +131,12 @@ msgstr ""
 "\t&dhsection;\n"
 "    "
 
-# type: <refpurpose></refpurpose>
 #. type: <refpurpose></refpurpose>
 #: debian/manpage/goobox.en.sgml:48
 #, no-wrap
 msgid "graphical CD player and ripper for GNOME"
 msgstr "graphischer CD-Spieler und Extrahierer für GNOME"
 
-# type: <cmdsynopsis sepchar=" "></cmdsynopsis>
 #. type: <cmdsynopsis sepchar=" "></cmdsynopsis>
 #: debian/manpage/goobox.en.sgml:53
 #, no-wrap
@@ -167,14 +147,12 @@ msgstr ""
 "<cmdsynopsis sepchar=\" \">\n"
 "&dhpackage; <arg rep=\"norepeat\" choice=\"opt\"><replaceable>OPTION</replaceable></arg><arg rep=\"norepeat\" choice=\"opt\"><replaceable>...</replaceable></arg>\n"
 
-# type: <title></title>
 #. type: <title></title>
 #: debian/manpage/goobox.en.sgml:56
 #, no-wrap
 msgid "DESCRIPTION"
 msgstr "BESCHREIBUNG"
 
-# type: <para></para>
 #. type: <para></para>
 #: debian/manpage/goobox.en.sgml:58
 msgid ""
@@ -187,7 +165,6 @@ msgstr ""
 "abspielen, ihren Inhalt extrahieren (d.h. sie in Dateien speichern) und "
 "Albumhüllen von ihnen anzeigen."
 
-# type: <para></para>
 #. type: <para></para>
 #: debian/manpage/goobox.en.sgml:61
 msgid ""
@@ -197,330 +174,258 @@ msgstr ""
 "Es verwendet das GStreamer-Rahmenwerk zum Extrahieren und Abspielen der CD "
 "und Musicbrainz für die Indexierung der CD."
 
-# type: <title></title>
 #. type: <title></title>
 #: debian/manpage/goobox.en.sgml:65
 #, no-wrap
 msgid "OPTIONS"
 msgstr "OPTIONEN"
 
-# type: <para></para>
 #. type: <para></para>
 #: debian/manpage/goobox.en.sgml:66
 msgid "Application Options:"
 msgstr "Anwendungsoptionen:"
 
-# type: <term></term>
 #. type: <term></term>
 #: debian/manpage/goobox.en.sgml:70
 #, no-wrap
 msgid "<option>--eject</option>"
 msgstr "<option>--eject</option>"
 
-# type: <para></para>
 #. type: <para></para>
 #: debian/manpage/goobox.en.sgml:72
 msgid "Eject the CD"
 msgstr "Werfe die CD aus"
 
-# type: <term></term>
 #. type: <term></term>
 #: debian/manpage/goobox.en.sgml:77
-#, no-wrap
-msgid "<option>--hide-show</option>"
-msgstr "<option>--hide-show</option>"
-
-# type: <para></para>
-#. type: <para></para>
-#: debian/manpage/goobox.en.sgml:79
-msgid "Hide/Show the main window."
-msgstr "Verstecke/Zeige das Hauptfenster"
-
-# type: <term></term>
-#. type: <term></term>
-#: debian/manpage/goobox.en.sgml:84
 #, no-wrap
 msgid "<option>--next</option>"
 msgstr "<option>--next</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:86
+#: debian/manpage/goobox.en.sgml:79
 msgid "Play the next track."
 msgstr "Spiele den nächsten Titel"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:91
+#: debian/manpage/goobox.en.sgml:84
 #, no-wrap
 msgid "<option>--play</option>"
 msgstr "<option>--play</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:93
+#: debian/manpage/goobox.en.sgml:86
 msgid "Play the CD on startup."
 msgstr "Spiele die CD beim Starten"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:98
-#, no-wrap
-msgid "<option>--play-pause</option>"
-msgstr "<option>--play-pause</option>"
-
-# type: <para></para>
-#. type: <para></para>
-#: debian/manpage/goobox.en.sgml:100
-msgid "Play/Pause"
-msgstr "Spielen/Pausieren"
-
-# type: <term></term>
-#. type: <term></term>
-#: debian/manpage/goobox.en.sgml:105
+#: debian/manpage/goobox.en.sgml:91
 #, no-wrap
 msgid "<option>--previous</option>"
 msgstr "<option>--previous</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:107
+#: debian/manpage/goobox.en.sgml:93
 msgid "Play the previous track."
 msgstr "Spiele den vorhergehenden Titel"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:112
+#: debian/manpage/goobox.en.sgml:98
 #, no-wrap
 msgid "<option>--quit</option>"
 msgstr "<option>--quit</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:114
+#: debian/manpage/goobox.en.sgml:100
 msgid "Quit the application."
 msgstr "Anwendung beenden"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:119
+#: debian/manpage/goobox.en.sgml:105
 #, no-wrap
 msgid "<option>--stop</option>"
 msgstr "<option>--stop</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:121
+#: debian/manpage/goobox.en.sgml:107
 msgid "Stop playing"
 msgstr "Abspielen beenden"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:126
-#, no-wrap
-msgid "<option>--volume-down</option>"
-msgstr "<option>--volume-down</option>"
-
-# type: <para></para>
-#. type: <para></para>
-#: debian/manpage/goobox.en.sgml:128
-msgid "Volume down"
-msgstr "Lautstärke runter"
-
-# type: <term></term>
-#. type: <term></term>
-#: debian/manpage/goobox.en.sgml:133
-#, no-wrap
-msgid "<option>--volume-up</option>"
-msgstr "<option>--volume-up</option>"
-
-# type: <para></para>
-#. type: <para></para>
-#: debian/manpage/goobox.en.sgml:135
-msgid "Volume up"
-msgstr "Lautstärke hoch"
-
-# type: <term></term>
-#. type: <term></term>
-#: debian/manpage/goobox.en.sgml:140
+#: debian/manpage/goobox.en.sgml:112
 #, no-wrap
 msgid "<option>-d</option> <option>--device=DEVICE_PATH</option>"
 msgstr "<option>-d</option> <option>--device=GERÄTE_PFAD</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:142
+#: debian/manpage/goobox.en.sgml:114
 msgid "CD device to be used."
 msgstr "Zu verwendendes CD-Gerät"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:147
+#: debian/manpage/goobox.en.sgml:119
 #, no-wrap
 msgid "<option>--display=DISPLAY</option>"
 msgstr "<option>--display=ANZEIGE</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:149
+#: debian/manpage/goobox.en.sgml:121
 msgid "X display to use."
 msgstr "Zu verwendende X-Anzeige (display)"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:154
+#: debian/manpage/goobox.en.sgml:126
 #, no-wrap
 msgid "<option>-v</option> <option>--version</option>"
 msgstr "<option>-v</option> <option>--version</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:156
+#: debian/manpage/goobox.en.sgml:128
 msgid "Show version of program."
 msgstr "Zeige Versionsnummer des Programms"
 
-# type: <para></para>
+#. type: <term></term>
+#: debian/manpage/goobox.en.sgml:133
+#, no-wrap
+msgid "--toggle-play"
+msgstr "--toggle-play"
+
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:163
+#: debian/manpage/goobox.en.sgml:135
+msgid "Toggle play"
+msgstr "Abspielen umschalten"
+
+#. type: <term></term>
+#: debian/manpage/goobox.en.sgml:141
+#, no-wrap
+msgid "--toggle-visibility"
+msgstr "--toggle-visibility"
+
+#. type: <para></para>
+#: debian/manpage/goobox.en.sgml:143
+msgid "Toggle the main window visibility"
+msgstr "Die Sichtbarkeit des Hauptfensters umschalten"
+
+#. type: <para></para>
+#: debian/manpage/goobox.en.sgml:151
 msgid "Help Options:"
 msgstr "Hilfe-Optionen:"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:167
+#: debian/manpage/goobox.en.sgml:155
 #, no-wrap
 msgid "<option>-h</option> <option>--help</option>"
 msgstr "<option>-h</option> <option>--help</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:169
+#: debian/manpage/goobox.en.sgml:157
 msgid "Show help options."
 msgstr "Zeige die Hilfe-Optionen"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:174
+#: debian/manpage/goobox.en.sgml:162
 #, no-wrap
 msgid "<option>--help-all</option>"
 msgstr "<option>--help-all</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:176
+#: debian/manpage/goobox.en.sgml:164
 msgid "Show all help options."
 msgstr "Zeige alle Hilfe-Optionen"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:181
+#: debian/manpage/goobox.en.sgml:169
 #, no-wrap
 msgid "<option>--help-gst</option>"
 msgstr "<option>--help-gst</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:183
+#: debian/manpage/goobox.en.sgml:171
 msgid "Show GStreamer options."
 msgstr "Zeige GStreamer-Optionen"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:188
+#: debian/manpage/goobox.en.sgml:176
 #, no-wrap
 msgid "<option>--help-gtk</option>"
 msgstr "<option>--help-gtk</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:190
+#: debian/manpage/goobox.en.sgml:178
 msgid "Show GTK+ options."
 msgstr "Zeige GTK+-Optionen"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:195
+#: debian/manpage/goobox.en.sgml:183
 #, no-wrap
 msgid "<option>--help-sm-client</option>"
 msgstr "<option>--help-sm-client</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:197
+#: debian/manpage/goobox.en.sgml:185
 msgid "Show session management options."
 msgstr "Zeige die Sitzungsverwaltungs-Optionen"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:203
+#: debian/manpage/goobox.en.sgml:191
 msgid "GStreamer Options:"
 msgstr "GStreamer-Optionen:"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:206
+#: debian/manpage/goobox.en.sgml:194
 #, no-wrap
 msgid "<option>--gst-version</option>"
 msgstr "<option>--gst-version</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:208
+#: debian/manpage/goobox.en.sgml:196
 msgid "Show the GStreamer version."
 msgstr "Zeige die GStreamer-Version"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:213
+#: debian/manpage/goobox.en.sgml:201
 #, no-wrap
 msgid "<option>--gst-fatal-warnings</option>"
 msgstr "<option>--gst-fatal-warnings</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:215 debian/manpage/goobox.en.sgml:339
+#: debian/manpage/goobox.en.sgml:203 debian/manpage/goobox.en.sgml:349
 msgid "Make all warnings fatal."
 msgstr "Stelle alle Warnungen auf fatal um"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:220
+#: debian/manpage/goobox.en.sgml:208
 #, no-wrap
 msgid "<option>--gst-debug-help</option>"
 msgstr "<option>--gst-debug-help</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:222
+#: debian/manpage/goobox.en.sgml:210
 msgid "Show available debug categories and exit."
 msgstr "Zeige verfügbare Debug-Kategorien und Beende"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:227
+#: debian/manpage/goobox.en.sgml:215
 #, no-wrap
 msgid "<option>--gst-debug-level=LEVEL</option>"
 msgstr "<option>--gst-debug-level=STUFE</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:229
+#: debian/manpage/goobox.en.sgml:217
 msgid ""
 "Default debug level from 1 (only error) to 5 (anything) or 0 for no output."
 msgstr ""
 "Standard-Debug-Stufe von 1 (nur Fehler) bis 4 (alles) oder 0 für keine "
 "Ausgabe"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:234
+#: debian/manpage/goobox.en.sgml:222
 #, no-wrap
 msgid "<option>--gst-debug=LIST</option>"
 msgstr "<option>--gst-debug=AUFZÄHLUNG</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:236
+#: debian/manpage/goobox.en.sgml:224
 msgid ""
 "Comma-separated list of category_name:level pairs to set specific levels for "
 "the individual categories. Example: GST_AUTOPLUG:5,GST_ELEMENT_*:3."
@@ -529,68 +434,73 @@ msgstr ""
 "speziellen Stufen für die einzelnen Kategorien einzustellen. Beispiel: "
 "GST_AUTOPLUG:5,GST_ELEMENT_*:3."
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:241
+#: debian/manpage/goobox.en.sgml:229
 #, no-wrap
 msgid "<option>--gst-debug-no-color</option>"
 msgstr "<option>--gst-debug-no-color</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:243
+#: debian/manpage/goobox.en.sgml:231
 msgid "Disable colored debugging output."
 msgstr "Deaktivere gefärbte Debugging-Ausgabe"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:248
+#: debian/manpage/goobox.en.sgml:236
+#, no-wrap
+msgid "<option>--gst-debug-color-mode</option>"
+msgstr "<option>--gst-debug-color-mode</option>"
+
+#. type: <para></para>
+#: debian/manpage/goobox.en.sgml:238
+msgid ""
+"Changes coloring mode of the debug log. Possible modes: off, on, disable, "
+"auto, unix"
+msgstr ""
+"Ändert Einfärbemodus des Debug-Protokolls. Mögliche Werte: off, on, disable, "
+"auto, unix"
+
+#. type: <term></term>
+#: debian/manpage/goobox.en.sgml:243
 #, no-wrap
 msgid "<option>--gst-debug-disable</option>"
 msgstr "<option>--gst-debug-disable</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:250
+#: debian/manpage/goobox.en.sgml:245
 msgid "Disable debugging."
 msgstr "Deaktiviere Debugging"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:255
+#: debian/manpage/goobox.en.sgml:250
 #, no-wrap
 msgid "<option>--gst-plugin-spew</option>"
 msgstr "<option>--gst-plugin-spew</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:257
+#: debian/manpage/goobox.en.sgml:252
 msgid "Enable verbose plugin loading diagnostics."
 msgstr "Aktiviere ausführliche Diagnose beim Laden von Erweiterungen"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:262
+#: debian/manpage/goobox.en.sgml:257
 #, no-wrap
 msgid "<option>--gst-plugin-path=PATHS</option>"
 msgstr "<option>--gst-plugin-path=PFADE</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:264
+#: debian/manpage/goobox.en.sgml:259
 msgid "Colon-separated paths containing plugins."
 msgstr "Doppelpunkt-separierte Liste von Pfaden, die Erweiterungen enthalten"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:269
+#: debian/manpage/goobox.en.sgml:264
 #, no-wrap
 msgid "<option>--gst-plugin-load=PLUGINS</option>"
 msgstr "<option>--gst-plugin-load=ERWEITERUNGEN</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:271
+#: debian/manpage/goobox.en.sgml:266
 msgid ""
 "Comma-separated list of plugins to preload in addition to the list stored in "
 "environment variable GST_PLUGIN_PATH."
@@ -599,181 +509,176 @@ msgstr ""
 "Erweiterungen vorab geladen werden sollen, die in der Umgebungsvariablen "
 "GST_PLUGIN_PATH stehen."
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:276
+#: debian/manpage/goobox.en.sgml:271
 #, no-wrap
 msgid "<option>--gst-disable-segtrap</option>"
 msgstr "<option>--gst-disable-segtrap</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:278
+#: debian/manpage/goobox.en.sgml:273
 msgid "Disable trapping of segmentation faults during plugin loading."
 msgstr ""
 "Deaktivere das Abfangen von Segmentfehlern (»segmentation faults«) während "
 "des Ladens von Erweiterungen."
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:283
+#: debian/manpage/goobox.en.sgml:278
 #, no-wrap
 msgid "<option>--gst-disable-registry-update</option>"
 msgstr "<option>--gst-disable-registry-update</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:285
+#: debian/manpage/goobox.en.sgml:280
 msgid "Disable updating the registry."
 msgstr "Deaktiviere die Aktualisierung der Registry."
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:290
+#: debian/manpage/goobox.en.sgml:285
 #, no-wrap
 msgid "<option>--gst-disable-registry-fork</option>"
 msgstr "<option>--gst-disable-registry-fork</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:292
+#: debian/manpage/goobox.en.sgml:287
 msgid "Disable the use of fork() while scanning the registry."
 msgstr "Deaktiviere die Verwendung von fork() beim Durchsuchen der Registry."
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:298
+#: debian/manpage/goobox.en.sgml:293
 msgid "GTK+ Options:"
 msgstr "GTK+-Optionen:"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:302
+#: debian/manpage/goobox.en.sgml:297
 #, no-wrap
 msgid "<option>--class=CLASS</option>"
 msgstr "<option>--class=KLASSE</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:304
+#: debian/manpage/goobox.en.sgml:299
 msgid "Program class as used by the window manager."
 msgstr ""
 "Programmklasse, wie sie vom Windowmanager (Fensterverwalter) verwendet wird"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:309
+#: debian/manpage/goobox.en.sgml:304
 #, no-wrap
 msgid "<option>--name=NAME</option>"
 msgstr "<option>--name=NAME</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:311
+#: debian/manpage/goobox.en.sgml:306
 msgid "Program name as used by the window manager."
 msgstr "Programmname, wie er vom Windowmanager verwendet wird"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:316
-#, no-wrap
-msgid "<option>--screen=SCREEN</option>"
-msgstr "<option>--screen=BILDSCHIRM</option>"
-
-# type: <para></para>
-#. type: <para></para>
-#: debian/manpage/goobox.en.sgml:318
-msgid "X screen to use."
-msgstr "Zu verwendender X-Bildschirm"
-
-# type: <term></term>
-#. type: <term></term>
-#: debian/manpage/goobox.en.sgml:323
-#, no-wrap
-msgid "<option>--sync</option>"
-msgstr "<option>--sync</option>"
-
-# type: <para></para>
-#. type: <para></para>
-#: debian/manpage/goobox.en.sgml:325
-msgid "Make X calls synchronous."
-msgstr "X-Aufrufe synchron ausführen"
-
-# type: <term></term>
-#. type: <term></term>
-#: debian/manpage/goobox.en.sgml:330
+#: debian/manpage/goobox.en.sgml:311
 #, no-wrap
 msgid "<option>--gtk-module=MODULES</option>"
 msgstr "<option>--gtk-module=MODULE</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:332
+#: debian/manpage/goobox.en.sgml:313
 msgid "Load additional GTK+ modules."
 msgstr "Lade zusätzliche GTK+-Module"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:337
+#: debian/manpage/goobox.en.sgml:318
+#, no-wrap
+msgid "<option>--gdk-debug=FLAGS</option>"
+msgstr "<option>--gst-debug=SCHALTER</option>"
+
+#. type: <para></para>
+#: debian/manpage/goobox.en.sgml:320
+msgid "GDK debugging flags to set"
+msgstr "Zu übergebende GDK-Debugging-Schalter"
+
+#. type: <term></term>
+#: debian/manpage/goobox.en.sgml:325
+#, no-wrap
+msgid "<option>--gdk-no-debug=FLAGS</option>"
+msgstr "<option>--gdk-no-debug=SCHALTER</option>"
+
+#. type: <para></para>
+#: debian/manpage/goobox.en.sgml:327
+msgid "GDK debugging flags to unset"
+msgstr "Nicht zu übergebene GDK-Debugging-Schalter"
+
+#. type: <term></term>
+#: debian/manpage/goobox.en.sgml:332
+#, no-wrap
+msgid "<option>--gtk-debug=FLAGS</option>"
+msgstr "<option>--gst-debug=SCHALTER</option>"
+
+#. type: <para></para>
+#: debian/manpage/goobox.en.sgml:334
+msgid "GTK+ debugging flags to set"
+msgstr "Zu übergebene GTK+-Debugging-Schalter"
+
+#. type: <term></term>
+#: debian/manpage/goobox.en.sgml:339
+#, no-wrap
+msgid "<option>--gtk-no-debug=FLAGS</option>"
+msgstr "<option>--gtk-no-debug=SCHALTER</option>"
+
+#. type: <para></para>
+#: debian/manpage/goobox.en.sgml:341
+msgid "GTK+ debugging flags to unset"
+msgstr "Nicht zu übergebene GTK+-Debugging-Schalter"
+
+#. type: <term></term>
+#: debian/manpage/goobox.en.sgml:347
 #, no-wrap
 msgid "<option>--g-fatal-warnings</option>"
 msgstr "<option>--g-fatal-warnings</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:346
+#: debian/manpage/goobox.en.sgml:356
 msgid "Session management Options:"
 msgstr "Sitzungs-Verwaltungs-(Session Management-)Optionen:"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:350
+#: debian/manpage/goobox.en.sgml:360
 #, no-wrap
 msgid "<option>--sm-client-id=ID</option>"
 msgstr "<option>--sm-client-id=ID</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:352
+#: debian/manpage/goobox.en.sgml:362
 msgid "Specify session management ID."
 msgstr "Gebe Sitzungsmanagement-ID an"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:357
+#: debian/manpage/goobox.en.sgml:367
 #, no-wrap
 msgid "<option>--sm-client-state-file=FILE</option>"
 msgstr "<option>--sm-client-state-file=DATEI</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:359
+#: debian/manpage/goobox.en.sgml:369
 msgid "Specify file containing saved configuration."
 msgstr "Geben die Datei mit der gespeicherten Konfiguration an"
 
-# type: <term></term>
 #. type: <term></term>
-#: debian/manpage/goobox.en.sgml:364
+#: debian/manpage/goobox.en.sgml:374
 #, no-wrap
 msgid "<option>--sm-disable</option>"
 msgstr "<option>--sm-disable</option>"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:366
+#: debian/manpage/goobox.en.sgml:376
 msgid "Disable connection to session manager."
 msgstr "Deaktiviere die Verbindung zum Sitzungsmanager"
 
-# type: <title></title>
 #. type: <title></title>
-#: debian/manpage/goobox.en.sgml:374
+#: debian/manpage/goobox.en.sgml:384
 #, no-wrap
 msgid "SEE ALSO"
 msgstr "SIEHE AUCH"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:376
+#: debian/manpage/goobox.en.sgml:386
 msgid ""
 "<application>gnome-cd</application>(1), <application>sound-juicer</"
 "application>(1), <application>grip</application>(1)"
@@ -781,16 +686,14 @@ msgstr ""
 "<application>gnome-cd</application>(1), <application>sound-juicer</"
 "application>(1), <application>grip</application>(1)"
 
-# type: <title></title>
 #. type: <title></title>
-#: debian/manpage/goobox.en.sgml:379
+#: debian/manpage/goobox.en.sgml:389
 #, no-wrap
 msgid "AUTHOR"
 msgstr "AUTOR"
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:386
+#: debian/manpage/goobox.en.sgml:396
 msgid ""
 "This manual page was written by &dhusername; &dhemail; for the &debian; "
 "system (but may be used by others). It was later updated by &dhuusername; "
@@ -805,15 +708,65 @@ msgstr ""
 "Version 2 oder einer neueren Version wird das Recht gewährt, dieses Dokument "
 "zu kopieren, zu verteilen und/oder zu verändern."
 
-# type: <para></para>
 #. type: <para></para>
-#: debian/manpage/goobox.en.sgml:390
+#: debian/manpage/goobox.en.sgml:400
 msgid ""
 "On &debian; systems, the complete text of the GNU General Public License can "
 "be found in /usr/share/common-licenses/GPL."
 msgstr ""
 "Auf &debian;-Systemen kann der komplette Text der GNU General Public License "
 "in /usr/share/common-licenses/GPL gefunden werden."
+
+#~ msgid "Hide/Show the main window."
+#~ msgstr "Verstecke/Zeige das Hauptfenster"
+
+#~ msgid "Play/Pause"
+#~ msgstr "Spielen/Pausieren"
+
+#~ msgid "Volume down"
+#~ msgstr "Lautstärke runter"
+
+#~ msgid "Volume up"
+#~ msgstr "Lautstärke hoch"
+
+#~ msgid "FIXME"
+#~ msgstr "FIXME"
+
+#~ msgid "X screen to use."
+#~ msgstr "Zu verwendender X-Bildschirm"
+
+#~ msgid "Make X calls synchronous."
+#~ msgstr "X-Aufrufe synchron ausführen"
+
+#~ msgid "<option>--gdk-debug=OPTIONES</option>"
+#~ msgstr "<option>--gdk-debug=OPTIONEN</option>"
+
+#~ msgid "<option>--gtk-debug=OPTIONS</option>"
+#~ msgstr "<option>--gtk-debug=OPTIONEN</option>"
+
+# type: <term></term>
+#~ msgid "<option>--hide-show</option>"
+#~ msgstr "<option>--hide-show</option>"
+
+# type: <term></term>
+#~ msgid "<option>--play-pause</option>"
+#~ msgstr "<option>--play-pause</option>"
+
+# type: <term></term>
+#~ msgid "<option>--volume-down</option>"
+#~ msgstr "<option>--volume-down</option>"
+
+# type: <term></term>
+#~ msgid "<option>--volume-up</option>"
+#~ msgstr "<option>--volume-up</option>"
+
+# type: <term></term>
+#~ msgid "<option>--screen=SCREEN</option>"
+#~ msgstr "<option>--screen=BILDSCHIRM</option>"
+
+# type: <term></term>
+#~ msgid "<option>--sync</option>"
+#~ msgstr "<option>--sync</option>"
 
 # type: definition of entity &dhpackage;
 #~ msgid "goobox"

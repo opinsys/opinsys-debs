@@ -1,39 +1,22 @@
 #!/usr/bin/make -f
 
-DEB_SOURCE := $(shell dpkg-parsechangelog | grep Source: | sed -e 's/Source: //')
-DEB_VERSION := $(shell dpkg-parsechangelog | grep Version: | sed -e 's/Version: //')
-DEB_UPSTREAM_VERSION := $(shell echo $(DEB_VERSION) | sed -e 's/-[^-]*$$//')
-DEB_MAJOR_VERSION := $(shell echo $(DEB_UPSTREAM_VERSION) | sed -e 's/git.*//')
+DPKG_EXPORT_BUILDFLAGS = 1
+include /usr/share/dpkg/buildflags.mk
 
-GIT_URL := git://git.gnome.org/network-manager-applet
-GIT_BRANCH := "master"
-GIT_BRANCH_NAME := network-manager-applet
-
-ifneq (,$(LOCAL_BRANCH))
-LOCAL_REAL_BRANCH = $(realpath $(LOCAL_BRANCH))
-endif
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,-z,defs -Wl,--as-needed
 
 %:
-	dh $@ --with autoreconf,translations
-
-export LDFLAGS := $(shell dpkg-buildflags --get LDFLAGS) -Wl,-z,defs -Wl,--as-needed
-
-override_dh_autoreconf:
-	intltoolize -f -c
-	dh_autoreconf
+	dh $@ --with autoreconf,translations,gir
 
 override_dh_auto_configure:
 	dh_auto_configure -- \
 		--libexecdir=/usr/lib/NetworkManager \
-		--enable-more-warnings=no \
-		--enable-indicator
-
-override_dh_autoreconf_clean:
-	dh_autoreconf_clean
-	rm -f po/*.gmo
-	rm -f intltool-*.in
-	rm -f m4/intltool.m4
-	rm -f po/Makefile.in.in
+		--disable-more-warnings \
+		--enable-migration \
+		--enable-introspection \
+		--with-modem-manager-1=yes \
+		--with-gtkver=3 \
+		--enable-indicator \
 
 override_dh_auto_clean:
 	dh_auto_clean
@@ -45,13 +28,9 @@ override_dh_auto_build:
 	cp -rf $(CURDIR)/debian/icons/22 icons/
 	docbook-to-man debian/nm-applet.sgml > debian/nm-applet.1
 
-override_dh_strip:
-	dh_strip --dbg-package=network-manager-gnome-dbg
-
 override_dh_install:
-	dh_install
-	find debian/network-manager-gnome/ -name \*.la -o -name \*.a | xargs rm -f
-	rm -rf debian/network-manager-gnome/usr/include/
+	find debian/tmp/ -name \*.la -delete -o -name \*.a -delete
+	dh_install --fail-missing
 	# workaround for icon-changes
 	# natty fallback icons
 	cp -f debian/icons/22/nm-device-wired-secure.png \
@@ -87,57 +66,13 @@ override_dh_install:
 	ln -snf nm-signal-100-secure.png \
 		debian/network-manager-gnome/usr/share/icons/hicolor/22x22/apps/gsm-3g-full-secure.png
 
+override_dh_builddeb:
+	dh_builddeb -- -Zxz
+
 override_dh_auto_test:
 
-
-GET_SOURCE = \
-	set -e; \
-	tmpdir=`mktemp -d -t`; \
-	cd $$tmpdir; \
-		echo "cloning upstream repository ..."; \
-		git clone -b $(GIT_BRANCH) $(if $(LOCAL_BRANCH),$(call LOCAL_REAL_BRANCH)/$(GIT_BRANCH_NAME),$(GIT_URL)) $(GIT_BRANCH_NAME); \
-		echo "getting specific upstream revision/tag: $(1)"; \
-		cd `ls | head -n 1`; git checkout -b orig $(1); \
-		commit_id=`git log -n1 --abbrev-commit | grep '^commit ' | sed -e 's/commit //' | sed -e 's/\.\.\.$$//'`; \
-		raw=`date --utc --date="$$(git log --pretty=fuller -n1 --date=rfc | grep CommitDate: | sed -e 's/CommitDate:[^0-9]*//')" "+%Y%m%d%H%M"`; \
-		if echo $(1) | grep -q -c "orig" || echo $(DEB_VERSION) | grep -q -c "git"; \
-		then \
-			upstream_version=$(DEB_MAJOR_VERSION)git$$raw.$$commit_id; \
-		else \
-			upstream_version=$(DEB_UPSTREAM_VERSION); \
-		fi; \
-		cd ..; tar --exclude=.git -czf $(CURDIR)/$(DEB_SOURCE)_$$upstream_version.orig.tar.gz `ls | head -n 1`; \
-		cd $(CURDIR); rm -rf $$tmpdir; 
-
-get-current-source:: $(if $(LOCAL_BRANCH),update-local-branch)
-	set -e; if echo $(DEB_VERSION) | grep -q -c "git"; \
-	then \
-		git_version=`echo $(DEB_VERSION) | sed -e 's/^.*git\.*\([0-9t]*\)\.\(.*\)-.*$$/\2/g'`; \
-	elif echo $(DEB_VERSION) | grep -q -c "~rc"; \
-	then \
-		git_version=`echo $(DEB_VERSION) | sed -e 's/^\([0-9\.]*\)\(~rc\)\([0-9]\)-.*$$/\1-rc\3/'`; \
-	else \
-		git_version=$(DEB_UPSTREAM_VERSION); \
-	fi; \
-	$(call GET_SOURCE, $$git_version, "current")
-
-SRC_VER := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\([0-9]\.[0-9]\).*-.*/\3/p')
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+.PHONY: get-orig-source
 get-orig-source:
-	wget http://download.gnome.org/sources/network-manager-applet/$(SRC_VER)/network-manager-applet-$(SRC_VERSION).tar.xz -O ../network-manager-applet_$(SRC_VERSION).orig.tar.xz
+	uscan --download-current-version
 	tar -J -x -f ../network-manager-applet_$(SRC_VERSION).orig.tar.xz --strip-components=1 -C .
-
-update-local-branch::
-	@echo "updating local branch ($(LOCAL_BRANCH))"
-	@set -e; if ! test -d $(LOCAL_BRANCH); then mkdir -p $(LOCAL_BRANCH); fi
-	@set -e; if ! test -d $(LOCAL_BRANCH)/$(GIT_BRANCH_NAME); then git clone $(GIT_URL) $(LOCAL_BRANCH)/$(GIT_BRANCH_NAME); fi
-	@set -e; cd $(LOCAL_BRANCH)/$(GIT_BRANCH_NAME); if ! `git branch | grep -q -c "$(GIT_BRANCH)"`; then git branch $(GIT_BRANCH) remotes/origin/$(GIT_BRANCH); fi
-	@set -e; cd $(LOCAL_BRANCH)/$(GIT_BRANCH_NAME); git checkout $(GIT_BRANCH); git pull -f
-	@echo "updated local branch ($(LOCAL_BRANCH))"
-
-get-snapshot-info:: $(if $(LOCAL_BRANCH),update-local-branch)
-	@set -e; \
-	git_version=`echo $(DEB_VERSION) | sed -e 's/^.*git\.*\([0-9t]*\)\.\(.*\)-.*$$/\2/g'`; \
-	cd $(LOCAL_BRANCH)/$(GIT_BRANCH_NAME); \
-	raw=`date --utc --date="$$(git log --pretty=fuller -n1 --date=rfc $$git_version | grep CommitDate: | sed -e 's/CommitDate:[^0-9]*//')" "+%Y-%m-%d %H:%M:%S (GMT)"`; \
-	git log -n1 $$git_version --format="%n%s%n%n  * upstream snapshot $$raw%n    + %H%n";

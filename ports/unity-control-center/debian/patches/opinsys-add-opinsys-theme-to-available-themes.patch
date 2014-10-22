@@ -1,0 +1,15 @@
+Index: unity-control-center/panels/appearance/cc-appearance-panel.c
+===================================================================
+--- unity-control-center.orig/panels/appearance/cc-appearance-panel.c	2014-04-10 17:26:50.000000000 +0300
++++ unity-control-center/panels/appearance/cc-appearance-panel.c	2014-06-18 12:55:22.933724225 +0300
+@@ -1253,8 +1253,8 @@
+   g_strfreev(uris);
+ }
+ 
+-static gchar *themes_id[] = { "Adwaita", "Ambiance", "Radiance", "HighContrast" };
+-static gchar *themes_name[] = { "Adwaita", "Ambiance", "Radiance", "High Contrast" };
++static gchar *themes_id[] = { "Radiance-opinsys", "Adwaita", "Ambiance", "Radiance", "HighContrast" };
++static gchar *themes_name[] = { "Radiance (Opinsys)", "Adwaita", "Ambiance", "Radiance", "High Contrast" };
+ 
+ static gboolean
+ get_theme_data (const gchar *theme_name,

@@ -1,0 +1,260 @@
+Index: unity-control-center/panels/display/display-capplet.ui
+===================================================================
+--- unity-control-center.orig/panels/display/display-capplet.ui	2014-09-11 10:24:12.780309148 +0300
++++ unity-control-center/panels/display/display-capplet.ui	2014-09-11 10:24:48.188476666 +0300
+@@ -1,4 +1,5 @@
+-<?xml version="1.0"?>
++<?xml version="1.0" encoding="UTF-8"?>
++<!-- Generated with glade 3.16.1 -->
+ <interface>
+   <requires lib="gtk+" version="3.0"/>
+   <object class="GtkListStore" id="available_launcher_placement_store">
+@@ -17,7 +18,6 @@
+       <column type="gchararray"/>
+     </columns>
+   </object>
+-  <!-- interface-naming-policy toplevel-contextual -->
+   <object class="GtkWindow" id="window1">
+     <property name="can_focus">False</property>
+     <child>
+@@ -49,8 +49,8 @@
+               <object class="GtkVBox" id="vbox1">
+                 <property name="visible">True</property>
+                 <property name="can_focus">False</property>
+-                <property name="spacing">12</property>
+                 <property name="halign">center</property>
++                <property name="spacing">12</property>
+                 <child>
+                   <object class="GtkHBox" id="mirror_hbox">
+                     <property name="visible">True</property>
+@@ -59,6 +59,8 @@
+                     <child>
+                       <object class="GtkCheckButton" id="clone_checkbox">
+                         <property name="visible">True</property>
++                        <property name="can_focus">False</property>
++                        <property name="receives_default">False</property>
+                         <property name="xalign">0.5</property>
+                         <property name="draw_indicator">True</property>
+                         <child>
+@@ -70,22 +72,30 @@
+                               <object class="GtkLabel" id="clone_checkbox_label">
+                                 <property name="visible">True</property>
+                                 <property name="can_focus">True</property>
+-                                <property name="receives_default">False</property>
+-                                <property name="use_underline">True</property>
+                                 <property name="label" translatable="yes" comments="Note that mirror is a verb in this string">_Mirror displays</property>
++                                <property name="use_underline">True</property>
+                               </object>
++                              <packing>
++                                <property name="expand">True</property>
++                                <property name="fill">True</property>
++                                <property name="position">0</property>
++                              </packing>
+                             </child>
+                             <child>
+-                              <!-- This is a workaround to not re-translate the warning, to be fixed later. -->
+                               <object class="GtkLabel" id="clone_res_warning_parentesis_open">
+-                                <property name="margin_left">2</property>
+                                 <property name="visible">True</property>
+                                 <property name="can_focus">False</property>
+-                                <property name="label" translatable="no">(</property>
++                                <property name="margin_left">2</property>
++                                <property name="label">(</property>
+                                 <attributes>
+                                   <attribute name="style" value="italic"/>
+                                 </attributes>
+                               </object>
++                              <packing>
++                                <property name="expand">True</property>
++                                <property name="fill">True</property>
++                                <property name="position">1</property>
++                              </packing>
+                             </child>
+                             <child>
+                               <object class="GtkLabel" id="clone_resolution_warning_label">
+@@ -97,17 +107,26 @@
+                                   <attribute name="style" value="italic"/>
+                                 </attributes>
+                               </object>
++                              <packing>
++                                <property name="expand">True</property>
++                                <property name="fill">True</property>
++                                <property name="position">2</property>
++                              </packing>
+                             </child>
+                             <child>
+-                              <!-- This is a workaround to not re-translate the warning, to be fixed later. -->
+                               <object class="GtkLabel" id="clone_res_warning_parentesis_open_close">
+                                 <property name="visible">True</property>
+                                 <property name="can_focus">False</property>
+-                                <property name="label" translatable="no">)</property>
++                                <property name="label">)</property>
+                                 <attributes>
+                                   <attribute name="style" value="italic"/>
+                                 </attributes>
+                               </object>
++                              <packing>
++                                <property name="expand">True</property>
++                                <property name="fill">True</property>
++                                <property name="position">3</property>
++                              </packing>
+                             </child>
+                           </object>
+                         </child>
+@@ -115,9 +134,15 @@
+                       <packing>
+                         <property name="expand">False</property>
+                         <property name="fill">False</property>
++                        <property name="position">0</property>
+                       </packing>
+                     </child>
+                   </object>
++                  <packing>
++                    <property name="expand">True</property>
++                    <property name="fill">True</property>
++                    <property name="position">0</property>
++                  </packing>
+                 </child>
+                 <child>
+                   <object class="GtkAlignment" id="alignment1">
+@@ -163,8 +188,8 @@
+                               <object class="GtkHBox" id="hbox2">
+                                 <property name="visible">True</property>
+                                 <property name="can_focus">False</property>
+-                                <property name="spacing">12</property>
+                                 <property name="valign">center</property>
++                                <property name="spacing">12</property>
+                                 <child>
+                                   <object class="GtkSwitch" id="monitor_switch">
+                                     <property name="visible">True</property>
+@@ -181,7 +206,6 @@
+                               <packing>
+                                 <property name="expand">False</property>
+                                 <property name="fill">False</property>
+-                                <property name="pack_type">start</property>
+                                 <property name="position">1</property>
+                               </packing>
+                             </child>
+@@ -249,6 +273,15 @@
+                           </packing>
+                         </child>
+                         <child>
++                          <placeholder/>
++                        </child>
++                        <child>
++                          <placeholder/>
++                        </child>
++                        <child>
++                          <placeholder/>
++                        </child>
++                        <child>
+                           <object class="GtkLabel" id="launcher_placement_label">
+                             <property name="visible">True</property>
+                             <property name="can_focus">False</property>
+@@ -261,17 +294,16 @@
+                             </style>
+                           </object>
+                           <packing>
+-                            <property name="top_attach">1</property>
+-                            <property name="bottom_attach">2</property>
+                             <property name="left_attach">3</property>
+                             <property name="right_attach">4</property>
++                            <property name="top_attach">1</property>
++                            <property name="bottom_attach">2</property>
+                             <property name="x_options">GTK_FILL</property>
+                             <property name="y_options"/>
+                           </packing>
+                         </child>
+                         <child>
+                           <object class="GtkLabel" id="sticky_edge_label">
+-                            <property name="visible">True</property>
+                             <property name="can_focus">False</property>
+                             <property name="xalign">1</property>
+                             <property name="label" translatable="yes">S_ticky edges</property>
+@@ -350,7 +382,6 @@
+                               <packing>
+                                 <property name="expand">False</property>
+                                 <property name="fill">False</property>
+-                                <property name="pack_type">start</property>
+                                 <property name="position">1</property>
+                               </packing>
+                             </child>
+@@ -365,7 +396,6 @@
+                         </child>
+                         <child>
+                           <object class="GtkHBox" id="stickyedge_hbox">
+-                            <property name="visible">True</property>
+                             <property name="can_focus">False</property>
+                             <property name="margin_bottom">1</property>
+                             <property name="spacing">12</property>
+@@ -378,7 +408,6 @@
+                               <packing>
+                                 <property name="expand">False</property>
+                                 <property name="fill">False</property>
+-                                <property name="pack_type">start</property>
+                                 <property name="position">1</property>
+                               </packing>
+                             </child>
+@@ -393,25 +422,27 @@
+                         </child>
+                         <child>
+                           <object class="GtkLabel" id="ui_scale_label">
+-                            <property name="visible">True</property>
+                             <property name="can_focus">False</property>
+                             <property name="xalign">0</property>
+                             <property name="yalign">1</property>
+                             <property name="label" translatable="yes">Scale for menu and title bars:</property>
+                           </object>
+                           <packing>
++                            <property name="right_attach">2</property>
+                             <property name="top_attach">3</property>
+                             <property name="bottom_attach">4</property>
+-                            <property name="right_attach">2</property>
+                             <property name="x_options">GTK_FILL</property>
+                           </packing>
+                         </child>
+                         <child>
++                          <placeholder/>
++                        </child>
++                        <child>
+                           <object class="GtkAlignment" id="ui_scale_alignment">
+-                            <property name="visible">True</property>
+                             <property name="width_request">150</property>
+-                            <property name="xscale">0.75</property>
++                            <property name="can_focus">False</property>
+                             <property name="xalign">0</property>
++                            <property name="xscale">0.75</property>
+                             <child>
+                               <object class="GtkHScale" id="ui_scale">
+                                 <property name="visible">True</property>
+@@ -433,8 +464,10 @@
+                           </packing>
+                         </child>
+                         <child>
++                          <placeholder/>
++                        </child>
++                        <child>
+                           <object class="GtkLabel" id="ui_scale_monitor_label">
+-                            <property name="visible">True</property>
+                             <property name="can_focus">False</property>
+                             <property name="xalign">0</property>
+                             <property name="label" translatable="yes">Scale all window _contents to match:</property>
+@@ -451,7 +484,7 @@
+                         </child>
+                         <child>
+                           <object class="GtkHBox" id="ui_scale_monitor_combo_hbox">
+-                            <property name="visible">True</property>
++                            <property name="can_focus">False</property>
+                             <child>
+                               <object class="GtkComboBox" id="ui_scale_monitor_combo">
+                                 <property name="visible">True</property>
+@@ -486,6 +519,9 @@
+                             <property name="y_options"/>
+                           </packing>
+                         </child>
++                        <child>
++                          <placeholder/>
++                        </child>
+                       </object>
+                     </child>
+                   </object>

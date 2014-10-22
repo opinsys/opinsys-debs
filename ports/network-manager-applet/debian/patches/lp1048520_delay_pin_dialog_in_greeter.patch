@@ -2,24 +2,33 @@ From: Antti Kaijanmäki <antti.kaijanmaki@canonical.com>
 Subject: Delay showing the pin dialog in greeter mode; only show it when
  the user actually activates a connection instead of on modem detect.
 
+---
+ src/applet-device-gsm.c |  128 ++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 123 insertions(+), 5 deletions(-)
+
 Index: b/src/applet-device-gsm.c
 ===================================================================
 --- a/src/applet-device-gsm.c
 +++ b/src/applet-device-gsm.c
-@@ -95,8 +95,11 @@ typedef struct {
+@@ -96,6 +96,8 @@ typedef struct {
+ 	gboolean skip_reg_poll;
+ 	gboolean skip_signal_poll;
+ 
++	gboolean greeter_mode;
++
  	/* Unlock dialog stuff */
  	GtkWidget *dialog;
- 	gpointer keyring_id;
-+
-+	gboolean greeter_mode;
- } GsmDeviceInfo;
+ 	GCancellable *cancellable;
+@@ -103,6 +105,7 @@ typedef struct {
  
-+static void unlock_dialog_new (NMDevice *device, GsmDeviceInfo *info);
  static void unlock_dialog_destroy (GsmDeviceInfo *info);
  static void check_start_polling (GsmDeviceInfo *info);
++static void unlock_dialog_new (NMDevice *device, GsmDeviceInfo *info);
  
-@@ -280,10 +283,117 @@ applet_gsm_connect_network (NMApplet *ap
- 	do_mobile_wizard (dbus_connect_3g_cb, info);
+ typedef struct {
+ 	NMApplet *applet;
+@@ -195,10 +198,117 @@ applet_gsm_connect_network (NMApplet *ap
+ 	}
  }
  
 +typedef struct {
@@ -33,7 +42,7 @@ Index: b/src/applet-device-gsm.c
 +gboolean delayed_activation_cb(gpointer user_data)
 +{
 +	DelayedActivationHelper *helper = user_data;
-+	
++
 +	if (!NM_IS_DEVICE (helper->device)) {
 +		// the device has been unplugged.
 +		return FALSE;
@@ -52,7 +61,7 @@ Index: b/src/applet-device-gsm.c
 +		return FALSE;
 +	}
 +
-+	helper->wait_retry -= 1; 
++	helper->wait_retry -= 1;
 +	if (helper->wait_retry == 0) {
 +		return FALSE;
 +	}
@@ -66,7 +75,7 @@ Index: b/src/applet-device-gsm.c
 +	GSMMenuItemInfo *info = (GSMMenuItemInfo *) user_data;
 +	GsmDeviceInfo *devinfo;
 +	DelayedActivationHelper *helper;
-+	
++
 +	/*
 +	 * The dialog is destroyed. Either the PIN code was successfully
 +	 * forwarded to ModemManager or the dialog was cancelled.
@@ -114,7 +123,7 @@ Index: b/src/applet-device-gsm.c
 +		/* We need to delay the activation until the modem is unlocked. */
 +
 +		unlock_dialog_new(devinfo->device, devinfo);
-+		/* 
++		/*
 +		 * The dialog gets destroyed if
 +		 *
 +		 * A) User enters the correct PIN and ModemManager tells nm-applet
@@ -126,7 +135,7 @@ Index: b/src/applet-device-gsm.c
 +		 *
 +		 *    All this happens in the dialogs response handler or callback that
 +		 *    handles the PIN activation return value from ModemManager.
-+		 *    See the relevant functions later in this file. 
++		 *    See the relevant functions later in this file.
 +		 *
 +		 * B) The user cancels the dialog.
 +		 */
@@ -136,22 +145,24 @@ Index: b/src/applet-device-gsm.c
  
  	applet_menu_item_activate_helper (info->device,
  	                                  info->connection,
-@@ -1395,8 +1505,10 @@ keyring_pin_check_cb (GnomeKeyringResult
- 	info->keyring_id = NULL;
+@@ -887,9 +997,11 @@ keyring_pin_check_cb (GObject *source,
+ 	list = secret_service_search_finish (NULL, result, &error);
  
- 	if (result != GNOME_KEYRING_RESULT_OK) {
+ 	if (!list) {
 -		/* No saved PIN, just ask the user */
 -		unlock_dialog_new (info->device, info);
+-		g_clear_error (&error);
 +		if (!info->greeter_mode) {
 +			/* No saved PIN, just ask the user */
 +			unlock_dialog_new (info->device, info);
++			g_clear_error (&error);
 +		}
  		return;
  	}
  
-@@ -1478,8 +1590,10 @@ simid_reply (DBusGProxy *proxy, DBusGPro
- 			                                              info->devid,
- 			                                              NULL);
+@@ -967,8 +1079,10 @@ simid_reply (DBusGProxy *proxy, DBusGPro
+ 			                       info->cancellable, keyring_pin_check_cb, info);
+ 			g_hash_table_unref (attrs);
  		} else {
 -			/* Couldn't get a device ID, but unlock required; present dialog */
 -			unlock_dialog_new (info->device, info);
@@ -162,9 +173,9 @@ Index: b/src/applet-device-gsm.c
  		}
  	}
  
-@@ -1721,6 +1835,10 @@ gsm_device_added (NMDevice *device, NMAp
- 	info->device = device;
+@@ -1213,6 +1327,10 @@ gsm_device_added (NMDevice *device, NMAp
  	info->bus = bus;
+ 	info->cancellable = g_cancellable_new ();
  
 +	info->greeter_mode = FALSE;
 +	if (getenv ("INDICATOR_GREETER_MODE"))

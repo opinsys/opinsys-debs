@@ -85,7 +85,7 @@ ifneq "$(wildcard /usr/share/misc/config.guess)" ""
 	cp -f /usr/share/misc/config.guess config.guess
 endif
 	# autoreconf
-	CFLAGS="$(CFLAGS)" ./configure $(confflags) --prefix=/usr --mandir=\$${prefix}/share/man --sysconfdir=/etc
+	CFLAGS="$(CFLAGS)" ./configure $(confflags) --prefix=/usr --mandir=\$${prefix}/share/man --sysconfdir=/etc --disable-silent-rules
 
 build: build-arch build-indep
 
@@ -152,7 +152,7 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs ChangeLog
+	dh_installchangelogs ChangeLog debian/changelog.classic
 	dh_installdocs
 	dh_install
 	dh_installmenu
