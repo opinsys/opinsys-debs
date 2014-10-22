@@ -1,13 +1,22 @@
 #!/usr/bin/make -f
 
-include /usr/share/cdbs/1/rules/patchsys-quilt.mk
-include /usr/share/cdbs/1/rules/autoreconf.mk
-include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/class/gnome.mk
-
 LDFLAGS += -Wl,-z,defs -Wl,--as-needed
 
+export DPKG_GENSYMBOLS_CHECK_LEVEL = 4
+
+%:
+	dh $@ --with autoreconf
+
+override_dh_autoreconf:
+	NOCONFIGURE=1 dh_autoreconf ./autogen.sh
+
+override_dh_install:
+	find debian/tmp -name \*.la -delete
+	find debian/tmp -name \*.a -delete
+	dh_install --fail-missing
+
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = indicator-applet_$(SRC_VERSION).orig.tar.gz
 get-orig-source:
-	uscan --download-current-version --force-download --rename
-	tar -z -x -f ../indicator-applet_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
+	wget -O ../$(TARBALL) https://launchpad.net/ubuntu/+archive/primary/+files/$(TARBALL)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .

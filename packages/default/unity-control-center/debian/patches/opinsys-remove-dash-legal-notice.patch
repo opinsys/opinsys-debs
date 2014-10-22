@@ -1,0 +1,19 @@
+Index: unity-control-center/panels/info/cc-info-panel.c
+===================================================================
+--- unity-control-center.orig/panels/info/cc-info-panel.c	2014-04-10 17:26:50.000000000 +0300
++++ unity-control-center/panels/info/cc-info-panel.c	2014-09-08 12:58:36.935577472 +0300
+@@ -1402,14 +1402,6 @@
+                       _("Removable Media"),
+                       -1);
+ 
+-  if (!g_strcmp0 (g_getenv ("XDG_CURRENT_DESKTOP"), "Unity"))
+-    {
+-      gtk_list_store_append (model, &iter);
+-      gtk_list_store_set (model, &iter, section_name_column,
+-                          _("Legal Notice"),
+-                          -1);
+-    }
+-
+   g_signal_connect (selection, "changed",
+                     G_CALLBACK (on_section_changed), self);
+   on_section_changed (selection, self);

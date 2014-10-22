@@ -18,9 +18,9 @@ override_dh_strip:
 
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -r -n -e 's/^Version: (([0-9]+):)?(.*)-(.*)/\3/p')
 get-orig-source:
-	mkdir ../geogebra-$(SRC_VERSION)
-	wget http://www.geogebra.net/linux/pool/main/g/geogebra/geogebra_$(SRC_VERSION)-24712_all.deb -O ../geogebra_$(SRC_VERSION)_all.deb
-	dpkg -x ../geogebra_$(SRC_VERSION)_all.deb ../geogebra-$(SRC_VERSION)
+	mkdir -p ../geogebra-$(SRC_VERSION)
+	wget http://www.geogebra.net/linux/pool/main/g/geogebra5/geogebra5_$(SRC_VERSION)-36450_i386.deb -O ../geogebra5_$(SRC_VERSION)_i386.deb
+	dpkg -x ../geogebra5_$(SRC_VERSION)_i386.deb ../geogebra-$(SRC_VERSION)
 	tar -z -c -f ../geogebra_$(SRC_VERSION).orig.tar.gz ../geogebra-$(SRC_VERSION)
 	rm -rf ../geogebra-$(SRC_VERSION)
 	tar -z -x -f ../geogebra_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .

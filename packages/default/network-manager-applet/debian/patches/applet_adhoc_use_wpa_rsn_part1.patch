@@ -4,17 +4,17 @@ Subject: [PATCH 3/3 applet] Allow to create and connect to Ad-Hoc RSN networks.
 This follows changes to Network Manager, which now
 supports WPA2/RSN in Ad-Hoc/IBSS mode.
 ---
- src/applet-dialogs.c                           |    2 --
- src/connection-editor/page-wireless-security.c |    9 ++-------
- src/libnm-gtk/nm-wireless-dialog.c             |    3 +--
- src/wireless-security/ws-wpa-psk.c             |   15 +++++++--------
+ src/applet-dialogs.c                       |    2 --
+ src/connection-editor/page-wifi-security.c |    9 ++-------
+ src/libnm-gtk/nm-wifi-dialog.c             |    3 +--
+ src/wireless-security/ws-wpa-psk.c         |   15 +++++++--------
  4 files changed, 10 insertions(+), 19 deletions(-)
 
-diff --git a/src/applet-dialogs.c b/src/applet-dialogs.c
-index b9ebc47..bb893af 100644
+Index: b/src/applet-dialogs.c
+===================================================================
 --- a/src/applet-dialogs.c
 +++ b/src/applet-dialogs.c
-@@ -241,8 +241,6 @@ create_info_label_security (NMConnection *connection)
+@@ -242,8 +242,6 @@ create_info_label_security (NMConnection
  
  			if (!strcmp (key_mgmt, "none"))
  				label = g_strdup (_("WEP"));
@@ -23,11 +23,11 @@ index b9ebc47..bb893af 100644
  			else if (!strcmp (key_mgmt, "wpa-psk"))
  				label = g_strdup (_("WPA/WPA2"));
  			else
-diff --git a/src/connection-editor/page-wireless-security.c b/src/connection-editor/page-wireless-security.c
-index 09a6744..855f783 100644
---- a/src/connection-editor/page-wireless-security.c
-+++ b/src/connection-editor/page-wireless-security.c
-@@ -79,8 +79,7 @@ get_default_type_for_security (NMSettingWirelessSecurity *sec)
+Index: b/src/connection-editor/page-wifi-security.c
+===================================================================
+--- a/src/connection-editor/page-wifi-security.c
++++ b/src/connection-editor/page-wifi-security.c
+@@ -79,8 +79,7 @@ get_default_type_for_security (NMSetting
  		return NMU_SEC_DYNAMIC_WEP;
  	}
  
@@ -37,7 +37,7 @@ index 09a6744..855f783 100644
  		if (find_proto (sec, "rsn"))
  			return NMU_SEC_WPA2_PSK;
  		else if (find_proto (sec, "wpa"))
-@@ -337,7 +336,7 @@ finish_setup (CEPageWirelessSecurity *self, gpointer unused, GError *error, gpoi
+@@ -337,7 +336,7 @@ finish_setup (CEPageWifiSecurity *self,
  		ws_wpa_psk = ws_wpa_psk_new (connection, FALSE);
  		if (ws_wpa_psk) {
  			add_security_item (self, WIRELESS_SECURITY (ws_wpa_psk), sec_model,
@@ -46,7 +46,7 @@ index 09a6744..855f783 100644
  			if ((active < 0) && ((default_type == NMU_SEC_WPA_PSK) || (default_type == NMU_SEC_WPA2_PSK)))
  				active = item;
  			item++;
-@@ -472,10 +471,6 @@ validate (CEPage *page, NMConnection *connection, GError **error)
+@@ -474,10 +473,6 @@ validate (CEPage *page, NMConnection *co
  	s_wireless = nm_connection_get_setting_wireless (connection);
  	g_assert (s_wireless);
  
@@ -57,11 +57,11 @@ index 09a6744..855f783 100644
  	mode = nm_setting_wireless_get_mode (s_wireless);
  	if (g_strcmp0 (mode, NM_SETTING_WIRELESS_MODE_ADHOC) == 0)
  		self->adhoc = TRUE;
-diff --git a/src/libnm-gtk/nm-wireless-dialog.c b/src/libnm-gtk/nm-wireless-dialog.c
-index 885a1c6..ec7c7e2 100644
---- a/src/libnm-gtk/nm-wireless-dialog.c
-+++ b/src/libnm-gtk/nm-wireless-dialog.c
-@@ -692,8 +692,7 @@ get_default_type_for_security (NMSettingWirelessSecurity *sec,
+Index: b/src/libnm-gtk/nm-wifi-dialog.c
+===================================================================
+--- a/src/libnm-gtk/nm-wifi-dialog.c
++++ b/src/libnm-gtk/nm-wifi-dialog.c
+@@ -687,8 +687,7 @@ get_default_type_for_security (NMSetting
  		return NMU_SEC_DYNAMIC_WEP;
  	}
  
@@ -71,11 +71,11 @@ index 885a1c6..ec7c7e2 100644
  		if (!have_ap || (ap_flags & NM_802_11_AP_FLAGS_PRIVACY)) {
  			if (find_proto (sec, "rsn"))
  				return NMU_SEC_WPA2_PSK;
-diff --git a/src/wireless-security/ws-wpa-psk.c b/src/wireless-security/ws-wpa-psk.c
-index ceb89e1..02be4ad 100644
+Index: b/src/wireless-security/ws-wpa-psk.c
+===================================================================
 --- a/src/wireless-security/ws-wpa-psk.c
 +++ b/src/wireless-security/ws-wpa-psk.c
-@@ -117,14 +117,13 @@ fill_connection (WirelessSecurity *parent, NMConnection *connection)
+@@ -117,14 +117,13 @@ fill_connection (WirelessSecurity *paren
  	wireless_security_clear_ciphers (connection);
  	if (is_adhoc) {
  		/* Ad-Hoc settings as specified by the supplicant */
@@ -96,7 +96,7 @@ index ceb89e1..02be4ad 100644
  	} else {
  		g_object_set (s_wireless_sec, NM_SETTING_WIRELESS_SECURITY_KEY_MGMT, "wpa-psk", NULL);
  
-@@ -163,7 +162,7 @@ ws_wpa_psk_new (NMConnection *connection, gboolean secrets_only)
+@@ -163,7 +162,7 @@ ws_wpa_psk_new (NMConnection *connection
  	if (!parent)
  		return NULL;
  
@@ -105,10 +105,3 @@ index ceb89e1..02be4ad 100644
  	sec = (WirelessSecurityWPAPSK *) parent;
  
  	widget = GTK_WIDGET (gtk_builder_get_object (parent->builder, "wpa_psk_entry"));
--- 
-1.7.10.4
-
-_______________________________________________
-networkmanager-list mailing list
-networkmanager-list@gnome.org
-https://mail.gnome.org/mailman/listinfo/networkmanager-list

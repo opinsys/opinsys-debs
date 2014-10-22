@@ -1,0 +1,38 @@
+Index: lightdm-1.10.1/common/dmrc.c
+===================================================================
+--- lightdm-1.10.1.orig/common/dmrc.c	2014-06-12 15:14:12.258348305 +0300
++++ lightdm-1.10.1/common/dmrc.c	2014-06-12 15:14:12.246348135 +0300
+@@ -27,6 +27,10 @@
+ 
+     dmrc_file = g_key_file_new ();
+ 
++    /* ignore user .dmrc file if configuration says so */
++    if (config_get_boolean (config_get_instance (), "SeatDefaults", "ignore-user-dmrc"))
++	return dmrc_file;
++
+     /* Load from the user directory, if this fails (e.g. the user directory
+      * is not yet mounted) then load from the cache */
+     path = g_build_filename (common_user_get_home_directory (user), ".dmrc", NULL);
+@@ -66,6 +70,10 @@
+     gsize length;
+     gboolean drop_privileges;
+ 
++    /* ignore user .dmrc file if configuration says so */
++    if (config_get_boolean (config_get_instance (), "SeatDefaults", "ignore-user-dmrc"))
++	return;
++
+     data = g_key_file_to_data (dmrc_file, &length, NULL);
+ 
+     /* Update the users .dmrc */
+Index: lightdm-1.10.1/data/lightdm.conf
+===================================================================
+--- lightdm-1.10.1.orig/data/lightdm.conf	2014-06-12 15:15:31.667492549 +0300
++++ lightdm-1.10.1/data/lightdm.conf	2014-06-12 15:15:42.083642619 +0300
+@@ -53,6 +53,7 @@
+ # greeter-show-manual-login = True if the greeter should offer a manual login option
+ # greeter-show-remote-login = True if the greeter should offer a remote login option
+ # user-session = Session to load for users
++# ignore-user-dmrc = True if user ~/.dmrc file should be ignored
+ # allow-guest = True if guest login is allowed
+ # guest-session = Session to load for guests (overrides user-session)
+ # session-wrapper = Wrapper script to run session with

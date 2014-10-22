@@ -1,11 +1,11 @@
-This package uses quilt to patch the source before building. Normally,
-you can simply run
-make -f debian/rules patch
-to create the sources as they will be built. 
+This package uses version 3 of the deb format to patch the source before 
+building. If you use "apt-get source" then the patches will be applied
+already.
 
 However, if you need to manually massage / add patches, either read the fine
 documentation included in the package quilt (/usr/share/doc/quilt/quilt.html) or
-do the following in the root of the package:
+do the following in the root of the package (after downloading and installing 
+the orig.tar and the debian.tar and possibly quilt if necessary):
 
 export QUILT_PATCHES=debian/patches
 
@@ -17,11 +17,11 @@ If you need to update a patch, run
 after editing. 
 
 If you need to create a new patch (e.g. to change a different file), run:
-       quilt new mypatch.diff
+       quilt new mypatch.patch
        quilt edit somefile.c
        quilt refresh
 
-Please give the patch name "mypatch.diff" a meaningful name.
+Please give the patch name "mypatch.patch" a meaningful name.
 
 To undo the current patch, run
        quilt pop

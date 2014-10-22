@@ -1,3 +1,10 @@
+geogebra (5.0.4.0-0+opinsys1) trusty; urgency=low
+
+  * Update to upstream version 5.0.4.0-36450
+    - upstream source is constructed simply from geogebra5_5.0.4.0-36450_all.deb
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Mon, 22 Sep 2014 14:40:50 +0300
+
 geogebra (4.2.47.0-0+opinsys1) quantal; urgency=low
 
   * Initial package for upstream version 4.2.47.0-24712

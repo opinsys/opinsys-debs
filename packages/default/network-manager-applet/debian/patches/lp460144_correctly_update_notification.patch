@@ -1,8 +1,12 @@
-Index: network-manager-applet-0.8.9997+git.20110616t193616.b2e6a33/src/applet.c
+---
+ src/applet.c |   38 +++++++++++++++++---------------------
+ 1 file changed, 17 insertions(+), 21 deletions(-)
+
+Index: b/src/applet.c
 ===================================================================
---- network-manager-applet-0.8.9997+git.20110616t193616.b2e6a33.orig/src/applet.c	2011-06-17 14:06:04.807740985 -0400
-+++ network-manager-applet-0.8.9997+git.20110616t193616.b2e6a33/src/applet.c	2011-06-17 14:06:29.547741028 -0400
-@@ -787,17 +787,6 @@
+--- a/src/applet.c
++++ b/src/applet.c
+@@ -867,17 +867,6 @@ applet_menu_item_create_device_item_help
  	return item;
  }
  
@@ -20,8 +24,8 @@ Index: network-manager-applet-0.8.9997+git.20110616t193616.b2e6a33/src/applet.c
  static gboolean
  applet_notify_server_has_actions (void)
  {
-@@ -839,19 +828,28 @@
- 	if (!gtk_status_icon_is_embedded (applet->status_icon))
+@@ -928,19 +917,28 @@ applet_do_notify (NMApplet *applet,
+ 	if (!applet->agent)
  		return;
  
 -	applet_clear_notify (applet);
@@ -57,7 +61,7 @@ Index: network-manager-applet-0.8.9997+git.20110616t193616.b2e6a33/src/applet.c
  
  #if HAVE_LIBNOTIFY_07
  	notify_notification_set_hint (notify, "transient", g_variant_new_boolean (TRUE));
-@@ -3226,7 +3224,6 @@
+@@ -3375,7 +3373,6 @@ status_icon_activate_cb (GtkStatusIcon *
  	/* Have clicking on the applet act also as acknowledgement
  	 * of the notification. 
  	 */
@@ -65,7 +69,7 @@ Index: network-manager-applet-0.8.9997+git.20110616t193616.b2e6a33/src/applet.c
  
  	/* Kill any old menu */
  	if (applet->menu)
-@@ -3256,7 +3253,6 @@
+@@ -3405,7 +3402,6 @@ status_icon_popup_menu_cb (GtkStatusIcon
  	/* Have clicking on the applet act also as acknowledgement
  	 * of the notification. 
  	 */

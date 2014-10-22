@@ -16,13 +16,13 @@ override_dh_shlibdeps:
 
 override_dh_strip:
 
+UPSTREAM_PACK = LPL-3846-32.tar.gz
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 get-orig-source:
 	mkdir ../vstdrivers-$(SRC_VERSION)
-	wget http://www.vernier.com/files/downloads/LPL_3845_B2_32.tgz -O ../LPL_3845_B2_32.tgz
-	tar -z -x -f ../LPL_3845_B2_32.tgz -C ../
-	rm -rf ../vstdrivers-$(SRC_VERSION)
+	wget http://www.vernier.com/files/downloads/$(UPSTREAM_PACK) -O ../$(UPSTREAM_PACK)
+	tar -z -x -f ../$(UPSTREAM_PACK) -C ../
 	dpkg -x ../vstdrivers_$(SRC_VERSION)_i386.deb ../vstdrivers-$(SRC_VERSION)
-	tar -z -c -f ../vstdrivers_$(SRC_VERSION).orig.tar.gz ../vstdrivers-$(SRC_VERSION)
+	tar -j -c -f ../vstdrivers_$(SRC_VERSION).orig.tar.bz2 ../vstdrivers-$(SRC_VERSION)
 	rm -rf ../vstdrivers-$(SRC_VERSION)
-	tar -z -x -f ../vstdrivers_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
+	tar -j -x -f ../vstdrivers_$(SRC_VERSION).orig.tar.bz2 --strip-components=1 -C .

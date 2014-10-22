@@ -16,12 +16,12 @@ override_dh_shlibdeps:
 
 override_dh_strip:
 
+UPSTREAM_PACK = LPL-3846-32.tar.gz
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 get-orig-source:
 	mkdir ../vstloggerpro-$(SRC_VERSION)
-	wget http://www.vernier.com/files/downloads/LPL_3845_B2_32.tgz -O ../LPL_3845_B2_32.tgz
-	tar -z -x -f ../LPL_3845_B2_32.tgz -C ../
-	rm -rf ../vstloggerpro-$(SRC_VERSION)
+	wget http://www.vernier.com/files/downloads/$(UPSTREAM_PACK) -O ../$(UPSTREAM_PACK)
+	tar -z -x -f ../$(UPSTREAM_PACK) -C ../
 	dpkg -x ../vstloggerpro_$(SRC_VERSION)_i386.deb ../vstloggerpro-$(SRC_VERSION)
 	tar -j -c -f ../vstloggerpro_$(SRC_VERSION).orig.tar.bz2 ../vstloggerpro-$(SRC_VERSION)
 	rm -rf ../vstloggerpro-$(SRC_VERSION)

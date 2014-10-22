@@ -1,0 +1,15 @@
+Source: firefox-esr
+Section: web
+Priority: extra
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+Homepage: https://www.mozilla.org/en-US/firefox/organizations/
+
+Package: firefox-esr
+Architecture: i386
+Depends: ${misc:Depends}
+Description: Firefox Extended Support Release
+ A community-led project that allows organizations to benefit from the
+ speed, flexibility and security of Firefox while getting the support
+ they need.

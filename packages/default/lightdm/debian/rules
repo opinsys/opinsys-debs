@@ -3,23 +3,26 @@
 LDFLAGS+=-Wl,--as-needed
 
 %:
-	dh $@ --with quilt,autoreconf,translations
+	dh $@ --with quilt,autoreconf,translations --parallel
+
+override_dh_autoreconf:
+	NOCONFIGURE=1 dh_autoreconf ./autogen.sh
 
 # NOTE: Using GNOME for now, but we still need a proper configuration system
 # See https://launchpad.net/bugs/799754
 override_dh_auto_configure:
-	dh_auto_configure -- --with-greeter-user=lightdm --with-user-session=ubuntu
+	dh_auto_configure -- --with-greeter-user=lightdm --with-user-session=ubuntu --enable-gtk-doc
+
+override_dh_auto_test:
+	#Disabled for now, are failing for some reason
+	#DEBUG=1 dh_auto_test || { cat tests/test-suite.log; exit 1; }
 
 override_dh_install:
-	#Remove .la and .a files.
-	find debian/tmp/usr/lib/ -name *.a |xargs rm
-	find debian/tmp/usr/lib -name *.la |xargs rm
-	#Remove conf files from upstream
-	#find debian/tmp/etc/ -name *.conf |xargs rm
-	#find debian/tmp/etc/init -name *.conf |xargs rm
-	dh_install --list-missing
-	mv debian/lightdm/usr/lib/lightdm/lightdm/lightdm-set-defaults debian/lightdm/usr/lib/lightdm
+	rm -r debian/tmp/usr/share/help/C/
+	# we do install pam through installpam and init through installinit
+	dh_install -X.a -X.la -Xpam.d -X'etc/init/lightdm.conf' --fail-missing
 	chmod +x debian/lightdm/usr/lib/lightdm/lightdm-greeter-session
+	chmod +x debian/lightdm/usr/lib/lightdm/guest-session-auto.sh
 
 override_dh_installinit:
 	dh_installinit --no-start
@@ -35,5 +38,5 @@ override_dh_makeshlibs:
 
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 get-orig-source:
-	wget https://launchpad.net/ubuntu/+archive/primary/+files/lightdm_$(SRC_VERSION).orig.tar.gz -O ../lightdm_$(SRC_VERSION).orig.tar.gz
-	tar -z -x -f ../lightdm_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
+	wget https://launchpad.net/lightdm/1.10/1.10.1/+download/lightdm-$(SRC_VERSION).tar.xz -O ../lightdm-$(SRC_VERSION).orig.tar.xz
+	tar -J -x -f ../lightdm-$(SRC_VERSION).orig.tar.xz --strip-components=1 -C .

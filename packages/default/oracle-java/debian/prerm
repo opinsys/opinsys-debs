@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+version=jre1.7.0_71
+
+update-alternatives --remove \
+  mozilla-javaplugin.so \
+  /opt/java/${version}/lib/i386/libnpjp2.so
+
+update-alternatives --remove \
+  javaws \
+  /opt/java/${version}/bin/javaws \

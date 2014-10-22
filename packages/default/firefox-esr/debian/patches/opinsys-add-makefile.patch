@@ -1,0 +1,18 @@
+diff -ruN firefox-esr.old/Makefile firefox-esr/Makefile
+--- firefox-esr.old/Makefile	1970-01-01 03:00:00.000000000 +0300
++++ firefox-esr/Makefile	2014-08-15 13:57:19.298383778 +0300
+@@ -0,0 +1,14 @@
++all:
++	for subdir in opt/firefox-esr/*; do \
++	  { \
++	    ln -fns /etc/firefox/syspref.js \
++	       $${subdir}/defaults/pref/syspref.js \
++	      && ln -fns /usr/lib/firefox/firefox-puavodesktop.js \
++		    $${subdir}/firefox-puavodesktop.js; \
++	  } || exit 1; \
++	done
++
++install:
++	cp -a opt/ $(DESTDIR)/
++
++clean:

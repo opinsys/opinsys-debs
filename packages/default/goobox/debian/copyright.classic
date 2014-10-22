@@ -1,0 +1,189 @@
+This package was debianized by Dan Korostelev <nadako@gmail.com> on
+Tue,  2 Nov 2004 01:02:47 +0300.
+
+It was downloaded from <http://ftp.gnome.org/pub/GNOME/sources/goobox/>.
+SVN versions were obtained from checkouts of <http://svn.gnome.org/svn/goobox>.
+
+Copyright Holder: Paolo Bacchilega <paobac@src.gnome.org>
+
+License:
+
+	Copyright (C) 2004-2013 Paolo Bacchilega <paobac@src.gnome.org>
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+
+On Debian systems, the complete text of the GNU General Public License
+version 2 can be found in the file /usr/share/common-licenses/GPL-2,
+whereas version 3 can be found in the file /usr/share/common-licenses/GPL-3.
+
+
+Goobox uses code, documents, translations … from the following 
+people/organisations:
+Eazel, Inc.                               (C) 2000, 2001.
+Free Software Foundation, Inc.            (C) 1989, 1991, 1994-1996, 1999-2010.
+The GNOME Foundation                      (C) 2004-2005.
+Gnome i18n Project for Vietnamese         (C) 2005.
+GNOME PL Team <translators@gnomepl.org>   (C) 2005.
+Red Hat, Inc.                             (C) 2002
+
+Adam Weinberger <adamw@gnome.org>         (C) 2004, 2005.
+Adrian Guniš <andygun696@gmail.com>       (C) 2008, 2010.
+Alessio Frusciante <algol@src.gnome.org>  (C) 2005-2007.
+Alexandre Franke <alexandre.franke@gmail.com>  (C) 2011-2013.
+Alexander Larsson <alexl@redhat.com>      (C) 2002.
+Alexander Nedotsukov <bland@FreeBSD.org>  (C) 2004
+Alexander Shopov <ash@contact.bg>         (C) 2005.
+Alexandre Prokoudine <alexandre.prokoudine@gmail.com> (C) 2005.
+Amanpreet Singh Alam <aalam@redhat.com>   (C) 2004.
+Anders Carlsson <andersca@gnu.org>        (C) 2002.
+Andika Triwidada <andika@gmail.com>       (C) 2010, 2012, 2013.
+Andrea Zagli <azagli@inwind.it>           (C) 2005-2007, 2010.
+Andrej Žnidarši◈ <andrej.znidarsic@gmail.com>  (C) 2009-2012.
+Andrew Munkres <amunkres@nyx.net>         (C) 2011.
+Arafat Medini <lumina@silverpen.de>       (C) 2004.
+Aron Xu <aronxu@gnome.org>                (C) 2010.
+Artur Flinta <aflinta@svn.gnome.org>      (C) 2005-2007.
+Augustin KIBERWA  <akiberwa@yahoo.co.uk>  (C) 2005.
+Aurimas ◈ernius <aurisc4@gmail.com>       (C) 2013.
+Aviary.pl <gnomepl@aviary.pl>             (C) 2012-2014.
+Balázs Úr <urbalazs@src.gnome.org>        (C) 2013.
+Baptiste Mille-Mathias <bmm80@free.fr>    (C) 2004.
+Bastien Nocera <hadess@hadess.net>        (C) 2002.
+Bruno Brouard <annoa.b@gmail.com>         (C) 2007, 2008, 2010, 2012.
+Carole Karema <karemacarole@hotmail.com>  (C) 2005.
+Changwoo Ryu <cwryu@debian.org>           (C) 2005.
+Christian Kirbach <Christian.Kirbach@googlemail.com>  (C) 2009, 2011, 2013.
+Christian Rose <menthos@menthos.com>      (C) 2004, 2005.
+Christophe Merlet <redfox@src.gnome.org>  (C) 2005, 2006.
+Claude Paroz <claude@2xlibre.net>         (C) 2008, 2010.
+Clytie Siddall <clytie@riverland.net.au>  (C) 2005-2007.
+Cody Russell                              (C) 2009.
+Colin Walters <walters@debian.org>        (C) 2002, 2003.
+Daniel Mustieles <daniel.mustieles@gmail.com> (C) 2011-2013.
+Daniel Nylander <dnylande@src.gnome.org>  (C) 2006, 2007, 2009, 2010, 2012.
+Daniel ◈erb◈nescu <daniel@serbanescu.dk>  (C) 2012.
+David Lodge <dave@cirt.net>               (C) 2005-2007.
+Dimitris Glezos <dimitris@glezos.com>     (C) 2006.
+Dimitris Spingos <dmtrs32@gmail.com>      (C) 2013.
+Djavan Fagundes <djavan@comum.org>        (C) 2008, 2010.
+Djihed Afifi <djihed@gmail.com>           (C) 2006, 2008.
+Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>  (C) 2005.
+du baodao <centerpoint@139.com>           (C) 2010.
+Duarte Loreto <happyguy_pt@hotmail.com>   (C) 2004.
+du baodao <centerpoint@139.com>           (C) 2010.
+Elian Myftiu <elian@alblinux.net>         (C) 2005.
+Enrico Nicoletto <liverig@gmail.com>      (C) 2013,2014.
+Enrique Matias Sanchez <cronopios@gmail.com> (C) 2004.
+Felix Riemann <friemann@gnome.org>        (C) 2006-2009.
+Fran Diéguez <fran.dieguez@mabishu.com>   (C) 2012.
+Francisco Javier F. Serrador <serrador@openshine.com> (C) 2004-2006.
+Frank Arnold <farnold@cvs.gnome.org>      (C) 2005.
+Funda Wang <fundawang@linux.net.cn>       (C) 2004, 2005.
+Gabor Kelemen <kelemeng@gnome.hu>         (C) 2005, 2006, 2010.
+Giannis Katsampiris                       (C) 2008.
+GNOME HK Team                             (C) 2005.
+György Balló <ballogy@freestart.hu>       (C) 2012.
+Helge Kreutzmann <debian@helgefjell.de>   (C) 2005, 2008, 2009.
+Hendrik Brandt <heb@gnome-de.org>         (C) 2004, 2005.
+Hendrik Richter <hendrikr@gnome.org>      (C) 2006.
+Ilkka Tuohela <ituohela@src.gnome.org>    (C) 2004-2008.
+Imam Musthaqim <userindesign@gmail.com>   (C) 2009.
+Iñaki Larrañagai Murgoitio <dooteo@euskalgnu.org> (C) 2005-2008, 2010.
+Irshad Abibouraguimane                    (C) 2007,2008.
+James Westby                              (C) 2009.
+Jaydeep Bhusal <zaydeep@hotmail.com>      (C) 2005.
+JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>  (C) 2005.
+Jens Seidel <jseidel@src.gnome.org>       (C) 2006,2008.
+Jiri Grönroos <jiri.gronroos+l10n@iki.fi> (C) 2013.
+Jiro Matsuzawa <jmatsuzawa@src.gnome.org> (C) 2012.
+Joan Duran <jodufi@gmail.com>             (C) 2007, 2008.
+Joe Hansen <joedalton2@yahoo.dk>          (C) 2010.
+Johannes Dewender <gnome@JonnyJD.net>     (C) 2013.
+Jonathan Ernst <jonathan@ernstfamily.ch>  (C) 2006.
+Jordi Mas <jmas@softcatala.org>           (C) 2007.
+Jorge González <jorgegonz@svn.gnome.org>  (C) 2007, 2009, 2010.
+Jorn Baayen <jorn@nl.linux.org>           (C) 2002, 2003.
+José Sánchez Moreno <jose@oxigenow.com>   (C) 2007.
+Julien Hardelin <jhardlin@wanadoo.fr>     (C) 2010, 2011.
+Julien Hardelin <jhardlin@orange.fr>      (C) 2010, 2011.
+Kjartan Maraas <kmaraas@gnome.org>        (C) 2003-2006.
+Kostas Papadimas <pkst@src.gnome.org>     (C) 2004, 2005.
+Kostas <pkst@gmx.net>                     (C) 2005.
+Laurent Dhima <laurenti@alblinux.net>     (C) 2005.
+Leonardo Ferreira Fontenelle <leonardof@gnome.org> (C) 2008.
+Mahesh subedi <submanesh@hotmail.com>     (C) 2006.
+Marek ◈ernocký <marek@manet.cz>           (C) 2011.
+Mario Blättermann <mariobl@gnome.org>     (C) 2009-2011.
+Matej Urban♦i♦ <mateju@svn.gnome.org>     (C) 2009, 2010.
+Matej Urban■i■ <mateju@svn.gnome.org>     (C) 2012.
+Mateus Zenaide <matzenh@gmail.com>        (C) 2011.
+Martin Willemoes Hansen <mwh@sysrq.dk>    (C) 2005.
+Mikel Olasagasti <hey_neken@mundurat.net> (C) 2004, 2005.
+Miloslav Trmac <mitr@volny.cz>            (C) 2005.
+M◈poc◈a◈ H◈◈o◈◈◈ <miroslavnikolic@rocketmail.com>  (C) 2013.
+Nickolay V. Shmyrev <nshmyrev@src.gnome.org> (C) 2005.
+Noëlla Mupole <s24211045@tuks.co.za>      (C) 2005.
+Ond♦ej Pohl <pohlondrej@seznam.cz>        (C) 2010.
+Paolo Borelli                             (C) 2004.
+Pawan Chitrakar <pachimho@src.gnome.org>  (C) 2005, 2006, 2008.
+Pema Geyleg <pgeyleg@src.gnome.org>       (C) 2007.
+Peter de Wachter <pdewacht@gmail.com>     (C) 2008.
+Petr Kovar <pknbe@volny.cz>               (C) 2008,2010.
+Philibert Ndandali <ndandali@yahoo.fr>    (C) 2005.
+Piotr Dr■g <piotrdrag@gmail.com>          (C) 2012-2014.
+Rafael Ferreira <rafael.f.f1@gmail.com>   (C) 2013,2014.
+Raivis Dejus <orvils@gmail.com>           (C) 2007.
+Ramiro Estrugo <ramiro@eazel.com>         (C) 2000, 2001.
+Raphael Higino <raphaelh@uai.com.br>      (C) 2005.
+Ricardo Fernandez Pascual                 (C) 2003.
+Ronald S. Bultje <rbultje@ronald.bitfreak.net> (C) 2005.
+Rostislav Raykov <zbrox@i-space.org>      (C) 2005.
+Shyam Krishna Bal <balshyam24@yahoo.com>  (C) 2007.
+Stéphane Raimbault <stephane.raimbault@gmail.com> (C) 2008.
+Steve Murphy <murf@e-tools.com>           (C) 2005.
+Szabo Roland <rolisz@gmail.com>                 (C) 2010.
+Takeshi AIHANA <takeshi.aihana@gmail.com> (C) 2004, 2005, 2007, 2009-2012.
+Timo Jyrinki <timo.jyrinki@canonical.com> (C) 2013.
+Tino Meinen <a.t.meinen@chello.nl>        (C) 2004-2006.
+Tommi Vainikainen <Tommi.Vainikainen@iki.fi> (C) 2004-2005.
+Valek Filippov <frob at df dot ru>        (C) 2006.
+Viateur MUGENZI <muvia1@yahoo.fr>         (C) 2005.
+Vincent van Adrighem <adrighem@gnome.org> (C) 2004-2006.
+Woodman Tuen <wmtuen@gmail.com>           (C) 2005.
+Yannig Marchegay (Kokoyaya) <yannig@marchegay.org> (C) 2006-2008.
+Yannig MARCHEGAY <ymarcheg@src.gnome.org> (C) 2006-2008.
+Yinghua Wang <wantinghard@gmail.com>      (C) 2011.
+Yosef Or Boczko <yosefor3@walla.com>      (C) 2013.
+Young-Ho Cha <ganadist@mizi.com>          (C) 2004.
+yumkee lhamo <yumkeyl08@hotmail.com>      (C) 2007.
+Žygimantas Beru■ka <uid0@akl.lt>          (C) 2004-2005.
+
+The following files are released under a different license than the main 
+program (i.e. not GPL 2 or any later version):
+COPYING:          permission to copy and distribute verbatim copies
+INSTALL:          unlimited permission to copy, distribute and modify
+po/fr.po:         GNU General Public License Version 2
+		  intended to relicence to goobox license
+po/nb.po:         same license as the sound-juicer package
+help/ca/ca.po:    GNU Free Documentation License (GFDL), Version 1.1 or later
+
+The Debian packaging is copyrighted by Dan Korostelev <nadako@gmail.com> 
+(2004-2005), Steve Langasek <vorlon@debian.org> (2006), Matej Vela 
+<vela@debian.org> (2006), Daniel Baumann <daniel@debian.org> (2006-2007) and 
+Helge Kreutzmann <debian@helgefjell.de> (2006-2014). It is distributed under 
+the same license as the goobox program.
+
+
+po/oc.po:         license (GPL 2+) confirmed by private e-mail exchange 2011-08-24

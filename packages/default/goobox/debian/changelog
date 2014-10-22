@@ -1,8 +1,56 @@
-goobox (3.2.1-2+opinsys1) quantal; urgency=low
+goobox (3.2.1-7+opinsys1) trusty; urgency=medium
 
-  * Loosen build-dep on libgtk-3.0-dev (>= 3.6)
+  * Fixed playlist fixed size.
 
- -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 05 Mar 2014 15:29:35 +0200
+ -- Petri Toivola <ptoivola@opinsys.fi>  Wed, 24 Sep 2014 11:08:56 +0300
+
+goobox (3.2.1-7) unstable; urgency=medium
+
+  * Really build against libcoverart (fix debian/control)
+  * Update README.source
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sat, 08 Feb 2014 14:17:03 +0100
+
+goobox (3.2.1-6) unstable; urgency=low
+
+  * Build against libcoverart, which is now finally available in unstable.
+    Thanks to Sebastian Ramacher for the patch. Closes: #735365
+  * Update manpage and German translation.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Wed, 15 Jan 2014 20:41:59 +0100
+
+goobox (3.2.1-5) unstable; urgency=medium
+
+  * Slightly update README.source.
+  * Include the copyright for the debian/* files as well (and update it for 
+    the below additions).
+  * po/cs.po updated from upstream git with msgcat.
+  * po/pl.po updated from upstream git with msgcat.
+  * po/es.po updated from upstream git with msgcat.
+  * po/pt_BR.po updated from upstream git with msgcat.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Tue, 07 Jan 2014 10:02:27 +0100
+
+goobox (3.2.1-4) unstable; urgency=low
+
+  * Finally complete the new style copyright. Yay!! Retain classic copyright
+    file (although unmainted in the future) for a while.
+  * Upgrade to policy 3.9.5, no changes required
+  * help/de/de.po and po/lv.po updated from upstream git.
+  * Use "--disable-silent-rules" to please lintian (and help spot problematic
+    flags)
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Tue, 03 Dec 2013 17:18:26 +0100
+
+goobox (3.2.1-3) unstable; urgency=low
+
+  * Remove double(d) recommends on gstreamer1.0-plugins-good.
+  * po/fi.po updated from upstream git.
+  * po/id.po updated from upstream git.
+  * po/pl.po updated from upstream git.
+  * Add missing entries in debian/copyright.
+
+ -- Helge Kreutzmann <debian@helgefjell.de>  Sat, 28 Sep 2013 14:32:01 +0200
 
 goobox (3.2.1-2) unstable; urgency=low
 

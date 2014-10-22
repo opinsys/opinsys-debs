@@ -3,7 +3,7 @@
   <!ENTITY dhsurname   "<surname>Korostelev</surname>">
   <!ENTITY dhufirstname "<firstname>Helge</firstname>">
   <!ENTITY dhusurname   "<surname>Kreutzmann</surname>">
-  <!ENTITY dhdate      "<date>November 30, 2009</date>">
+  <!ENTITY dhdate      "<date>January 12, 2014</date>">
   <!ENTITY dhsection   "<manvolnum>1</manvolnum>">
   <!ENTITY dhemail     "<email>dan@ats.energo.ru</email>">
   <!ENTITY dhuemail     "<email>debian@helgefjell.de</email>">
@@ -32,7 +32,7 @@
 	</author>
 
 	<copyright>
-	    <year>2004, 2007, 2009</year>
+	    <year>2004, 2007, 2009, 2014</year>
 	    <holder>&dhusername; and &dhuusername;</holder>
 	</copyright>
 	&dhdate;
@@ -73,13 +73,6 @@
 	      </listitem>
 	  </varlistentry>
 
-	  <varlistentry>
-	      <term><option>--hide-show</option></term>
-	      <listitem>
-		  <para>Hide/Show the main window.</para>
-	      </listitem>
-	  </varlistentry>
-
       <varlistentry>
 	  <term><option>--next</option></term>
 	  <listitem>
@@ -91,13 +84,6 @@
 	  <term><option>--play</option></term>
 	  <listitem>
 	      <para>Play the CD on startup.</para>
-	  </listitem>
-      </varlistentry>
-
-      <varlistentry>
-	  <term><option>--play-pause</option></term>
-	  <listitem>
-	      <para>Play/Pause</para>
 	  </listitem>
       </varlistentry>
 
@@ -123,20 +109,6 @@
       </varlistentry>
 
       <varlistentry>
-        <term><option>--volume-down</option></term>
-        <listitem>
-          <para>Volume down</para>
-        </listitem>
-      </varlistentry>
-
-      <varlistentry>
-	  <term><option>--volume-up</option></term>
-	  <listitem>
-	      <para>Volume up</para>
-	  </listitem>
-      </varlistentry>
-
-      <varlistentry>
 	  <term><option>-d</option> <option>--device=DEVICE_PATH</option></term>
         <listitem>
           <para>CD device to be used.</para>
@@ -155,7 +127,23 @@
 	<listitem>
 	    <para>Show version of program.</para>
         </listitem>
+    </varlistentry>
+
+    <varlistentry>
+	<term>--toggle-play</term>
+	<listitem>
+	    <para>Toggle play</para>
+        </listitem>
+    </varlistentry>
+
+
+    <varlistentry>
+	<term>--toggle-visibility</term>
+	<listitem>
+	    <para>Toggle the main window visibility</para>
+        </listitem>
       </varlistentry>
+
 
 
   </variablelist>
@@ -245,6 +233,13 @@
       </varlistentry>
 
     <varlistentry>
+        <term><option>--gst-debug-color-mode</option></term>
+        <listitem>
+          <para>Changes coloring mode of the debug log. Possible modes: off, on, disable, auto, unix</para>
+        </listitem>
+      </varlistentry>
+
+    <varlistentry>
         <term><option>--gst-debug-disable</option></term>
         <listitem>
           <para>Disable debugging.</para>
@@ -313,25 +308,40 @@
       </varlistentry>
 
     <varlistentry>
-        <term><option>--screen=SCREEN</option></term>
-        <listitem>
-          <para>X screen to use.</para>
-        </listitem>
-      </varlistentry>
-
-    <varlistentry>
-        <term><option>--sync</option></term>
-	<listitem>
-          <para>Make X calls synchronous.</para>
-        </listitem>
-      </varlistentry>
-
-    <varlistentry>
         <term><option>--gtk-module=MODULES</option></term>
         <listitem>
           <para>Load additional GTK+ modules.</para>
         </listitem>
-      </varlistentry>
+    </varlistentry>
+
+    <varlistentry>
+        <term><option>--gdk-debug=FLAGS</option></term>
+        <listitem>
+          <para>GDK debugging flags to set</para>
+        </listitem>
+    </varlistentry>
+
+    <varlistentry>
+        <term><option>--gdk-no-debug=FLAGS</option></term>
+        <listitem>
+          <para>GDK debugging flags to unset</para>
+        </listitem>
+    </varlistentry>
+
+    <varlistentry>
+        <term><option>--gtk-debug=FLAGS</option></term>
+        <listitem>
+          <para>GTK+ debugging flags to set</para>
+        </listitem>
+    </varlistentry>
+
+    <varlistentry>
+        <term><option>--gtk-no-debug=FLAGS</option></term>
+        <listitem>
+          <para>GTK+ debugging flags to unset</para>
+        </listitem>
+    </varlistentry>
+
 
     <varlistentry>
         <term><option>--g-fatal-warnings</option></term>
