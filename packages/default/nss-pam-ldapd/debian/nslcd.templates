@@ -1,0 +1,180 @@
+Template: nslcd/ldap-uris
+Type: string
+_Description: LDAP server URI:
+ Please enter the Uniform Resource Identifier of the LDAP server. The format
+ is "ldap://<hostname_or_IP_address>:<port>/". Alternatively, "ldaps://" or
+ "ldapi://" can be used. The port number is optional.
+ .
+ When using an ldap or ldaps scheme it is recommended to use an IP address to
+ avoid failures when domain name services are unavailable.
+ .
+ Multiple URIs can be separated by spaces.
+
+Template: nslcd/ldap-base
+Type: string
+_Description: LDAP server search base:
+ Please enter the distinguished name of the LDAP search base. Many sites use
+ the components of their domain names for this purpose. For example, the
+ domain "example.net" would use "dc=example,dc=net" as the distinguished name
+ of the search base.
+
+Template: nslcd/ldap-auth-type
+Type: select
+__Choices: none, simple, SASL
+_Description: LDAP authentication to use:
+ Please choose what type of authentication the LDAP database should
+ require (if any):
+ .
+  * none: no authentication;
+  * simple: simple bind DN and password authentication;
+  * SASL: any Simple Authentication and Security Layer mechanism.
+
+Template: nslcd/ldap-binddn
+Type: string
+_Description: LDAP database user:
+ Please enter the name of the account that will be used to log in to the LDAP
+ database. This value should be specified as a DN (distinguished name).
+
+Template: nslcd/ldap-bindpw
+Type: password
+_Description: LDAP user password:
+ Please enter the password that will be used to log in to the LDAP database.
+
+Template: nslcd/ldap-sasl-mech
+Type: select
+Choices: auto, LOGIN, PLAIN, NTLM, CRAM-MD5, DIGEST-MD5, SCRAM, GSSAPI, SKEY, OTP, EXTERNAL
+_Description: SASL mechanism to use:
+ Please choose the SASL mechanism that will be used to authenticate to the LDAP
+ database:
+ .
+  * auto: auto-negotiation;
+  * LOGIN: deprecated in favor of PLAIN;
+  * PLAIN: simple cleartext password mechanism;
+  * NTLM: NT LAN Manager authentication mechanism;
+  * CRAM-MD5: challenge-response scheme based on HMAC-MD5;
+  * DIGEST-MD5: HTTP Digest compatible challenge-response scheme;
+  * SCRAM: salted challenge-response mechanism;
+  * GSSAPI: used for Kerberos;
+  * SKEY: S/KEY mechanism (obsoleted by OTP);
+  * OTP: One Time Password mechanism;
+  * EXTERNAL: authentication is implicit in the context.
+
+Template: nslcd/ldap-sasl-realm
+Type: string
+_Description: SASL realm:
+ Please enter the SASL realm that will be used to authenticate to the LDAP
+ database.
+ .
+ The realm is appended to authentication and authorization identities.
+ .
+ For GSSAPI, this can be left blank to use information from the Kerberos
+ credentials cache.
+
+Template: nslcd/ldap-sasl-authcid
+Type: string
+_Description: SASL authentication identity:
+ Please enter the SASL authentication identity that will be used to authenticate to
+ the LDAP database.
+ .
+ This is the login used in LOGIN, PLAIN, CRAM-MD5, and DIGEST-MD5 mechanisms.
+
+Template: nslcd/ldap-sasl-authzid
+Type: string
+_Description: SASL proxy authorization identity:
+ Please enter the proxy authorization identity that will be used to authenticate to
+ the LDAP database.
+ .
+ This is the object in the name of which the LDAP request is done.
+ This value should be specified as a DN (distinguished name).
+
+Template: nslcd/ldap-sasl-secprops
+Type: string
+_Description: Cyrus SASL security properties:
+ Please enter the Cyrus SASL security properties.
+ .
+ Allowed values are described in the ldap.conf(5) manual page
+ in the SASL OPTIONS section.
+
+Template: nslcd/ldap-sasl-krb5-ccname
+Type: string
+Default: /var/run/nslcd/nslcd.tkt
+_Description: Kerberos credential cache file path:
+ Please enter the GSSAPI/Kerberos credential cache file name that will be used.
+
+Template: nslcd/ldap-starttls
+Type: boolean
+_Description: Use StartTLS?
+ Please choose whether the connection to the LDAP server should use
+ StartTLS to encrypt the connection.
+
+Template: nslcd/ldap-reqcert
+Type: select
+__Choices: never, allow, try, demand
+_Description: Check server's SSL certificate:
+ When an encrypted connection is used, a server certificate can be requested
+ and checked. Please choose whether lookups should be configured to require
+ a certificate, and whether certificates should be checked for validity:
+ .
+  * never: no certificate will be requested or checked;
+  * allow: a certificate will be requested, but it is not
+           required or checked;
+  * try: a certificate will be requested and checked, but if no
+         certificate is provided, it is ignored;
+  * demand: a certificate will be requested, required, and checked.
+
+Template: nslcd/ldap-cacertfile
+Type: string
+Default: /etc/ssl/certs/ca-certificates.crt
+_Description: Certificate authority certificate:
+ When certificate checking is enabled this file contains the X.509
+ certificate that is used to check the certificate provided by the server.
+
+Template: nslcd/disable-screensaver
+Type: error
+_Description: xscreensaver and xlockmore must be restarted before upgrading
+ One or more running instances of xscreensaver or xlockmore have been
+ detected on this system. Because of incompatible library changes, the
+ upgrade of nslcd may leave you unable to authenticate to these programs.
+ You should arrange for these programs to be restarted or stopped before
+ continuing this upgrade, to avoid locking your users out of their current
+ sessions.
+
+Template: libraries/restart-without-asking
+Type: boolean
+Default: false
+_Description: Restart services during package upgrades without asking?
+ There are services installed on your system which need to be restarted
+ when certain libraries, such as libpam, libc, and libssl, are upgraded.
+ Since these restarts may cause interruptions of service for the system,
+ you will normally be prompted on each upgrade for the list of services
+ you wish to restart.  You can choose this option to avoid being prompted;
+ instead, all necessary restarts will be done for you automatically so you
+ can avoid being asked questions on each library upgrade.
+
+Template: nslcd/restart-services
+Type: string
+_Description: Services to restart for nslcd upgrade:
+ Running services and programs that are using nslcd need to be restarted,
+ otherwise they might not be able to do lookup or authentication any more
+ (for services such as ssh, this can affect your ability to login).
+ Please review the following space-separated list of init.d scripts for
+ services to be restarted now, and correct it if needed.
+
+Template: nslcd/restart-failed
+Type: error
+#flag:translate!:3
+_Description: Failure restarting some services for nslcd upgrade
+ The following services could not be restarted:
+ .
+ ${services}
+ .
+ You will need to start these manually by running
+ '/etc/init.d/<service> start'.
+
+Template: nslcd/xdm-needs-restart
+Type: error
+_Description: Display manager must be restarted manually
+ The wdm and xdm display managers require a restart for the new version of
+ nslcd, but there are X login sessions active on your system that would be
+ terminated by this restart.  You will therefore need to restart these
+ services by hand before further X logins will be possible.

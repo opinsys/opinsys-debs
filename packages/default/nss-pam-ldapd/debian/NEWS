@@ -1,0 +1,26 @@
+nss-pam-ldapd (0.9.0-1) experimental; urgency=low
+
+    The 0.9 release changes the communication protocol used between the NSS
+    and PAM modules on one end and the nslcd process on the other end.
+
+    This means that after the upgrade, if the new nslcd is running, processes
+    that have the old NSS or PAM module already loaded will be unable to
+    perform queries.
+
+    For example, if a screensaver that was running before the upgrade has
+    locked the screen during the upgrade, the user will no longer be able to
+    unlock the screen.
+
+ -- Arthur de Jong <adejong@debian.org>  Sat, 06 Apr 2013 15:00:00 +0200
+
+nss-pam-ldapd (0.7.0) unstable; urgency=low
+
+    The package has been split into libnss-ldapd which contains the the NSS
+    module, libpam-ldapd which contains the PAM module and nslcd which
+    includes the daemon that performs the LDAP operations.
+
+    The configuration file has been changed to /etc/nslcd.conf to reflect this
+    new organisation of packages (upgrades should create this file based on
+    any existing /etc/nss-ldapd.conf file).
+
+ -- Arthur de Jong <adejong@debian.org>  Tue, 01 Sep 2009 17:00:00 +0200

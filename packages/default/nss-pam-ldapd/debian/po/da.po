@@ -1,0 +1,601 @@
+# Danish translation nss-pam-ldapd.
+# Copyright (C) 2014 nss-pam-ldapd og nedenstående oversættere.
+# This file is distributed under the same license as the nss-pam-ldapd package.
+#
+# Translators:
+#
+# Jonas Smedegaard <dr@jones.dk>, 2008.
+# Joe Hansen <joedalton2@yahoo.dk>, 2010, 2011, 2013,2014
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: nss-pam-ldapd 0.9.4-2\n"
+"Report-Msgid-Bugs-To: nss-pam-ldapd@packages.debian.org\n"
+"POT-Creation-Date: 2014-06-08 11:45+0200\n"
+"PO-Revision-Date: 2014-07-06 23:51+0200\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
+"Language: da\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:1001
+msgid "LDAP server URI:"
+msgstr "Adresse for LDAP-server:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:1001
+msgid ""
+"Please enter the Uniform Resource Identifier of the LDAP server. The format "
+"is \"ldap://<hostname_or_IP_address>:<port>/\". Alternatively, \"ldaps://\" "
+"or \"ldapi://\" can be used. The port number is optional."
+msgstr ""
+"Angiv URI'en (Uniform Resource Identifier) for den anvendte LDAP-server. "
+"Formatet er »ldap://<værtsnavn_eller_IP-adresse>:<port>/«. Alternativt "
+"»ldaps://« eller også kan »ldapi://« bruges. Portnummeret er valgfrit."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:1001
+msgid ""
+"When using an ldap or ldaps scheme it is recommended to use an IP address to "
+"avoid failures when domain name services are unavailable."
+msgstr ""
+"Når ldap- eller ldaps-skemaerne bruges, anbefales det, at bruge en IP-"
+"adresse for at undgå fejl når domænenavnstjenester ikke er tilgængelige."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:1001
+msgid "Multiple URIs can be separated by spaces."
+msgstr "Flere URI'er kan adskilles med mellemrum."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:2001
+msgid "LDAP server search base:"
+msgstr "Søgebase for LDAP-server:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:2001
+msgid ""
+"Please enter the distinguished name of the LDAP search base. Many sites use "
+"the components of their domain names for this purpose. For example, the "
+"domain \"example.net\" would use \"dc=example,dc=net\" as the distinguished "
+"name of the search base."
+msgstr ""
+"Angiv det særlige navn på LDAP-søgebasen. Mange sider bruger komponenterne "
+"fra deres domænenavne til dette formål. Eksempelvis ville domænet »eksempel."
+"dk« bruge »dc=eksempel,dc=dk« som det særlige navn på søgebasen."
+
+#. Type: select
+#. Choices
+#: ../nslcd.templates:3001
+msgid "none"
+msgstr "ingen"
+
+#. Type: select
+#. Choices
+#: ../nslcd.templates:3001
+msgid "simple"
+msgstr "simpel"
+
+#. Type: select
+#. Choices
+#: ../nslcd.templates:3001
+msgid "SASL"
+msgstr "SASL"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:3002
+msgid "LDAP authentication to use:"
+msgstr "LDAP-godkendelse at bruge:"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:3002
+msgid ""
+"Please choose what type of authentication the LDAP database should require "
+"(if any):"
+msgstr ""
+"Vælg venligst hvilken godkendelsestype LDAP-databasen skal kræve (hvis "
+"nogen):"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:3002
+msgid ""
+" * none: no authentication;\n"
+" * simple: simple bind DN and password authentication;\n"
+" * SASL: any Simple Authentication and Security Layer mechanism."
+msgstr ""
+" * ingen: ingen godkendelse;\n"
+" * simpel: simpel bind DN og godkendelse af adgangskode;\n"
+" * SASL: enhver Simple Authentication og Security Layer-mekanisme."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:4001
+msgid "LDAP database user:"
+msgstr "LDAP-databasebruger:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:4001
+msgid ""
+"Please enter the name of the account that will be used to log in to the LDAP "
+"database. This value should be specified as a DN (distinguished name)."
+msgstr ""
+"Indtast navnet for kontoen som vil blive brugt til at logge ind i LDAP-"
+"databasen. Denne værdi bør angives som et DN (særligt navn - distinguished "
+"name)."
+
+#. Type: password
+#. Description
+#: ../nslcd.templates:5001
+msgid "LDAP user password:"
+msgstr "Adgangskode for LDAP-bruger:"
+
+#. Type: password
+#. Description
+#: ../nslcd.templates:5001
+msgid ""
+"Please enter the password that will be used to log in to the LDAP database."
+msgstr ""
+"Angiv adgangskoden som vil blive brugt til at logge ind på LDAP-databasen."
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:6001
+msgid "SASL mechanism to use:"
+msgstr "SASL-mekanisme at bruge:"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:6001
+msgid ""
+"Please choose the SASL mechanism that will be used to authenticate to the "
+"LDAP database:"
+msgstr ""
+"Vælg den SASL-mekanisme som vil blive brugt til at godkende adgang til LDAP-"
+"databasen:"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:6001
+msgid ""
+" * auto: auto-negotiation;\n"
+" * LOGIN: deprecated in favor of PLAIN;\n"
+" * PLAIN: simple cleartext password mechanism;\n"
+" * NTLM: NT LAN Manager authentication mechanism;\n"
+" * CRAM-MD5: challenge-response scheme based on HMAC-MD5;\n"
+" * DIGEST-MD5: HTTP Digest compatible challenge-response scheme;\n"
+" * SCRAM: salted challenge-response mechanism;\n"
+" * GSSAPI: used for Kerberos;\n"
+" * SKEY: S/KEY mechanism (obsoleted by OTP);\n"
+" * OTP: One Time Password mechanism;\n"
+" * EXTERNAL: authentication is implicit in the context."
+msgstr ""
+" * auto: automatisk forhandling;\n"
+" * LOGIN: forældet i forhold til PLAIN;\n"
+" * PLAIN: simpel klartekst adgangskodemekanisme;\n"
+" * NTLM: NT LAN Manager-godkendelsesmekanisme;\n"
+" * CRAM-MD5: udfordr-svar skema baseret på HMAC-MD5;\n"
+" * DIGEST-MD5: HTTP Digest-kompatibel udfordr-svar skema;\n"
+" * SCRAM: salted challenge-response-mekanisme;\n"
+" * GSSAPI: brugt for Kerberos;\n"
+" * SKEY: S/KEY-mekanisme (forældet af OTP);\n"
+" * OTP: en mekanisme hvor en adgangskode kun kan bruges en gang. * EXTERNAL: "
+"godkendelse er implicit i konteksten."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:7001
+msgid "SASL realm:"
+msgstr "SASL-område (realm):"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:7001
+msgid ""
+"Please enter the SASL realm that will be used to authenticate to the LDAP "
+"database."
+msgstr ""
+"Angiv SASL-området (realm) som vil blive brugt til at godkende for LDAP-"
+"databasen."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:7001
+msgid "The realm is appended to authentication and authorization identities."
+msgstr "Området tilføjes godkendelses- og autorisationsidentiteter."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:7001
+msgid ""
+"For GSSAPI, this can be left blank to use information from the Kerberos "
+"credentials cache."
+msgstr ""
+"For GSSAPI kan dette efterlades tomt for at bruge information fra "
+"akkreditivmellemlageret for Kerberos."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:8001
+msgid "SASL authentication identity:"
+msgstr "SASL-godkendelsesidentitet:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:8001
+msgid ""
+"Please enter the SASL authentication identity that will be used to "
+"authenticate to the LDAP database."
+msgstr ""
+"Angiv SASL-godkendelsesidentiteten som vil blive brugt til at godkende for "
+"LDAP-databasen."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:8001
+msgid ""
+"This is the login used in LOGIN, PLAIN, CRAM-MD5, and DIGEST-MD5 mechanisms."
+msgstr ""
+"Dette er logindet brugt i LOGIN-, PLAIN-, CRAM-MD5- OG DIGEST-MD5-"
+"mekanismerne."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:9001
+msgid "SASL proxy authorization identity:"
+msgstr "SASL-proxygodkendelsesidentitet:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:9001
+msgid ""
+"Please enter the proxy authorization identity that will be used to "
+"authenticate to the LDAP database."
+msgstr ""
+"Angiv proxygodkendelsesidentiteten som vil blive brugt til at godkende for "
+"LDAP-databasen."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:9001
+msgid ""
+"This is the object in the name of which the LDAP request is done. This value "
+"should be specified as a DN (distinguished name)."
+msgstr ""
+"Dette er objektet i hvis navn LDAP-forespørgslen foretages. Denne værdi bør "
+"angives som et DN (særligt navn - distinguished name)."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:10001
+msgid "Cyrus SASL security properties:"
+msgstr "Cyrus SASL-sikkerhedsegenskaber:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:10001
+msgid "Please enter the Cyrus SASL security properties."
+msgstr "Indtast Cyrus SASL-sikkerhedsegenskaber."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:10001
+msgid ""
+"Allowed values are described in the ldap.conf(5) manual page in the SASL "
+"OPTIONS section."
+msgstr ""
+"Tilladte værdier er beskrevet i ldap.conf(5)-manualsiden i SASL OPTIONS-"
+"afsnittet."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:11001
+msgid "Kerberos credential cache file path:"
+msgstr "Kerberos' filsti for akkreditivmellemlageret:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:11001
+msgid ""
+"Please enter the GSSAPI/Kerberos credential cache file name that will be "
+"used."
+msgstr ""
+"Indtast filnavnet for GSSAPI/Kerberos' akkreditivmellemlageret som vil blive "
+"brugt."
+
+#. Type: boolean
+#. Description
+#: ../nslcd.templates:12001
+msgid "Use StartTLS?"
+msgstr "Brug StartTLS?"
+
+#. Type: boolean
+#. Description
+#: ../nslcd.templates:12001
+msgid ""
+"Please choose whether the connection to the LDAP server should use StartTLS "
+"to encrypt the connection."
+msgstr ""
+"Vælg venligst hvorvidt forbindelsen til LDAP-serveren skal bruge StartTLS "
+"til at kryptere forbindelsen."
+
+#. Type: select
+#. Choices
+#: ../nslcd.templates:13001
+msgid "never"
+msgstr "aldrig"
+
+#. Type: select
+#. Choices
+#: ../nslcd.templates:13001
+msgid "allow"
+msgstr "tillad"
+
+#. Type: select
+#. Choices
+#: ../nslcd.templates:13001
+msgid "try"
+msgstr "forsøg"
+
+#. Type: select
+#. Choices
+#: ../nslcd.templates:13001
+msgid "demand"
+msgstr "kræv"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:13002
+msgid "Check server's SSL certificate:"
+msgstr "Tjek servers SSL-certifikat:"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:13002
+msgid ""
+"When an encrypted connection is used, a server certificate can be requested "
+"and checked. Please choose whether lookups should be configured to require a "
+"certificate, and whether certificates should be checked for validity:"
+msgstr ""
+"Når en krypteret forbindelse bruges, kan der blive spurgt efter et "
+"servercertifikat, som tjekkes. Vælg venligst hvorvidt opslag skal "
+"konfigureres til at kræve et certifikat, og hvorvidt certifikater skal "
+"validitetstjekkes:"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:13002
+msgid ""
+" * never: no certificate will be requested or checked;\n"
+" * allow: a certificate will be requested, but it is not\n"
+"          required or checked;\n"
+" * try: a certificate will be requested and checked, but if no\n"
+"        certificate is provided, it is ignored;\n"
+" * demand: a certificate will be requested, required, and checked."
+msgstr ""
+" * aldrig: Der vil ikke blive spurgt efter eller kontrolleret for "
+"certifikater;\n"
+" * tillad: Der vil blive spurgt efter et certifikat, men det er ikke krævet\n"
+"           og kontrolleres ikke;\n"
+" * forsøg: Der vil blive spurgt efter et certifikat, som kontrolleres, men "
+"hvis\n"
+"           intet certifikat tilbydes ignoreres det;\n"
+" * kræv: Der vil blive spurgt efter et certifikat, det er krævet og det\n"
+"         kontrolleres."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:14001
+msgid "Certificate authority certificate:"
+msgstr "Certifikat for certifikatautoritet:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:14001
+msgid ""
+"When certificate checking is enabled this file contains the X.509 "
+"certificate that is used to check the certificate provided by the server."
+msgstr ""
+"Når certifikatkontrol er aktiveret, så indeholde denne fil X.509-"
+"certifikatet, som bruges til at kontrollere certifikatet leveret af "
+"serveren."
+
+#. Type: error
+#. Description
+#: ../nslcd.templates:15001
+msgid "xscreensaver and xlockmore must be restarted before upgrading"
+msgstr "xscreensaver og xlockmore skal genstartes før opgradering"
+
+#. Type: error
+#. Description
+#: ../nslcd.templates:15001
+msgid ""
+"One or more running instances of xscreensaver or xlockmore have been "
+"detected on this system. Because of incompatible library changes, the "
+"upgrade of nslcd may leave you unable to authenticate to these programs. You "
+"should arrange for these programs to be restarted or stopped before "
+"continuing this upgrade, to avoid locking your users out of their current "
+"sessions."
+msgstr ""
+"En eller flere kørende instanser af xscreensaver eller xlockmore er blevet "
+"registreret på dette system. På grund af biblioteksændringer der ikke er "
+"kompatible, vil opgraderingen af nslcd gøre, at du ikke kan godkende disse "
+"programmer. Du skal sørge for, at disse programmer bliver genstartet eller "
+"stoppet, før du fortsætter denne opgradering, så du undgår at lukke dine "
+"brugere ud af deres igangværende sessioner."
+
+#. Type: boolean
+#. Description
+#: ../nslcd.templates:16001
+msgid "Restart services during package upgrades without asking?"
+msgstr "Genstart tjenester under pakkeopgraderinger uden at spørge?"
+
+#. Type: boolean
+#. Description
+#: ../nslcd.templates:16001
+msgid ""
+"There are services installed on your system which need to be restarted when "
+"certain libraries, such as libpam, libc, and libssl, are upgraded. Since "
+"these restarts may cause interruptions of service for the system, you will "
+"normally be prompted on each upgrade for the list of services you wish to "
+"restart.  You can choose this option to avoid being prompted; instead, all "
+"necessary restarts will be done for you automatically so you can avoid being "
+"asked questions on each library upgrade."
+msgstr ""
+"Der er tjenester installeret på dit system, som kræver at blive genstartet "
+"når bestemte biblioteker, såsom libpam, libc og libssl, opgraderes. Da disse "
+"genstarter kan medføre forstyrrelse af systemets tjenester, vil du normalt "
+"blive spurgt ved hver opgradering om listen over tjenester, du ønsker at "
+"genstarte. Du kan vælge denne indstilling for at undgå at blive spurgt; i "
+"stedet for vil alle nødvendige genstarter blive udført automatisk, så du kan "
+"undgå spørgsmål ved hver biblioteksopgradering."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:17001
+msgid "Services to restart for nslcd upgrade:"
+msgstr "Tjenester at genstarte for nslcd-opgradering:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:17001
+msgid ""
+"Running services and programs that are using nslcd need to be restarted, "
+"otherwise they might not be able to do lookup or authentication any more "
+"(for services such as ssh, this can affect your ability to login). Please "
+"review the following space-separated list of init.d scripts for services to "
+"be restarted now, and correct it if needed."
+msgstr ""
+"Kørende tjenester og programmer som bruger nslcd skal genstartes, ellers vil "
+"de måske ikke mere kunne foretage opslag eller opnå godkendelse (for "
+"tjenester såsom ssh, kan dette påvirke din mulighed for at logge ind). "
+"Gennemse venligst den følgende kommaadskilte liste af init.d-skripter til "
+"tjenester som genstartes nu, og ret den hvis behovet er der."
+
+#. Type: error
+#. Description
+#: ../nslcd.templates:18001
+msgid "Failure restarting some services for nslcd upgrade"
+msgstr ""
+"Der opstod en fejl under genstart af nogle tjenester til nslcd-opgradering"
+
+#. Type: error
+#. Description
+#: ../nslcd.templates:18001
+msgid "The following services could not be restarted:"
+msgstr "De følgende tjenester kunne ikke genstartes:"
+
+#. Type: error
+#. Description
+#: ../nslcd.templates:18001
+msgid ""
+"You will need to start these manually by running '/etc/init.d/<service> "
+"start'."
+msgstr ""
+"Du skal genstarte disse manuelt ved at køre »/etc/init.d/<service> start«."
+
+#. Type: error
+#. Description
+#: ../nslcd.templates:19001
+msgid "Display manager must be restarted manually"
+msgstr "Visningshåndtering skal genstartes manuelt"
+
+#. Type: error
+#. Description
+#: ../nslcd.templates:19001
+msgid ""
+"The wdm and xdm display managers require a restart for the new version of "
+"nslcd, but there are X login sessions active on your system that would be "
+"terminated by this restart.  You will therefore need to restart these "
+"services by hand before further X logins will be possible."
+msgstr ""
+"Wdm- og xdm-visningshåndteringerne kræver en genstart for den nye version af "
+"nslcd, men der er X-logindsessioner, som er aktive på dit system og som vil "
+"blive afsluttet af denne genstart. Du skal derfor manuelt genstarte disse "
+"tjenester, før yderligere X-logind'er vil være mulige."
+
+#. Type: multiselect
+#. Description
+#: ../libnss-ldapd.templates:1001
+msgid "Name services to configure:"
+msgstr "Navnetjenester at konfigurere:"
+
+#. Type: multiselect
+#. Description
+#: ../libnss-ldapd.templates:1001
+msgid ""
+"For this package to work, you need to modify the /etc/nsswitch.conf file to "
+"use the ldap datasource."
+msgstr ""
+"For at denne pakke fungerer, må du ændre din /etc/nsswitch.conf-fil til at "
+"bruge ldap-datakilden."
+
+#. Type: multiselect
+#. Description
+#: ../libnss-ldapd.templates:1001
+msgid ""
+"You can select the services that should have LDAP lookups enabled. The new "
+"LDAP lookups will be added as the last datasource. Be sure to review these "
+"changes."
+msgstr ""
+"Du kan vælge de tjenester, som skal have LDAP-opslag aktiveret. De nye LDAP-"
+"opslag vil blive tilføjet som den sidste datakilde. Sørg for at gennemgå "
+"ændringerne."
+
+#. Type: boolean
+#. Description
+#: ../libnss-ldapd.templates:2001
+msgid "Remove LDAP from nsswitch.conf now?"
+msgstr "Fjern LDAP fra nsswitch.conf nu?"
+
+#. Type: boolean
+#. Description
+#: ../libnss-ldapd.templates:2001
+msgid ""
+"The following services are still configured to use LDAP for lookups:\n"
+"  ${services}\n"
+"but the libnss-ldapd package is about to be removed."
+msgstr ""
+"De følgende tjenester er stadig konfigureret til at bruge LDAP til\n"
+"opslag:\n"
+"  ${services}\n"
+"men pakken libnss-ldapd er ved at blive afinstalleret."
+
+#. Type: boolean
+#. Description
+#: ../libnss-ldapd.templates:2001
+msgid ""
+"You are advised to remove the entries if you don't plan on using LDAP for "
+"name resolution any more. Not removing ldap from nsswitch.conf should, for "
+"most services, not cause problems, but host name resolution could be "
+"affected in subtle ways."
+msgstr ""
+"Du anbefales at fjerne punkterne, hvis du ikke længere har planer om at "
+"bruge LDAP til navneopslag. For de fleste tjenester skulle det ikke give "
+"problemer ikke at fjerne ldap fra nsswitch.conf, men opslag af værtsnavne "
+"kan blive påvirket i mindre grad."
+
+#. Type: boolean
+#. Description
+#: ../libnss-ldapd.templates:2001
+msgid ""
+"You can edit /etc/nsswitch.conf by hand or choose to remove the entries "
+"automatically now. Be sure to review the changes to /etc/nsswitch.conf if "
+"you choose to remove the entries now."
+msgstr ""
+"Du kan redigere /etc/nsswitch.conf i hånden eller vælge at fjerne punkterne "
+"automatisk nu. Sørg for at gennemse ændringer til /etc/nsswitch.conf hvis du "
+"vælger at fjerne indlæggene nu."
