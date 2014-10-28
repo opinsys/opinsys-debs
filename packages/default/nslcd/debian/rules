@@ -29,3 +29,11 @@ override_dh_auto_test:
 override_dh_installinit:
 #	sed 's/^\(# Provides: *\|NSLCD_NAME=\)nslcd/\1pynslcd/' debian/nslcd.init > debian/pynslcd.init
 	dh_installinit --restart-after-upgrade
+
+PACKAGE = nss-pam-ldapd
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+.PHONY: get-orig-source
+get-orig-source:
+	wget -c http://arthurdejong.org/nss-pam-ldapd/nss-pam-ldapd-$(SRC_VERSION).tar.gz -O ../$(TARBALL)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
