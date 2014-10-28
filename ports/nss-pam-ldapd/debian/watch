@@ -1,0 +1,3 @@
+version=3
+opts=pgpsigurlmangle=s/$/.sig/ \
+http://arthurdejong.org/nss-pam-ldapd/downloads.html nss-pam-ldapd-([\d\.]*).tar.gz

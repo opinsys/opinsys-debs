@@ -1,0 +1,26 @@
+#!/bin/sh
+
+set -e
+
+# when upgrading from an pre-0.9 version of the package check for running
+# screensavers that could lock users out when nslcd is replaced
+# (the NSS and PAM modules loaded will not be able to communicate with the
+# new nslcd)
+if [ "$1" = upgrade ] && dpkg --compare-versions "$2" lt-nl "0.9"
+then
+  # perhaps only do check if ldap is enabled in NSS and/or PAM stack
+  if pidof xscreensaver xlockmore > /dev/null
+  then
+    # source debconf library
+    . /usr/share/debconf/confmodule
+    # show note
+    db_version 2.0
+    db_reset nslcd/disable-screensaver
+    db_input critical nslcd/disable-screensaver || true
+    db_go || true
+  fi
+fi
+
+#DEBHELPER#
+
+exit 0

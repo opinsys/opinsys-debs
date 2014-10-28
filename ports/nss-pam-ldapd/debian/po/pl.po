@@ -1,0 +1,600 @@
+# Translation of nss-pam-ldapd debconf templates to Polish.
+# Copyright (C) 2013
+# This file is distributed under the same license as the nss-pam-ldapd package.
+#
+# Michał Kułach <michal.kulach@gmail.com>, 2013, 2014.
+msgid ""
+msgstr ""
+"Project-Id-Version: nss-pam-ldapd 0.9.4-2\n"
+"Report-Msgid-Bugs-To: nss-pam-ldapd@packages.debian.org\n"
+"POT-Creation-Date: 2014-06-08 11:45+0200\n"
+"PO-Revision-Date: 2014-07-06 21:33+0200\n"
+"Last-Translator: Michał Kułach <michal.kulach@gmail.com>\n"
+"Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 1.4\n"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:1001
+msgid "LDAP server URI:"
+msgstr "URI serwera LDAP:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:1001
+msgid ""
+"Please enter the Uniform Resource Identifier of the LDAP server. The format "
+"is \"ldap://<hostname_or_IP_address>:<port>/\". Alternatively, \"ldaps://\" "
+"or \"ldapi://\" can be used. The port number is optional."
+msgstr ""
+"Proszę podać Uniform Resource Identifier serwera LDAP. Format to: \"ldap://"
+"<nazwa-hosta-lub-adres-IP>:<port>/\". Można również użyć protokołu \"ldaps://"
+"\" lub \"ldapi://\". Numer portu jest opcjonalny."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:1001
+msgid ""
+"When using an ldap or ldaps scheme it is recommended to use an IP address to "
+"avoid failures when domain name services are unavailable."
+msgstr ""
+"Przy korzystaniu z ldap lub ldaps zaleca się użycie adresu IP, w celu "
+"uniknięciu problemów w przypadku niedostępności usług nazw domenowych."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:1001
+msgid "Multiple URIs can be separated by spaces."
+msgstr "Poszczególne URI proszę oddzielić spacją."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:2001
+msgid "LDAP server search base:"
+msgstr "Podstawa wyszukiwania serwera LDAP:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:2001
+msgid ""
+"Please enter the distinguished name of the LDAP search base. Many sites use "
+"the components of their domain names for this purpose. For example, the "
+"domain \"example.net\" would use \"dc=example,dc=net\" as the distinguished "
+"name of the search base."
+msgstr ""
+"Proszę wprowadzić unikalną nazwę (ang. distinguished name) jako podstawę "
+"wyszukiwania LDAP. Wiele stron używa w tym celu części swoich nazw "
+"domenowych. Przykładowo, domena \"example.net\" może używać \"dc=example,"
+"dc=net\" jako unikalną nazwę podstawy wyszukiwania."
+
+#. Type: select
+#. Choices
+#: ../nslcd.templates:3001
+msgid "none"
+msgstr "brak"
+
+#. Type: select
+#. Choices
+#: ../nslcd.templates:3001
+msgid "simple"
+msgstr "proste"
+
+#. Type: select
+#. Choices
+#: ../nslcd.templates:3001
+msgid "SASL"
+msgstr "SASL"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:3002
+msgid "LDAP authentication to use:"
+msgstr "Uwierzytelnianie LDAP:"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:3002
+msgid ""
+"Please choose what type of authentication the LDAP database should require "
+"(if any):"
+msgstr "Proszę wybrać typ uwierzytelniania bazy danych LDAP:"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:3002
+msgid ""
+" * none: no authentication;\n"
+" * simple: simple bind DN and password authentication;\n"
+" * SASL: any Simple Authentication and Security Layer mechanism."
+msgstr ""
+" * brak: brak uwierzytelniania;\n"
+" * proste: proste DN bind i hasło;\n"
+" * SASL: dowolny mechanizm Simple Authentication and Security Layer."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:4001
+msgid "LDAP database user:"
+msgstr "Użytkownik bazy danych LDAP:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:4001
+msgid ""
+"Please enter the name of the account that will be used to log in to the LDAP "
+"database. This value should be specified as a DN (distinguished name)."
+msgstr ""
+"Proszę wybrać nazwę konta, która będzie używana do zalogowania się do bazy "
+"danych LDAP. Wartość powinna być podana jako unikalna nazwa (DN - ang. "
+"distinguished name)."
+
+#. Type: password
+#. Description
+#: ../nslcd.templates:5001
+msgid "LDAP user password:"
+msgstr "Hasło użytkownika LDAP:"
+
+#. Type: password
+#. Description
+#: ../nslcd.templates:5001
+msgid ""
+"Please enter the password that will be used to log in to the LDAP database."
+msgstr ""
+"Proszę wprowadzić hasło, które będzie używane do zalogowania się do bazy "
+"danych LDAP."
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:6001
+msgid "SASL mechanism to use:"
+msgstr "Mechanizm SASL do użycia:"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:6001
+msgid ""
+"Please choose the SASL mechanism that will be used to authenticate to the "
+"LDAP database:"
+msgstr ""
+"Proszę wybrać mechanizm SASL, który będzie używany do uwierzytelnienia "
+"dostępu do bazy danych LDAP:"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:6001
+msgid ""
+" * auto: auto-negotiation;\n"
+" * LOGIN: deprecated in favor of PLAIN;\n"
+" * PLAIN: simple cleartext password mechanism;\n"
+" * NTLM: NT LAN Manager authentication mechanism;\n"
+" * CRAM-MD5: challenge-response scheme based on HMAC-MD5;\n"
+" * DIGEST-MD5: HTTP Digest compatible challenge-response scheme;\n"
+" * SCRAM: salted challenge-response mechanism;\n"
+" * GSSAPI: used for Kerberos;\n"
+" * SKEY: S/KEY mechanism (obsoleted by OTP);\n"
+" * OTP: One Time Password mechanism;\n"
+" * EXTERNAL: authentication is implicit in the context."
+msgstr ""
+" * auto: automatyczna negocjacja;\n"
+" * LOGIN: przestarzałe, proszę używać PLAIN;\n"
+" * PLAIN: prosty mechanizm hasła w zwykłym tekście;\n"
+" * NTLM: mechanizm uwierzytelniania NT LAN Manager;\n"
+" * CRAM-MD5: wyzwanie-odpowiedź oparte na HMAC-MD5;\n"
+" * DIGEST-MD5: wyzwanie-odpowiedź kompatybilne z HTTP Digest;\n"
+" * SCRAM: posolony mechanizm wyzwanie-odpowiedź;\n"
+" * GSSAPI: używane do Kerberosa;\n"
+" * SKEY: mechanizm S/KEY (zastąpiony przez OTP);\n"
+" * OTP: mechanizm jednorazowego hasła - One Time Password;\n"
+" * EXTERNAL: uwierzytelnianie wynika z kontekstu."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:7001
+msgid "SASL realm:"
+msgstr "Dziedzina SASL:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:7001
+msgid ""
+"Please enter the SASL realm that will be used to authenticate to the LDAP "
+"database."
+msgstr ""
+"Proszę wprowadzić dziedzinę SASL (ang. realm), która będzie używana do "
+"uwierzytelnienia do bazy danych LDAP."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:7001
+msgid "The realm is appended to authentication and authorization identities."
+msgstr ""
+"Dziedzina jest dołączana do identyfikatorów uwierzytelniania i autoryzacji."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:7001
+msgid ""
+"For GSSAPI, this can be left blank to use information from the Kerberos "
+"credentials cache."
+msgstr ""
+"W przypadku GSSAPI pole to można pozostawić puste, aby używać informacji z "
+"bufora uwierzytelnień Kerberos."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:8001
+msgid "SASL authentication identity:"
+msgstr "Identyfikator uwierzytelnienia SASL:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:8001
+msgid ""
+"Please enter the SASL authentication identity that will be used to "
+"authenticate to the LDAP database."
+msgstr ""
+"Proszę wprowadzić identyfikator uwierzytelnienia SASL, który będzie używany "
+"w celu uwierzytelnienia do bazy danych LDAP."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:8001
+msgid ""
+"This is the login used in LOGIN, PLAIN, CRAM-MD5, and DIGEST-MD5 mechanisms."
+msgstr ""
+"Jest to login używany w mechanizmach LOGIN, PLAIN, CRAM-MD5 i DIGEST-MD5."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:9001
+msgid "SASL proxy authorization identity:"
+msgstr "Identyfikator pośrednika uwierzytelniania SASL:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:9001
+msgid ""
+"Please enter the proxy authorization identity that will be used to "
+"authenticate to the LDAP database."
+msgstr ""
+"Proszę wprowadzić identyfikator pośrednika uwierzytelniania, który będzie "
+"używany w celu uwierzytelnienia dostępu do bazy danych LDAP."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:9001
+msgid ""
+"This is the object in the name of which the LDAP request is done. This value "
+"should be specified as a DN (distinguished name)."
+msgstr ""
+"Jest to obiekt w imieniu którego wykonywane jest żądanie LDAP. Wartość "
+"powinna być podana jako unikalna nazwa (DN - ang. distinguished name)."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:10001
+msgid "Cyrus SASL security properties:"
+msgstr "Właściwości związane z bezpieczeństwem Cyrus SASL:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:10001
+msgid "Please enter the Cyrus SASL security properties."
+msgstr "Proszę wprowadzić cechy bezpieczeństwa Cyrus SASL."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:10001
+msgid ""
+"Allowed values are described in the ldap.conf(5) manual page in the SASL "
+"OPTIONS section."
+msgstr ""
+"Dopuszczalne wartości są opisane w podręczniku systemowym ldap.conf(5) w "
+"rozdziale SASL OPTIONS."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:11001
+msgid "Kerberos credential cache file path:"
+msgstr "Ścieżka bufora uwierzytelnień Kerberos:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:11001
+msgid ""
+"Please enter the GSSAPI/Kerberos credential cache file name that will be "
+"used."
+msgstr ""
+"Proszę wprowadzić nazwę pliku bufora GSSAPI/Kerberos która ma być używana."
+
+#. Type: boolean
+#. Description
+#: ../nslcd.templates:12001
+msgid "Use StartTLS?"
+msgstr "Używać StartTLS?"
+
+#. Type: boolean
+#. Description
+#: ../nslcd.templates:12001
+msgid ""
+"Please choose whether the connection to the LDAP server should use StartTLS "
+"to encrypt the connection."
+msgstr ""
+"Proszę zdecydować czy połączenia do serwera LDAP powinny wykorzystywać "
+"StartTLS w celu szyfrowania połączenia."
+
+#. Type: select
+#. Choices
+#: ../nslcd.templates:13001
+msgid "never"
+msgstr "nigdy"
+
+#. Type: select
+#. Choices
+#: ../nslcd.templates:13001
+msgid "allow"
+msgstr "dozwól"
+
+#. Type: select
+#. Choices
+#: ../nslcd.templates:13001
+msgid "try"
+msgstr "próbuj"
+
+#. Type: select
+#. Choices
+#: ../nslcd.templates:13001
+msgid "demand"
+msgstr "wymagaj"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:13002
+msgid "Check server's SSL certificate:"
+msgstr "Sprawdzanie certyfikatu SSL serwera:"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:13002
+msgid ""
+"When an encrypted connection is used, a server certificate can be requested "
+"and checked. Please choose whether lookups should be configured to require a "
+"certificate, and whether certificates should be checked for validity:"
+msgstr ""
+"Gdy używane jest połączenie szyfrowane, certyfikat serwera może być żądany i "
+"sprawdzany. Proszę zdecydować które wyszukiwania mają wymagać certyfikatu i "
+"czy certyfikat ma być sprawdzany pod kątem prawidłowości:"
+
+#. Type: select
+#. Description
+#: ../nslcd.templates:13002
+msgid ""
+" * never: no certificate will be requested or checked;\n"
+" * allow: a certificate will be requested, but it is not\n"
+"          required or checked;\n"
+" * try: a certificate will be requested and checked, but if no\n"
+"        certificate is provided, it is ignored;\n"
+" * demand: a certificate will be requested, required, and checked."
+msgstr ""
+" * nigdy :  certyfikaty nie będą żądane ani sprawdzane;\n"
+" * dozwól:  certyfikat będzie żądany, ale nie jest wymagany ani\n"
+"            sprawdzany;\n"
+" * próbuj:  certyfikat będzie żądany i sprawdzany, jednak gdy nie\n"
+"            zostanie on dostarczony zostanie to zignorowane;\n"
+" * wymagaj: certyfikat będzie żądany, wymagany i sprawdzany."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:14001
+msgid "Certificate authority certificate:"
+msgstr "Certyfikat urzędu certyfikacji:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:14001
+msgid ""
+"When certificate checking is enabled this file contains the X.509 "
+"certificate that is used to check the certificate provided by the server."
+msgstr ""
+"Gdy włączone jest sprawdzanie certyfikatu plik ten zawiera certyfikat X.509 "
+"używany do sprawdzenia certyfikatu dostarczonego przez serwer."
+
+#. Type: error
+#. Description
+#: ../nslcd.templates:15001
+msgid "xscreensaver and xlockmore must be restarted before upgrading"
+msgstr "xscreensaver i xlockmore muszą zostać zrestartowane przed aktualizacją"
+
+#. Type: error
+#. Description
+#: ../nslcd.templates:15001
+msgid ""
+"One or more running instances of xscreensaver or xlockmore have been "
+"detected on this system. Because of incompatible library changes, the "
+"upgrade of nslcd may leave you unable to authenticate to these programs. You "
+"should arrange for these programs to be restarted or stopped before "
+"continuing this upgrade, to avoid locking your users out of their current "
+"sessions."
+msgstr ""
+"Wykryto jedną lub więcej działających kopii programu xscreensaver lub "
+"xlockmore. Z powodu niekompatybilnych zmian biblioteki, aktualizacja nslcd "
+"uniemożliwiłaby autoryzację użytkownika do tych programów. Należy "
+"zrestartować lub zatrzymać te programy przed aktualizacją, aby zapobiec "
+"utknięciu użytkowników poza ich aktualnymi sesjami."
+
+#. Type: boolean
+#. Description
+#: ../nslcd.templates:16001
+msgid "Restart services during package upgrades without asking?"
+msgstr "Zrestartować usługi podczas aktualizacji pakietu bez pytania?"
+
+#. Type: boolean
+#. Description
+#: ../nslcd.templates:16001
+msgid ""
+"There are services installed on your system which need to be restarted when "
+"certain libraries, such as libpam, libc, and libssl, are upgraded. Since "
+"these restarts may cause interruptions of service for the system, you will "
+"normally be prompted on each upgrade for the list of services you wish to "
+"restart.  You can choose this option to avoid being prompted; instead, all "
+"necessary restarts will be done for you automatically so you can avoid being "
+"asked questions on each library upgrade."
+msgstr ""
+"Niektóre z zainstalowanych usług wymagają restartu, gdy są aktualizowane "
+"określone biblioteki (np. libpam, libc i libss1). Ponieważ restarty mogą "
+"spowodować przerwanie tych usług, użytkownik jest zwykle pytany podczas "
+"każdej aktualizacji o listę usług, które chce zrestartować. Można wybrać tę "
+"opcję, aby zapobiec takim pytaniom; wtedy wszystkie potrzebne restarty "
+"odbędą się automatycznie, a użytkownik uniknie pytania przy każdej "
+"aktualizacji biblioteki."
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:17001
+msgid "Services to restart for nslcd upgrade:"
+msgstr "Usługi które mają być zrestartowane, w związku z aktualizacją nslcd:"
+
+#. Type: string
+#. Description
+#: ../nslcd.templates:17001
+msgid ""
+"Running services and programs that are using nslcd need to be restarted, "
+"otherwise they might not be able to do lookup or authentication any more "
+"(for services such as ssh, this can affect your ability to login). Please "
+"review the following space-separated list of init.d scripts for services to "
+"be restarted now, and correct it if needed."
+msgstr ""
+"Uruchomione usługi i programy wykorzystujące nslcd wymagają restartu. W "
+"przeciwnym wypadku operacje związane z autoryzacją nie będą działały "
+"prawidłowo. Przy usługach takich jak ssh będzie to oznaczało brak możliwości "
+"zalogowania. Zalecane jest przejrzenie listy skryptów startowych i jej "
+"ewentualne poprawienie."
+
+#. Type: error
+#. Description
+#: ../nslcd.templates:18001
+msgid "Failure restarting some services for nslcd upgrade"
+msgstr "Nie udało się zrestartować niektórych usług w celu aktualizacji nslcd"
+
+#. Type: error
+#. Description
+#: ../nslcd.templates:18001
+msgid "The following services could not be restarted:"
+msgstr "Następujące usługi nie mogły zostać zrestartowane:"
+
+#. Type: error
+#. Description
+#: ../nslcd.templates:18001
+msgid ""
+"You will need to start these manually by running '/etc/init.d/<service> "
+"start'."
+msgstr ""
+"Aby zrestartować te usługi ręcznie należy wywołać \"/etc/init.d/<service> "
+"start\"."
+
+#. Type: error
+#. Description
+#: ../nslcd.templates:19001
+msgid "Display manager must be restarted manually"
+msgstr "Menedżer logowania musi być zrestartowany ręcznie"
+
+#. Type: error
+#. Description
+#: ../nslcd.templates:19001
+msgid ""
+"The wdm and xdm display managers require a restart for the new version of "
+"nslcd, but there are X login sessions active on your system that would be "
+"terminated by this restart.  You will therefore need to restart these "
+"services by hand before further X logins will be possible."
+msgstr ""
+"Menedżery logowania wdm i xdm wymagają restartu z powodu nowej wersji nslcd, "
+"ale występują aktywne sesje logowania X, które mogą być przerwane przez ten "
+"restart. Będzie istniała potrzeba ręcznego restartu tych usług, aby kolejne "
+"logowania X stały się możliwe."
+
+#. Type: multiselect
+#. Description
+#: ../libnss-ldapd.templates:1001
+msgid "Name services to configure:"
+msgstr "Nazwy usług do skonfigurowania:"
+
+#. Type: multiselect
+#. Description
+#: ../libnss-ldapd.templates:1001
+msgid ""
+"For this package to work, you need to modify the /etc/nsswitch.conf file to "
+"use the ldap datasource."
+msgstr ""
+"Do działania tego pakietu konieczne jest zmodyfikowania pliku /etc/nsswitch."
+"conf tak, aby używać źródła danych ldap."
+
+#. Type: multiselect
+#. Description
+#: ../libnss-ldapd.templates:1001
+msgid ""
+"You can select the services that should have LDAP lookups enabled. The new "
+"LDAP lookups will be added as the last datasource. Be sure to review these "
+"changes."
+msgstr ""
+"Można wybrać usługi, które powinny mieć włączone wyszukiwanie LDAP. Nowe "
+"wyszukiwania LDAP zostaną dodane jako ostatnie źródło danych. Proszę "
+"koniecznie przejrzeć te zmiany."
+
+#. Type: boolean
+#. Description
+#: ../libnss-ldapd.templates:2001
+msgid "Remove LDAP from nsswitch.conf now?"
+msgstr "Usunąć teraz LDAP z pliku nsswitch.conf?"
+
+#. Type: boolean
+#. Description
+#: ../libnss-ldapd.templates:2001
+msgid ""
+"The following services are still configured to use LDAP for lookups:\n"
+"  ${services}\n"
+"but the libnss-ldapd package is about to be removed."
+msgstr ""
+"Następujące usługi są wciąż skonfigurowane w celu używania LDAP do "
+"wyszukiwań:\n"
+"  ${services}\n"
+"lecz pakiet libnss-ldapd ma zostać usunięty."
+
+#. Type: boolean
+#. Description
+#: ../libnss-ldapd.templates:2001
+msgid ""
+"You are advised to remove the entries if you don't plan on using LDAP for "
+"name resolution any more. Not removing ldap from nsswitch.conf should, for "
+"most services, not cause problems, but host name resolution could be "
+"affected in subtle ways."
+msgstr ""
+"Zaleca się usunąć te wpisy jeśli nie planuje się dalszego używania LDAP do "
+"rozwiązywania nazw. Nieusunięcie ldap z nsswitch.conf nie powinno stwarzać "
+"problemów dla większości usług, lecz mechanizm rozwiązywania nazw może nie "
+"do końca działać poprawnie."
+
+#. Type: boolean
+#. Description
+#: ../libnss-ldapd.templates:2001
+msgid ""
+"You can edit /etc/nsswitch.conf by hand or choose to remove the entries "
+"automatically now. Be sure to review the changes to /etc/nsswitch.conf if "
+"you choose to remove the entries now."
+msgstr ""
+"Można dokonać ręcznej edycji pliku /etc/nsswitch.conf lub wybrać teraz "
+"automatyczne usunięcie odpowiednich wpisów. W tym drugim przypadku proszę "
+"pamiętać o przejrzeniu plik /etc/nsswitch.conf po zakończeniu konfiguracji."
+
+#~ msgid ""
+#~ "If certificate checking is enabled, at least one of the tls_cacertdir or "
+#~ "tls_cacertfile options must be put in /etc/nslcd.conf."
+#~ msgstr ""
+#~ "Jeśli włączone jest sprawdzanie certyfikatu to w pliku /etc/nslcd.conf "
+#~ "należy umieścić co najmniej jedną z opcji tls_cacertdir lub "
+#~ "tls_cacertfile."

@@ -1,0 +1,126 @@
+#!/bin/sh
+
+# testsuite - run tests in our test environment
+#
+# Copyright (C) 2013 Arthur de Jong
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301 USA
+
+set -e
+
+# get the script name
+script="`basename "$0"`"
+
+# redirect stderr to stdout to have readable logs
+exec 2>&1
+
+# stop any running daemons that might interfere
+echo "$script: stopping services..."
+service slapd stop || true
+service nslcd stop || true
+service pynslcd stop || true
+service nscd stop || true
+service unscd stop || true
+
+# temporary file to keep nslcd debug output
+nslcd_debug_log=`mktemp -t nslcd.debug.log.XXXXXX`
+
+# Clean up on exit
+cleanup() {
+  echo "$script: cleaning up..."
+  service nslcd stop || true
+  service pynslcd stop || true
+  [ -n "$tmpslapd" ] && tests/setup_slapd.sh "$tmpslapd" clean
+  echo "$script: restoring configuration..."
+  if [ -n "$bkdir" ]
+  then
+    cp -p "$bkdir"/nsswitch.conf /etc/nsswitch.conf
+    cp -p "$bkdir"/nslcd.conf  /etc/nslcd.conf
+    rm -rf "$bkdir"
+  fi
+  if [ -n "$nslcd_debug_log" ]
+  then
+    rm -f "$nslcd_debug_log"
+  fi
+}
+trap cleanup EXIT
+
+# make backup of some files
+echo "$script: making backup of old configuration..."
+bkdir=`mktemp -d -t backups.XXXXXX`
+cp -p /etc/nsswitch.conf "$bkdir"/
+cp -p /etc/nslcd.conf "$bkdir"/
+
+# configure nsswitch.conf
+echo "$script: configuring /etc/nsswitch.conf..."
+tests/testenv.sh nss_enable \
+  passwd group shadow hosts networks protocols services ethers rpc netgroup aliases
+
+# configure PAM?
+
+# configure and start slapd
+echo "$script: setting up test slapd..."
+tmpslapd=`mktemp -d -t slapd.XXXXXX`
+tests/setup_slapd.sh "$tmpslapd" setup
+tests/setup_slapd.sh "$tmpslapd" start
+
+# set up nslcd.conf
+echo "$script: setting up nslcd.conf..."
+cat tests/nslcd-test.conf > /etc/nslcd.conf
+
+# start nslcd (or pynslcd)
+[ -x /usr/sbin/nslcd ] && daemon="nslcd" || true
+[ -x /usr/sbin/pynslcd ] && daemon="pynslcd" || true
+if [ -z "$daemon" ]
+then
+  echo "$script: neither nslcd nor pynslcd found..."
+  exit 1
+fi
+echo "$script: starting $daemon..."
+/usr/sbin/$daemon -d > "$nslcd_debug_log" 2>&1 &
+
+# allow for a second to have nslcd up and running
+sleep 1
+
+# see if test environment is in order
+echo "$script: check test environment..."
+tests/testenv.sh check
+tests/testenv.sh check_nss \
+  passwd group shadow hosts networks protocols services ethers rpc netgroup aliases
+
+# see if anything failed
+fail=""
+
+# run the NSS tests
+echo "$script: running NSS tests..."
+tests/test_nsscmds.sh || fail="fail"
+
+# run the PAM tests
+echo "$script: running PAM tests..."
+tests/test_pamcmds.sh || fail="fail"
+
+# dump nslcd debug output on failure
+if [ -n "$fail" ]
+then
+  echo "$script: FAIL"
+  echo "$script: $daemon debug output:"
+  service $daemon stop || true
+  cat "$nslcd_debug_log"
+  exit 1
+else
+  echo "$script: all tests passed!"
+  exit 0
+fi
