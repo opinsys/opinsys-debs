@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+
+CONFFILE="/etc/nslcd.conf"
+OCONFFILE="/etc/nss-ldapd.conf"
+
+# remove /var/run/nslcd directory on remove unless an nslcd implementation
+# is still installed (e.g. when switching between nslcd and pynslcd)
+if [ "$1" = "remove" ] && ! [ -x /usr/sbin/nslcd ] && ! [ -x /usr/sbin/pynslcd ]
+then
+  rm -rf /var/run/nslcd
+fi
+
+# remove our configuration file (not a conffile) on purge unless an nslcd
+# implementation is still installed (e.g. when switching between nslcd and
+# pynslcd)
+if [ "$1" = "purge" ] && ! [ -x /usr/sbin/nslcd ] && ! [ -x /usr/sbin/pynslcd ]
+then
+  rm -f "$CONFFILE" "$OCONFFILE"
+fi
+
+#DEBHELPER#

@@ -1,0 +1,32 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE=1
+
+# multiarch support
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+
+# enable hardening options (we disable pie because it conflicts with -fPIC)
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all,-pie
+
+%:
+	dh $@ --with python2
+
+# pass extra flags to configure
+override_dh_auto_configure:
+	dh_auto_configure -- \
+	            --libdir=/lib/$(DEB_HOST_MULTIARCH) \
+	            --with-pam-seclib-dir=/lib/$(DEB_HOST_MULTIARCH)/security \
+	            --enable-warnings \
+	            --enable-pynslcd
+
+# run the tests but ignore the results
+override_dh_auto_test:
+	-chmod o-rwx tests/nslcd-test.conf
+	-dh_auto_test
+	-cat tests/test-suite.log
+
+# ensure that nslcd is not down during upgrades and generate a pynslcd
+# init script on the fly
+override_dh_installinit:
+	sed 's/^\(# Provides: *\|NSLCD_NAME=\)nslcd/\1pynslcd/' debian/nslcd.init > debian/pynslcd.init
+	dh_installinit --restart-after-upgrade

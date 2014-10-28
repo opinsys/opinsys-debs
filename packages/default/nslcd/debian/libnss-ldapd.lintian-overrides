@@ -1,0 +1,3 @@
+# since the shared library shouldn't be publically used the SONAME is only
+# used for internal purposes
+libnss-ldapd: package-name-doesnt-match-sonames libnss-ldap2
