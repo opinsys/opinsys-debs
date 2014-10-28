@@ -16,8 +16,7 @@ override_dh_auto_configure:
 	dh_auto_configure -- \
 	            --libdir=/lib/$(DEB_HOST_MULTIARCH) \
 	            --with-pam-seclib-dir=/lib/$(DEB_HOST_MULTIARCH)/security \
-	            --enable-warnings \
-	            --enable-pynslcd
+	            --enable-warnings
 
 # run the tests but ignore the results
 override_dh_auto_test:
@@ -28,5 +27,5 @@ override_dh_auto_test:
 # ensure that nslcd is not down during upgrades and generate a pynslcd
 # init script on the fly
 override_dh_installinit:
-	sed 's/^\(# Provides: *\|NSLCD_NAME=\)nslcd/\1pynslcd/' debian/nslcd.init > debian/pynslcd.init
+#	sed 's/^\(# Provides: *\|NSLCD_NAME=\)nslcd/\1pynslcd/' debian/nslcd.init > debian/pynslcd.init
 	dh_installinit --restart-after-upgrade

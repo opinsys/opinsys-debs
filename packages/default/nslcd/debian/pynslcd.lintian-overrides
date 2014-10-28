@@ -1,3 +1,0 @@
-# since pynslcd shares the debconf templates with nslcd it also inherits
-# the disable-screensaver template which isn't used in pynslcd
-pynslcd: unused-debconf-template nslcd/disable-screensaver

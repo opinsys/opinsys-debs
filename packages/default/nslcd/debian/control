@@ -5,9 +5,7 @@ Maintainer: Arthur de Jong <adejong@debian.org>
 Standards-Version: 3.9.5
 Build-Depends: debhelper (>=9), autotools-dev, libkrb5-dev, libldap2-dev,
                libsasl2-dev, po-debconf (>= 0.5.0), docbook2x, docbook-xml,
-               libpam0g-dev, python (>= 2.6.6-3~), python-daemon, python-ldap,
-               python-pyasn1, python-pyasn1-modules
-X-Python-Version: >= 2.6
+               libpam0g-dev
 Homepage: http://arthurdejong.org/nss-pam-ldapd/
 Vcs-Svn: http://arthurdejong.org/svn/nss-pam-ldapd/debian/nss-pam-ldapd/trunk/
 Vcs-Browser: http://arthurdejong.org/viewvc/nss-pam-ldapd/debian/nss-pam-ldapd/trunk/
@@ -31,29 +29,6 @@ Description: daemon for NSS and PAM lookups using LDAP
  This package provides a daemon for retrieving user accounts and similar
  system information from LDAP. It is used by the libnss-ldapd and libpam-ldapd
  packages but is not very useful by itself.
-
-Package: pynslcd
-Architecture: all
-Multi-Arch: foreign
-Provides: nslcd-2
-Depends: ${python:Depends}, ${misc:Depends}, adduser,
-         python-daemon, python-ldap, python-setproctitle, python-pyasn1,
-         python-pyasn1-modules
-Recommends: nscd,
-            libnss-ldapd | libnss-ldap,
-            libpam-ldapd | libpam-ldap | libpam-krb5 | libpam-heimdal | libpam-sss,
-            nslcd-utils, ldap-utils, bind9-host | host
-Suggests: kstart
-Replaces: nslcd-2
-Breaks: libnss-ldapd (<< 0.9.0), libpam-ldapd (<< 0.9.0)
-Conflicts: nslcd-2, nslcd
-Description: daemon for NSS and PAM lookups via LDAP - Python version
- This package provides a daemon for retrieving user accounts and similar
- system information from LDAP. It is used by the libnss-ldapd and
- libpam-ldapd packages but is not very useful by itself.
- .
- This is an alternative Python implementation of nslcd. Note that it is
- currently EXPERIMENTAL and has not undergone the same testing as nslcd.
 
 Package: libnss-ldapd
 Architecture: any
