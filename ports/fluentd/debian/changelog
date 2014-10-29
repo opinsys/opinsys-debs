@@ -1,3 +1,9 @@
+fluentd (0.10.55-0+opinsys1) trusty; urgency=medium
+
+  * New upstream release.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 29 Oct 2014 21:16:51 +0200
+
 fluentd (0.10.46-1+opinsys1) precise; urgency=low
 
   * Update to 0.10.46
