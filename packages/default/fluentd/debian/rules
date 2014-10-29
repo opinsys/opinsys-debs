@@ -9,6 +9,7 @@ SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):
 
 INSTALL_DIR = $(CURDIR)/debian/fluentd/usr/lib/fluentd-gem
 override_dh_auto_install:
+	mkdir -p $(CURDIR)/debian/fluentd/etc/fluent/conf.d
 	mkdir -p $(INSTALL_DIR)
 	GEM_HOME=$(INSTALL_DIR) gem1.9.1 install --version $(SRC_VERSION) $(PACKAGE)
 
