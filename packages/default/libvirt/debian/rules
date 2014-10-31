@@ -3,17 +3,10 @@
 DEB_HOST_ARCH_CPU := $(shell dpkg-architecture -qDEB_HOST_ARCH_CPU 2>/dev/null)
 DEB_HOST_ARCH_OS := $(shell dpkg-architecture -qDEB_HOST_ARCH_OS 2>/dev/null)
 
-ifneq (,$(findstring $(DEB_HOST_ARCH_OS), linux))
-  ifneq (,$(findstring $(DEB_HOST_ARCH), i386 amd64))
     WITH_XEN = --with-xen
     WITH_LIBXL = --with-libxl
     WITH_VBOX = --with-vbox
     MAKE_CHECK = 1
-  else
-    WITH_XEN            = --without-xen
-    WITH_LIBXL          = --without-libxl
-    WITH_VBOX           = --without-vbox
-  endif
   WITH_STORAGE_LVM    = --with-storage-lvm
 #  WITH_STORAGE_ISCSI  = --with-storage-iscsi
   WITH_STORAGE_DISK   =	--with-storage-disk
@@ -48,39 +41,15 @@ ifneq (,$(findstring $(DEB_HOST_ARCH_OS), linux))
   else
       WITH_LXC        = --with-lxc
   endif
-else
-  WITH_STORAGE_LVM    = --without-storage-lvm
-#  WITH_STORAGE_ISCSI  = --without-storage-iscsi
-  WITH_STORAGE_DISK   =	--without-storage-disk
-  WITH_STORAGE_SHEEPDOG = --without-storage-sheepdog
-  WITH_STORAGE_RBD    = --without-storage-rbd
-  WITH_UDEV           = --without-udev
-  WITH_CAPNG          = --without-capng
-  WITH_POLKIT         = --without-polkit
-  WITH_MACVTAP        = --without-macvtap
-  WITH_NETWORK        = --without-network
-  WITH_QEMU           = --without-qemu
-  WITH_LXC            = --without-lxc
-  WITH_NUMA           = --without-numactl
-  WITH_NETCF          = --without-netcf
-  WITH_INIT_SCRIPT    =	--with-init-script=none
-  WITH_SYSTEMD        = --without-systemd-daemon
-  WITH_AUDIT          = --without-audit
-  WITH_SELINUX        = --without-selinux
-  WITH_APPARMOR       = --without-apparmor
-  WITH_DTRACE         = --without-dtrace
-  WITH_XEN            = --without-xen
-  WITH_LIBXL          = --without-libxl
-  WITH_VBOX           = --without-vbox
-endif
 
-# Not available in wheezy
 WITH_STORAGE_SHEEPDOG = --without-storage-sheepdog
 WITH_STORAGE_RBD      = --without-storage-rbd
 WITH_LIBXL            = --without-libxl
 WITH_MACVTAP          = --without-macvtap
+WITH_SELINUX          = --without-selinux
 
 DEB_CONFIGURE_EXTRA_ARGS :=      \
+	--without-selinux	 \
 	--disable-silent-rules   \
 	--disable-rpath          \
 	$(WITH_QEMU)		 \
@@ -101,7 +70,6 @@ DEB_CONFIGURE_EXTRA_ARGS :=      \
 	$(WITH_STORAGE_RBD)      \
 	$(WITH_INIT_SCRIPT)      \
 	$(WITH_NUMA)             \
-	$(WITH_SELINUX)          \
 	$(WITH_APPARMOR)         \
 	--without-esx		 \
 	--without-phyp           \
