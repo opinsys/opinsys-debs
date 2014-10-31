@@ -1,5 +1,8 @@
 #!/usr/bin/make -f
 
+DEB_HOST_ARCH_CPU := $(shell dpkg-architecture -qDEB_HOST_ARCH_CPU 2>/dev/null)
+DEB_HOST_ARCH_OS := $(shell dpkg-architecture -qDEB_HOST_ARCH_OS 2>/dev/null)
+
 ifneq (,$(findstring $(DEB_HOST_ARCH_OS), linux))
   ifneq (,$(findstring $(DEB_HOST_ARCH), i386 amd64))
     WITH_XEN = --with-xen
@@ -25,8 +28,8 @@ ifneq (,$(findstring $(DEB_HOST_ARCH_OS), linux))
   WITH_OPENVZ         = --with-openvz
   WITH_NETCF          = --with-netcf
   WITH_SANLOCK        = --with-sanlock
-  WITH_INIT_SCRIPT    =	--with-init-script=systemd
-  WITH_SYSTEMD        = --with-systemd-daemon
+#  WITH_INIT_SCRIPT    =	--with-init-script=upstart
+#  WITH_SYSTEMD        = --with-systemd-daemon
   WITH_AUDIT          = --with-audit
   WITH_SELINUX        = --with-selinux --with-secdriver-selinux --with-selinux-mount=/sys/fs/selinux
   WITH_APPARMOR       = --with-apparmor --with-secdriver-apparmor --with-apparmor-profiles
@@ -131,7 +134,7 @@ override_dh_auto_install:
 	# Add empty dirs so dh_install doesn't fail on kFreebsd until we have
 	# Polkit/Systemd/systemtap/apparmor support
 	mkdir -p debian/tmp/usr/share/polkit-1 \
-	         debian/tmp/lib/systemd/system \
+	         debian/tmp/usr/lib/systemd/system \
 	         debian/tmp/usr/share/systemtap \
 	         debian/tmp/etc/apparmor.d/
 
@@ -152,10 +155,10 @@ override_dh_install:
 	    debian/libvirt-bin.libvirt-guests.init
 	cp tools/libvirt-guests.sysconf \
 	    debian/libvirt-bin.libvirt-guests.default
-ifneq (,$(findstring $(DEB_HOST_ARCH_OS), linux))
-	mv debian/libvirt-bin/lib/systemd/system/libvirtd.service \
-	   debian/libvirt-bin/lib/systemd/system/libvirt-bin.service
-endif
+#ifneq (,$(findstring $(DEB_HOST_ARCH_OS), linux))
+#	mv debian/libvirt-bin/lib/systemd/system/libvirtd.service \
+#	   debian/libvirt-bin/lib/systemd/system/libvirt-bin.service
+#endif
 
 	for l in $(LOGROTATE); do \
 		cp $(CURDIR)/debian/build/daemon/$$l.logrotate \
@@ -169,10 +172,10 @@ endif
 	rm -r debian/libvirt-bin/usr/share/libvirt/api/
 
 override_dh_installinit:
-	dh_systemd_enable
+#	dh_systemd_enable
 	dh_installinit --name=libvirt-bin --restart-after-upgrade -- defaults 28 72
 	dh_installinit --name=libvirt-guests --no-restart-on-upgrade -- defaults 29 71
-	dh_systemd_start --restart-after-upgrade
+#	dh_systemd_start --restart-after-upgrade
 
 override_dh_installdocs:
 	dh_installdocs
