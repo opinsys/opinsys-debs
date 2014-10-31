@@ -1,0 +1,7 @@
+/usr/lib/ipxe/qemu/pxe-e1000.rom /usr/lib/ipxe/e1000_82540.rom
+/usr/lib/ipxe/qemu/pxe-e1000.rom /usr/lib/ipxe/82540em.rom
+/usr/lib/ipxe/qemu/pxe-eepro100.rom /usr/lib/ipxe/eepro100.rom
+/usr/lib/ipxe/qemu/pxe-ne2k_pci.rom /usr/lib/ipxe/ns8390.rom
+/usr/lib/ipxe/qemu/pxe-pcnet.rom /usr/lib/ipxe/pcnet32.rom
+/usr/lib/ipxe/qemu/pxe-rtl8139.rom /usr/lib/ipxe/rtl8139.rom
+/usr/lib/ipxe/qemu/pxe-virtio.rom /usr/lib/ipxe/virtio-net.rom

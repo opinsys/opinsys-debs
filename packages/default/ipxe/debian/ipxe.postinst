@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+
+case "$1" in
+    configure)
+        command -v update-grub > /dev/null && update-grub || :
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

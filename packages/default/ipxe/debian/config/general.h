@@ -1,0 +1,1 @@
+#define ROM_BANNER_TIMEOUT 0

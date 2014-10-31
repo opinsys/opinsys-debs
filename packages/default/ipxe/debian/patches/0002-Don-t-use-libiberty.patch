@@ -1,0 +1,23 @@
+From d13ec96355d9b445a2f2981d4ee1494b94fd6c5a Mon Sep 17 00:00:00 2001
+From: Bastian Blank <waldi@debian.org>
+Date: Sat, 4 Oct 2014 20:24:20 +0200
+Subject: Don't use libiberty
+
+Bug-Debian: http://bugs.debian.org/730910
+---
+ src/Makefile.housekeeping | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Makefile.housekeeping b/src/Makefile.housekeeping
+index 1a75d39..9fa8e81 100644
+--- a/src/Makefile.housekeeping
++++ b/src/Makefile.housekeeping
+@@ -1249,7 +1249,7 @@ CLEANUP += $(ZBIN)
+ ELF2EFI_CFLAGS	:= -I$(BINUTILS_DIR)/include -I$(BFD_DIR)/include \
+ 		   -I$(ZLIB_DIR)/include -idirafter include
+ ELF2EFI_LDFLAGS	:= -L$(BINUTILS_DIR)/lib -L$(BFD_DIR)/lib -L$(ZLIB_DIR)/lib \
+-		   -lbfd -ldl -liberty -lz -Wl,--no-warn-search-mismatch
++		   -lbfd -ldl -lz -Wl,--no-warn-search-mismatch
+ 
+ $(ELF2EFI32) : util/elf2efi.c $(MAKEDEPS)
+ 	$(QM)$(ECHO) "  [HOSTCC] $@"
