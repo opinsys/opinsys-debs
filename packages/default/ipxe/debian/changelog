@@ -1,0 +1,86 @@
+ipxe (1.0.0+git-20141004.86285d1-1) unstable; urgency=medium
+
+  * New snapshot.
+
+ -- Bastian Blank <waldi@debian.org>  Sun, 19 Oct 2014 16:02:53 +0200
+
+ipxe (1.0.0+git-20131111.c3d1e78-2.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Add missing export in d/rules.
+  * Change syslinux to syslinux-common in B-D. (Closes: #750349)
+
+ -- Juli?n Moreno Pati?o <julian@debian.org>  Wed, 10 Sep 2014 11:06:28 -0500
+
+ipxe (1.0.0+git-20131111.c3d1e78-2) unstable; urgency=medium
+
+  * Don't use libiberty. (closes: #730910)
+
+ -- Bastian Blank <waldi@debian.org>  Sun, 22 Dec 2013 20:05:03 +0100
+
+ipxe (1.0.0+git-20131111.c3d1e78-1) unstable; urgency=low
+
+  * New snapshot.
+  * Add undionly.kkpxe. (closes: #671340)
+  * Ignore result of update-grub invocation. (closes: #660459)
+  * Mark packages as multi-arch foreign. (closes: #728476)
+  * Use debhelper 9.
+  * Remove old breaks relations.
+  * Add 64-bit EFI images:
+    - Build-depend on binutils-dev, zlib1g-dev.
+    - Add combined EFI/legacy images for qemu.
+    - Properly clean build dir.
+  * Install images in ipxe-qemu to match names used by qemu:
+    - Add compatility symlink for e1000_82540.
+    - Use dh-exec to allow renames in dh_install.
+
+ -- Bastian Blank <waldi@debian.org>  Thu, 21 Nov 2013 18:26:32 +0100
+
+ipxe (1.0.0+git-20120202.f6840ba-3) unstable; urgency=low
+
+  * Fix to break qemu-system instead of qemu. (closes: #658982)
+  * Make ipxe-qemu break and replace ipxe. (closes: #658684)
+  * Add link for ipxe.lkrn, so all images can be found in one location.
+
+ -- Bastian Blank <waldi@debian.org>  Tue, 07 Feb 2012 16:09:43 +0100
+
+ipxe (1.0.0+git-20120202.f6840ba-2) unstable; urgency=low
+
+  * Fix grub setup and restrict entry by default. (closes: #658465)
+  * Install only combined images into ipxe package.
+  * Install rom images needed for qemu into ipxe-qemu package.
+    - Add breaks against qemu and qemu-kvm.
+  * Disable rom banner timeout. (closes: #638574)
+
+ -- Bastian Blank <waldi@debian.org>  Fri, 03 Feb 2012 19:04:56 +0100
+
+ipxe (1.0.0+git-20120202.f6840ba-1) unstable; urgency=low
+
+  * New snapshot.
+  * Disable ath9k roms.
+  * Fix tg3 build.
+  * Create grub entry. (closes: #626238)
+  * Override version string with package version.
+
+ -- Bastian Blank <waldi@debian.org>  Thu, 02 Feb 2012 12:40:26 +0100
+
+ipxe (1.0.0+git-2.149b50-1) unstable; urgency=low
+
+  * New snapshot.
+
+ -- Bastian Blank <waldi@debian.org>  Sun, 31 Jul 2011 20:57:02 +0200
+
+ipxe (1.0.0+git-1.293e34-2) unstable; urgency=low
+
+  * Add some missing copyrights and licenses to the copyright files.
+
+ -- Bastian Blank <waldi@debian.org>  Mon, 11 Apr 2011 19:35:36 +0200
+
+ipxe (1.0.0+git-1.293e34-1) unstable; urgency=low
+
+  * Initial release (closes: #474034)
+  * Remove drivers with binary-only firmware:
+    - Remove bnx2 driver.
+    - Remove linda infiniband driver.
+
+ -- Bastian Blank <waldi@debian.org>  Sun, 03 Apr 2011 11:32:56 +0200

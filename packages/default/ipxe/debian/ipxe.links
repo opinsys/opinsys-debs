@@ -1,0 +1,2 @@
+/boot/ipxe.efi /usr/lib/ipxe/ipxe.efi
+/boot/ipxe.lkrn /usr/lib/ipxe/ipxe.lkrn

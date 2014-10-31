@@ -1,0 +1,13 @@
+#! /usr/bin/dh-exec
+src/bin-efi/82540em.efirom => usr/lib/ipxe/qemu/efi-e1000.rom
+src/bin/82540em.rom => usr/lib/ipxe/qemu/pxe-e1000.rom
+src/bin-efi/eepro100.efirom => usr/lib/ipxe/qemu/efi-eepro100.rom
+src/bin/eepro100.rom => usr/lib/ipxe/qemu/pxe-eepro100.rom
+src/bin-efi/ns8390.efirom => usr/lib/ipxe/qemu/efi-ne2k_pci.rom
+src/bin/ns8390.rom => usr/lib/ipxe/qemu/pxe-ne2k_pci.rom
+src/bin-efi/pcnet32.efirom => usr/lib/ipxe/qemu/efi-pcnet.rom
+src/bin/pcnet32.rom => usr/lib/ipxe/qemu/pxe-pcnet.rom
+src/bin-efi/rtl8139.efirom => usr/lib/ipxe/qemu/efi-rtl8139.rom
+src/bin/rtl8139.rom => usr/lib/ipxe/qemu/pxe-rtl8139.rom
+src/bin-efi/virtio-net.efirom => usr/lib/ipxe/qemu/efi-virtio.rom
+src/bin/virtio-net.rom => usr/lib/ipxe/qemu/pxe-virtio.rom

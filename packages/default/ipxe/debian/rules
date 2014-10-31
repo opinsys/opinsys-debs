@@ -1,0 +1,32 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+export ISOLINUX_BIN=/usr/lib/syslinux/
+
+VERSION := $(shell dpkg-parsechangelog | sed -ne 's,^Version: *\(.*\)$$,\1,p')
+
+%:
+	+dh $@ 
+
+override_dh_auto_configure:
+	cp debian/config/* src/config/local
+
+src/bin/% src/bin-x86_64-efi/%:
+	$(MAKE) -C src V=1 NO_WERROR=1 VERSION="$(VERSION)" $(subst src/,,$@)
+
+src/bin-efi/%.efirom: src/bin/%.rom src/bin-x86_64-efi/%.efirom
+	@[ -d $(dir $@) ] || mkdir $(dir $@)
+	src/util/catrom.pl $^ > $@
+
+override_dh_auto_build: $(shell grep -hoE 'src/bin(-[^/]*)?/\S+' debian/*.install)
+
+override_dh_auto_clean:
+	$(MAKE) -C src veryclean
+	rm -fr src/bin*
+	rm -f src/config/local/*
+
+.NOTPARALLEL:
+.SECONDARY:
