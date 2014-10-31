@@ -27,3 +27,11 @@ override_dh_auto_test:
 
 override_dh_strip:
 	dh_strip -a --dbg-package=libssh2-1-dbg
+
+PACKAGE = libssh2
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+.PHONY: get-orig-source
+get-orig-source:
+	wget -c http://www.libssh2.org/download/libssh2-$(SRC_VERSION).tar.gz -O ../$(TARBALL)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
