@@ -1,0 +1,3336 @@
+qemu (2.0.0+dfsg-2ubuntu1.6) trusty-proposed; urgency=medium
+
+  * Support incoming migration from 12.04 (LP: #1374612)
+    - d/p/ubutu/add-machine-type-pc-1.0-qemu-kvm-for-live-migrate-co.patch
+    - add note in README.Debian
+    - d/control: have qemu-system-x86 suggest kvm-ipxe-precise
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 06 Oct 2014 17:47:08 -0500
+
+qemu (2.0.0+dfsg-2ubuntu1.5) trusty-proposed; urgency=medium
+
+  * move reload of kvm_intel qemu-system-x86.postinst.  (LP: #1324174)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Sun, 14 Sep 2014 19:40:42 -0500
+
+qemu (2.0.0+dfsg-2ubuntu1.4) trusty-proposed; urgency=medium
+
+  * reload kvm_intel if needed to set the nested=Y flag (LP: #1324174)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 09 Sep 2014 15:08:12 -0500
+
+qemu (2.0.0+dfsg-2ubuntu1.3) trusty-security; urgency=medium
+
+  * SECURITY UPDATE: multiple buffer overflows on invalid state load
+    - debian/patches: added large number of upstream patches pulled from
+      git tree.
+    - CVE-2013-4148
+    - CVE-2013-4149
+    - CVE-2013-4150
+    - CVE-2013-4151
+    - CVE-2013-4526
+    - CVE-2013-4527
+    - CVE-2013-4529
+    - CVE-2013-4530
+    - CVE-2013-4531
+    - CVE-2013-4532
+    - CVE-2013-4533
+    - CVE-2013-4534
+    - CVE-2013-4535
+    - CVE-2013-4536
+    - CVE-2013-4537
+    - CVE-2013-4538
+    - CVE-2013-4539
+    - CVE-2013-4540
+    - CVE-2013-4541
+    - CVE-2013-4542
+    - CVE-2013-6399
+    - CVE-2014-0182
+    - CVE-2014-0222
+    - CVE-2014-0223
+    - CVE-2014-3461
+    - CVE-2014-3471
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Tue, 12 Aug 2014 08:10:08 -0400
+
+qemu (2.0.0+dfsg-2ubuntu1.2) trusty-proposed; urgency=medium
+
+  * d/qemu-system-x86.qemu-kvm.upstart: change the early-exit check from
+    /usr/bin/kvm to qemu-system-x86_64. (LP: #1348551)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 25 Jul 2014 08:59:57 -0500
+
+qemu (2.0.0+dfsg-2ubuntu1.1) trusty-proposed; urgency=low
+
+  * remove alternatives for qemu: different architectures
+    aren't really alternatives and never had been  (LP: #1316829)
+  * debian/rules: install the proper /etc/init/qemu-kvm.conf (LP: #1315402)
+  * debian/control: drop the versioning requirement from libfdt-dev
+    build-dependency, as it is longer needed (LP: #1295072)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Wed, 07 May 2014 17:31:39 -0500
+
+qemu (2.0.0+dfsg-2ubuntu1) trusty-proposed; urgency=medium
+
+  * Merge 2.0.0+dfsg-2
+  * Incorporates a fix for spice users (LP: #1309452)
+  * drop patch kvm_physical_sync_dirty_bitmap-ignore-ENOENT-from-kv.patch, as
+    the regression requiring it was reverted for 2.0 upstream.
+  * remove qemu-system-common depends on the qemu-system-aarch64 metapackage
+  * debian/qemu-debootstrap: add arm64
+  * Remaining changes from debian:
+    - keep qemu 'alternative' (not something to change in SRU)
+    - debian/control and debian/control-in:
+      * versioned libfdt-dev check, until libfdt is fixed in precise
+      * enable rbd
+      * remove ovmf Recommends, as it is in multiverse
+      * use libsdl1.2, not libsdl2, since libsdl2-dev is in universe
+      * add a qemu-system-aarch64 metapackage for transitions from trusty
+        development version.  This can be removed after trusty.
+    - qemu-system-common.install: add debian/tmp/usr/lib to install the
+      qemu-bridge-helper
+    - qemu-system-common.postinst: fix /dev/kvm acls
+    - qemu-system-common.preinst: add kvm group if needed
+    - qemu-system-x86.links: add eepro100.rom link, drop links which we
+      have in ipxe-qemu package.
+    - qemu-system-x86.modprobe: set module options for older releases
+    - qemu-system-x86.qemu-kvm.default: defaults for the upstart job
+    - qemu-system-x86.qemu-kvm.upstart: qemu-kvm upstart job
+    - qemu-user-static.postinst-in: remove qemu-arm64-static on arm64
+    - debian/rules
+      * add legacy kvm-spice link
+      * fix ppc and arm slections
+      * add aarch64 to user_targets
+    - debian/patches/ubuntu/define-trusty-machine-type.patch: define a
+      pc-i440fx-trusty machine type as the default.
+    - debian/patches/ubuntu/expose-vmx_qemu64cpu.patch: support nesting by
+      default in qemu64 cpu time.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 18 Apr 2014 09:23:27 -0500
+
+qemu (2.0.0+dfsg-2) unstable; urgency=medium
+
+  * resurrect 02_kfreebsd.patch, -- without it qemu FTBFS on current
+    Debian kFreeBSD system still.
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Thu, 17 Apr 2014 22:04:38 +0400
+
+qemu (2.0.0+dfsg-1) unstable; urgency=low
+
+  * 2.0 actually does not close #739589,
+    remove it from from last changelog entry
+  * mention closing of #707629 by 2.0
+  * mention a list of CVE IDs closed by #742730
+  * mention closing of CVE-2013-4377 by 1.7.0-6
+  * do not set --enable-uname-release=2.6.32 for qemu-user anymore
+    (was needed for old ubuntu builders)
+  * removed 02_kfreebsd.patch: it adds configure check for futimens() and
+    futimesat() syscalls on FreeBSD, however futimens() appeared in FreeBSD
+    5.0, and futimesat() in 8.0, and 8.0 is the earliest supported version
+  * kmod dependency is linux-any
+  * doc-grammify-allows-to.patch: fix some lintian warnings
+  * remove alternatives for qemu: different architectures
+    aren't really alternatives and never had been 
+  * update Standards-Version to 3.9.5 (no changes needed)
+  * exec-limit-translation-limiting-in-address_space_translate-to-xen.diff -
+    fixes windows BSOD with virtio-scsi when upgrading from 1.7.0 to 1.7.1
+    or 2.0, among other things
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Thu, 17 Apr 2014 18:27:15 +0400
+
+qemu (2.0.0~rc1+dfsg-1exp) experimental; urgency=low
+
+  * new upstream release candidate (2.0-rc1)
+    Closes: #742730 -- image format processing issues:
+     CVE-2014-0142 CVE-2014-0143 CVE-2014-0144 CVE-2014-0145
+     CVE-2014-0146 CVE-2014-0147 CVE-2014-0148
+    Closes: #743235, #707629
+  * refreshed patches:
+    02_kfreebsd.patch
+    retry-pxe-after-efi.patch
+    use-fixed-data-path.patch
+  * removed patches applied upstream:
+    qemu-1.7.1.diff
+    address_space_translate-do-not-cross-page-boundaries.diff
+    fix-smb-security-share.patch
+    slirp-smb-redirect-port-445-too.patch
+    implement-posix-timers.diff
+    linux-user-fixed-s390x-clone-argument-order.patch
+  * added bios-256k.bin symlink and bump seabios dependency to >= 1.7.4-2
+  * recommend ovmf package for qemu-system-x86 to support UEFI boot
+    (Closes: #714249)
+  * switch from sdl1 to sdl2 (build-depend on libsdl2-dev)
+  * output last 50 lines of config.log in case configure failed
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Sat, 05 Apr 2014 16:23:48 +0400
+
+qemu (2.0.0~rc1+dfsg-0ubuntu3) trusty; urgency=medium
+
+  * d/p/ubuntu/kvm_physical_sync_dirty_bitmap-ignore-ENOENT-from-kv.patch
+    don't abort() just because the kernel has no dirty bitmap.
+    (LP: #1303926)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 08 Apr 2014 22:32:00 -0500
+
+qemu (2.0.0~rc1+dfsg-0ubuntu2) trusty; urgency=medium
+
+  * define-trusty-machine-type.patch: update the trusty machine type name to
+    pc-i440fx-trusty (LP: #1304107)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 08 Apr 2014 11:49:04 -0500
+
+qemu (2.0.0~rc1+dfsg-0ubuntu1) trusty; urgency=medium
+
+  * Merge 2.0.0-rc1
+  * debian/rules: consolidate ppc filter entries.
+  * Move qemu-system-arch64 into qemu-system-arm
+  * debian/patches/define-trusty-machine-type.patch: define a trusty machine
+    type, currently the same as pc-i440fx-2.0, to put is in a better position
+    to enable live migrations from trusty onward.  (LP: #1294823)
+  * debian/control: build-dep on libfdt >= 1.4.0  (LP: #1295072)
+  * Merge latest upstream git to commit dc9528f
+  * Debian/rules:
+    - remove -enable-uname-release=2.6.32
+    - don't make the aarch64 target Ubuntu-specific.
+  * Remove patches which are now upstream:
+    - fix-smb-security-share.patch
+    - slirp-smb-redirect-port-445-too.patch 
+    - linux-user-Implement-sendmmsg-syscall.patch (better version is upstream)
+    - signal-added-a-wrapper-for-sigprocmask-function.patch
+    - ubuntu/signal-sigsegv-protection-on-do_sigprocmask.patch
+    - ubuntu/Don-t-block-SIGSEGV-at-more-places.patch
+    - ubuntu/ppc-force-cpu-threads-count-to-be-power-of-2.patch
+  * add link for /usr/share/qemu/bios-256k.bin
+  * Remove all linaro patches.
+  * Remove all arm64/ patches.  Many but not all are upstream.
+  * Remove CVE-2013-4377.patch which is upstream.
+  * debian/control-in: don't make qemu-system-aarch64 ubuntu-specific
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 25 Feb 2014 22:31:43 -0600
+
+qemu (1.7.0+dfsg-3ubuntu7) trusty; urgency=low
+
+  * No-change rebuild to build with libxen-4.4.
+
+ -- Stefan Bader <stefan.bader@canonical.com>  Fri, 21 Mar 2014 10:04:36 +0100
+
+qemu (1.7.0+dfsg-3ubuntu6) trusty; urgency=medium
+
+  * d/p/ubuntu/ppc-force-cpu-threads-count-to-be-power-of-2.patch: cherrypick
+    upstream patch to force cpu count on ppc to be a power of 2. (LP: #1279682)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 11 Mar 2014 00:03:00 -0500
+
+qemu (1.7.0+dfsg-3ubuntu5) trusty; urgency=medium
+
+  [ dann frazier ]
+  * Add patches from the susematz tree to avoid intermittent segfaults:
+     - ubuntu/signal-added-a-wrapper-for-sigprocmask-function.patch
+     - ubuntu/signal-sigsegv-protection-on-do_sigprocmask.patch
+     - ubuntu/Don-t-block-SIGSEGV-at-more-places.patch
+
+  [ Serge Hallyn ]
+  * Modify do_sigprocmask to only change behavior for aarch64.
+    (LP: #1285363)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 06 Mar 2014 16:15:50 -0600
+
+qemu (1.7.0+dfsg-3ubuntu4) trusty; urgency=medium
+
+  [ Steve Langasek ]
+  * Merge debian/control with unreleased Debian branch: our architecture
+    lists should now be in sync.
+
+  [ Dann Frazier ]
+  * ubuntu/linux-user-Implement-sendmmsg-syscall.patch: Fix user mode DNS
+    on arm64 and maybe others. (LP: #1284344)
+
+  [ Serge Hallyn ]
+  * Move the OVMF.fd link to the ovmf package.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 21 Feb 2014 12:14:53 -0800
+
+qemu (1.7.0+dfsg-3ubuntu3) trusty; urgency=medium
+
+  * Add ppc64el to the architecture list (supposedly added in the previous
+    upload, but really wasn't).
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Thu, 20 Feb 2014 23:40:07 -0800
+
+qemu (1.7.0+dfsg-3ubuntu2) trusty; urgency=medium
+
+  * Backport changes to enable qemu-user-static support for aarch64
+  * debian/control: add ppc64el to Architectures
+  * debian/rules: only install qemu-system-aarch64 on arm64.
+    Fixes a FTBFS  when built twice in a row on non-arm64 due to a stale
+    debian/qemu-system-aarch64 directory
+
+ -- dann frazier <dann.frazier@canonical.com>  Tue, 11 Feb 2014 15:41:53 -0700
+
+qemu (1.7.0+dfsg-3ubuntu1) trusty; urgency=medium
+
+  * Fix broken filter_binfmts
+  * Remove use of dpkg-version in postinsts, as we're not Depending on
+    dpkg-dev.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Wed, 05 Feb 2014 21:57:38 -0600
+
+qemu (1.7.0+dfsg-3ubuntu1~ppa1) trusty; urgency=medium
+
+  * Merge 1.7.0+dfsg-3 from debian.  Remaining changes:
+    - debian/patches/ubuntu:
+      * expose-vmx_qemu64cpu.patch
+      * linaro (omap3) and arm64 patches
+      * ubuntu/target-ppc-add-stubs-for-kvm-breakpoints: fix FTBFS
+        on ppc
+      * ubuntu/CVE-2013-4377.patch: fix denial of service via virtio
+    - debian/qemu-system-x86.modprobe: set kvm_intel nested=1 options
+    - debian/control:
+      * add arm64 to Architectures
+      * add qemu-common and qemu-system-aarch64 packages
+    - debian/qemu-system-common.install: add debian/tmp/usr/lib
+    - debian/qemu-system-common.preinst: add kvm group
+    - debian/qemu-system-common.postinst: remove acl placed by udev,
+      and add udevadm trigger.
+    - qemu-system-x86.links: add eepro100.rom, remove pxe-virtio,
+      pxe-e1000 and pxe-rtl8139.
+    - add qemu-system-x86.qemu-kvm.upstart and .default
+    - qemu-user-static.postinst-in: remove arm64 binfmt
+    - debian/rules:
+      * allow parallel build
+      * add aarch64 to system_targets and sys_systems
+      * add qemu-kvm-spice links
+      * install qemu-system-x86.modprobe
+    - add debian/qemu-system-common.links for OVMF.fd link
+  * Remove kvm-img, kvm-nbd, kvm-ifup and kvm-ifdown symlinks.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 04 Feb 2014 12:13:08 -0600
+
+qemu (1.7.0+dfsg-3) unstable; urgency=low
+
+  * qemu-kvm: fix versions for Breaks/Replaces/Depends on qemu-system-x86
+  * qemu-system-ppc: depend on openbios-ppc >= 1.1+svn1229 to fix boot issues
+  * qemu-system-sparc: depend on openbios-sparc >= 1.1+svn1229 too
+  * remove unused lintian overrides for qemu-user from qemu (meta)package
+  * qemu-system-*: depend on unversioned qemu-keymaps and qemu-system-common
+    packages (no particular version of any is hard-required)
+  * remove debian/README.source (was from quilt)
+  * add myself to debian/copyright
+  * reorder d/control to have Recommends:/Suggests: closer to Depends.
+  * rename d/control to d/control-in and add a d/rules rule to build it
+    based on ${VENDOR}
+  * allow different content in d/control for debian/ubuntu
+  * added debian/README-components-versions
+  * fixed qemu-armeb binfmt (Closes: #735078)
+  * added powerpcspe host arch (Closes: #734696)
+  * do not check for presence of update-alternatives which is part of dpkg
+    (Closes: #733222)
+  * do not call update-alternative --remove from postrm:remove
+    (lintian complains about this)
+  * add efi netrom links.  This requires new ipxe-qemu.
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Thu, 16 Jan 2014 15:17:46 +0400
+
+qemu (1.7.0+dfsg-2ubuntu9) trusty; urgency=medium
+
+  * debian/qemu-user-static.postinst-in: remove arm64 qemu-user binfmt, which
+    may have been installed up to 1.6.0+dfsg-2ubuntu4 (LP: #1273654)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 28 Jan 2014 14:41:20 +0000
+
+qemu (1.7.0+dfsg-2ubuntu8) trusty; urgency=medium
+
+  * SECURITY UPDATE: denial of service via virtio device hot-plugging
+    - debian/patches/CVE-2013-4377.patch: upstream commits to refactor
+      virtio device unplugging.
+    - CVE-2013-4377
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Mon, 27 Jan 2014 09:10:37 -0500
+
+qemu (1.7.0+dfsg-2ubuntu7) trusty; urgency=medium
+
+  * d/p/target-ppc-add-stubs-for-kvm-breakpoints: fix FTBFS on
+    powerpc.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Wed, 22 Jan 2014 11:59:26 -0600
+
+qemu (1.7.0+dfsg-2ubuntu6) trusty; urgency=medium
+
+  [ Serge Hallyn ]
+  * add arm64 patchset from upstream.  The three arm virt patches previously
+    pushed are in that set, so drop them.
+
+  [ dann frazier ]
+  * Add packaging for qemu-system-aarch64. This package is currently only
+    available for arm64, as full software emulation is not yet supported.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 10 Jan 2014 12:19:08 -0600
+
+qemu (1.7.0+dfsg-2ubuntu5) trusty; urgency=medium
+
+  * Drop d/p/fix-pci-add: upstream does not intend for pci_add to be
+    supported any longer.
+  * Add patchset from git://git.linaro.org/qemu/qemu-linaro.git#rebasing
+  * Refresh debian/patches/hw_arm_add_virt_platform.patch against context
+    churn caused by linaro patchset.
+  * debian/rules: enable parallel builds.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 03 Jan 2014 10:53:17 -0600
+
+qemu (1.7.0+dfsg-2ubuntu4) trusty; urgency=medium
+
+  * d/control: enable usbredir (LP: 1126390)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 02 Jan 2014 08:55:43 -0600
+
+qemu (1.7.0+dfsg-2ubuntu3) trusty; urgency=medium
+
+  * add missing arm virt patches from the mach-virt-v7 branch of
+    git://git.linaro.org/people/cdall/qemu-arm.git
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Wed, 18 Dec 2013 12:25:59 -0600
+
+qemu (1.7.0+dfsg-2ubuntu2) trusty; urgency=medium
+
+  * debian/control: add arm64 to list of architectures.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 12 Dec 2013 10:22:47 -0600
+
+qemu (1.7.0+dfsg-2ubuntu1) trusty; urgency=low
+
+  * Merge 1.7.0+dfsg-2 from debian experimental.  Remaining changes:
+    - debian/control
+      * update maintainer
+      * remove libiscsi, usb-redir, vde, vnc-jpeg, and libssh2-1-dev
+        from build-deps
+      * enable rbd
+      * add qemu-system and qemu-common B/R to qemu-keymaps
+      * add D:udev, R:qemu, R:qemu-common and B:qemu-common to
+        qemu-system-common
+      * qemu-system-arm, qemu-system-ppc, qemu-system-sparc:
+        - add qemu-common, qemu-kvm, kvm to B/R
+        - remove openbios-sparc from qemu-system-sparc D
+        - drop openbios-ppc and openhackware Depends to Suggests (for now)
+      * qemu-system-x86:
+        - add qemu-common to Breaks/Replaces.
+        - add cpu-checker to Recommends.
+      * qemu-user: add B/R:qemu-kvm
+      * qemu-kvm:
+        - add armhf armel powerpc sparc to Architecture
+        - C/R/P: qemu-kvm-spice
+      * add qemu-common package
+      * drop qemu-slof which is not packaged in ubuntu
+    - add qemu-system-common.links for tap ifup/down scripts and OVMF link.
+    - qemu-system-x86.links:
+      * remove pxe rom links which are in kvm-ipxe
+    - debian/rules
+      * add kvm-spice symlink to qemu-kvm
+      * call dh_installmodules for qemu-system-x86
+      * update dh_installinit to install upstart script
+      * run dh_installman (Closes: #709241) (cherrypicked from 1.5.0+dfsg-2)
+    - Add qemu-utils.links for kvm-* symlinks.
+    - Add qemu-system-x86.qemu-kvm.upstart and .default
+    - Add qemu-system-x86.modprobe to set nesting=1
+    - Add qemu-system-common.preinst to add kvm group
+    - qemu-system-common.postinst: remove bad group acl if there, then have
+      udev relabel /dev/kvm.
+    - New linaro patches from qemu-linaro rebasing branch
+    - Dropped patches:
+      * linaro patchset
+      * mach-virt patchset
+    - Kept patches:
+      * expose_vms_qemu64cpu.patch
+      * fix-pci-add
+  * qemu-system-common.install: add debian/tmp/usr/lib to install the
+    qemu-bridge-helper
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Sat, 07 Dec 2013 06:08:11 +0000
+
+qemu (1.7.0+dfsg-2) unstable; urgency=low
+
+  * switch from vgabios to seavgabios
+  * rework update-alternatives handling for qemu-system (Closes: #722914)
+  * mention closing of #326886, #390444, #706237 and CVE-2013-4375 for 1.7.0
+  * rearrange libvte-dev build-dependency to come together with gtk, and
+    comment it out (since gtk frontend isn't being built)
+  * re-introduce qemu-kvm package with just a wrapper (/usr/bin/kvm)
+    and make this wrapper to force kvm mode (Closes: #727762)
+  * use less strict dependency on qemu-keymaps
+  * added fix-smb-security-share.patch by Michael Büsch (Closes: #727756)
+  * added move-ncalrpc-dir-to-tmp.patch by Michael Büsch (Closes: #728876)
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Fri, 29 Nov 2013 00:16:44 +0400
+
+qemu (1.7.0+dfsg-1) unstable; urgency=low
+
+  * new upstream release (Closes: #724758, #326886, #390444, #706237)
+    Also fixes CVE-2013-4375 (xen-specific qemu disk backend (qdisk)
+    resource leak)
+  * tweak kvm loading script to not load module for 3.4+ kernel
+    (kernel autoloads kvm modules since 3.4) (Closes: #717811)
+  * mention closing of #721713, #710971, #674201
+  * refresh use-fixed-data-path.patch to contain just the min. changes
+  * fix pxe-eepro100.rom link (never worked in qemu due to wrong name)
+  * remove old $Id$ line from debian/rules
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Thu, 28 Nov 2013 03:14:21 +0400
+
+qemu (1.6.0+dfsg-2ubuntu2) trusty; urgency=low
+
+  * debian/control: qemu-utils must Replace: qemu-kvm as it did in raring,
+    to prevent lts-to-lts updates from breaking.  (LP: #1243403)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Wed, 23 Oct 2013 14:31:05 -0500
+
+qemu (1.6.0+dfsg-2ubuntu1) trusty; urgency=low
+
+  * Merge 1.6.0~rc0+dfsg-2exp from debian experimental.  Remaining changes:
+    - debian/control
+      * update maintainer
+      * remove libiscsi, usb-redir, vde, vnc-jpeg, and libssh2-1-dev
+        from build-deps
+      * enable rbd
+      * add qemu-system and qemu-common B/R to qemu-keymaps
+      * add D:udev, R:qemu, R:qemu-common and B:qemu-common to
+        qemu-system-common
+      * qemu-system-arm, qemu-system-ppc, qemu-system-sparc:
+        - add qemu-kvm to Provides
+        - add qemu-common, qemu-kvm, kvm to B/R
+        - remove openbios-sparc from qemu-system-sparc D
+        - drop openbios-ppc and openhackware Depends to Suggests (for now)
+      * qemu-system-x86:
+        - add qemu-common to Breaks/Replaces.
+        - add cpu-checker to Recommends.
+      * qemu-user: add B/R:qemu-kvm
+      * qemu-kvm:
+        - add armhf armel powerpc sparc to Architecture
+        - C/R/P: qemu-kvm-spice
+      * add qemu-common package
+      * drop qemu-slof which is not packaged in ubuntu
+    - add qemu-system-common.links for tap ifup/down scripts and OVMF link.
+    - qemu-system-x86.links:
+      * remove pxe rom links which are in kvm-ipxe
+      * add symlink for kvm.1 manpage
+    - debian/rules
+      * add kvm-spice symlink to qemu-kvm
+      * call dh_installmodules for qemu-system-x86
+      * update dh_installinit to install upstart script
+      * run dh_installman (Closes: #709241) (cherrypicked from 1.5.0+dfsg-2)
+    - Add qemu-utils.links for kvm-* symlinks.
+    - Add qemu-system-x86.qemu-kvm.upstart and .default
+    - Add qemu-system-x86.modprobe to set nesting=1
+    - Add qemu-system-common.preinst to add kvm group
+    - qemu-system-common.postinst: remove bad group acl if there, then have
+      udev relabel /dev/kvm.
+    - New linaro patches from qemu-linaro rebasing branch
+    - Dropped patches:
+      * xen-simplify-xen_enabled.patch
+      * sparc-linux-user-fix-missing-symbols-in-.rel-.rela.plt-sections.patch
+      * main_loop-do-not-set-nonblocking-if-xen_enabled.patch
+      * xen_machine_pv-do-not-create-a-dummy-CPU-in-machine-.patch
+      * virtio-rng-fix-crash
+    - Kept patches:
+      * expose_vms_qemu64cpu.patch - updated
+      * linaro arm patches from qemu-linaro rebasing branch
+    - New patches:
+      * fix-pci-add: change CONFIG variable in ifdef to make sure that
+        pci_add is defined.
+  * Add linaro patches
+  * Add experimental mach-virt patches for arm virtualization.
+  * qemu-system-common.install: add debian/tmp/usr/lib to install the
+    qemu-bridge-helper
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 22 Oct 2013 22:47:07 -0500
+
+qemu (1.6.0+dfsg-2) unstable; urgency=low
+
+  * Build-depend in seccomp again once it is in -testing
+  * 1.6.1 upstream bugfix release (Closes: #725944, #721713)
+  * fix "allows [one] to" in qemu-ga description
+  * fix descriptions for qemu-system and qemu-system-common packages
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Fri, 11 Oct 2013 01:15:48 +0400
+
+qemu (1.6.0+dfsg-1) unstable; urgency=low
+
+  [ Michael Tokarev ]
+  * final upstream v1.6.0 (Closes: #718180, #714273, #605525, #701855)
+  * removed configure-explicitly-disable-virtfs-if-softmmu=no.patch
+  * mention closing of #717724 by 1.6
+  * mention closing of #710971 by 1.5 (which disabled gtk support)
+
+  [ Riku Voipio ]
+  * - set --cross-prefix in debian/rules when cross-compiling
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Mon, 02 Sep 2013 15:18:49 +0400
+
+qemu (1.6.0~rc0+dfsg-1exp) experimental; urgency=low
+
+  * uploading to experimental (rc0)
+  * new upstream release (release candidate) (Closes: #718016, #717724)
+  * removed patches:
+   - qemu-1.5.1.diff
+   - sparc-linux-user-fix-missing-symbols-in-.rel-.rela.plt-sections.patch
+  * refreshed use-fixed-data-path.patch
+  * ship new qemu_logo_no_text.svg
+  * stop shipping sgabios symlink, it is moved to sgabios package
+  * bump version of libseccomp build dependency to 2.1 (minimum
+    required to build) and disable libseccomp for now (because it
+    isn't available in debian yet)
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Wed, 31 Jul 2013 10:49:30 +0400
+
+qemu (1.5.0+dfsg-5) unstable; urgency=low
+
+  * new upstream 1.5.1 stable/bugfix release (as qemu-1.5.1.diff)
+    removed qemu_openpty_raw-helper.patch (included upstream)
+  * configure-explicitly-disable-virtfs-if-softmmu=no.patch -- do not
+    build virtfs-proxy-helper stuff if not building system emulator
+    (fix FTBFS on s390)
+  * disable gtk ui and build dependencies, as it adds almost nothing
+    compared with sdl (well, except bugs and limitations), and has
+    lots of additional dependencies (Closes: #710971)
+  * remove obsolete /etc/init.d/qemu-kvm (Closes: #712898)
+  * fix versions of obsolete qemu-kvm conffiles to be removed
+  * provide manpage for obsolete kvm (Closes: #716891, #586973)
+  * add --daemonize option to the guest-agent startup script (Closes: #715502)
+  * clarify what qemu-guest-agent does (Closes: #714270) and provide
+    its json schema as a doc
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Tue, 23 Jul 2013 22:39:54 +0400
+
+qemu (1.5.0+dfsg-4) unstable; urgency=medium
+
+  * urgency is medium to make it go faster because, on one hand, we've
+    been in unstable for quite a bit longer than needed already and
+    have nothing but (build) fixes in there, but on the other hand
+    we're holding migration of other packages which are waiting for
+    us, again, for too long already
+  * added qemu_openpty_raw-helper.patch - a cleanup patch submitted upstream
+    which removes #include <termios.h> from common header and hence works
+    around FTBFS problem on debian sparc where somehow, <termios.h> conflicts
+    with <linux/termio.h>.
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Thu, 06 Jun 2013 01:50:32 +0400
+
+qemu (1.5.0+dfsg-3ubuntu6) trusty; urgency=low
+
+  * No change rebuild for new seccomp.
+
+ -- Stéphane Graber <stgraber@ubuntu.com>  Mon, 21 Oct 2013 18:34:50 -0400
+
+qemu (1.5.0+dfsg-3ubuntu5) saucy; urgency=low
+
+  * Cherrypick upstream patch to fix crash with rng device (LP: #1235017)
+    - virtio-rng-fix-crash
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Wed, 09 Oct 2013 17:46:49 -0500
+
+qemu (1.5.0+dfsg-3ubuntu4) saucy; urgency=low
+
+  * Re-introduce snippet in upstart job to load kvm modules if needed.
+    (LP: #1218459)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 16 Sep 2013 22:43:52 +0000
+
+qemu (1.5.0+dfsg-3ubuntu3) saucy; urgency=low
+
+  * Cherry-picking three Xen related patches targetted for qemu-stable:
+    * xen-simplify-xen_enabled.patch
+    * main_loop-do-not-set-nonblocking-if-xen_enabled.patch
+    * xen_machine_pv-do-not-create-a-dummy-CPU-in-machine-.patch
+
+ -- Stefan Bader <stefan.bader@canonical.com>  Fri, 26 Jul 2013 15:01:44 +0200
+
+qemu (1.5.0+dfsg-3ubuntu2) saucy; urgency=low
+
+  * Drop openbios-ppc and openhackware Depends to Suggests for now.
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Wed, 05 Jun 2013 03:23:56 -0600
+
+qemu (1.5.0+dfsg-3ubuntu1) saucy; urgency=low
+
+  * Merge 1.5.0+dfs-3 from debian unstable.  Remaining changes:
+    - debian/control
+      * update maintainer
+      * remove libiscsi, usb-redir, vde, vnc-jpeg, and libssh2-1-dev
+        from build-deps
+      * enable rbd
+      * add qemu-system and qemu-common B/R to qemu-keymaps
+      * add D:udev, R:qemu, R:qemu-common and B:qemu-common to
+        qemu-system-common
+      * qemu-system-arm, qemu-system-ppc, qemu-system-sparc:
+        - add qemu-kvm to Provides
+        - add qemu-common, qemu-kvm, kvm to B/R
+        - remove openbios-sparc from qemu-system-sparc D
+      * qemu-system-x86:
+        - add qemu-common to Breaks/Replaces.
+        - add cpu-checker to Recommends.
+      * qemu-user: add B/R:qemu-kvm
+      * qemu-kvm:
+        - add armhf armel powerpc sparc to Architecture
+        - C/R/P: qemu-kvm-spice
+      * add qemu-common package
+      * drop qemu-slof which is not packaged in ubuntu
+    - add qemu-system-common.links for tap ifup/down scripts and OVMF link.
+    - qemu-system-x86.links:
+      * remove pxe rom links which are in kvm-ipxe
+      * add symlink for kvm.1 manpage
+    - debian/rules
+      * add kvm-spice symlink to qemu-kvm
+      * call dh_installmodules for qemu-system-x86
+      * update dh_installinit to install upstart script
+      * run dh_installman (Closes: #709241) (cherrypicked from 1.5.0+dfsg-2)
+    - Add qemu-utils.links for kvm-* symlinks.
+    - Add qemu-system-x86.qemu-kvm.upstart and .default
+    - Add qemu-system-x86.modprobe to set nesting=1
+    - Add qemu-system-common.preinst to add kvm group
+    - qemu-system-common.postinst: remove bad group acl if there, then have
+      udev relabel /dev/kvm.
+    - Dropped patches:
+      * 0001-fix-wrong-output-with-info-chardev-for-tcp-socket.patch
+    - Kept patches:
+      * expose_vms_qemu64cpu.patch - updated
+      * gridcentric patch - updated
+      * linaro arm patches from qemu-linaro rebasing branch
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 04 Jun 2013 22:56:43 +0200
+
+qemu (1.5.0+dfsg-3) unstable; urgency=low
+
+  * fix sections: misc => otherosfs
+  * remove obsolete conffiles (kvm-ifup, kvm-ifdown, target-x86_64.conf)
+    from /etc/kvm/ in qemu-kvm (Closes: #710328)
+  * rework debian/rules a bit, to build various bits depending on
+    which packages are requested, not depending on ad-hoc host/arch
+    logic
+  * do not fail at install if kvm module loading failed on x86 or
+    if modprobe isn't installed (Closes: #710496)
+  * also suggest kmod to be able to load x86 kvm modules
+  * suggest sgabios for qemu-system-x86 and put a symlink to sgabios.bin
+    (Closes: #696985)
+  * add rules to build just one of arch/indep parts, to make
+    buildd log scanner happier (E-binary-arch-produces-all)
+  * use verbose build by default (V=1) and let it to be overridden
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Sun, 02 Jun 2013 01:49:47 +0400
+
+qemu (1.5.0+dfsg-2ubuntu1) saucy; urgency=low
+
+  * Merge 1.5.0+dfs-2 from debian unstable.  Remaining changes:
+    - debian/control
+      * update maintainer
+      * remove libiscsi, usb-redir, vde, vnc-jpeg, and libssh2-1-dev
+        from build-deps
+      * enable rbd
+      * add qemu-system and qemu-common B/R to qemu-keymaps
+      * add D:udev, R:qemu, R:qemu-common and B:qemu-common to
+        qemu-system-common
+      * qemu-system-arm, qemu-system-ppc, qemu-system-sparc:
+        - add qemu-kvm to Provides
+        - add qemu-common, qemu-kvm, kvm to B/R
+        - remove openbios-sparc from qemu-system-sparc D
+      * qemu-system-x86:
+        - add qemu-common to Breaks/Replaces.
+        - add cpu-checker to Recommends.
+      * qemu-user: add B/R:qemu-kvm
+      * qemu-kvm:
+        - add armhf armel powerpc sparc to Architecture
+        - C/R/P: qemu-kvm-spice
+      * add qemu-common package
+      * drop qemu-slof which is not packaged in ubuntu
+    - add qemu-system-common.links for tap ifup/down scripts and OVMF link.
+    - qemu-system-x86.links:
+      * remove pxe rom links which are in kvm-ipxe
+      * add symlink for kvm.1 manpage
+    - debian/rules
+      * add kvm-spice symlink to qemu-kvm
+      * call dh_installmodules for qemu-system-x86
+      * update dh_installinit to install upstart script
+      * run dh_installman (Closes: #709241) (cherrypicked from 1.5.0+dfsg-2)
+    - Add qemu-utils.links for kvm-* symlinks.
+    - Add qemu-system-x86.qemu-kvm.upstart and .default
+    - Add qemu-system-x86.modprobe to set nesting=1
+    - Add qemu-system-common.preinst to add kvm group
+    - qemu-system-common.postinst: remove bad group acl if there, then have
+      udev relabel /dev/kvm.
+    - Dropped patches:
+      * 0001-fix-wrong-output-with-info-chardev-for-tcp-socket.patch
+    - Kept patches:
+      * expose_vms_qemu64cpu.patch - updated
+      * gridcentric patch - updated
+      * linaro arm patches from qemu-linaro rebasing branch
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 28 May 2013 08:18:30 -0500
+
+qemu (1.5.0+dfsg-2) unstable; urgency=low
+
+  * merged development history of wheezy and experimental branches.
+    Now the history is ordered by version, but is not chronological.
+    As a base we now have wheezy (1.1.2+dfsg-6a) version.
+  * removed trailing whitespaces from changelog file
+  * run dh_installinit properly (Closes: #709199)
+  * run dh_installman (Closes: #709241)
+  * remove build-dependendy on texi2html, upstream switched to makeinfo
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Tue, 28 May 2013 10:48:41 +0400
+
+qemu (1.5.0+dfsg-1) unstable; urgency=low
+
+  * update to 1.5.0 (Closes: #707732)
+  * upload to unstable
+  * mention that 1.5 closes #697641 and #705544
+  * bump dependency on openbios (openbios-ppc for qemu-system-ppc,
+    openbios-sparc for qemu-system-sparc) from 1.0+svn1060 to 1.1
+    (Closes: #707727)
+  * bump dependency on seabios to be >= 1.7.2-2
+  * add retry-pxe-after-efi.patch to try pxe-XXXX.rom after unsuccessfully
+    trying efi-XXXX.rom - this is for NICs, until pxe-qemu package will be
+    able to provide necessary efi-XXXX.rom files.
+  * add (versioned) dependency on libusb-1.0 now when the right version
+    is available in debian
+  * use-fixed-data-path.patch: do not try to derive data path from
+    executable location, always use /usr/share/qemu
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Tue, 21 May 2013 00:49:47 +0400
+
+qemu (1.5.0~rc0+dfsg-1) experimental; urgency=low
+
+  * update to new upstream release candidate (1.5.0-rc0)
+    (Closes: #697641, #705544)
+  * remove --audio-card-list
+  * added new moxie system target
+  * added new linux-user targets: mips64 mips64el mipsn32 mipsn32el
+  * add libgtk2 and libvte to dependencies (new UI)
+  * added libssh2 to dependencies (new block device)
+  * s/libvdeplug2-dev/libvdeplug-dev/
+  * define localstatedir (for guest-agent)
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Wed, 08 May 2013 01:01:01 +0400
+
+qemu (1.4.0+dfsg-2exp) experimental; urgency=low
+
+  [ Michael Tokarev ]
+  * set qemu-kvm priority to extra
+  * fix distribution field in last qemu-system.NEWS entry
+  * bump Standards-Version to 3.9.4 (no changes needed)
+  * fix update-rc.d args for qemu-system-x86
+  * pre-Depend on adduser for qemu-system-common (Closes: #700840)
+  * move guest agent binary (qemu-ga) to /usr/sbin
+  * add versioned build-depends on libspice-protocol-dev (>= 0.12.3)
+  * refresh qemu-ifunc-sparc.patch, use proper submission from patchwork
+    (sparc-linux-user-fix-missing-symbols...) instead.
+  * apply 1.4.1 upstream stable patch
+  * release as 1.4.0
+
+  [ Aurelien Jarno ]
+  * debian/rules: don't build spapr-rtas.bin from .hex file.
+  * qemu-system-ppc: add a depends on qemu-slof and add the corresponding
+    links (Closes: #686979).
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Thu, 18 Apr 2013 14:45:30 +0400
+
+qemu (1.4.0+dfsg-1expubuntu4) raring; urgency=low
+
+  * re-add qemu-system-x86.modprobe to set nesting=1 (LP: #1155177)
+  * qemu-system-x86.qemu-kvm.upstart:
+    - remove NESTED workarounds from upstart file.
+    - remove loading of modules which is now always done
+    - remove TAPR define which is no longer used
+  * move customizable defines back to qemu-kvm.default
+  * copy creation of group kvm to preinst - the group must exist when the
+    kvm udev rule is installed (LP: #1103022) (LP: #1092715)
+  * add adduser to qemu-system-common Pre-Depends for use by preinst.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 14 Mar 2013 14:21:53 -0500
+
+qemu (1.4.0+dfsg-1expubuntu3) raring; urgency=low
+
+  * debian/rules: add a symlink from kvm-spice to kvm in qemu-kvm, on
+    i386/amd64 targets.  (LP: #1126258)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 28 Feb 2013 15:17:16 -0600
+
+qemu (1.4.0+dfsg-1expubuntu2) raring; urgency=low
+
+  * substitute (apparently identical) patches from 1.4.0 qemu-linaro rebasing
+    tree.
+  * add qemu-common to qemu-system-common B/R (was accidentally dropped from
+    1.3.0 in 1.4.0 merge).
+  * debian/control: fix kvm P/C/B/R:
+    - make all C/B/R against kvm versioned
+    - don't have any qemu-system-* other than x86 Provides: kvm
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 22 Feb 2013 13:34:07 -0600
+
+qemu (1.4.0+dfsg-1expubuntu1) raring; urgency=low
+
+  * Merge 1.4.0+dfsg-1exp from debian.  Remaining changes:
+    - debian/control:
+      * update maintainer
+      * remove libiscsi, usb-redir, vde, and vnc-jpeg from build-deps
+      * enable rbd
+      * add qemu-system and qemu-common B/R to qemu-keymaps
+      * add D:udev and R:qemu to qemu-system-common
+      * qemu-system-arm, qemu-system-ppc, qemu-system-sparc:
+        - add qemu-kvm and kvm to Provides
+        - add qemu-common and qemu-kvm to Breaks/Replaces qemu-system-ppc,
+          qemu-system-sparc:
+        - remove openbios-$arch from Depends
+      * qemu-system-x86:
+        - add qemu-common to Breaks/Replaces.
+        - add cpu-checker to Recommends.
+      * qemu-user:
+        - add B/R qemu-kvm
+      * qemu-utils:
+        - add B/R qemu-user and qemu-kvm
+      * qemu-kvm: add armhf armel powerpc sparc to Architecture
+      * add qemu-common package
+    - add qemu-system-common.links for tap ifup/down scripts and OVMF link.
+    - qemu-system-x86.links:
+      * remove pxe rom links which are in kvm-ipxe
+      * add symlink for kvm.1 manpage
+    - Add qemu-utils.links for kvm-* symlinks.
+    - Add qemu-kvm.conf upstart job to qemu-system
+    - Clear /dev/kvm acls on install
+    - Add linaro arm patches.
+    - Add gridcentric patches.
+    - Re-add expose_vms_qemu64cpu.patch (from Daviey)
+  * Add 0001-fix-wrong-output-with-info-chardev-for-tcp-socket.patch
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Wed, 20 Feb 2013 11:58:27 -0600
+
+qemu (1.4.0+dfsg-1exp) experimental; urgency=low
+
+  [ Michael Tokarev ]
+  * 1.4.0 final release
+  * remove fix-virtio-net-for-win-guests.patch (upstream now has better fix)
+  * fix debian/control arch fields. Build-Depends: foo [bar]
+    means foo will be selected for build on LINUX-bar, not any-bar.
+    So stop using [bar], always use [linux-bar] or [any-bar],
+    as appropriate.  This fix spice and xen (non)selection on
+    kfreebsd-{i386,amd64}.
+  * fix manpage "links" generation (man qemu-system-* was broken)
+  * change Vcs fields to point to anonscm.debian.org (lintian)
+  * add a check for (lxc) container to qemu-system-x86 initscript
+
+  [ Michael Tokarev - committed after 1.4.0+dfsg-1exp]
+  * fix distribution field in last qemu-system.NEWS entry
+  * bump Standards-Version to 3.9.4 (no changes needed)
+  * pre-Depend on adduser for qemu-system-common (Closes: #700840)
+
+  [ Steve Langasek ]
+  * Pass --enable-uname-release=2.6.32 for the user emulation builds, so that
+    we have a sensible baseline kernel value regardless of what the
+    underlying host kernel is.  This makes eglibc happier when running under
+    emulation on a very old kernel for instance (whose host syscall ABI has
+    nothing to do with what emulated syscalls are supported), and probably
+    also lets us steer clear for the moment of code that has problem with
+    the new kernel upstream versioning convention.  LP: #921078.
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Sat, 16 Feb 2013 12:34:54 +0400
+
+qemu (1.4.0~rc0+dfsg-1exp) experimental; urgency=low
+
+  * new upstream 1.4.0-rc0 (first release candidate).
+    (Closes: #549195)
+  * remove patches included upstream:
+    e1000-discard-oversized-packets-based-on-SBP_LPE.patch
+    link-seccomp-only-with-softmmu-targets.patch
+    revert-serial-fix-retry-logic.patch
+    savevm.c-cleanup-system-includes.patch
+  * refresh qemu-ifunc-sparc.patch
+  * add fix-virtio-net-for-win-guests.patch bandaid to make virtio-net
+    in windows guest to work again
+  * don't install virtfs-proxy-helper in its own subdir in /usr/bin
+  * add qemu-io manpage.  Thank you Asias He for the work!
+    (Closes: #652518)
+  * move config options from debian/configure-opts into debian/control,
+    to keep list of build-deps & corresponding config flags in one place
+  * use initscript from old qemu-kvm package to load kvm modules for
+    qemu-system-x86, and clean it up (Closes: #699404)
+  * load vhost_net module in the initscript too
+  * mention default NIC change in qemu-kvm.NEWS and old conffiles
+  * remove mentions of (ubuntu-specific) qemu-common from debian/control
+    for now, as it does not help anyway (other changes are needed anyway
+    and it is better to keep them in one place)
+  * add a (preliminary) qemu-guest-agent startup script
+  * qemu-system-x86 break libvirt0 << 1.0, because older versions
+    didn't work with qemu 1.3+ correctly
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Sat, 02 Feb 2013 21:05:28 +0400
+
+qemu (1.3.0+dfsg-5expubuntu5) raring; urgency=low
+
+  * qemu-system-common.postinst: only run setfacl when /dev/kvm exists.
+    (LP: #1130591)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Wed, 20 Feb 2013 08:58:53 -0600
+
+qemu (1.3.0+dfsg-5expubuntu4) raring; urgency=low
+
+  * Update workarounds for udev/inotify:  (LP: #1092715)
+    - qemu-system-common.udev: go back to original, simple rule
+    - qemu-system-common.postinst: manually run setfacl
+    - (keep Depends: on acl as well)
+    - this can be removed once bug 1092715 is fixed.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 19 Feb 2013 12:41:22 -0600
+
+qemu (1.3.0+dfsg-5expubuntu3) raring; urgency=low
+
+  * Now that qemu provides spice support, and qemu-kvm-spice is removed from
+    the archive, have qemu-kvm (which qemu-kvm-spice always depended on)
+    P/C/R qemu-kvm-spice.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 14 Feb 2013 13:43:27 -0600
+
+qemu (1.3.0+dfsg-5expubuntu2) raring; urgency=low
+
+  * Enable spice.
+  * Address lintian warning by adding ${misc:Depends} to qemu-common and
+    qemu-kvm.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 12 Feb 2013 16:07:04 -0600
+
+qemu (1.3.0+dfsg-5expubuntu1) raring; urgency=low
+
+  [ Serge Hallyn ]
+  * Merge 1.3.0+dfsg-5exp from Debian.
+  * remaining changes from 1.3.0+dfsg-1~exp3ubuntu1:
+    - debian/control:
+      * update maintainer
+      * remove vde2 recommends
+      * build-deps: remove libusbredir, libvdeplug2-dev,
+        libspice-server-dev, libspice-protocol-dev, libiscsi-dev
+      * qemu-system:
+        - break/replace qemu-common
+        - depend on udev
+        - remove openbios-ppc, openbios-sparc, and openhackware from
+          Depends.  (Intend to add them back once we can build them.)
+      * qemu-utils: break/replace qemu-kvm
+    - qemu-kvm.upstart:
+      - add qemu-system.qemu-kvm.upstart
+      - debian/rules: add dh_installinit to get qemu-system.upstart installed.
+      - take the defaults from the old qemu-kvm.defaults, and move them into
+        the upstart job
+    - debian/patches:
+      - apply gridcentric patches from lp:~amscanne/+junk/gridcentric-qemu-patches
+      - apply arm patches from git://git.linaro.org/qemu/qemu-linaro.git
+    - add links for qemu-ifup/down in qemu-system-common.links
+    - debian/qemu-system-common.postinst
+      - udevadm trigger to fix up /dev/kvm perms
+    - debian/qemu-system.links:
+      - remove pxe-virtio, pxe-e1000 and pxe-rtl8139 links (which conflict
+        with ones from kvm-ipxe).  We may want to move the links from kvm-ipxe
+        back to qemu-system at some point.
+  * remaining changes from after 1.3.0+dfsg-1~exp3ubuntu1:
+    - qemu-system-common.links: add link for OVMF
+    - Add qemu-utils.links for kvm-img and kvm-nbd utils and manpages.
+    - qemu-system.links:
+      * Add link to usr/share/ovmf/OVMF.fd
+      * Fix target of /etc/kvm/kvm-if{up,down} links
+    - debian/control: qemu-system should Recommend cpu-checker
+    - Add qemu-kvm breaks/replaces to qemu-user, to handle conflict over
+      (i.e.) qemu-x86_64.
+    - add qemu-kvm, and qemu-common transitional packages.
+    - Add breaks/replaces to qemu-keymaps for qemu-system.
+    - Add provides: qemu-kvm and kvm to qemu-system-ppc.
+    - Add breaks/replaces to qemu-system-ppc for qemu-kvm and qemu-common.
+    - Add breaks/replaces to qemu-kvm for qemu-common.
+    - Add breaks/replaces to qemu-utils for qemu-user and qemu-kvm.
+    - Add armhf, armel, powerpc and sparc arches to qemu-kvm transitional
+      package.
+    - Add qemu-common package.
+    - Make sure /dev/kvm gets its acls cleared:
+      * Add acl to qemu-system.depends
+      * update qemu-system.udev to run setfacl to set g::rw acl
+    - Remove vnc-jpeg, libiscsi-dev, and vde from debian/configure-opts
+  * dropped debian/patches/CVE-2012-6075.patch (duplicate of
+    e1000-discard-oversize-packets-based-on-SBP_LPE.patch)
+  * debian/{control,configure-opts}: enable rbd (LP: #1118406)
+  * add symlink for kvm.1 -> qemu.1 manpage (LP: #1117636)
+  * add replaces to qemu-system-common for qemu - we briefly moved conflicting
+    docs to qemu, which debian moved to qemu-system-common.  This can be
+    dropped after raring.
+  * move qemu-kvm.upstart from qemu-system to qemu-system-x86.
+  * Support upgrade from qemu-kvm on non-x86 arches:
+    - Add Provides: qemu-kvm, kvm to qemu-system-{arm,ppc,sparc,x86}
+    - Add Breaks/Replaces for qemu-{common,system,kvm} and kvm.
+  * Re-add expose_vms_qemu64cpu.patch (from Daviey) from quantal.
+
+  [ Steve Langasek ]
+  * Pass --enable-uname-release=2.6.32 for the user emulation builds, so that
+    we have a sensible baseline kernel value regardless of what the
+    underlying host kernel is.  This makes eglibc happier when running under
+    emulation on a very old kernel for instance (whose host syscall ABI has
+    nothing to do with what emulated syscalls are supported), and probably
+    also lets us steer clear for the moment of code that has problem with
+    the new kernel upstream versioning convention.  LP: #921078.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 07 Feb 2013 14:15:26 -0600
+
+qemu (1.3.0+dfsg-5exp) experimental; urgency=low
+
+  * qemu-system-split: split qemu-system into several target-specific packages:
+    qemu-system-arm, qemu-system-mips, qemu-system-ppc, qemu-system-sparc,
+    qemu-system-x86, and qemu-system-misc, plus qemu-system-common.
+    (Closes: #636000)
+  * add initial qemu-guest-agent package (just the binary for now,
+    no startup script) (Closes: #676959)
+  * do not try to install (linux-specific) virtfs-proxy-helper on kfreebsd
+  * change order of audio drivers, in particular put pulseaudio (pa) first
+  * ship OS-specific qemu-ifup (use trivial ifconfig invocation on kfreebsd)
+  * qemu-system replaces qemu-utils due to virtfs-proxy-helper binary
+  * chmod +x qemu-ifdown
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Mon, 28 Jan 2013 15:05:57 +0400
+
+qemu (1.3.0+dfsg-4exp) experimental; urgency=low
+
+  * install forgotten /etc/qemu-ifdown (dummy, but qemu complains without it)
+  * install virtfs-proxy-helper in qemu-system not qemu-utils
+  * add qemu-kvm.NEWS mentioning transition from qemu-kvm to qemu-system-x86_64.
+  * do not pass -cpu kvm64 to qemu in kvm wrapper script, previous qemu-kvm
+    used qemu64 cpu instead - the same as new qemu uses.
+  * install kvm wrapper on x86 only, and install it as /usr/bin/kvm not
+    /usr/bin/kvm/kvm (Closes: #698736).
+  * stop shipping /usr/share/qemu/vapic.bin link (qemu uses kvmvapic.bin)
+  * stop shipping /usr/share/qemu/vgabios.bin link (qemu uses vgabios-*.bin)
+  * enable all guest audio devices
+  * add breaks/replaces/provides/conflicts with kvm (very old package),
+    qemu-kvm, and ubuntu's qemu-common.
+  * stop caring about old (pre-squeeze) qemu
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Wed, 23 Jan 2013 11:08:47 +0400
+
+qemu (1.3.0+dfsg-3exp) experimental; urgency=low
+
+  * add ability to specify os-arch in configure-opts
+  * libseccomp is linux-x86 not linux-any
+  * e1000-discard-oversized-packets-based-on-SBP_LPE.patch
+    CVE-2012-6075 (Closes: #696051)
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Mon, 21 Jan 2013 02:54:15 +0400
+
+qemu (1.3.0+dfsg-2exp) experimental; urgency=low
+
+  * qemu-nbd and qemu-io should be installed on kFreeBSD too
+  * install qemu-system docs into /usr/share/doc/qemu-system,
+    not .../qemu (Closes: #697085)
+  * do not depend on ipxe, it does not provide our ROMs
+  * move vde2 from Recommends to Suggests, since it isn't
+    used often
+  * require libspice-server-dev >= 0.12.2 and require it on i386 too,
+    enable spice support
+  * require libusbredirparser-dev >= 0.6, enable usb-redir
+  * enable xen explicitly on amd64|i386
+  * enable xfsctl explicitly on linux
+  * sort build-deps in debian/control and add comments
+  * set permissions of /dev/kvm in qemu-system.postinst
+    the same way it is done in old qemu-kvm package
+  * set --localstatedir=/var (will be used later by guest agent)
+  * bump qemu-system dependency on seabios to 1.7.2
+    and add symlinks for acpi-dsdt.aml and q35-acpi-dsdt.aml
+  * import qemu-ifup and qemu-ifdown scripts from qemu-kvm,
+    and modify qemu-ifup to allow usage of just `ip' command
+    from iproute package (if installed) instead of old brctl+ifconfig.
+    Add Breaks: for old iproute without bridge controls.
+    Add iproute to Recomments, so that the scripts will actually work
+    (previous script used sudo which should be in recommends too)
+  * enable seccomp (and libseccomp-dev b-d) on linux,
+    and add link-seccomp-only-with-softmmu-targets.patch
+  * use $(MAKE) not make when building spapr-rtas.bin
+  * update debian/watch (new place and new extensions)
+  * add qemu-kvm package (transitional, depends on qemu-system),
+    and add /usr/bin/kvm wrapper that calls qemu-system-x86_64
+    with some arguments to match original qemu-kvm behavour.
+    (Closes: #560853)
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Sun, 20 Jan 2013 22:12:11 +0400
+
+qemu (1.3.0+dfsg-1~exp3ubuntu8) raring; urgency=low
+
+  * qemu-system.links:
+    - Add link to usr/share/ovmf/OVMF.fd (LP: #1074207)
+    - Fix target of /etc/kvm/kvm-if{up,down} links
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Tue, 29 Jan 2013 10:52:22 -0600
+
+qemu (1.3.0+dfsg-1~exp3ubuntu7) raring; urgency=low
+
+  * debian/control: qemu-system should Recommend cpu-checker (LP: #1103982)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 28 Jan 2013 11:52:10 -0600
+
+qemu (1.3.0+dfsg-1~exp3ubuntu6) raring; urgency=low
+
+  * configure-opts: add audio-cards list (LP: #1102487)
+  * configure-opts: change order of audio-drv-list for ubuntu, putting pa
+    first.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 21 Jan 2013 12:02:09 -0600
+
+qemu (1.3.0+dfsg-1~exp3ubuntu5) raring; urgency=low
+
+  * Add qemu-kvm breaks/replaces to qemu-user, to handle conflict over
+    (i.e.) qemu-x86_64. (LP: #1102332)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 21 Jan 2013 08:58:07 -0600
+
+qemu (1.3.0+dfsg-1~exp3ubuntu4) raring; urgency=low
+
+  * Move three docs from qemu-system.install to qemu.docs (LP: #1101798)
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Sat, 19 Jan 2013 20:12:48 -0700
+
+qemu (1.3.0+dfsg-1~exp3ubuntu3) raring; urgency=low
+
+  * debian/patches/CVE-2012-6075.patch: Fix guest denial of service and
+    possible code execution in hw/e1000.c by dropping oversize packets.
+
+ -- Adam Conrad <adconrad@ubuntu.com>  Sat, 19 Jan 2013 07:31:50 -0700
+
+qemu (1.3.0+dfsg-1~exp3ubuntu2) raring; urgency=low
+
+  * debian/rules: empty MAKEFLAGS when building spapr-rtas.bin on powerpc, to
+    fix FTBFS due to parallel compile.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 18 Jan 2013 15:51:09 -0600
+
+qemu (1.3.0+dfsg-1~exp3ubuntu1) raring; urgency=low
+
+  * Merge 1.3.0+dfsg-1~exp3.  Remaining ubuntu delta:
+    - debian/control:
+      * update maintainer
+      * remove vde2 recommends
+      * build-deps: remove libusbredir, libvdeplug2-dev,
+        libspice-server-dev, libspice-protocol-dev, libiscsi-dev,
+        and libxen-dev.
+      * qemu-keymaps: break/replace qemu-common
+      * qemu-system:
+        - break/replace qemu-common
+        - depend on udev
+        - remove openbios-ppc, openbios-sparc, and openhackware from
+          Depends.  (Intend to add them back once we can build them.)
+        - provides: qemu-kvm
+      * qemu-utils: break/replace qemu-kvm
+      * set up transitional packages for qemu-kvm, qemu-common, and kvm.
+    - qemu-kvm.upstart:
+      - add qemu-system.qemu-kvm.upstart
+      - debian/rules: add dh_installinit to get qemu-system.upstart installed.
+      - take the defaults from the old qemu-kvm.defaults, and move them into
+        the upstart job
+    - debian/patches:
+      - apply gridcentric patches from lp:~amscanne/+junk/gridcentric-qemu-patches
+      - apply arm patches from git://git.linaro.org/qemu/qemu-linaro.git
+    - ifup/down:
+      - copy Debian qemu-kvm's kvm-ifup/down into debian/
+      - fix dh_install for kvm-ifup/down in debian/rules
+      - add links for qemu-ifup/down in qemu-system.links
+      - remove (debian's original) qemu-ifup from qemu-system.install
+    - debian/qemu-system.postinst
+      - udevadm trigger to fix up /dev/kvm perms
+      - make the 'qemu' symlink point to qemu-system-x86_64, not -i386.
+    - debian/qemu-system.links:
+      - point 'kvm' to qemu-system-x86_64
+      - remove pxe-virtio, pxe-e1000 and pxe-rtl8139 links (which conflict
+        with ones from kvm-ipxe).  We may want to move the links from kvm-ipxe
+        back to qemu-system at some point.
+  * Add note about kvm to qemu-system.README.debian.
+  * Copy kvm-ifup and kvm-ifdown from debian's qemu-kvm
+  * Remove TAPBR from qemu-kvm.conf.
+  * Make sure /dev/kvm gets its acls cleared:
+    - Add acl to qemu-system.depends
+    - update qemu-system.udev to run setfacl to set g::rw acl
+  * qemu-system.qemu-kvm.conf: don't rmmod at stop
+  * Remove vnc-jpeg, libiscsi-dev, and vde from debian/configure-opts
+  * Remove hugepages sysctl file - qemu now supports transparent hugepages.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 14 Jan 2013 23:22:51 -0600
+
+qemu (1.3.0+dfsg-1~exp3) experimental; urgency=low
+
+  * enable vde on kFreebsd too (no idea why it was disabled)
+  * bluez (libbluetooth) is linux-specific
+  * savevm.c-cleanup-system-includes.patch: remove excessive #includes
+    from savevm.c (fixes FTBFS on kFreebsd due to wrong #include)
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Mon, 31 Dec 2012 15:52:23 +0400
+
+qemu (1.3.0+dfsg-1~exp2) experimental; urgency=low
+
+  * mention that 1.3: Closes #622319, #597527, #593547, #660154
+  * libcap and libcap-ng are linux-specific
+  * include spapr-rtas.bin file in a pre-compiled pseudo-hex-with-assembly
+    form in debian/spapr-rtas.hex, "compile" it (using sed magic) in
+    build step and compare the result with the actually built binary
+    on ppc.  This binary is needed for ppc system emulation (qemu-system-ppc*).
+    (Closes: #670909).
+  * rename system-build to qemu-build, and merge user-build to qemu-build,
+    building qemu-system and qemu-user in one go.  Only qemu-system-static
+    is left in separate build dir.  Note that current qemu-user is
+    linux-specific, even if qemu has bsd-user targets.
+  * add or32 user target
+  * debian/configure-opts - list of (possible arch- or os-specific)
+    features to enable/disable.  This is in order to ensure we always
+    build with specific options enabled and error out if new upstream
+    will dislike our dependencies, or if the deps will not work.
+    Move config_audio_drv from debian/rules to this file too.
+    For now do not explicitly enable xen, spice, usb-redir, since
+    these requires some more work.
+    Also pass $(QEMU_CONFIGURE_OPTIONS) to qemu configure line,
+    to be able to quickly override some options.
+  * do not build-depend on sharutils, since no uuencoded binaries
+    are shipped anymore
+  * do not build-depend on nasm, we don't compile from assembly anymore
+  * remove libgpmg1-dev from build-depends.  It was due to #267174,
+    because of static link of qemu with libsdl.  Now only qemu-user-static
+    is linked statically, and this one does not use libsdl.
+  * add myself to uploaders, and remove dm-upload-allowed
+  * added main docs to qemu-system package
+  * specify --libexecdir=/usr/lib to configure
+  * mark all packages as Multi-Arch: foreign
+    (at least it is possible to install i386 versions on amd64 arch)
+  * replace "flags OC" with "credentials yes" in debian/binfmts/*,
+    since that's the format update-binfmts expects to enable setuid
+    binaries. (Closes: #683205)
+  * build-depend on debhelper 9, and set debian/compat to 9
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Mon, 31 Dec 2012 01:40:35 +0400
+
+qemu (1.2.0.dfsg-1~exp1-0ubuntu2) raring; urgency=low
+
+  * Remove kvm package
+    - make qemu-system P/C/B: kvm.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 14 Jan 2013 12:03:19 -0600
+
+qemu (1.2.0.dfsg-1~exp1-0ubuntu1) raring; urgency=low
+
+  [ Serge Hallyn ]
+  * debian/control:
+    - update maintainer
+    - remove vde2 recommends
+    - build-deps: remove libusbredir, libvdeplug2-dev,
+      libspice-server-dev, libspice-protocol-dev, libiscsi-dev,
+      and libxen-dev.
+    - qemu-keymaps: break/replace qemu-common
+    - qemu-system:
+      - break/replace qemu-common
+      - depend on udev
+      - remove openbios-ppc, openbios-sparc, and openhackware from
+        Depends.  (Intend to add them back once we can build them.)
+      - provides: qemu-kvm
+    - qemu-utils: break/replace qemu-kvm
+    - set up transitional packages for qemu-kvm, qemu-common, and kvm.
+  * debian/rules:
+    - install kvm-ifup and kvm-ifdown
+    - dh_installinit the qemu-kvm upstart job
+  * install a 30-qemu-kvm.conf into /etc/sysctl.c for nr_hugepages.
+  * qemu-kvm.upstart:
+    - add qemu-system.qemu-kvm.upstart
+    - add mv_confile to qemu-system.preinst, postinst, and .postrm to rename
+      /etc/init/qemu-kvm.conf to qemu-system.conf
+    - debian/rules: add dh_installinit to get qemu-system.upstart installed.
+    - take the defaults from the old qemu-kvm.defaults, and move them into
+      the upstart job
+  * debian/patches:
+    - apply gridcentric patches from lp:~amscanne/+junk/gridcentric-qemu-patches
+    - apply arm patches from git://git.linaro.org/qemu/qemu-linaro.git
+    - apply nbd-fixes-to-read-only-handling.patch from upstream to
+      make read-write mount after read-only mount work.  (LP: #1077838)
+  * ifup/down:
+    - copy Ubuntu qemu-kvm's kvm-ifup/down into debian/
+    - fix dh_install for kvm-ifup/down in debian/rules
+    - add links for qemu-ifup/down in qemu-system.links
+    - remove (debian's original) qemu-ifup from qemu-system.install
+  * debian/qemu-system.postinst
+    - udevadm trigger to fix up /dev/kvm perms
+    - make the 'qemu' symlink point to qemu-system-x86_64, not -i386.
+  * debian/qemu-system.links:
+    - point 'kvm' to qemu-system-x86_64
+    - remove pxe-virtio, pxe-e1000 and pxe-rtl8139 links (which conflict
+      with ones from kvm-ipxe).  We may want to move the links from kvm-ipxe
+      back to qemu-system at some point.
+    - add qemu-ifdown and qemu-ifup links
+  * debian/qemu-system.install:
+    - remove /etc/qemu-ifup link
+    - add /etc/sysctl.d/30-qemu-kvm.conf
+
+  [ Adam Conrad ]
+  * Appease apt-get's dist-upgrade resolver by creating a qemu-common
+    transitional package to upgrade more gracefully to qemu-keymaps.
+  * Move all the empty transitional packages to the oldlibs section.
+  * Restore the versioned dep from qemu-kvm (and kvm) to qemu-system.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Fri, 04 Jan 2013 08:50:24 -0600
+
+qemu (1.2.0+dfsg-1~exp1) UNRELEASED; urgency=low
+
+  [ Michael Tokarev ]
+  * new upstream version (1.3.0)
+    (Closes: #676374, #622319, #597527, #593547, #660154)
+   - Removed patches included upstream:
+     do-not-include-libutil.h.patch
+     configure-nss-usbredir.patch
+     tcg_s390-fix-ld_st-with-CONFIG_TCG_PASS_AREG0.patch
+     net-add--netdev-options-to-man-page.patch
+   - update 02_kfreebsd.patch
+   - do not build mpc8544ds.dtb
+   - include new targets
+  * Cleaned up the build system ALOT.  Larger changes:
+    - used explicit lists of emulated targets in debian/rules
+      and generate everything else from there, instead of repeating
+      these lists in lots of places.
+    - stop using debian/$pkg.manpages and other auxilary files like this,
+      moving eveything to debian/$pkg.install, because with the number
+      of packages growing, amount of these small files becomes very
+      large and the result is difficult to maintain.
+  * ship forgotten target-x86_64.conf in qemu-system.
+  * ship virtfs-proxy-helper in qemu-utils.
+  * stop shipping tundev.c, since it does not reflect the reality for
+    a long time now (Closes: #325761, #325754).
+  * re-introduce support parallel build using DEB_BUILD_OPTIONS=parallel=N,
+    this time by adding to $MAKEFLAGS instead of passing down to submakes
+  * build-depend on libcap-ng-dev (for virtfs-proxy-helper)
+
+  [ Vagrant Cascadian ]
+  * Add libcap-dev to Build-Depends to support virtfs-proxy-helper.
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Sun, 30 Dec 2012 01:52:21 +0400
+
+qemu (1.1.2+dfsg-6a) unstable; urgency=low
+
+  * reupload to remove two unrelated files slipped in debian/
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Mon, 18 Mar 2013 10:09:37 +0400
+
+qemu (1.1.2+dfsg-6) unstable; urgency=low
+
+  * another bugfix for USB, upstream from early days of past-1.1.
+    usb-split-endpoint-init-and-reset.patch.  With certain redirected
+    to guest USB devices, qemu process may crash:
+
+     usb_packet_complete: Assertion `((&ep->queue)->tqh_first) == p' failed.
+
+    The patch fixes this by de-coupling reset and complete paths.
+    Big thanks goes to Joseph Price who found the fix by doing a
+    reverse git bisection.
+    (Closes: #701926)
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Mon, 18 Mar 2013 09:07:24 +0400
+
+qemu (1.1.2+dfsg-5) unstable; urgency=low
+
+  * fix USB regression introduced in 1.1 (Closes: #683983)
+    uhci-don-t-queue-up-packets-after-one-with-the-SPD-flag-set.patch
+    Big thanks to Peter Schaefer (https://bugs.launchpad.net/bugs/1033727)
+    for the help identifying the fix.
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Mon, 14 Jan 2013 12:20:29 +0400
+
+qemu (1.1.2+dfsg-4) unstable; urgency=medium
+
+  * linux-user-fix-mips-32-on-64-prealloc-case.patch (Closes: #668658)
+  * e1000-discard-oversized-packets-based-on-SBP_LPE.patch: the second
+    half of the fix for CVE-2012-6075. (Finally Closes: #696051)
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Wed, 09 Jan 2013 23:05:17 +0400
+
+qemu (1.1.2+dfsg-3) unstable; urgency=low
+
+  * add build-dependency on libcap-dev [linux-any] to enable virtfs support
+    which has been dropped in 1.1. (Closes: #677654)
+  * intel_hda-do-not-call-msi_reset-when-only-device-state-needs-resetting.patch
+    patch to fix Fixing reset of MSI function in intel-hda virtual device.
+    The fix (applied to stable-1.1.1) was partially wrong, as it actually
+    added the msi_reset() call to two code paths instead of one as planned.
+    Fix this by splitting the function in question into two parts.
+    (Closes: #688964)
+  * blockdev-preserve-readonly-and-snapshot-states-across-media-changes.patch:
+    allow opening of read-only cdrom images/devices (Closes: #686776)
+  * ahci-properly-reset-PxCMD-on-HBA-reset.patch: fix windows install on ahci
+    (Closes: #696052)
+  * e1000-discard-packets-that-are-too-long-if-not-SBP-and-not-LPE.patch:
+    discard too long rx packets which may overflow guest buffer
+    (Closes: #696051)
+  * eepro100-fix-network-hang-when-rx-buffers-run-out.patch:
+    fix e100 stall (Closes: #696061)
+  * fix possible network stalls/slowness in e1000 device emulation:
+    net-notify-iothread-after-flushing-queue.patch
+    e1000-flush-queue-whenever-can_receive-can-go-from-false-to-true.patch
+    (Closes: #696063)
+  * fixes-related-to-processing-of-qemu-s-numa-option.patch:
+    fixes numa handling (Closes: #691343)
+  * qcow2-fix-avail_sectors-in-cluster-allocation-code.patch:
+    fixes data corruption in stacked qcow2 (Closes: #695905)
+  * qcow2-fix-refcount-table-size-calculation.patch: another possible
+    corruption or crash in qcow2 (Closes: #691569)
+  * tap-reset-vnet-header-size-on-open.patch: always ensure tap device is
+    in known state initially (Closes: #696057)
+  * vmdk-fix-data-corruption-bug-in-WRITE-and-READ-handling.patch:
+    possible data corruption bug in vmdk image format (Closes: #696050)
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Sun, 16 Dec 2012 23:08:40 +0400
+
+qemu (1.1.2+dfsg-2) unstable; urgency=low
+
+  * remove debian/patches/fix-armhf-prctl.patch, it is included
+    upstream in 1.1.0 version and is misapplied since 1.1.0~rc3+dfsg-1.
+  * drop -jN passing to downstream makes, as it breaks dpkg-buildpackage -j
+    and actually breaks build (Closes: #597524 - said to be fixed in 0.14.1
+    but was still present)
+  * add revert-serial-fix-retry-logic.patch that restores
+    old (semi-)working behavour of a virtual serial port.
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Wed, 19 Sep 2012 13:54:05 +0400
+
+qemu (1.1.2+dfsg-1) unstable; urgency=low
+
+  [Michael  Tokarev]
+  * new upstream stable/bugfix release, fixing a LOT of bugs,
+    including CVE-2012-3515 (Closes: #686973, #681985)
+  * bump versioned depends of seabios to 1.7.0~, since this version ships
+    kvmvapic.bin.
+  * ship /usr/share/qemu/qemu-icon.bmp (Closes: #681317)
+  * do not build-depend on ceph (librbd-dev librados-dev), since ceph is
+    having longstanding issues in wheezy.
+  * add tcg_s390-fix-ld_st-with-CONFIG_TCG_PASS_AREG0.patch - upstream fix
+    to un-break s390[x] emulation code.  Similar fixes were included for
+    other platforms in 1.1.2 changeset.  Without this fix, qemu is basically
+    useless on s390.
+  * document -netdev option in the manpage, a long-standing omission
+    (net-add--netdev-options-to-man-page.patch)
+
+  [Vagrant Cascadian]
+  * qemu-system: Add symlinks for extboot.bin, kvmvapic.bin and vapic.bin to
+    binaries shipped in seabios. Closes: #678217, #679004.
+  * qemu-system: Remove dead link for ne2k_isa.rom, which is not included in
+    ipxe. Closes: #679004.
+  * qemu-system: Bump versioned openbios-sparc and openbios-ppc Depends to
+    1.0+svn1060, to ensure we use at least version which is used by upstream.
+    Wheezy already has the right version, but we should not break partial
+    upgrades.
+
+ -- Michael Tokarev <mjt@tls.msk.ru>  Sun, 09 Sep 2012 18:52:57 +0400
+
+qemu (1.1.0+dfsg-1) unstable; urgency=low
+
+  [ Vagrant Cascadian ]
+  * New upstream release. (Closes: #655604, #655145)
+
+  [ Michael Tokarev ]
+  * do-not-include-libutil.h.patch - don't include libutil.h&Co when not
+    needed.  Fixes FTBFS on kFreebsd with recent libbsd-dev.
+  * drop libbsd-dev support on kFreebsd - no longer needed.
+  * do not build USB host support on kFreebsd (qemu uses obsolete,
+    now removed, USB API).  Use the same hack/technique as FreeBSD
+    qemu port does -- changing HOST_USB to "stub" after configure run.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Thu, 07 Jun 2012 13:44:26 -0700
+
+qemu (1.1.0~rc3+dfsg-1) experimental; urgency=low
+
+  * New upstream release candidate.
+  * debian/patches:
+    - Update 02_kfreebsd.
+    - Remove dont-block-sigchld, applied upstream.
+    - Update configure-nss-usbredir.
+    - Update fix-armhf-prctl.
+  * debian/rules: Remove --disable-darwin-user from configure, as it is no
+    longer present.
+  * Apply patch to qemu-make-debian-root to improve argument handling.
+    (Closes: #671723). Thanks to Askar Safin.
+  * qemu-utils: Add recommends on sharutils, used by qemu-make-debian-root
+    (Closes: #660296).
+  * Add Build-Depends on libusbredirparser-dev to support usbredir protocol.
+  * Add Build-Depends on libbsd-dev for kfreebsd.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Wed, 30 May 2012 20:24:59 -0700
+
+qemu (1.0.1+dfsg-1) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream stable version:
+    - remove debian/patches/fix-malta-i8259
+    - remove debian/patches/qemu-ifunc-ppc.patch
+    - remove debian/patches/x86-fix-cmpxchg.patch
+
+  [ Michael Tokarev ]
+  * apply patch to change backticks `` in debian/rules variables
+    to $(shell) construct, by Allard Hoeve.  (Closes: #660133)
+  * depend on vgabios >= 0.6c-3~ not 0.6c-3, to assist backporting
+
+  [ Hector Oron ]
+  * Fix prctl syscall (Closes: #656926, #651083).
+
+  [ Vagrant Cascadian ]
+  * Update to Standards-Version 3.9.3, no changes necessary.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Mon, 05 Mar 2012 13:05:14 -0800
+
+qemu (1.0+dfsg-3) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * Add a build-depends on libfdt-dev to enable some more emulated machines.
+  * Really add binfmt support for s390x.
+
+  [ Michael Tokarev ]
+  * Depend on ipxe-qemu | ipxe (<< 1.0.0+git-20120202.f6840ba-2)
+    after ipxe package split.  This will probably need to be changed
+    to just ipxe-qemu once it will be landed properly.
+
+  [ Vagrant Cascadian ]
+  * Apply patch to use dpkg-buildflags (Closes: #656276).
+    Thanks to Moritz Muehlenhoff.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Mon, 06 Feb 2012 17:56:15 -0800
+
+qemu (1.0+dfsg-2) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * Add patch from upstream to fix cmpxchg on x86.
+  * Add patch to not link user builds with NSS (Closes: #648202).
+  * Add binfmt support for s390x.
+  * Bump depends on openbios-ppc and openbios-sparc on versions
+    compatible with version 1.0.
+  * Build on s390x (Closes: #651048).
+
+  [ Vagrant Cascadian ]
+  * qemu-make-debian-root: Fix argument processing to handle when both -s and
+    -k are specified. Thanks to Mats Erik Andersson (Closes: #638047).
+  * Add Patch from upstream to fix regression on malta with i8259 interrupts.
+  * qemu-debootstrap: Add support for armhf and s390x.
+  * debian/rules: remove config.log in the clean target.
+  * qemu-make-debian-root: Use debootstrap's minbase variant, instead of a
+    long list of excludes.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Mon, 09 Jan 2012 16:01:17 -0800
+
+qemu (1.0+dfsg-1) experimental; urgency=low
+
+  * New upstream version.
+  * Add build-dep on libxen-dev to enable xen support.
+  * Add build-dep on libiscsi-dev to enable iscsi support.
+  * Add patch from upstream to not block SIGCHLD (Closes: #618743).
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Fri, 30 Dec 2011 16:12:03 -0800
+
+qemu (1.0~rc4+dfsg-1) experimental; urgency=low
+
+  * New upstream version:
+    - Fixes CVE-2011-4111.
+  * remove patches applied upstream:
+    - security/leftover.patch
+    - Move_QEMU_INCLUDES_before_QEMU_CFLAGS
+    - runnning-typo.patch
+  * Install new qemu-system variants:
+    xtensa, xtensaeb, alpha
+  * debian/rules: Drop hack to rename "qemu" binary to "qemu-system-i386", as
+    upstream now does the same.
+  * Enable spice support on amd64:
+    - Add Build-Depends: libspice-server-dev, libspice-protocol-dev
+  * debian/rules: use dh_prep instead of "dh_clean -k", which is deprecated.
+  * qemu-system: Bump dependency on seabios to 1.6.3~.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Mon, 28 Nov 2011 23:40:24 -0800
+
+qemu (0.15.1+dfsg-3) unstable; urgency=low
+
+  * Add patch from upstream to fix FTBFS on ia64.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Fri, 09 Dec 2011 23:48:21 -0800
+
+qemu (0.15.1+dfsg-2) unstable; urgency=low
+
+  * Add patch that fixes a buffer overrun (CVE-2011-4111).
+  * Enable spice support on amd64:
+    - Add Build-Depends: libspice-server-dev, libspice-protocol-dev
+  * debian/rules: Use dh_prep instead of "dh_clean -k", which is deprecated.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Mon, 28 Nov 2011 20:34:50 -0800
+
+qemu (0.15.1+dfsg-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Sun, 06 Nov 2011 10:37:31 -0800
+
+qemu (0.15.0+dfsg-1) unstable; urgency=low
+
+  * New upstream version.
+  * Install new qemu-system, qemu-user and qemu-user-static variants:
+    lm32, microblazeel, s390x, unicore32
+  * Patch from upstream to set QEMU_INCLUDES before QEMU_CFLAGS.
+  * Update debian/watch to check http://qemu.org/download.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Mon, 03 Oct 2011 12:29:18 -0700
+
+qemu (0.15.0~rc2+dfsg-1) experimental; urgency=low
+
+  * New upstream version.
+  * qemu-debootstrap: Return the exit status of debootstrap instead of
+    hard-coding a sucessful exit status.
+  * Build-depend on librbd-dev.
+  * Remove qemu-mipsel-debian-rootfs.patch, a variation was applied upstream.
+  * Remove pcnet-ipxe patch, applied upstream.
+  * Add Build-Depends on python.
+  * Rename pxe rom symlinks to match upstream rename.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Sun, 07 Aug 2011 13:27:43 +0200
+
+qemu (0.14.1+dfsg-3) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * Add patches/qemu-ifunc-ppc.patch and patches/qemu-ifunc-sparc.patch
+    to fix FTBFS on ppc and sparc.
+
+  [ Vagrant Cascadian ]
+  * Apply patch to fix qemu-user-static mipsel emulation (Closes: #562887).
+  * Drop support for esd (Closes: #633390). Thanks to Adrian Bunk.
+  * Add dummy debian/rules build-indep/build-arch targets to resolve lintian
+    warnings and future policy requirements.
+  * Remove needless mention of "Author(s)" which triggers a lintian warning.
+  * Fix maintainer-script-without-set-e lintian checks.
+  * Fix hyphen-used-as-minus-sign lintian check for qemu-debootstrap manpage.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Sat, 23 Jul 2011 10:18:37 +0200
+
+qemu (0.14.1+dfsg-2) unstable; urgency=low
+
+  * Add override for qemu-user-static binaries which embed needed libraries.
+  * Add qemu-debootstrap manpage.
+  * Add patch to fix typo in qemu-system-* (runnning -> running).
+  * Update to Standards-Version 3.9.2, no changes necessary.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Sat, 02 Jul 2011 22:29:17 -0700
+
+qemu (0.14.1+dfsg-1) unstable; urgency=low
+
+  * New upstream version.
+  * Depend on ipxe instead of etherboot-qemu.
+  * Add pcnet-ipxe.patch from upstream to fix ipxe with pcnet nic.
+  * Add symlink for network boot with eepro100 cards (i82551, i82557b,
+    i82559er).
+  * Drop 01_rdb.patch, applied upstream.
+  * Add support for building on armhf architecture.
+  * Support debootstrap options that require arguments in qemu-debootstrap.
+    Thanks to Stefano Rivera for the patch. Closes: #605660.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Fri, 01 Jul 2011 22:49:40 -0700
+
+qemu (0.14.0+dfsg-5.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Replace "librados1-dev" by "librados-dev" in Build-Dependencies.
+
+ -- Mehdi Dogguy <mehdi@debian.org>  Fri, 29 Apr 2011 17:45:05 +0200
+
+qemu (0.14.0+dfsg-5) unstable; urgency=low
+
+  * Don't register qemu-mips(el) with binfmt on mips(el).  Closes:
+    #618369.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Thu, 17 Mar 2011 20:13:27 +0100
+
+qemu (0.14.0+dfsg-4) unstable; urgency=low
+
+  * Reupload without automatically generated patch
+    debian-changes-0.14.0+dfsg-3.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Mon, 28 Feb 2011 15:10:04 +0100
+
+qemu (0.14.0+dfsg-3) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * Depends on vgabios (>= 0.6c-3) and add symlinks for qxl, stdvga and
+    vmware bioses.  Closes: #614252, #614169.
+  * Tighten build-depends on linux-libc-dev to (>= 2.6.34), to get
+    vhost-net support.
+  * Build-depends on xfslibs-dev in order to get TRIM support on XFS
+    filesystems.
+  * Build-depends on librados1-dev to get rdb support.  Closes: #614150.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Mon, 28 Feb 2011 09:06:00 +0100
+
+qemu (0.14.0+dfsg-2) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * Tighten dependencies on openbios-ppc, openbios-sparc and seabios to
+    the versions in upstream 0.14.0.
+  * patches/02_kfreebsd.patch: don't consider futimens/utimensat available
+    if it is a stub.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 20 Feb 2011 00:36:20 +0100
+
+qemu (0.14.0+dfsg-1) unstable; urgency=low
+
+  [ Vagrant Cascadian ]
+  * New upstream release candidate version.
+  * qemu-user-static:
+    - Drop binfmt support for emulating amd64 on i386, as it is broken and
+      including it interferes with environments capable of running amd64
+      natively.  Closes: #604712.
+    - Remove binfmt support for installed targets in postinst before installing
+      supported targets, to ensure no-longer-supported targets are actually
+      removed.
+    - Remove binfmt support for installed targets in prerm.
+
+  [ Aurelien Jarno ]
+  * Fix configuration files directory.  Closes: #600735.
+  * Enable AIO support.
+
+  [ Vagrant Cascadian ]
+  * Update debian/copyright to refer to upstream git repositry and clarify
+    which binary blobs are removed to make the dfsg-free tarball.
+  * Refresh debian/patches/security/leftover.patch.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Fri, 18 Feb 2011 21:07:01 -0800
+
+qemu (0.13.0+dfsg-2) experimental; urgency=low
+
+  * Fix Build-Depends to exclude kfreebsd-any wildcards where appropriate.
+    Thanks to Jon Severinsson. Closes: #592215
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Sun, 24 Oct 2010 09:02:27 -0700
+
+qemu (0.13.0+dfsg-1) experimental; urgency=low
+
+  [ Aurelien Jarno ]
+  * mips/mipsel binfmt registration: also match EI_ABIVERSION=1, used by
+    OpenWRT. Closes: #591543.
+  * Build-depends on libattr1-dev to enable VirtFS (9p) support. Closes:
+    #592215.
+  * Use architecture wildcards instead of explicit architecture list.
+
+  [ Vagrant Cascadian ]
+  * Switch to source format 3.0 (quilt).
+  * New upstream version.
+  * Drop 99_stable.diff, applied in new upstream version.
+  * debian/watch: update to properly handle upstream rc versions.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Mon, 18 Oct 2010 10:22:44 -0700
+
+qemu (0.13.0~rc0+dfsg-2) experimental; urgency=low
+
+  [ Aurelien Jarno ]
+  * Add ia64 to the list of supported architectures.
+  * Bump Standards-Version to 3.9.1 (no changes).
+  * Update seabios, openbios-ppc and openbios-sparc dependencies.
+  * Add 99_stable.diff to update from the stable-0.13 branch:
+    - Fix sparc FTBFS. Closes: #591249.
+  * Add qemu-debootstrap from Loïc Minier in qemu-static. Closes:
+    #572952.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Tue, 03 Aug 2010 07:25:06 +0200
+
+qemu (0.13.0~rc0+dfsg-1) experimental; urgency=low
+
+  * New upstream release candidate version.
+  * Do not configure audio drivers for qemu-user and qemu-user-static targets.
+  * Remove patches:
+    - 05_bochs_vbe, applied upstream.
+    - 06_sh4, applied upstream.
+    - 03_support_pselect_in_linux_user_arm, upstream implemented a simpler
+      workaround.
+  * Add Build-Depends on texinfo.
+  * Drop libqemu-dev package.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Thu, 29 Jul 2010 19:51:01 -0400
+
+qemu (0.12.5+dfsg-3) unstable; urgency=medium
+
+  * qemu-user-static:
+    - Drop binfmt support for emulating amd64 on i386, as it is broken and
+      including it interferes with environments capable of running amd64
+      natively.  Closes: #604712.
+    - Remove binfmt support for installed targets in postinst before installing
+      supported targets, to ensure no-longer-supported targets are actually
+      removed.
+    - Remove binfmt support for installed targets in prerm.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Sun, 28 Nov 2010 15:57:11 -0800
+
+qemu (0.12.5+dfsg-2) unstable; urgency=low
+
+  * mips/mipsel binfmt registration: also match EI_ABIVERSION=1, used by
+    OpenWRT. Closes: #591543.
+  * Update 99_stable.diff from the stable branch:
+    - Fix windows XP boot with libvirt. Closes: bug#579166.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Tue, 17 Aug 2010 12:56:30 +0200
+
+qemu (0.12.5+dfsg-1) unstable; urgency=low
+
+  * New upstream stable version.
+  * qemu-system: don't suggests kqemu-source.  Closes: bug#589217.
+  * qemu-keymaps: fix short description.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Fri, 23 Jul 2010 19:02:14 +0200
+
+qemu (0.12.4+dfsg-4) unstable; urgency=high
+
+  * Update debian/copyright.  Closes: bug#588911.
+  * Update 99_stable.diff from the stable branch:
+    - Add documentation for the stdio signal option. Closes: bug#588514.
+  * Split out keymaps in the qemu-keymaps package.  Closes: bug#559174.
+  * Bump Standards-Version to 3.9.0 (no changes).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Wed, 14 Jul 2010 15:13:04 +0200
+
+qemu (0.12.4+dfsg-3) unstable; urgency=low
+
+  * Update 99_stable.diff from the stable branch.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Wed, 16 Jun 2010 23:07:36 +0200
+
+qemu (0.12.4+dfsg-2) unstable; urgency=low
+
+  [ Vagrant Cascadian ]
+  * qemu-system: Depend on etherboot-qemu package for PXE roms.
+    Closes: #552406.
+
+  [ Aurelien Jarno ]
+  * Add 99_stable.diff to update from the stable branch.
+  * Use --with-pkgversion to set the packaging version.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Wed, 02 Jun 2010 21:24:26 +0200
+
+qemu (0.12.4+dfsg-1) unstable; urgency=low
+
+  * New upstream stable version:
+    - remove debian/patches/01_redir_doc.patch
+    - remove debian/patches/04_cmd646.patch
+    - update debian/patches/06_sh4.diff
+
+ -- Aurelien Jarno <aurel32@debian.org>  Fri, 07 May 2010 19:43:48 +0200
+
+qemu (0.12.3+dfsg-4) unstable; urgency=low
+
+  * Add 05_bochs_vbe.diff backported from uptream to support vgabios
+    0.6c.
+  * Add 06_sh4.diff containing a few SH4 specific fixes backported from
+    upstream.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Fri, 09 Apr 2010 01:44:38 +0200
+
+qemu (0.12.3+dfsg-3) unstable; urgency=low
+
+  * Add symlink for seabios's multiboot.bin.
+  * Change configure-stamp depends to non-phony target $(QUILT_STAMPFN).
+    Closes: #574444.
+  * Fix a crash in cmd646 bmdma code that can be triggered by the guest.
+    Closes: #574539.
+  * Explain that KQEMU support has been removed in qemu-system.NEWS.
+  * Build-Conflicts with oss4-dev, as this package install a broken
+    <linux/soundcard.h> header. Closes: #575320.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sat, 03 Apr 2010 17:07:23 +0200
+
+qemu (0.12.3+dfsg-2) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * Disable KVM support on PowerPC, as it needs at least 2.6.33 kernel
+    headers.
+
+  [ Vagrant Cascadian ]
+  * Support pselect for linux-user arm target. Patch by Michael Casadevall.
+  * Add symlink for seabios's linuxboot.bin to fix -kernel option. Thanks to
+    Sami Liedes. Closes: #574174.
+  * qemu-system: Switch back to using versioned dependencies for vgabios,
+    bochsbios, openhackware, openbios-ppc and openbios-sparc rather than
+    recommends/conflicts, to ensure a proper upgrade path. Closes: #573397.
+    Reopens: #436094.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Fri, 19 Mar 2010 09:31:29 -0700
+
+qemu (0.12.3+dfsg-1) unstable; urgency=low
+
+  [ Vagrant Cascadian ]
+  * New upstream version:
+    - Fix access to block devices on GNU/kFreeBSD. Closes: #558447.
+    - Correctly update clock when waking up from sleep. Closes: #414165.
+    - Slirp works with other network interfaces. Closes: #407702.
+    - Add the possibility to specify a host to bind to with the -redir
+      option. Closes: #366847.
+    - Fix cirrus graphics card with windows 98. Closes: #522124.
+  * Indicate repackaged upstream tarball by adding "+dfsg" to the version.
+    Closes: #388740.
+  * Remove second libgnutls-dev from build depends.
+  * Update debian/watch with current location of tarball releases.
+  * Drop binutils-gold patch, applied upstream.
+  * Switch from bochsbios to seabios. Update bios.bin symlink and
+    recommends/conflicts.
+  * Bump Standards-Version to 3.8.4 (no changes).
+  * Update my email address to vagrant@debian.org.
+
+  [ Aurelien Jarno ]
+  * Create a kvm group in postinst and set the group of /dev/kvm to kvm.
+    Closes: #570544.
+  * Add mips and mipsel to the list of supported architectures.
+  * Add patches/01_redir_doc.patch to fix a mistake in the redirection
+    documentation.
+  * Add patches/02_kfreebsd.patch to use the legacy USB stack on
+    GNU/kFreeBSD.
+  * Force the depends from qemu on qemu-system, qemu-user and qemu-utils
+    to (>= {source:Version}).
+  * Update openbios related conflicts.
+
+ -- Vagrant Cascadian <vagrant@debian.org>  Sun, 07 Mar 2010 09:20:43 -0800
+
+qemu (0.11.1-2) unstable; urgency=low
+
+  * Add versioned build-depends on etherboot.
+  * Add PXE boot support for virtio network adapters.
+  * Move qemu-make-debian-root to qemu-utils package, as it only produces disk
+    images not useable by qemu-user. Lower recommends on debootstrap to
+    suggests. Add Conflicts and Replaces on older versions of qemu-user.
+  * Register /usr/bin/qemu with the alternatives system. Closes: #413840.
+  * qemu: Add ${misc:Depends} so that debhelper can add dependencies if needed.
+
+ -- Vagrant Cascadian <vagrant@freegeek.org>  Fri, 08 Jan 2010 09:26:11 -0800
+
+qemu (0.11.1-1) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream version.
+  * Drop build-depends on libfreebsd-dev on GNU/kFreeBSD.
+  * qemu: suggests qemu-user-static.
+  * qemu-user-static: register QEMU with binfmt mecanism. Closes:
+    #306637.
+  * Bump conflicts on openbios-ppc to (<< 1.0+svn505-1).
+  * Add 01-binutils-gold.diff to fix FTBFS with binutils-gold. Closes:
+    #556301.
+  * Add sparc64 support.
+  * Use new roms location in etherboot package.
+
+  [ Vagrant Cascadian ]
+  * qemu-utils, qemu-user, qemu-system: Set both Conflicts and Replaces for
+    older versions of qemu to ensure proper upgrade path.
+  * Add versioned build-dep on linux-libc-dev to ensure that KVM support is
+    enabled.
+  * qemu-system: Lower dependencies on vgabios, bochsbios, openhackware,
+    openbios-ppc and openbios-sparc to recommends. Conflict with versions that
+    are incompatible. Closes: #436094.
+  * qemu-utils: Tighten the versioned conflicts with kvm, as not all older
+    versions actually conflict.
+  * qemu-make-debian-root: Apply modified patch from Nicolas Boulenguez that
+    documents usage of -s, exits on error, and mentions that it is normally
+    run as root. Closes: #447034.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 27 Dec 2009 12:09:11 +0100
+
+qemu (0.11.0-6) unstable; urgency=low
+
+  * Update from stable-0.11 branch.
+  * qemu-utils: add Replaces: qemu (<< 0.11.0-2). Closes: #556627,
+    #556860.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Fri, 20 Nov 2009 08:24:32 +0100
+
+qemu (0.11.0-5) unstable; urgency=low
+
+  * Change the Conflicts: into Replaces: to handle the move of /etc/ifup
+    from one package to another correctly. Tighten the version. Closes:
+    #556627.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Wed, 18 Nov 2009 16:30:39 +0000
+
+qemu (0.11.0-4) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * Update from stable-0.11 branch.
+  * Default to alsa before OSS. Closes: #451234.
+
+  [ Vagrant Cascadian ]
+  * Updated Vcs-Git to a url more likely to work with debcommit.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Wed, 18 Nov 2009 16:26:17 +0100
+
+qemu (0.11.0-3) unstable; urgency=low
+
+  * qemu-system, qemu-user: fix conflicts version. Closes: #556627.
+  * qemu-utils: conflicts with kvm (<= 85+dfsg-4.1), as it also provides
+    qemu-io.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Tue, 17 Nov 2009 09:49:24 +0100
+
+qemu (0.11.0-2) unstable; urgency=low
+
+  * Update from stable-0.11 branch.
+  * Move qemu-user.1 and qemu-make-debian-root.8 to the qemu-user
+    package.
+  * Add build-depends on uuid-dev.
+  * Use a specific install file for qemu-utils on GNU/kFreeBSD.
+  * Call dh_install with -s.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Tue, 17 Nov 2009 09:11:29 +0100
+
+qemu (0.11.0-1) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream version.
+    - Documents virtio NIC. Closes: #541182.
+    - Increase the maximum TCG op a target instruction op can expand to.
+      Closes: #530645, #542297.
+    - KVM is enabled by default. Closes: #520894.
+    - Fix CVE-2009-3616.  Closes: #553589.
+  * Drop 65_kfreebsd.patch.
+  * Split the qemu package and use out of tree building. Based on a patch
+    from Vagrant Cascadian. Closes: #524774.
+  * Only recommends debootstrap for qemu-user and qemu-user static. Closes:
+    #543356.
+  * Remove /usr/share/qemu/proll.elf. Closes: bug#542247.
+  * Add build-depends on libcurl4-gnutls-dev, libgnutls-dev and libsasl2-dev
+    to enable new upstream features.
+  * Bump Standards-Version to 3.8.3 (no changes).
+  * Update Vcs-* fields to point to the new git repository.
+  * Add Vagrant Cascadian <vagrant@freegeek.org> to uploaders, and set
+    DM-Upload-Allowed to yes.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Mon, 26 Oct 2009 10:17:57 +0000
+
+qemu (0.10.50+git20090729-1) experimental; urgency=low
+
+  [ Josh Triplett ]
+  * Remove myself from Uploaders.
+
+  [ Riku Voipio ]
+  * new upstream RC version
+  * nuke all linux-user patches (applied upstream)
+    06_exit_segfault
+    12_signal_powerpc_support
+    21_net_soopts
+    30_syscall_ipc
+    32_syscall_sysctl
+    35_syscall_sockaddr
+    48_signal_terminate
+    55_unmux_socketcall
+  * nuke all other applied-upstream patches
+    01_nostrip (better version upstream)
+    07_i386_exec_name (can be reintroduced in debian/rules)
+    50_linuxbios_isa_bios_ram (shouldn't be needed anymore)
+    51_linuxbios_piix_ram_size (applied)
+    56_dhcp (crap)
+    60_ppc_ld (reintroduce if needed)
+    64_ppc_asm_constraints (ditto)
+    66_tls_ld.patch (ditto)
+    81_compile_dtb.patch (applied upstream)
+    82_qemu-img_decimal (ditto)
+  * move to git
+  * simplify build rules
+  * Correct my email address
+
+ -- Riku Voipio <riku.voipio@iki.fi>  Wed, 29 Jul 2009 13:28:05 +0300
+
+qemu (0.10.6-1) unstable; urgency=low
+
+  [ Josh Triplett ]
+  * Remove myself from Uploaders.
+
+  [ Aurelien Jarno ]
+  * New upstream version.
+  * Bump Standards-Version to 3.8.2 (no changes).
+  * Update debian/watch (closes: bug#538781).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Fri, 31 Jul 2009 15:25:36 +0200
+
+qemu (0.10.5-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 24 May 2009 16:15:35 +0200
+
+qemu (0.10.4-1) unstable; urgency=low
+
+  * New upstream version.
+  * debian/NEWS.Debian: new file, describing the cache policy options
+    (closes: bug#526832).
+  * debian/patches/70_versatile_memsize.patch: new patch to set a upper
+    limit on the memory size of the versatile boards (closes:
+    bug#527264).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Tue, 12 May 2009 18:31:29 +0200
+
+qemu (0.10.3-1) unstable; urgency=low
+
+  * New upstream version.
+  * Tighten dependency on bochsbios.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sat, 02 May 2009 10:14:21 +0200
+
+qemu (0.10.2-2) unstable; urgency=low
+
+  * Add missing comma in build-depends (closes: bug#524207).
+  * Tighten dependency on vgabios.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Wed, 15 Apr 2009 22:30:43 +0200
+
+qemu (0.10.2-1) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream stable release.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Tue, 07 Apr 2009 07:37:15 +0200
+
+qemu (0.10.1-1) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream stable release:
+    - patches/80_stable-branch.patch: remove.
+  * debian/control:
+    - Remove depends on proll.
+    - Move depends on device-tree-compiler to build-depends.
+    - Bump Standards-Version to 3.8.1 (no changes).
+  * patches/82_qemu-img_decimal.patch: new patch from upstream to make
+    qemu-img accept sizes with decimal values (closes: bug#501400).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 22 Mar 2009 10:13:17 +0100
+
+qemu (0.10.0-1) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream release:
+    - Fix fr-be keyboard mapping (closes: bug#514462).
+    - Fix stat64 structure on ppc-linux-user (closes: bug#470231).
+    - Add a chroot option (closes: bug#415996).
+    - Add evdev support (closes: bug#513210).
+    - Fix loop on symlinks in user mode (closes: bug#297572).
+    - Bump depends on openbios-sparc.
+    - Depends on openbios-ppc.
+    - Update 12_signal_powerpc_support.patch.
+    - Update 21_net_soopts.patch.
+    - Drop 44_socklen_t_check.patch (merged upstream).
+    - Drop 49_null_check.patch (merged upstream).
+    - Update 64_ppc_asm_constraints.patch.
+    - Drop security/CVE-2008-0928-fedora.patch (merged upstream).
+    - Drop security/CVE-2007-5730.patch (merged upstream).
+  * patches/80_stable-branch.patch: add patches from stable branch:
+    - Fix race condition between signal handler/execution loop (closes:
+      bug#474386, bug#501731).
+  * debian/copyright: update.
+  * Compile and install .dtb files:
+    - debian/control: build-depends on device-tree-compiler.
+    - debian/patches/81_compile_dtb.patch: new patch from upstream.
+    - debian/rules: compile and install bamboo.dtb and mpc8544.dtb.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sat, 07 Mar 2009 06:20:34 +0100
+
+qemu (0.9.1+svn20090104-1) experimental; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream snapshot.
+  * Disable security/CVE-2008-0928-fedora.patch, it still breaks qcow
+    format.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 04 Jan 2009 16:31:40 +0100
+
+qemu (0.9.1+svn20081223-1) experimental; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream snapshot.
+    - Fix CVE-2008-2382
+  * Update patches/48_signal_terminate.patch.
+  * debian/rules: remove upstream flags from CFLAGS.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Tue, 23 Dec 2008 14:51:25 +0100
+
+qemu (0.9.1+svn20081214-1) experimental; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream snapshot.
+    - Fix jmp im on x86_64 when executing 32-bit code. Fix grub
+      installation (Closes: bug#467148).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 14 Dec 2008 23:26:04 +0100
+
+qemu (0.9.1+svn20081207-1) experimental; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream snapshot.
+    - Do not depend on gcc-3.4 anymore (Closes: bug#440425, bug#463066).
+    - Fix broken display introduced by CVE-2007-1320 (Closes: bug#422578).
+  * debian/control: remove build-dependency on gcc-3.4.
+  * debian/rules: remove code for dyngen targets.
+  * Split 90_security.patch into
+    - security/CVE-2007-5730.patch
+    - security/leftover.patch
+  * Replace 91_security.patch by security/CVE-2008-0928-fedora.patch taken
+    from fedora repository and enable it (Closes: #469649).
+
+  [ Riku Voipio ]
+  * 2 patches gone, 19 to go:
+    - 10_signal_jobs.patch: drop, merged upstream
+    - 11_signal_sigaction.patch: drop, merged upstream
+    - series: update
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 07 Dec 2008 19:40:09 +0100
+
+qemu (0.9.1+svn20081128-1) experimental; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream snapshot.
+    - Include documentation for network downscript option (Closes:
+      bug#506994).
+    - Drop 00_bios.patch and pass --disable-blobs instead.
+    - Update 12_signal_powerpc_support.patch.
+
+  [ Riku Voipio ]
+  * Drop 31_syscalls.patch as it makes no sense using host uselib to
+    load target code into qemu's host memoryspace.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sat, 29 Nov 2008 09:04:41 +0100
+
+qemu (0.9.1+svn20081112-1) experimental; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream snapshot.
+    - does not need a disk image anymore (Closes: bug#260935).
+    - 53_openbios_size.patch: drop (merged upstream).
+    - 90_security: update.
+  * debian/control: depend on openbios-sparc (>= 1.0~alpha2+20081109)
+    (Closes: bug#502411, bug#502414).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 09 Nov 2008 14:42:37 +0100
+
+qemu (0.9.1+svn20081101-1) experimental; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream snapshot.
+    - fix a heap overflow in Cirrus emulation (CVE-2008-4539).
+    - 50_linuxbios_isa_bios_ram.patch: update.
+    - 90_security.patch: update.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sat, 01 Nov 2008 09:26:45 +0100
+
+qemu (0.9.1+svn20081023-1) experimental; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream snapshot.
+    - 12_signal_powerpc_support.patch: update.
+    - 50_linuxbios_isa_bios_ram.patch: update.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Thu, 23 Oct 2008 21:34:26 +0200
+
+qemu (0.9.1+svn20081016-1) experimental; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream snapshot.
+  * patches/31_syscalls.patch: remove parts merged upstream.
+  * debian/qemu-make-debian-root:
+    - Fix bug introduced when fixing bug#496394 (Closes: bug#502325).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Mon, 13 Oct 2008 23:11:15 +0200
+
+qemu (0.9.1+svn20081012-1) experimental; urgency=low
+
+  [ Riku Voipio ]
+  * Add a bunch of patches from scratchbox
+    - 44_socklen_t_check work better with badbehavin net apps
+    - 48_signal_terminate make qemu binary terminate on signals as expected
+    - 49_null_checks don't bother some syscalls when null/zero is passed
+
+  [ Aurelien Jarno ]
+  * New upstream snapshot.
+    - alpha is now a TCG target.
+    - comma has been added to sendkey (closes: bug#414342).
+  * patches/31_syscalls.patch: remove parts merged upstream.
+  * patches/39_syscall_fadvise64.patch: remove (merged upstream).
+  * patches/90_security.patch: remove parts merged upstream.
+  * debian/control: build-depends on libbluetooth-dev.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 12 Oct 2008 18:46:54 +0200
+
+qemu (0.9.1+svn20080905-1) experimental; urgency=low
+
+  * New upstream snapshot.
+    - SH4 is now a TCG target.
+  * debian/watch: update URL location.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Tue, 02 Sep 2008 01:43:24 +0200
+
+qemu (0.9.1+svn20080826-1) experimental; urgency=low
+
+  * New upstream snapshot.
+  * debian/qemu-make-debian-root:
+    - Use mktemp instead of $$ to create temporary directories (Closes:
+      bug#496394).
+  * Ship a libqemu-dev package (Closes: bug#451618).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Tue, 26 Aug 2008 09:55:36 +0200
+
+qemu (0.9.1+svn20080822-1) experimental; urgency=low
+
+  * New upstream snapshot.
+    - Focus to monitor to ask password (Closes: bug#473240).
+    - TCG SPARC host support (Closes: bug#450817).
+    - Check KQEMU availability before allocating memory (Closes: bug#414566).
+    - Fix dead keys (Closes: bug#489594).
+    - Fix ES1370 emulation (Closes: bug#494462).
+    - New USB UHCI implemnation (Closes: bug#457651).
+    - Add debian/patches/00_bios.patch.
+    - Remove debian/patches/02_snapshot_use_tmpdir.patch (merged).
+    - Remove debian/patches/04_do_not_print_rtc_freq_if_ok.patch (merged).
+    - Remove patches/05_non-fatal_if_linux_hd_missing.patch (merged).
+    - Update debian/patches/07_i386_exec_name.patch
+    - Update debian/patches/12_signal_powerpc_support.patch
+    - Remove debian/patches/33_syscall_ppc_clone.patch (merged differently).
+    - Remove debian/patches/41_arm_fpa_sigfpe.patch (merged).
+    - Remove debian/patches/42_arm_tls.patch (merged differently).
+    - Update debian/patches/55_unmux_socketcall.patch.
+    - Remove debian/patches/63_sparc_build.patch (useless).
+    - Update debian/patches/65_kfreebsd.patch.
+    - Update debian/patches/66_tls_ld.patch.
+    - Remove debian/patches/70_manpage.patch (merged).
+    - Remove debian/patches/71_doc.patch  (merged).
+    - Remove debian/patches/80_ui_curses.patch (merged).
+    - Remove debian/patches/81_mips32r2_fpu.patch (merged).
+    - Remove debian/patches/82_mips_abs.patch (merged).
+    - Remove debian/patches/83_usb-serial.patch (merged).
+    - Remove debian/patches/84_rtl8139.patch (merged).
+    - Remove debian/patches/85_vvfat.patch (merged).
+    - Remove debian/patches/86_df.patch (merged).
+    - Remove debian/patches/87_eoi.patch (merged).
+    - Remove debian/patches/88_dma.patch (merged).
+    - Remove debian/patches/89_braille.patch (merged).
+    - Remove debian/patches/92_no_shutdown.patch (merged).
+    - Remove debian/patches/93_tmpfs.patch (merged).
+    - Remove debian/patches/94_security.patch (merged).
+  * debian/README.source: new file.
+  * debian/patches/*: convert to patchlevel 1 (Closes: bug#484963).
+  * debian/control:
+    - Add build-depends on libesd0-dev.
+    - Add build-depends on libpulse-dev.
+    - Add build-depends on libvdeplug2-dev.
+    - Add build-depends on etherboot.
+    - Update list of supported targets (Closes: bug#488339).
+    - Suggests kqemu-source.
+    - Bump Standards-Version to 3.8.0.
+  * debian/links:
+    - Add missing manpage symlinks.
+  * debian/rules:
+    - Enable audio drivers depending on the system.
+    - Enable DYNGEN targets depending on the system.
+    - Install PXE bios from etherboot (Closes: bug#412010).
+    - Don't ignore make clean errors.
+    - Don't build DYNGEN targets on kfreebsd-amd64 (Closes: bug#494353).
+  * debian/patches/22_net_tuntap_stall.patch: remove (outdated).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Fri, 22 Aug 2008 01:00:54 +0200
+
+qemu (0.9.1-5) unstable; urgency=high
+
+  [ Guillem Jover ]
+  * Add Homepage field.
+  * Add Vcs-Browser and Vcs-Svn fields.
+  * Remove packaging repository information from debian/copyright.
+  * Add former package co-maintainers to debian/copyright.
+  * Serialize patch and configure steps in debian/rules to support parallel
+    builds, as we are patching configure.
+  * Remove myself from Uploaders.
+
+  [ Aurelien Jarno ]
+  * debian/patches/70_manpage.patch: remove curses documentation, it is already
+    in debian/patches/80_ui_curses.patch (Closes: bug#477369).
+  * debian/patches/94_security.patch: add format= to drive options
+    (CVE-2008-2004).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Mon, 28 Apr 2008 21:54:12 +0200
+
+qemu (0.9.1-4) unstable; urgency=high
+
+  * debian/patches/52_ne2000_return.patch: drop, the patch is wrong.
+  * Backports from upstream:
+    - Typo in curses_keys.h
+    - Documentation for the -curses option
+    - Fix broken absoluteness check for cabs.d.*.
+    - USB-to-serial device.
+    - rtl8139: fix endianness on big endian targets
+    - restore rw support for vvfat
+    - x86-64: recompute DF after eflags has been modified when emulating
+      SYSCALL
+    - ignore reads to the EOI register
+    - IDE: Improve DMA transfers by increasing the buffer size
+    - Braille device support
+    - Add -no-shutdown option (Closes: #326406)
+    - Ask to use "mount -o remount" instead of "umount" and "mount"
+      /dev/shm (Closes: #476539).
+  * debian/qemu.doc-base: fix section.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 20 Apr 2008 23:29:42 +0200
+
+qemu (0.9.1-3) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * debian/patches/42_arm_tls.patch: fix to get qemu-system-arm working
+    again. (Closes: #471722).
+  * debian/patches/56_dhcp.patch: fix DHCP server to correctly support
+    MS-Windows guests. (Closes: #471452).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Wed, 19 Mar 2008 18:58:29 +0100
+
+qemu (0.9.1-2) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * debian/patches/80_ui_curses.patch: pull new patch from upstream CVS
+    (Closes: #442274).
+  * debian/patches/65_kfreebsd.patch: link with -lfreebsd. (Closes:
+    #465932).
+  * debian/patches/81_mips32r2_fpu.patch: patch pulled from upstream
+    to fix FPU issue on MIPS32R2.
+  * debian/patches/42_arm_tls.patch: reenable, mistakenly disabled in the
+    previous upload. (Closes: #469743).
+  * debian/rules: fix parallel building. (Closes: #469981).
+  * debian/patches/07_i386_exec_name.patch: install the i386 emulator as
+    qemu-system-i386, and change qemu into a link pointing to the i386
+    version.
+  * debian/README.Debian: add notes about qemu-system-ppc and video.x
+    (Closes: #388735).
+  * debian/patches/70_manpage.patch: describe the -curses option.
+    (Closes: #433658).
+  * debian/patches/71_doc.patch: fix the monitor change option. (Closes:
+    #467106).
+  * debian/patches/35_syscall_sockaddr.patch: fix sockaddr (Closes:
+    #469351).
+  * debian/patches/43_arm_cpustate.patch: disable (Closes: #444171).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Mon, 17 Mar 2008 01:29:03 +0100
+
+qemu (0.9.1-1) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * New upstream version. (Closes: #459801)
+    - Supports s390 host. (Closes: #441119)
+    - Fix PCI bar allocation. (Closes: #413315)
+    - Fix typo in keys name. (Closes: #426181)
+    - Fix segfault of qemu-i386 (Closes: #446868).
+    - debian/control: bump depends on openbios-sparc to
+      >= 1.0~alpha2+20080106.
+    - debian/patches/02_snapshot_use_tmpdir.patch: Refreshed.
+    - debian/patches/04_do_not_print_rtc_freq_if_ok.patch: Likewise.
+    - debian/patches/05_non-fatal_if_linux_hd_missing.patch: Likewise.
+    - debian/patches/06_exit_segfault.patch: Likewise.
+    - debian/patches/10_signal_jobs.patch: Likewise.
+    - debian/patches/11_signal_sigaction.patch: Likewise.
+    - debian/patches/12_signal_powerpc_support.patch: Likewise.
+    - debian/patches/21_net_soopts.patch: Likewise.
+    - debian/patches/30_syscall_ipc.patch: Likewise.
+    - debian/patches/31_syscalls.patch: Likewise.
+    - debian/patches/32_syscall_sysctl.patch: Likewise.
+    - debian/patches/33_syscall_ppc_clone.patch: Likewise.
+    - debian/patches/35_syscall_sockaddr.patch: Likewise.
+    - debian/patches/41_arm_fpa_sigfpe.patch: Likewise.
+    - debian/patches/42_arm_tls.patch: Likewise.
+    - debian/patches/50_linuxbios_isa_bios_ram.patch: Likewise
+    - debian/patches/51_linuxbios_piix_ram_size.patch: Likewise
+    - debian/patches/61_safe_64bit_int.patch: Removed, merged upstream.
+    - debian/patches/63_sparc_build.patch: Refreshed.
+    - debian/patches/80_ui_curses.patch: Likewise.
+  * debian/patches/90_security.patch: fix 64-bit overflow. (Closes:
+    #425634)
+  * debian/qemu-make-debian-root: add a -s option to create sparse
+    image. (Closes: #322325)
+  * debian/control: bump depends on bochsbios to >= 2.3.5-1. Use
+    BIOS-qemu-latest instead of BIOS-bochs-latest. (Closes: #402289,
+    #442822)
+  * debian/rules: build the non-dyngen part with default gcc.
+  * debian/rules: support DEB_BUILD_OPTIONS="parallel=n".
+  * debian/patches/70_manpage.patch: describe the arguments of the
+    -usbdevice option in the manpage. (Closes: #443801)
+  * debian/control: now using Standards-Version 3.7.3 (no changes needed).
+  * debian/control: build-depends on libgnutls-dev to enable TLS support
+    in VNC.
+  * debian/patches/01_nostrip.patch: don't strip binaries during make
+    install. (Closes: #437866)
+  * debian/patches/53_openbios_size.patch: increase maximum prom size to
+    support latest openbios.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Mon, 28 Jan 2008 21:24:14 +0100
+
+qemu (0.9.0+20070816-1) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * New upstream snapshot.
+    - Fix hang on ARM during Etch installation. (Closes: #430164)
+    - Fix data corruption with qcow 2. (Closes: #440296)
+    - Fix errors with raw images > 4 GiB. (Closes: #425634)
+    - debian/patches/01_typo_qemu-img.patch: Removed, merged upstream.
+    - debian/patches/03_machines_list_no_error.patch: Likewise.
+    - debian/patches/36_syscall_prctl.patch: Likewise.
+    - debian/patches/37_syscall_mount.patch: Likewise.
+    - debian/patches/38_syscall_semctl.patch: Likewise.
+    - debian/patches/40_sparc_fp_to_int.patch: Likewise.
+    - debian/patches/44_arm_eabi_built_on_64bit_arches.patch: Likewise.
+    - debian/patches/62_linux_boot_nasm.patch: Likewise.
+    - debian/patches/04_do_not_print_rtc_freq_if_ok.patch: Synced.
+    - debian/patches/05_non-fatal_if_linux_hd_missing.patch: Likewise.
+    - debian/patches/31_syscalls.patch: Likewise.
+    - debian/patches/35_syscall_sockaddr.patch: Likewise.
+    - debian/patches/42_arm_tls.patch: Likewise.
+    - debian/patches/43_arm_cpustate.patch: Likewise.
+    - debian/patches/51_linuxbios_piix_ram_size.patch: Likewise.
+    - debian/patches/55_unmux_socketcall.patch: Likewise.
+    - debian/patches/60_ppc_ld.patch: Likewise.
+    - debian/patches/65_kfreebsd.patch: Likewise.
+    - debian/patches/80_ui_curses.patch: Likewise.
+    - debian/patches/90_security.patch: Likewise.
+  * Remove Elrond and Guilherme de S. Pastore from Uploaders, with their
+    permission, and add Aurelien Jarno and Riku Voipio.
+  * Remove Tag field, this is better maintained outside of the package.
+  * Add openbios-sparc64 to qemu_bios_files in debian/rules.
+
+  [ Aurelien Jarno ]
+  * Fix FTBFS on amd64. (Closes: #434296)
+    - Drop debian/patches/34_syscalls_types.patch
+  * debian/control:
+    - Suggest samba. (Closes: #430368)
+  * Add OpenBIOS for sparc. (Closes: #407076)
+    - debian/control: depends on openbios-sparc.
+    - debian/links: provide symlinks in /usr/share/qemu.
+
+ -- Guillem Jover <guillem@debian.org>  Tue, 04 Sep 2007 04:04:47 +0300
+
+qemu (0.9.0-2) unstable; urgency=high
+
+  [ Guillem Jover ]
+  * Fix several security issues. (Closes: #424070)
+    Thanks to Tavis Ormandy <taviso@google.com>.
+    - Cirrus LGD-54XX "bitblt" heap overflow. CVE-2007-1320
+    - NE2000 "mtu" heap overflow.
+    - QEMU "net socket" heap overflow.
+    - QEMU NE2000 "receive" integer signedness error. CVE-2007-1321
+    - Infinite loop in the emulated SB16 device.
+    - Unprivileged "aam" instruction does not correctly handle the
+      undocumented divisor operand. CVE-2007-1322
+    - Unprivileged "icebp" instruction will halt emulation. CVE-2007-1322
+    - debian/patches/90_security.patch: New file.
+  * Enable adlib audio emulation. (Closes: #419170)
+  * Fix structure padding for target_eabi_flock64 when built for a 64 bit
+    architecture. (Closes: #414799)
+    Thanks to Stuart Anderson <anderson@netsweng.com>.
+    - debian/patches/44_arm_eabi_built_on_64bit_arches.patch: New file.
+  * Fix qemu to be able to use LinuxBios. (Closes: #412212)
+    Thanks to Ed Swierk <eswierk@cs.stanford.edu>.
+    - debian/patches/50_linuxbios_isa_bios_ram.patch: New file.
+    - 51_linuxbios_piix_ram_size.patch: Likewise.
+  * Fix segfault when booting a Linux kernel w/o a disk image, by exiting but
+    clarifying the message, as to use '/dev/null'. (Closes: #409817, #411780)
+    Thanks to Robert Millan <rmh@aybabtu.com>.
+    - debian/patches/05_non-fatal_if_linux_hd_missing.patch: Updated.
+  * Fix segfault by using addrlen instead of target_addrlen in
+    do_getpeername()/do_getsockname(). (Closes: #411910)
+    Thanks to Stuart Anderson <anderson@netsweng.com>.
+    - debian/patches/35_syscall_sockaddr.patch: Updated.
+  * Fix semctl() for 32 bit targets on 64 bit hosts. (Closes: #414809)
+    Thanks to Stuart Anderson <anderson@netsweng.com>.
+    - debian/patches/38_syscall_semctl.patch: New file.
+  * Remove Elrond from Uploaders with consent, always welcome to join
+    back anytime.
+
+ -- Guillem Jover <guillem@debian.org>  Wed, 16 May 2007 08:08:31 +0300
+
+qemu (0.9.0-1) experimental; urgency=low
+
+  [ Guillem Jover ]
+  * New upstream release. (Closes: #409989)
+    - Support for relative paths in backing files for disk images.
+      (Closes: #390446)
+    - debian/patches/01_doc_typos.patch: Removed, merged upstream.
+    - debian/patches/38_syscall_arm_statfs64.patch: Likewise.
+    - debian/patches/51_serial_small_divider.patch: Likewise.
+    - debian/patches/67_ppc_ftbfs.patch: Likewise.
+    - debian/patches/21_net_soopts.patch: Synced.
+    - debian/patches/30_syscall_ipc.patch: Likewise.
+    - debian/patches/31_syscalls.patch: Likewise.
+    - debian/patches/35_syscall_sockaddr.patch: Likewise.
+    - debian/patches/39_syscall_fadvise64.patch: Likewise.
+    - debian/patches/42_arm_tls.patch: Likewise.
+    - debian/patches/55_unmux_socketcall.patch: Likewise.
+    - debian/patches/80_ui_curses.patch: Likewise.
+  * Update the copyright information.
+  * The ACPI initialization code has been moved to bochsbios.
+    - debian/patches/acpi-dsdt.hex: Removed.
+    - debian/rules: Do not install acpi-dsdt.hex.
+  * Add more files to the list of roms removed from the tarball needed to
+    be touched so that upstream 'make install' does not fail.
+  * Added armeb and armel to Architecture fields and libgpmg1-dev
+    Build-Depends.
+  * Recommend vde2 instead of the transitional vde package. (Closes: #407251)
+  * Fix typo in qemu-img output. (Closes: #408542)
+    - debian/patches/01_typo_qemu-img.patch: New file.
+    Thanks to Adam Buchbinder <adam.buchbinder@gmail.com>.
+  * Symlink qemu-user(1) to qemu-m68k(1).
+  * Reduce redundancy in qemu-user(1) synopsis.
+  * Fix rounding in sparc floating point to integer conversions.
+    - debian/patches/40_sparc_fp_to_int.patch: New file.
+    Thanks to Aurelien Jarno <aurelien@aurel32.net>.
+
+ -- Guillem Jover <guillem@debian.org>  Thu,  8 Feb 2007 01:01:29 +0200
+
+qemu (0.8.2-5) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * Added a missing part to the ARM NPTL support patch, initially lost.
+    - debian/patches/42_arm_tls.patch: Updated.
+
+ -- Guillem Jover <guillem@debian.org>  Tue, 16 Jan 2007 11:44:00 +0200
+
+qemu (0.8.2-4) unstable; urgency=medium
+
+  [ Guillem Jover ]
+  * Disable using iasl for now until it's ported to big-endian systems and
+    include a locally built acpi-dsdt.hex file.
+
+ -- Guillem Jover <guillem@debian.org>  Sun,  3 Dec 2006 21:10:23 +0200
+
+qemu (0.8.2-3) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * Hopefully really fix powerpc FTBFS.
+
+ -- Guillem Jover <guillem@debian.org>  Sun,  5 Nov 2006 17:09:53 +0200
+
+qemu (0.8.2-2) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * Update Tag field to match new debtags vocabulary.
+  * Clean properly. (Closes: #390166)
+    - Remove the acpi generated files and the docs.
+    - Revert the docs regeneration forcing logic.
+    Thanks to Anderson Lizardo <anderson.lizardo@gmail.com>.
+  * On install use DESTDIR instead of specifying all paths. (Closes: #396139)
+    Thanks to Anderson Lizardo <anderson.lizardo@gmail.com>.
+  * Port to GNU/kFreeBSD. (Closes: #327622)
+    - Disable ALSA on non-linux systems.
+    - Add a Build-Depends on libfreebsd-dev on kfreebsd systems.
+    - Add kfreebsd-i386 and kfreebsd-amd64 to the Architecture field.
+    - debian/patches/65_kfreebsd.patch: New file.
+    Thanks Petr Salinger <Petr.Salinger@seznam.cz>.
+  * In qemu-make-debian-root do not explicitely install in aptitude and
+    libsigc++-1.2-5c102, they are pulled now by default. And do not remove
+    aptitude afterwards. (Closes: #392481)
+    Thanks to Ted Percival <ted@midg3t.net>.
+  * Add experimental ncurses ui support. (Closes: #369462)
+    - debian/patches/80_ui_curses.patch: New file.
+    Thanks to Andrzej Zaborowski <balrog@zabor.org>.
+  * Add SO_PEERCRED and SO_SNDTIMEO support, and fix accept syscall when
+    being passed NULL pointers.
+    - debian/patches/21_net_sockopts.patch: Renamed to ...
+    - debian/patches/21_net_soopts.patch: ... here. Modify.
+    Thanks to Pablo Virolainen.
+  * Add a fadvise64 syscall stub.
+    - debian/patches/39_syscall_fadvise64.patch: New file.
+    Thanks to Pablo Virolainen.
+  * Add EABI unmuxed socket syscalls.
+    - debian/patches/55_unmux_socketcall.patch: New file.
+    Thanks to Riku Voipio.
+  * Add TLS sections to the ARM and x86 linker scripts so that qemu user
+    emulators can be linked statically.
+    - debian/patches/66_tls_ld.patch: New file.
+  * Move the documentation of the binary blob removals from the original
+    upstream tarball from README.Debian to debian/copyright.
+  * Reword the emphasis on "FAST!" from the package description.
+  * Fix FTBFS on powerpc by adding the missing fp_status variable to the
+    int32_to_float32 function calls.
+    - debian/patches/67_ppc_ftbfs.patch: New file.
+
+ -- Guillem Jover <guillem@debian.org>  Sun,  5 Nov 2006 08:48:27 +0200
+
+qemu (0.8.2-1) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * New upstream release. (Closes: #379461, #385029, #388810)
+    - Add ACPI BIOS emulation support. (Closes: #372533)
+    - Fix mouse invisible wall when using Windows XP. (Closes: #384666)
+    - debian/patches/01_doc_typos.patch: Sync.
+    - debian/patches/03_machines_list_no_error.patch: Likewise.
+    - debian/patches/04_do_not_print_rtc_freq_if_ok.patch: Likewise.
+    - debian/patches/05_non-fatal_if_linux_hd_missing.patch: Likewise.
+    - debian/patches/06_exit_segfault.patch: Likewise.
+    - debian/patches/12_signal_powerpc_support.patch: Likewise.
+    - debian/patches/21_net_sockopt.patch: Likewise.
+    - debian/patches/22_net_tuntap_stall.patch: Likewise.
+    - debian/patches/30_syscall_ipc.patch: Likewise.
+    - debian/patches/31_syscalls.patch: Likewise.
+    - debian/patches/32_syscall_sysctl.patch: Likewise.
+    - debian/patches/33_syscall_ppc_clone.patch: Likewise.
+    - debian/patches/35_syscall_sockaddr.patch: Likewise.
+    - debian/patches/36_syscall_prctl.patch: Likewise.
+    - debian/patches/37_syscall_mount.patch: Likewise.
+    - debian/patches/41_arm_fpa_sigfpe.patch: Likewise.
+    - debian/patches/42_arm_tls.patch: Likewise.
+    - debian/patches/61_safe_64bit_int.patch: Likewise.
+    - debian/patches/63_sparc_build.patch: Likewise.
+    - debian/patches/50_missing_keycodes.patch: Removed, integrated upstream.
+  * Switch to quilt:
+    - debian/control: Add quilt (>= 0.40) to Build-Depends.
+    - debian/patches/series: New file.
+    - debian/patch.mk: Removed.
+    - debian/rules: Include '/usr/share/quilt/quilt.make' instead of
+      'debian/patch.mk'.
+  * Build the ACPI Source Language files with iasl.
+  * Add a Tag field to the binary package, using data from debtags.
+  * Add 2006 to the debian/copyright years.
+  * Add a Recommends on vde. (Closes: #386780)
+  * Fix spelling error in package description (peripherials -> peripherals).
+    (Closes: #388700)
+    Thanks to Rakesh 'arky' Ambati <rakesh_ambati@yahoo.com>.
+  * Fix ne2000_can_receive return code to 0 when the command is STOP.
+    (Closes: #386209)
+    - debian/patches/52_ne2000_return.patch: New file.
+    Thanks to Samuel Thibault <samuel.thibault@ens-lyon.org>.
+  * Document the binary blob removals from the original upstream tarball in
+    README.Debian. (Closes: #388740)
+
+ -- Guillem Jover <guillem@debian.org>  Mon, 25 Sep 2006 04:16:25 +0300
+
+qemu (0.8.1-1) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * New upstream release. (Closes: #366955, #366637)
+    - debian/patches/01_doc_typos.patch: Sync.
+    - debian/patches/04_do_not_print_rtc_freq_if_ok.patch: Likewise.
+    - debian/patches/05_non-fatal_if_linux_hd_missing.patch: Likewise.
+    - debian/patches/12_signal_powerpc_support.patch: Likewise.
+    - debian/patches/21_net_sockopt.patch: Likewise.
+    - debian/patches/22_net_tuntap_stall.patch: Likewise.
+    - debian/patches/30_syscall_ipc.patch: Likewise.
+    - debian/patches/31_syscalls.patch: Likewise.
+    - debian/patches/32_syscall_sysctl.patch: Likewise.
+    - debian/patches/33_syscall_ppc_clone.patch: Likewise.
+    - debian/patches/35_syscall_sockaddr.patch: Likewise.
+    - debian/patches/36_syscall_prctl.patch: Likewise.
+    - debian/patches/37_syscall_mount.patch: Likewise.
+    - debian/patches/41_arm_fpa_sigfpe.patch: Likewise.
+    - debian/patches/42_arm_tls.patch: Likewise.
+    - debian/patches/43_arm_cpustate.patch: Likewise.
+    - debian/patches/50_missing_keycodes.patch: Likewise.
+    - debian/patches/51_serial_small_divider.patch: Likewise.
+    - debian/patches/61_safe_64bit_int.patch: Likewise.
+    - debian/patches/63_sparc_build.patch: Likewise.
+    - debian/patches/40_arm_nwfpe_cpsr.patch: Removed, integrated upstream.
+  * Make the patch system apply the patch on the first run.
+    - debian/patches/64_ppc_asm_constraints.patch: Add DPATCHLEVEL.
+  * Document how to use the images created with qemu-make-debian-root in the
+    man page. Thanks to Jacobo <jacobo221@hotmail.com>. (Closes: #343450)
+  * Add support for the -snapshot option to use the TMPDIR evironment
+    variable. (Closes: #353880)
+    - debian/patches/02_snapshot_use_tmpdir.patch: New file.
+  * Do not exit with an error when using '-M ?'. (Closes: #365209)
+    - debian/patches/03_machines_list_no_error.patch: New file.
+  * Added symlink for system-mipsel emulator man page.
+  * Build and clean the pc-bios directory.
+  * Avoid segfaulting by using _exit(2) instead of exit(3) in qemu user
+    emulators. (Closes: #338289)
+    - debian/patches/06_exit_segfault.patch: New file.
+  * Enable ALSA audio support and add libasound2-dev to the Build-Depends.
+  * Now using Standards-Version 3.7.2 (no changes needed).
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 28 May 2006 20:51:10 +0300
+
+qemu (0.8.0-3) unstable; urgency=low
+
+  [ Josh Triplett ]
+  * Fix FTBFS on PowerPC caused by asm constraint problem. (Closes: #361727)
+    - debian/patches/64_ppc_asm_constraints.patch.
+
+  [ Guillem Jover ]
+  * Clamp addrlen from host to target when using AF_UNIX. This fixes
+    socket problems when using EABI.
+    - debian/patches/35_syscall_sockaddr.patch: New file.
+  * Fix floating point comparison on ARM NWFPE, due to glue code missmatch.
+    (Closes: #356287)
+    - debian/patches/40_arm_nwfpe_cpsr.patch: New file.
+    - debian/patches/40_fpu_arm_sigfpe.patch: Rename to ...
+    - debian/patches/41_arm_fpa_sigfpe.patch: ... this. Resync.
+    Thanks to Ulrich Hecht.
+  * Fix POSIX threads creation on ARM hanging when initializing the cpu
+    structure being it cyclic.
+    - debian/patches/43_arm_cpustate.patch: New file.
+  * Add TLS support for ARM. Stolen from Scratchbox.
+    - debian/patches/42_arm_tls.patch: New file.
+  * Fix sysctl endian problem.
+    - debian/patches/32_syscall_sysctl.patch: Update.
+    Thanks to Timo Savola <tsavola@movial.fi>.
+  * Remove now default '--enable-slirp' build option. (Closes: #356284)
+    Thanks to Anderson Lizardo <anderson.lizardo@gmail.com>.
+  * Remove unused sharedir to 'make install'. (Closes: #356418)
+    Thanks to Anderson Lizardo <anderson.lizardo@gmail.com>.
+  * Fix package not cleaning properly. (Closes: #356279)
+    Thanks to Anderson Lizardo <anderson.lizardo@gmail.com> for the initial
+    patch.
+  * Add needed syscalls to make debootstrap work. (Closes: #356291)
+    - debian/patches/36_syscall_prctl.patch: New file.
+    - debian/patches/37_syscall_mount.patch: Likewise.
+    - debian/patches/38_syscall_arm_statfs64.patch: Likewise.
+    Thanks to Anderson Lizardo <anderson.lizardo@gmail.com>.
+  * Remove obsolete Build-Dependency xlibs-dev.
+
+ -- Guillem Jover <guillem@debian.org>  Thu, 13 Apr 2006 11:53:00 +0300
+
+qemu (0.8.0-2) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * Switch away from cdbs to plain debhelper.
+  * Upgrade to debhelper compat level 5.
+  * Allow overriding CC compiler variable. (Closes: #345772)
+  * Do not redefine 64 bit types on 64 bit arches.
+    - debian/patches/61_safe_64bit_int.patch: New file.
+  * Allow linux_boot.bin to be built on any arch by switching to nasm,
+    and Build-Depending on it.
+    - debian/patches/62_linux_boot_nasm.patch: New file.
+  * The serial hw driver uses a small divider that gets zeroed when shifting
+    bits to the right. (Closes: #276276, #348098)
+    - debian/patches/51_serial_small_divider.patch: New file.
+    Thanks to Samuel Thibault <samuel.thibault@ens-lyon.org>.
+  * Escaped hyphens in qemu-user manpage, use italics for filenames and
+    parameters and bold for options.
+  * Partial build failure fix for Sparc. (Bugs: #317145, #336970)
+    Thanks to Jurij Smakov <jurij@wooyd.org>.
+
+ -- Guillem Jover <guillem@debian.org>  Mon, 20 Feb 2006 09:17:46 +0200
+
+qemu (0.8.0-1) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * New upstream release. (Closes: #344339)
+    - Added support for Virtual FAT. (Closes: #313123)
+    - Emulate repeated keystrokes when holding a key. (Closes: #298864)
+    - debian/patches/01_doc_typos.patch: Sync.
+    - debian/patches/04_do_not_print_rtc_freq_if_ok.patch: Likewise.
+    - debian/patches/05_non-fatal_if_linux_hd_missing.patch: Likewise.
+    - debian/patches/12_signal_powerpc_support.patch: Likewise.
+    - debian/patches/21_net_sockopt.patch: Likewise.
+    - debian/patches/22_net_tuntap_stall.patch: Likewise.
+    - debian/patches/30_syscall_ipc.patch: Likewise.
+    - debian/patches/31_syscalls.patch: Likewise.
+    - debian/patches/32_syscall_sysctl.patch: Likewise.
+    - debian/patches/33_syscall_ppc_clone.patch: Likewise.
+    - debian/patches/40_fpu_arm_sigfpe.patch: Likewise.
+    - debian/patches/50_missing_keycodes.patch: Likewise.
+  * Added mips and mipsel to the lintian overrides for the user emulators
+    being shlib-with-non-pic-code.
+  * Added symlinks for mips, mipsel and system-arm emulator manpages.
+
+ -- Guillem Jover <guillem@debian.org>  Fri, 30 Dec 2005 05:44:53 +0200
+
+qemu (0.7.2-2) unstable; urgency=low
+
+  [ Josh Triplett ]
+  * Add support for signal handling on PowerPC. (Closes: #335509)
+    - debian/patches/12_signal_powerpc_support.patch: New file.
+
+  [ Guillem Jover ]
+  * Add Josh Triplett <josh@psas.pdx.edu> to Uploaders and packaging team.
+  * Fix PowerPC build failure by reintroducing the ppc linker script and
+    adding the missing _SDA_BASE_ and _SDA2_BASE_ symbols. (Closes: #336983)
+  * Remove invalid patch making X11 fail at runtime.
+    - debian/patches/20_net_socket.patch: Remove.
+    - debian/patches/32_syscall_sysctl.patch: Sync.
+    Thanks to Daniel Gimpelevich <daniel@gimpelevich.san-francisco.ca.us>.
+  * Avoid the patch system to try until it applies.
+    - debian/patches/05_non-fatal_if_linux_hd_missing.patch: Added patch level.
+    - debian/patches/12_signal_powerpc_support.patch: Likewise.
+
+ -- Guillem Jover <guillem@debian.org>  Wed, 21 Dec 2005 22:11:34 +0200
+
+qemu (0.7.2-1) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * New upstream release. (Closes: #321232, #327168)
+    - debian/patches/12_signal_silent.patch: Integrated upstream, remove.
+    - debian/patches/50_ppc_ldscript.patch: Likewise.
+    - debian/patches/33_syscall_truncate64.patch: Likewise.
+    - debian/patches/01_doc_typos.patch: Resync with upstream.
+    - debian/patches/04_do_not_print_rtc_freq_if_ok.patch: Likewise.
+    - debian/patches/05_non-fatal_if_linux_hd_missing.patch: Likewise.
+    - debian/patches/10_signal_jobs.patch: Likewise.
+    - debian/patches/11_signal_sigaction.patch: Likewise.
+    - debian/patches/20_net_socket.patch: Likewise.
+    - debian/patches/21_net_sockopt.patch: Likewise.
+    - debian/patches/22_net_tuntap_stall.patch: Likewise.
+    - debian/patches/30_syscall_ipc.patch: Likewise.
+    - debian/patches/31_syscalls.patch: Likewise.
+    - debian/patches/32_syscall_sysctl.patch: Likewise.
+    - debian/patches/40_fpu_arm_sigfpe.patch: Likewise.
+  * Repackaged upstream source to deal with binaries w/o sources.
+    - pc-bios/video.x: New file removed.
+  * Create a new qemu-user(1) manpage and link all user emulator manpages
+    to it. (Closes: #335163)
+  * Add missing '-' and '=' keycodes for sendkey command.
+    - debian/patches/50_missing_keycodes.patch: New file. (Closes: #334071)
+    Thanks to Robert Millan <rmh@aybabtu.com>.
+  * Add manpage link for qemu-system-mips.
+  * Make sysctl byte-swap the name values.
+    - debian/patches/32_syscall_sysctl.patch: Merge patch. (Closes: #334458)
+    Thanks to Josh Triplett <josh@psas.pdx.edu>.
+  * Change documentation menu section to "Apps/Emulators". (Closes: #335062)
+    Thanks to Frans Pop <aragorn@tiscali.nl>.
+  * On PowerPC, do not zero registers r7-r31 in do_fork and zero register r3.
+    Fixing segfaults on programs using the clone syscall.
+    - debian/patches/33_syscall_ppc_clone.patch: New file. (Closes: #335159)
+    Thanks to Josh Triplett <josh@psas.pdx.edu>
+    and Paul Brook <paul@codesourcery.com>.
+  * Tighten vgabios and bochsbios versioned Depends.
+  * Add video.x to the list of roms to touch to make qemu Makefile happy.
+  * Add lintian overrides for the user emulators being shlib-with-non-pic-code.
+  * Wrap lines in debian/control fields (knowingly breaking policy).
+
+  [ Guilherme de S. Pastore ]
+  * debian/control:
+    - Updated my e-mail address.
+  * debian/copyright:
+    - Dropped André from team members list, not a single contribution ever.
+
+ -- Guillem Jover <guillem@debian.org>  Mon, 31 Oct 2005 05:01:45 +0200
+
+qemu (0.7.0-4) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * Rebuild source with locally deborked dpkg-source. (Closes: #321019)
+  * Added the location of the Subversion repo used for the packages and
+    fixed the upstream URL in debian/copyright.
+  * Lower case title header in qemu-make-debian-root man page.
+  * Use dd instead of cat to generate the qemu debian root image.
+    (Closes: #315952)
+
+ -- Guillem Jover <guillem@debian.org>  Wed,  3 Aug 2005 05:53:30 +0300
+
+qemu (0.7.0-3) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * Update watch file to version 3, use perlre and new upstream site.
+  * Now using Standards-Version 3.6.2 (no changes needed).
+  * Fix TUN/TAP network interface stalling the connection. (Closes: #290569)
+    Thanks to Vitaly Belostotsky <byly.useless@tochka.ru>.
+  * Link against librt, needed by the new clock_gettime syscall.
+    - debian/patches/31_syscalls.patch: Update. (Closes: #315388)
+    Thanks to Timo Savola <tsavola@movial.fi> for noticing.
+  * Force Build-Dependency on binutils >= 2.16-1 needed by the amd64 and
+    powerpc linker scripts. (Closes: #262655)
+  * Force usage of gcc-3.4. (Closes: #319527)
+  * Add missing Build-Dependency on zlib1g-dev.
+    Thanks to Reinhard Tartler <siretart@tauware.de>.
+  * Include <linux/types.h> in syscall.c to avoid the broken headers in
+    linux-kernel-headers 2.6.12.
+    - debian/patches/34_syscalls_types.patch: New file.
+    Thanks to Octavian Cerna <tavy@ylabs.com>.
+  * Fix powerpc linker script.
+    - debian/patches/50_ppc_ldscript.patch: New file.
+    Thanks to Octavian Cerna <tavy@ylabs.com>.
+
+ -- Guillem Jover <guillem@debian.org>  Mon,  1 Aug 2005 02:48:09 +0300
+
+qemu (0.7.0-2) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * Add alpha, sparc, arm and s390 to Architectures (and to the
+    libgpmg1-dev Build-Depends).
+
+  * Forward SIGSTOP and SIGCONT sent to QEMU to the emulated application.
+    - debian/patches/10_signal_jobs.patch: New file.
+    Thanks to Ulrich Hecht.
+  * Return EINVAL on emulated sigaction when given invalid signal
+    parameters SIGKILL and SIGSTOP.
+    - debian/patches/11_signal_sigaction.patch: New fle.
+    Thanks to Valtteri Rahkonen.
+  * Do not print messsages for uncaught signal, thus fixing the case
+    were some applications want to kill their siblings.
+    - debian/patches/12_signal_silent.patch: New file.
+    Thanks to Valtteri Rahkonen
+
+  * Fix Unix sockets by handling correctly AF_UNIX socket address
+    structure length.
+    - debian/patches/20_net_socket.patch: New file.
+    Thanks to Timo Savola.
+  * Implement SO_LINGER, SO_RCVTIMEO, SO_SNDTIMEO, SO_PEERNAME and
+    SO_PEERCRED getsockoptions.
+    - debian/patches/21_net_sockopt.patch: New file.
+    Thanks to Valtteri Rahkonen.
+
+  * Implement SysV IPC message and semaphore syscalls.
+    - debian/patches/30_syscall_ipc.patch: New file.
+    Thanks to Valtteri Rahkonen.
+  * Implement acct, umount2, uselib, swapon, syslog, ftruncate64,
+    mincore, madvise, readahead and clock_gettime syscalls.
+    - debian/patches/31_syscalls.patch: New file.
+    Thanks to Ulrich Hecht.
+  * Implement sysctl CTL_KERN/KERN_VERSION
+    - debian/patches/32_syscall_sysctl.patch: New file.
+    Thanks to Timo Savola.
+  * Implement truncate64 syscall.
+    - debian/patches/33_syscall_truncate64.patch: New file.
+    Thanks to Valtteri Rahkonen.
+
+  * Implement ARM floating point exeption emulation.
+    - debian/patches/40_fpu_arm_sigfpe.patch: New file.
+    Thanks to Ulrich Hecht.
+
+ -- Guillem Jover <guillem@debian.org>  Sun, 19 Jun 2005 15:05:37 +0300
+
+qemu (0.7.0-1) experimental; urgency=low
+
+  [ Guillem Jover ]
+  * New upstream release. (Closes: #308459, #308494)
+  * Do not require a disk image when booting a Linux kernel. (Closes: #260935)
+    Thanks to Jonas Smedegaard <dr@jones.dk>.
+
+  [ Guilherme de S. Pastore ]
+  * Rewrote README.Debian for more clarity
+  * Add support for amd64 as a host architecture. (Closes: #262655)
+    - Add build-depend on libgpmg1-dev on amd64.
+  * Fixed qemu-make-debian-root so that it shows the name by which
+    it was called on the usage notice, not "%s". (Closes: #303507)
+    Thanks to Micah Anderson <micah@riseup.net>.
+
+  [ Elrond ]
+  * Clean up more files, so they don't end up in the final .diff.gz
+  * Switch to external proll and openhackware:
+    - Instead of patching qemu's Makefile, trick it by giving it empty
+      files to install and remove them straight after install.
+    - Don't ship the roms in debian/roms any more!
+    - Instead add more symlinks.
+    - Update Depends: apropiately.
+
+ -- Guillem Jover <guillem@debian.org>  Fri, 27 May 2005 02:06:20 +0300
+
+qemu (0.6.1+20050407-1) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * New upstream snapshot.
+    - Fix -user-net. (Closes: #295019)
+    - Fix win2k and winxp image booting. (Closes: #285170, #292707)
+    - Fix installation of outdated documentation. (Closes: #286931)
+    - Provide qemu-img instead of qemu-mkcow. (Closes: #290713)
+    - Remove debian/patches/05_fix_openpic_timer_test.patch, integrated
+      upstream.
+    - Remove debian/patches/02_selectable_sdl_keyboard.patch, superseded
+      by new keyboard implementation. (Closes: #284510, #299432)
+    - Remove debian/patches/01_mkcow_section_and_hyphens.patch.
+    - Conditionalize qemu -g option for some architectures. (Closes: #298988)
+  * Added new copyright year to debian/copyright.
+  * Added initial qemu-make-debian-root man page. (Closes: #286932)
+  * Fixed typos in qemu documentation. (Closes: #301933)
+    Thanks to A Costa <agcosta@gis.net>.
+  * Added Elrond <elrond@samba-tng.org> to Uploaders and packaging team.
+  * Use the default target list:
+    - Do not build qemu-fast anymore as it is deprecated upstream anyway.
+    (Closes: #278602, #281510)
+    - New targets armeb and system-x86_64.
+  * Updated ROM images under debian/roms/:
+    - OpenHackWare 0.4.
+    - Proll 18 with qemu specific patches.
+  * Remove uudecoded files from pc-bios/ on clean.
+  * Fix qemu-make-debian-root to behave correctly even if the needed
+    Recommends are not installed.
+
+  [ Guilherme de S. Pastore ]
+  * Create a doc-base entry for the package (Closes: #290669)
+  * debian/control:
+    - Add debootstrap to the 'Recommends: ' line, as needed by
+      qemu-make-debian-root (Closes: #302848)
+    - Moved sharutils from dependency to recommendation, as it is only
+      needed by qemu-make-debian-root
+  * debian/docs:
+    - Do not include README.distrib in the binary package (Closes: #302853)
+
+  [ Elrond ]
+  * Replace "libgpmg1-dev | not+linux-gnu" by "libgpmg1-dev [i386 powerpc]"
+    in Build-Depends. qemu should not need to build-depend on it anyway, the
+    real problem is described in Bug#267174. When it is solved, we can
+    remove our dependency. Until then please remember to add any arch, which
+    we will build on and that has gpm. This change hopefully calms:
+    <http://qa.debian.org/debcheck.php?dist=unstable&package=qemu>
+  * Add versions to the dependencies on bochsbios and vgabios
+    (Closes: #288997):
+    - vgabios: Use the current version from testing/unstable (0.4c+20041014-1),
+      according to Frans Pop <aragorn@tiscali.nl>, this fixed those
+      "blank screen" problems.
+    - bochsbios: Use the current version from unstable (2.1.1+20041109-3), as
+      Guillem Jover fixed the networking in that version.
+
+ -- Guillem Jover <guillem@debian.org>  Thu,  7 Apr 2005 01:26:01 +0300
+
+qemu (0.6.1-1) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * New upstream release. (Closes: #281626)
+    - Booting from drive b is not supported anymore. (Closes: #275679)
+    - Fix ne2k network interface that was not working in some situations.
+      (Closes: #281862)
+    - Remove debian/patches/06_build_gcc3.4.patch, fixed upstream.
+    - Remove debian/patches/04_lfs.patch, fixed upstream.
+    - Remove debian/patches/02_fix_powerpc_FTBFS.patch, fixed upstream.
+    - Remove debian/patches/00_escape_manpage_hyphens.patch, not needed.
+    - Sync debian/patches/03_use_external_bios.patch.
+  * Include uuencoded source for proll 18, some build fixes and its binary
+    proll.bin on debian/roms/.
+  * Suggests sudo to be used by the qemu-ifup script.
+    Thanks to Elrond <elrond@samba-tng.org>.
+  * Make sudo in qemu-ifup explain what the password is for. (Closes: #281380)
+  * Add an option to select the method to convert keyevent to keycode
+    in the SDL keyboard handling code. Added support for Right Shift in the
+    generic handler. (Closes: #282658)
+    Thanks to Elrond <elrond@samba-tng.org>.
+  * Do not set RTC frequency to 1024 or warn about this if it has already
+    the correct value. (Closes: #281403)
+  * Enabled sparc-softmmu support.
+
+ -- Guillem Jover <guillem@debian.org>  Sat, 27 Nov 2004 23:23:49 +0100
+
+qemu (0.6.0.dfsg.2-1) unstable; urgency=low
+
+  [ Guillem Jover ]
+  * Repackaged upstream source to remove external included files.
+    - pc-bios/ppc-rom.bin: Removed.
+    - pc-bios/OpenHackWare_0.3.tar.bz2: Likewise.
+    - pc-bios/vgabios.bin: Likewise.
+    - pc-bios/vgabios-cirrus.bin: Likewise.
+    - pc-bios/vgabios-cvs-2004-06-17.tgz: Likewise.
+  * Include uuencoded source for OpenHackWare 0.3.1 and its binary
+    ppc-rom.bin on debian/roms/. Add a Build-Depends on sharutils.
+  * Update tundev.c. Pass -tun-dev to qemu without the equal sign.
+    Thanks to Isaac Clerencia <isaac@sindominio.net>.
+  * Fix README.Debian to point to the renamed qemu-make-debian-root.
+  * Add Depends on sharutils needed by qemu-make-debian-root.
+    (Closes: #272130)
+  * Use and depend on vgabios package, which is in sync with bochsbios
+    that checks for rom bios checksums. (Closes: #281202)
+  * Enable LFS globally, thus fixing problems with qemu-mkcow when using
+    an existing large image.
+    (Closes: #279925)
+  * Fix openpic timer write test, catched from a warning about a constant
+    value larger than the type it was casted to.
+  * Fix build failure with gcc 3.4. Patch stolen from Gentoo BTS.
+
+ -- Guillem Jover <guillem@debian.org>  Mon, 15 Nov 2004 10:46:54 +0100
+
+qemu (0.6.0.dfsg.1-1) unstable; urgency=high
+
+  [ Guillem Jover ]
+  * Repackaged upstream source to deal with binaries w/o sources.
+    (Closes: #268780)
+    - pc-bios/bios.bin: Removed binary without source. Now using
+      bochsbios package.
+    - pc-bios/vgabios.bin: Rebuilt from vgabios cvs 2004-06-17 snapshot,
+      source included.
+    - pc-bios/vgabios-cirrus.bin: Likewise.
+    - pc-bios/ppc-rom.bin: Rebuilt on voltaire, source included.
+    - pc-bios/linux_boot.bin: Rebuilt from source.
+  * Move make-debian-root.sh to /usr/sbin/qemu-make-debian-root.
+    (Closes: #268705)
+
+ -- Guillem Jover <guillem@debian.org>  Mon, 13 Sep 2004 01:28:54 +0200
+
+qemu (0.6.0-2) unstable; urgency=high
+
+  [ Guilherme de S. Pastore ]
+  * Fixed dangling symlinks under /usr/share/man/man1. (Closes: #264764)
+
+  [ Guillem Jover ]
+  * Fix FTBFS on powerpc.
+    - debian/patches/02_fix_powerpc_FTBFS.patch: New file.
+
+ -- Guillem Jover <guillem@debian.org>  Wed, 18 Aug 2004 15:50:43 +0200
+
+qemu (0.6.0-1) unstable; urgency=medium
+
+  * New maintainers. (Closes: #258900)
+  * New upstream release. (Closes: #258732)
+    - Installs ppc BIOS ROM file. (Closes: #257492)
+    - Builds with -fno-strict-aliasing. (Closes: #257123)
+
+  [ Guilherme de S. Pastore ]
+  * debian/rules:
+    - Cleaned up.
+    - Ported to use CDBS.
+  * 00_escape_manpage_hyphens.patch:
+    - Correct a little typo and escape hyphens in upstream manpage.
+  * 01_mkcow_section_and_hyphens.patch:
+    - Fix section mismatch and escape hyphens in the qemu-mkcow manpage.
+  * Added simple /etc/qemu-ifup helper script. (Closes: #245281)
+    Thanks to Martin Michlmayr <tbm@cyrius.com>.
+  * Cleaned debian/watch.
+  * UTF-8'ed debian/changelog.
+  * Updated Standards-Version to 3.6.1.1.
+  * Removed outdated and unnecessary debian/qemu-i386.sgml.
+    - Removed build dependency on docbook-to-man.
+  * Removed "x86" part from the description (hey, qemu is not x86-only
+    in any way). Deserves a complete rewrite, shall be done soon.
+
+  [ Guillem Jover ]
+  * Lower-case package short description.
+  * Added missing CPU emulations to the description.
+  * Cleaned and updated debian/copyright.
+  * Removed manually added libx11-6 dependency.
+  * Only Build-Depends on libgpmg1-dev on GNU/Linux systems.
+  * Cosmetic unification to debian/changelog.
+  * debian/rules:
+    - Remove generated files.
+    - Give exec perms to qemu-ifup.
+
+ -- Guillem Jover <guillem@debian.org>  Sun,  8 Aug 2004 17:24:08 +0200
+
+qemu (0.5.5-2) unstable; urgency=low
+
+  * Re-enable SDL disabled while I was bugchasing. (Closes: #255014)
+  * Yes, this is really 0.5.5. (Closes: #254655)
+  * Enable slirp networking. (Closes: #253573)
+  * Add Build-Depends on libgpmg1-dev (found by Bastian Blank, probably breaks
+    Hurd but that's a problem for another day).
+
+ -- Paul Russell <prussell@debian.org>  Thu, 24 Jun 2004 06:26:42 +0200
+
+qemu (0.5.5-1) unstable; urgency=low
+
+  * New upstream release. (Closes: #237556, #237556)
+  * Applied patch to add options to make_debian_root.sh. (Closes: #238787)
+  * Applied patch for other archs: hmmm... (Closes: #251420)
+  * Do umount -d in make_debian_root.sh. (Closes: #251775)
+
+ -- Paul Russell <prussell@debian.org>  Tue,  1 Jun 2004 03:50:05 +0200
+
+qemu (0.5.4-1) unstable; urgency=low
+
+  * New upstream release. (Closes: #246634)
+  * qemu-mkcow included in upstream.
+  * Added tundev program source in doc, to see if people find it useful.
+
+ -- Paul Russell <prussell@debian.org>  Mon,  3 May 2004 08:14:49 +0200
+
+qemu (0.5.3-1) unstable; urgency=low
+
+  * New upstream release. (Closes: #237556)
+  * Use aalib-config --static-libs. (Closes: #243325)
+  * Document Control-Shift to release mouse pointer. (Closes: #238074)
+
+ -- Paul Russell <prussell@debian.org>  Tue, 13 Apr 2004 02:58:49 +0200
+
+qemu (0.5.2-4) unstable; urgency=low
+
+  * Fix PPC install (Michel Daenzer patch). (Closes: #238431)
+  * Simplify deps (might be wrong, but it's neater). (Closes: #238430)
+
+ -- Paul Russell <prussell@debian.org>  Wed, 17 Mar 2004 01:35:47 +0100
+
+qemu (0.5.2-3) unstable; urgency=low
+
+  * Make compile on woody. (Closes: #238163)
+  * Include qemu-doc.html. (Closes: #238076)
+  * Wrote qemu-i386 man page. (Closes: #238077)
+
+ -- Paul Russell <prussell@debian.org>  Mon, 15 Mar 2004 23:56:25 +0100
+
+qemu (0.5.2-2) unstable; urgency=low
+
+  * Fix build problem so bios.bin etc. can be found. (Closes: #237553)
+
+ -- Paul Russell <prussell@debian.org>  Fri, 12 Mar 2004 05:43:00 +0100
+
+qemu (0.5.2-1) unstable; urgency=low
+
+  * Initial Release. (Closes: #187407)
+
+ -- Paul Russell <prussell@debian.org>  Wed,  3 Mar 2004 02:18:54 +0100
+
