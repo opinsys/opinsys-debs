@@ -23,10 +23,10 @@ Build-Depends: debhelper (>= 9),
 # for virtfs
 # --enable-attr
  libattr1-dev,
-# --enable-bluez	linux-*
- libbluetooth-dev [linux-any],
-# --enable-brlapi
- libbrlapi-dev,
+## --enable-bluez	linux-*
+# libbluetooth-dev [linux-any],
+## --enable-brlapi
+# libbrlapi-dev,
 # --enable-virtfs	linux-*
 # needed for virtfs
  libcap-dev [linux-any],
@@ -59,15 +59,15 @@ Build-Depends: debhelper (>= 9),
 # --enable-sdl
 # libsdl2-dev is debian-only for now while ubuntu/libsdl2-dev is in universe
  libsdl1.2-dev (>> 1.2.1),
-# --enable-seccomp	linux-amd64|linux-i386
- libseccomp-dev (>> 2.1.0) [linux-amd64 linux-i386],
-# --enable-spice	linux-amd64|linux-i386
- libspice-server-dev (>= 0.12.2~) [linux-amd64 linux-i386],
- libspice-protocol-dev (>= 0.12.3~) [linux-amd64 linux-i386],
-# --enable-libusb	linux-*
- libusb-1.0-0-dev (>= 2:1.0.13~) [linux-any],
-# --enable-usb-redir	linux-*
- libusbredirparser-dev (>= 0.6~) [linux-any],
+## --enable-seccomp	linux-amd64|linux-i386
+# libseccomp-dev (>> 2.1.0) [linux-amd64 linux-i386],
+## --enable-spice	linux-amd64|linux-i386
+# libspice-server-dev (>= 0.12.2~) [linux-amd64 linux-i386],
+# libspice-protocol-dev (>= 0.12.3~) [linux-amd64 linux-i386],
+## --enable-libusb	linux-*
+# libusb-1.0-0-dev (>= 2:1.0.13~) [linux-any],
+## --enable-usb-redir	linux-*
+# libusbredirparser-dev (>= 0.6~) [linux-any],
 # libssh2 is debian-only since ubuntu/libssh2 is in universe
 # vde is debian-only since ubuntu/vde2 is in universe
 # needed for sdl
@@ -78,8 +78,8 @@ Build-Depends: debhelper (>= 9),
  linux-libc-dev (>= 2.6.34) [linux-any],
 # --enable-uuid
  uuid-dev,
-# --enable-xfsctl	linux-*
- xfslibs-dev [linux-any],
+## --enable-xfsctl	linux-*
+# xfslibs-dev [linux-any],
 # always needed
  zlib1g-dev,
 # other optional features we enable
@@ -336,7 +336,7 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, qemu-system-common, qemu-keymaps,
 Recommends: qemu-utils,
 # ovmf recommends is debian-only because ubuntu/ovmf is in multiverse
  cpu-checker
-Suggests: samba, vde2, kmod [linux-any], sgabios, kvm-ipxe-precise
+Suggests: samba, vde2, kmod [linux-any], sgabios
 Provides: ${sysprovides:x86}
 Conflicts: kvm (<< 1.3.0+dfsg-5)
 Breaks:
