@@ -5,16 +5,16 @@ Maintainer: Debian Libvirt Maintainers <pkg-libvirt-maintainers@lists.alioth.deb
 Uploaders: Guido Günther <agx@sigxcpu.org>, Laurent Léonard <laurent@open-minds.org>
 Build-Depends:
  debhelper (>= 7),
- dh-systemd (>= 1.18),
+# dh-systemd (>= 1.18),
  libxml2-dev,
  libncurses5-dev,
  libreadline-dev,
  zlib1g-dev,
- libgcrypt20-dev,
+ libgcrypt11-dev,
  libgnutls28-dev,
  libavahi-client-dev,
  libsasl2-dev,
- libxen-dev (>= 4.3) [i386 amd64],
+# libxen-dev (>= 4.3) [i386 amd64],
  lvm2 [linux-any],
  open-iscsi [linux-any],
  libparted0-dev (>= 2.2),
@@ -23,8 +23,8 @@ Build-Depends:
  uuid-dev,
  libudev-dev [linux-any],
  libpciaccess-dev,
- kmod [linux-any],
- policykit-1 (>= 0.105-4~),
+# kmod [linux-any],
+ policykit-1,
  libcap-ng-dev [linux-any],
  libnl-3-dev [linux-any],
  libnl-route-3-dev [linux-any],
@@ -32,15 +32,14 @@ Build-Depends:
  libpcap0.8-dev,
  libnuma-dev [amd64 i386 ia64 mips mipsel powerpc],
  radvd [linux-any],
- libnetcf-dev (>= 1:0.2.3-3~) [linux-any],
- libsanlock-dev [linux-any],
+ libnetcf-dev [linux-any],
  libaudit-dev [linux-any],
  libselinux1-dev (>= 2.0.82) [linux-any],
  libapparmor-dev [linux-any],
- libsystemd-daemon-dev [linux-any],
+# libsystemd-daemon-dev [linux-any],
  systemtap-sdt-dev [amd64 armel armhf i386 ia64 powerpc s390],
 # for --with-storage-sheepdog
- sheepdog [linux-any],
+# sheepdog [linux-any],
 # for --with-storage-rados
  librbd-dev [linux-any],
  librados-dev [linux-any],
@@ -138,8 +137,8 @@ Recommends:
  parted,
  pm-utils,
 Section: admin
-Suggests: radvd, auditd, systemtap, systemd, apparmor
-Breaks: avahi-daemon (<< 0.6.31-3~)
+Suggests: radvd, auditd, systemtap, apparmor
+#Breaks: avahi-daemon (<< 0.6.31-3~)
 Replaces: libvirt-bin (<< 1.2.7-4~)
 Conflicts: libvirt-bin (<< 1.2.6-1~)
 Description: Libvirt daemon configuration files
@@ -202,20 +201,4 @@ Description: development files for the libvirt library
  .
  This package contains the header files and static libraries which are
  needed for developing the applications with libvirt.
-
-Package: libvirt-sanlock
-Architecture: linux-any
-Depends:
- ${misc:Depends},
- ${shlibs:Depends},
- augeas-tools,
- libvirt0 (= ${binary:Version}),
-Priority: extra
-Description: library for interfacing with different virtualization systems
- Libvirt is a C toolkit to interact with the virtualization capabilities
- of recent versions of Linux (and other OSes). The library aims at providing
- a long term stable C API for different virtualization mechanisms. It currently
- supports QEMU, KVM, XEN, OpenVZ, LXC, and VirtualBox.
- .
- This package contains the sanlock plugin.
 
