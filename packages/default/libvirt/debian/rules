@@ -5,118 +5,51 @@ DEB_BUILDHOST=$(shell hostname)
 DEB_BUILDDATE=$(shell date +"%F-%T")
 DEB_BUILDUSER=${USER}
 
-ifneq (,$(findstring $(DEB_HOST_ARCH_OS), linux))
-  ifneq (,$(findstring $(DEB_HOST_ARCH), i386 amd64))
-    WITH_XEN = --with-xen
-    WITH_LIBXL = --with-libxl
-    WITH_VBOX = --with-vbox
-    MAKE_CHECK = 1
-  else
-    WITH_XEN            = --without-xen
-    WITH_LIBXL          = --without-libxl
-    WITH_VBOX           = --without-vbox
-  endif
-  WITH_STORAGE_LVM    = --with-storage-lvm
-  WITH_STORAGE_ISCSI  = --with-storage-iscsi
-  WITH_STORAGE_DISK   =	--with-storage-disk
-  WITH_STORAGE_SHEEPDOG = --with-storage-sheepdog
-  WITH_STORAGE_RBD    = --with-storage-rbd
-  WITH_UDEV           = --with-udev
-  WITH_CAPNG          = --with-capng
-  WITH_POLKIT         = --with-polkit
-  WITH_MACVTAP        = --with-macvtap
-  WITH_NETWORK        = --with-network
-  WITH_QEMU           = --with-qemu
-  WITH_OPENVZ         = --with-openvz
-  WITH_NETCF          = --with-netcf
-  WITH_SANLOCK        = --with-sanlock
-  WITH_INIT_SCRIPT    =	--with-init-script=systemd
-  WITH_SYSTEMD        = --with-systemd-daemon
-  WITH_AUDIT          = --with-audit
-  WITH_SELINUX        = --with-selinux --with-secdriver-selinux --with-selinux-mount=/sys/fs/selinux
-  WITH_APPARMOR       = --with-apparmor --with-secdriver-apparmor --with-apparmor-profiles
-  ifneq (,$(findstring $(DEB_HOST_ARCH), amd64 armel armhf i386 ia64 powerpc s390))
-      WITH_DTRACE     = --with-dtrace
-  else
-      WITH_DTRACE     = --without-dtrace
-  endif
-  ifneq (,$(findstring $(DEB_HOST_ARCH), amd64 i386 ia64 mips mipsel powerpc))
-      WITH_NUMA       = --with-numactl
-  else
-      WITH_NUMA       = --without-numactl
-  endif
-  ifneq (,$(findstring $(DEB_HOST_ARCH), ia64))
-      WITH_LXC        = --without-lxc
-  else
-      WITH_LXC        = --with-lxc
-  endif
-else
-  WITH_STORAGE_LVM    = --without-storage-lvm
-  WITH_STORAGE_ISCSI  = --without-storage-iscsi
-  WITH_STORAGE_DISK   =	--without-storage-disk
-  WITH_STORAGE_SHEEPDOG = --without-storage-sheepdog
-  WITH_STORAGE_RBD    = --without-storage-rbd
-  WITH_UDEV           = --without-udev
-  WITH_CAPNG          = --without-capng
-  WITH_POLKIT         = --without-polkit
-  WITH_MACVTAP        = --without-macvtap
-  WITH_NETWORK        = --without-network
-  WITH_QEMU           = --without-qemu
-  WITH_LXC            = --without-lxc
-  WITH_NUMA           = --without-numactl
-  WITH_NETCF          = --without-netcf
-  WITH_INIT_SCRIPT    =	--with-init-script=none
-  WITH_SYSTEMD        = --without-systemd-daemon
-  WITH_AUDIT          = --without-audit
-  WITH_SELINUX        = --without-selinux
-  WITH_APPARMOR       = --without-apparmor
-  WITH_DTRACE         = --without-dtrace
-  WITH_XEN            = --without-xen
-  WITH_LIBXL          = --without-libxl
-  WITH_VBOX           = --without-vbox
-endif
+DEB_HOST_ARCH_CPU := $(shell dpkg-architecture -qDEB_HOST_ARCH_CPU 2>/dev/null)
+DEB_HOST_ARCH_OS := $(shell dpkg-architecture -qDEB_HOST_ARCH_OS 2>/dev/null)
 
 DEB_CONFIGURE_EXTRA_ARGS :=      \
 	--with-packager="$(DEB_BUILDUSER) $(DEB_BUILDDATE) $(DEB_BUILDHOST)" \
 	--with-packager-version="$(DEB_RELEASE)" \
 	--disable-silent-rules   \
 	--disable-rpath          \
-	$(WITH_QEMU)		 \
+	--with-qemu		 \
 	--with-qemu-user=libvirt-qemu  \
 	--with-qemu-group=libvirt-qemu \
-	$(WITH_OPENVZ)		 \
-	--with-avahi             \
+	--without-openvz	 \
+	--without-avahi          \
 	--with-sasl              \
 	--with-yajl              \
 	--with-ssh2		 \
-	$(WITH_POLKIT)		 \
-	$(WITH_UDEV)		 \
+	--with-polkit		 \
+	--with-udev		 \
 	--with-storage-fs        \
-	$(WITH_STORAGE_LVM)	 \
-	$(WITH_STORAGE_ISCSI)	 \
-	$(WITH_STORAGE_DISK)	 \
-	$(WITH_STORAGE_SHEEPDOG) \
-	$(WITH_STORAGE_RBD)      \
-	$(WITH_INIT_SCRIPT)      \
-	$(WITH_NUMA)             \
-	$(WITH_SELINUX)          \
-	$(WITH_APPARMOR)         \
+	--with-storage-lvm	 \
+	--without-storage-iscsi	 \
+	--with-storage-disk	 \
+	--without-storage-sheepdog	\
+	--without-storage-rbd      \
+#	$(WITH_INIT_SCRIPT)      \
+	--with-numactl           \
+	--without-selinux        \
+	--with-apparmor --with-secdriver-apparmor --with-apparmor-profiles        \
 	--without-esx		 \
 	--without-phyp           \
-	$(WITH_CAPNG)		 \
+	--with-capng		 \
 	--enable-debug		 \
-	$(WITH_MACVTAP)		 \
-	$(WITH_NETWORK)		 \
-	$(WITH_NETCF)		 \
-	$(WITH_XEN)		 \
-	$(WITH_LIBXL)		 \
-	$(WITH_VBOX)		 \
-	$(WITH_LXC)              \
-	$(WITH_DTRACE)           \
-	$(WITH_AUDIT)            \
+	--without-macvtap	 \
+	--with-network		 \
+	--with-netcf		 \
+	--without-xen		 \
+	--with-libxl		 \
+	--with-vbox		 \
+	--with-lxc               \
+	--with-dtrace            \
+	--with-audit             \
 	--without-hal            \
 	--without-firewalld      \
-	--without-attr
+	--without-attr		 \
+	--without-sanlock
 
 DEB_BUILDDIR := $(CURDIR)/debian/build
 LOGROTATE = $(basename $(basename $(notdir $(wildcard daemon/libvirtd*.logrotate.in))))
@@ -152,9 +85,9 @@ override_dh_install:
 	    debian/libvirt-daemon-system/var/lib/polkit-1/localauthority/10-vendor.d/
 ifneq (,$(findstring $(DEB_HOST_ARCH_OS), linux))
 	# Linux supports more nice things:
-	dh_install -p libvirt-daemon-system usr/lib/systemd/system lib/systemd/
+#	dh_install -p libvirt-daemon-system usr/lib/systemd/system lib/systemd/
 	dh_install -p libvirt-daemon-system usr/lib/libvirt/virt-aa-helper
-	dh_install -p libvirt-daemon-system etc/apparmor.d
+#	dh_install -p libvirt-daemon-system etc/apparmor.d
 	dh_install -p libvirt-daemon-system usr/share/polkit-1
 	# Not all linux arches have systemtap yet
 	mkdir -p debian/tmp/usr/share/systemtap
@@ -162,7 +95,7 @@ ifneq (,$(findstring $(DEB_HOST_ARCH_OS), linux))
 	dh_install -p libvirt-daemon-system etc/libvirt/lxc.conf
 	dh_install -p libvirt-daemon-system etc/libvirt/qemu.conf
 	dh_install -p libvirt-daemon-system etc/libvirt/qemu-lockd.conf
-	dh_install -p libvirt-daemon-system etc/libvirt/qemu-sanlock.conf
+#	dh_install -p libvirt-daemon-system etc/libvirt/qemu-sanlock.conf
 	dh_install -p libvirt-daemon-system etc/libvirt/qemu/networks/
 	dh_install -p libvirt-daemon-system etc/libvirt/nwfilter/
 	dh_install -p libvirt-clients etc/libvirt/virt-login-shell.conf
@@ -180,11 +113,11 @@ endif
 	rm -r debian/libvirt-daemon/usr/share/libvirt/api/
 
 override_dh_installinit:
-	dh_systemd_enable
+#	dh_systemd_enable
 	dh_installinit -p libvirt-daemon-system --name=libvirtd --restart-after-upgrade -- defaults 28 72
 	dh_installinit -p libvirt-daemon-system --name=libvirt-guests --no-restart-on-upgrade -- defaults 29 71
-	dh_systemd_start -p libvirt-daemon-system --restart-after-upgrade libvirtd.service
-	dh_systemd_start -p libvirt-daemon-system --no-restart-on-upgrade libvirt-guests.service virtlockd.socket virtlockd.service
+#	dh_systemd_start -p libvirt-daemon-system --restart-after-upgrade libvirtd.service
+#	dh_systemd_start -p libvirt-daemon-system --no-restart-on-upgrade libvirt-guests.service virtlockd.socket virtlockd.service
 
 override_dh_installdocs:
 	dh_installdocs
@@ -209,3 +142,11 @@ override_dh_auto_clean:
 override_dh_installchangelogs:
 	dh_installchangelogs -plibvirt0
 	dh_installchangelogs -Nlibvirt0 -XChangeLog
+
+PACKAGE = libvirt
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+.PHONY: get-orig-source
+get-orig-source:
+	wget -c http://libvirt.org/sources/libvirt-$(SRC_VERSION).tar.gz -O ../$(TARBALL)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
