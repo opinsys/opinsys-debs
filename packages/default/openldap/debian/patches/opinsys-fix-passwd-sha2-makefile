@@ -1,0 +1,27 @@
+--- orig/contrib/slapd-modules/passwd/sha2/Makefile	2014-10-21 14:28:18.366104000 +0000
++++ new/contrib/slapd-modules/passwd/sha2/Makefile	2014-10-21 14:37:34.262104000 +0000
+@@ -1,7 +1,7 @@
+ # $OpenLDAP$
+ 
+ LDAP_SRC = ../../../..
+-LDAP_BUILD = ../../../..
++LDAP_BUILD = ../../../../debian/build
+ LDAP_INC = -I$(LDAP_BUILD)/include -I$(LDAP_SRC)/include -I$(LDAP_SRC)/servers/slapd
+ LDAP_LIB = $(LDAP_BUILD)/libraries/libldap_r/libldap_r.la \
+ 	$(LDAP_BUILD)/libraries/liblber/liblber.la
+@@ -17,12 +17,12 @@
+ PROGRAMS = pw-sha2.la
+ LTVER = 0:0:0
+ 
+-prefix=/usr/local
++prefix=/usr
+ exec_prefix=$(prefix)
+-ldap_subdir=/openldap
++ldap_subdir=/ldap
+ 
+ libdir=$(exec_prefix)/lib
+-libexecdir=$(exec_prefix)/libexec
++libexecdir=$(exec_prefix)/lib
+ moduledir = $(libexecdir)$(ldap_subdir)
+ 
+ .SUFFIXES: .c .o .lo
