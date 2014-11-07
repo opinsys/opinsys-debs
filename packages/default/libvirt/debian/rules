@@ -29,7 +29,6 @@ DEB_CONFIGURE_EXTRA_ARGS :=      \
 	--with-storage-disk	 \
 	--without-storage-sheepdog	\
 	--without-storage-rbd      \
-#	$(WITH_INIT_SCRIPT)      \
 	--with-numactl           \
 	--without-selinux        \
 	--with-apparmor --with-secdriver-apparmor --with-apparmor-profiles        \
