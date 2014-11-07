@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-DEB_RELEASE=$(shell dpkg-parsechangelog -SVersion | sed 's/[^-]\+-//')
+DEB_RELEASE=$(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-\(.*\)/\4/p')
 DEB_BUILDHOST=$(shell hostname)
 DEB_BUILDDATE=$(shell date +"%F-%T")
 DEB_BUILDUSER=${USER}
