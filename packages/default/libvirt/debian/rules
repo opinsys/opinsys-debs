@@ -40,8 +40,8 @@ DEB_CONFIGURE_EXTRA_ARGS :=      \
 	--with-network		 \
 	--with-netcf		 \
 	--without-xen		 \
-	--with-libxl		 \
-	--with-vbox		 \
+	--without-libxl		 \
+	--without-vbox		 \
 	--with-lxc               \
 	--with-dtrace            \
 	--with-audit             \
