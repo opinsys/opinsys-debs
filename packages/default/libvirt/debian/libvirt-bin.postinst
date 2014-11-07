@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = "configure" ]; then
+    # Configure dnsmasq
+    if [ -f /etc/dnsmasq.d-available/libvirt-bin ]; then
+        echo "Setting up libvirt-bin dnsmasq configuration."
+        mkdir -p /etc/dnsmasq.d
+        if [ ! -e /etc/dnsmasq.d/libvirt-bin ]; then
+            ln -s /etc/dnsmasq.d-available/libvirt-bin /etc/dnsmasq.d/libvirt-bin
+        fi
+
+        # Try to restart a potential system wide dnsmasq
+        invoke-rc.d dnsmasq restart 2>/dev/null || true
+    fi
+fi
