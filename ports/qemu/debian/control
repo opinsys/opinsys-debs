@@ -338,7 +338,7 @@ Recommends: qemu-utils,
  cpu-checker
 Suggests: samba, vde2, kmod [linux-any], sgabios
 Provides: ${sysprovides:x86}
-Conflicts: kvm (<< 1.3.0+dfsg-5)
+Conflicts: kvm (<< 1.3.0+dfsg-5), kvm-ipxe
 Breaks:
  qemu-system (<< 1.3.0+dfsg-5),
 # older libvirt (eg 1.0) is known broken with qemu >= 1.6
