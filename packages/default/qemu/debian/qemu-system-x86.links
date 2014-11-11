@@ -18,8 +18,8 @@ usr/share/seabios/vgabios-vmware.bin usr/share/qemu/vgabios-vmware.bin
 usr/lib/ipxe/pcnet32.rom usr/share/qemu/pxe-pcnet.rom
 usr/lib/ipxe/ns8390.rom usr/share/qemu/pxe-ne2k_pci.rom
 usr/lib/ipxe/eepro100.rom usr/share/qemu/pxe-eepro100.rom
-usr/lib/ipxe/pxe-e1000.rom usr/share/qemu/pxe-e1000.rom
-usr/lib/ipxe/pxe-virtio.rom usr/share/qemu/pxe-virtio.rom
+usr/lib/ipxe/qemu/pxe-e1000.rom usr/share/qemu/pxe-e1000.rom
+usr/lib/ipxe/qemu/pxe-virtio.rom usr/share/qemu/pxe-virtio.rom
 usr/lib/ipxe/qemu/efi-e1000.rom usr/share/qemu/efi-e1000.rom
 usr/lib/ipxe/qemu/efi-eepro100.rom usr/share/qemu/efi-eepro100.rom
 usr/lib/ipxe/qemu/efi-ne2k_pci.rom usr/share/qemu/efi-ne2k_pci.rom
