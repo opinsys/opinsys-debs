@@ -1,3 +1,9 @@
+syslinux (3:6.03) unstable; urgency=low
+
+  * Change version because of builder problems
+
+ -- Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>  Tue, 18 Nov 2014 16:33:12 +0200
+
 syslinux (3:6.03+dfsg-2) unstable; urgency=low
 
   * Adding initial Danish debconf translations from Joe Hansen
