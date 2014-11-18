@@ -1,4 +1,4 @@
-syslinux (3:6.03) unstable; urgency=low
+syslinux (3:6.03-opinsys1) unstable; urgency=low
 
   * Change version because of builder problems
 
