@@ -1,0 +1,13 @@
+Source: tmcbeans
+Section: utils
+Priority: extra
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+Homepage: http://tmc.mooc.fi/
+
+Package: tmcbeans
+Architecture: i386
+Depends: openjdk-7-jdk
+Description: NetBeans with TMC plugin
+ NetBeans with TMC plugin
