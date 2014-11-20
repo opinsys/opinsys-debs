@@ -1,0 +1,28 @@
+Index: tmcbeans/Makefile
+===================================================================
+--- tmcbeans.orig/Makefile	2014-11-20 13:47:38.467041874 +0200
++++ tmcbeans/Makefile	2014-11-20 13:47:38.463041863 +0200
+@@ -1,7 +1,9 @@
+ all :
+ 
+ install :
++	mkdir -p $(DESTDIR)/usr/share/applications
+ 	mkdir -p $(DESTDIR)/opt/tmcbeans
+ 	cp -rT opt $(DESTDIR)/opt/tmcbeans
++	install -m 0644 tmcbeans.desktop $(DESTDIR)/usr/share/applications
+ 
+ clean :
+Index: tmcbeans/tmcbeans.desktop
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ tmcbeans/tmcbeans.desktop	2014-11-20 14:07:48.382891844 +0200
+@@ -0,0 +1,9 @@
++[Desktop Entry]
++Name=NetBeans IDE
++Comment=Integrated Development Environment
++TryExec=/opt/tmcbeans/bin/netbeans
++Exec=/opt/tmcbeans/bin/netbeans
++Categories=Development;IDE;Java;
++Terminal=false
++Type=Application
++StartupNotify=true
