@@ -70,6 +70,7 @@ configure-stamp:
 	--with-system-verto \
 		--libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
 		--sysconfdir=/etc \
+		--disable-ipv6 \
 		$(SYSTEM) $(CACHE)
 	touch configure-stamp
 
@@ -186,7 +187,7 @@ binary-arch: build-arch install
 	dh_installchangelogs  -Xdoc/CHANGES
 	dh_installdocs
 	dh_installdebconf
-	dh_installinit -- defaults 18 18
+	dh_installinit --upstart-only
 	dh_lintian
 	set -e ; for pkg in $(LIB_PACKAGES) ; do \
 		DH_OPTIONS="" dh_strip -p$$pkg --dbg-package=libkrb5-dbg; \
