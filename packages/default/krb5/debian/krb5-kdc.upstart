@@ -1,0 +1,22 @@
+description "krb5-kdc"
+
+start on started slapd
+
+limit nofile 100000 100000
+respawn
+
+pre-start script
+  # Exit if the package is not installed.
+  [ -x /usr/sbin/krb5kdc ] || stop
+end script
+
+script
+  DAEMON_ARGS=""
+
+  # Read configuration if it is present.
+  [ -r /etc/default/krb5-kdc ] && . /etc/default/krb5-kdc
+
+  exec /usr/sbin/krb5kdc -n ${DAEMON_ARGS}
+end script
+
+post-stop exec sleep 5
