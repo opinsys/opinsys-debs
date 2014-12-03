@@ -1,0 +1,18 @@
+diff -ruN flashblock.orig/chrome/flashblock.jar!/content/flashblock/version.dtd flashblock/chrome/flashblock.jar!/content/flashblock/version.dtd
+--- flashblock.orig/chrome/flashblock.jar!/content/flashblock/version.dtd	2013-02-27 21:39:50.000000000 +0200
++++ flashblock/chrome/flashblock.jar!/content/flashblock/version.dtd	2014-12-03 14:02:25.984791623 +0200
+@@ -1 +1 @@
+-<!ENTITY extension.version "1.5.17">
++<!ENTITY extension.version "1.5.18">
+diff -ruN flashblock.orig/install.rdf flashblock/install.rdf
+--- flashblock.orig/install.rdf	2013-03-23 17:47:16.000000000 +0200
++++ flashblock/install.rdf	2014-12-03 14:02:35.264664209 +0200
+@@ -7,7 +7,7 @@
+         <em:type>2</em:type>
+         <em:unpack>true</em:unpack>
+         <em:name>Flashblock</em:name>
+-        <em:version>1.5.17</em:version>
++        <em:version>1.5.18</em:version>
+         <em:description>Replaces Flash objects with a button you can click to view them.</em:description>
+         <em:creator>The Flashblock Team</em:creator>
+         <em:contributor>Ted Drake</em:contributor>
