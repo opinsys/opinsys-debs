@@ -1,3 +1,9 @@
+ekapeli (1.97-0+opinsys1) trusty; urgency=low
+
+  * New release.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Mon, 08 Dec 2014 12:46:00 +0200
+
 ekapeli (1.95-0+opinsys1) trusty; urgency=low
 
   * Initial release.
