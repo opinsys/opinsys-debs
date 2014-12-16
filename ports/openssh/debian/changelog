@@ -1,3 +1,9 @@
+openssh (1:6.6p1-2ubuntu1+opinsys1) precise; urgency=medium
+
+  * Disable systemd stuff.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 16 Dec 2014 10:10:55 +0200
+
 openssh (1:6.6p1-2ubuntu1) trusty; urgency=medium
 
   * Upload from Debian git repository to fix a release-critical bug.
