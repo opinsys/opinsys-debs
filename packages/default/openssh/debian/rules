@@ -221,5 +221,5 @@ debian/faq.html:
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 .PHONY: get-orig-source
 get-orig-source:
-	uscan --download-current-version --rename
+	wget ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-$(SRC_VERSION).tar.gz -O ../openssh_$(SRC_VERSION).orig.tar.gz
 	tar -z -x -f ../openssh_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
