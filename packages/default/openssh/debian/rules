@@ -217,3 +217,9 @@ debian/faq.html:
 	wget -O - http://www.openssh.org/faq.html | \
 		sed 's,\(href="\)\(txt/\|[^":]*\.html\),\1http://www.openssh.org/\2,g' \
 		> debian/faq.html
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+.PHONY: get-orig-source
+get-orig-source:
+	uscan --download-current-version --rename
+	tar -z -x -f ../openssh_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
