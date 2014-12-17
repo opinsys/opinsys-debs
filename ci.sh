@@ -22,7 +22,10 @@ debian/rules get-orig-source
 puavo-dch
 dpkg-buildpackage -us -uc -sa --source-option='--compression=gzip'
 
+git_branch=$(echo "${GIT_BRANCH}" | cut -d / -f 2)
+APTIREPO_BRANCH=${APTIREPO_BRANCH:-"git-${git_branch}"}
+
 if [ -n "${APTIREPO_REMOTE}" ]; then
     aptirepo-upload -r "${APTIREPO_REMOTE}" \
-        -b "git-$(echo "${GIT_BRANCH}" | cut -d / -f 2)" ../${package}*.changes
+        -b "${APTIREPO_BRANCH}" ../${package}*.changes
 fi
