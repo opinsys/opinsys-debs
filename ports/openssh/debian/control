@@ -45,7 +45,7 @@ Package: openssh-server
 Priority: optional
 Architecture: any
 Pre-Depends: ${misc:Pre-Depends}
-Depends: ${shlibs:Depends}, ${misc:Depends}, libpam-runtime (>= 0.76-14), libpam-modules (>= 0.72-9), adduser (>= 3.9), dpkg (>= 1.9.0), openssh-client (= ${binary:Version}), lsb-base (>= 4.1+Debian3), procps, openssh-sftp-server
+Depends: ${shlibs:Depends}, ${misc:Depends}, libpam-runtime (>= 0.76-14), libpam-modules (>= 0.72-9), adduser (>= 3.9), dpkg (>= 1.9.0), openssh-client (= ${binary:Version}), lsb-base (>= 4.0-0ubuntu20), procps, openssh-sftp-server
 Recommends: xauth, ncurses-term, ${openssh-server:Recommends}
 Conflicts: ssh-socks, ssh2, sftp
 Replaces: ssh, ssh-krb5
