@@ -295,6 +295,7 @@ if [ "$action" = configure ]; then
 	    start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/sshd.pid || true
 	fi
 	if dpkg --compare-versions "$2" lt 1:6.5p1-2 && \
+	   test -x $(which deb-systemd-helper) && \
 	   deb-systemd-helper debian-installed ssh.socket && \
 	   deb-systemd-helper --quiet was-enabled ssh.service && \
 	   deb-systemd-helper --quiet was-enabled ssh.socket; then
