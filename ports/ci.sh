@@ -22,9 +22,9 @@ debian/rules get-orig-source
 puavo-dch
 if [ "${CI_TARGET_ARCH}" = amd64 ]; then
     dpkg-buildpackage -us -uc -sa --source-option='--compression=gzip'
+else
+    dpkg-buildpackage -B -uc
 fi
-
-dpkg-buildpackage -B -us -uc -sa --source-option='--compression=gzip'
 
 git_branch=$(echo "${GIT_BRANCH}" | cut -d / -f 2)
 APTIREPO_BRANCH=${APTIREPO_BRANCH:-"git-${git_branch}"}
