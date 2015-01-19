@@ -20,7 +20,11 @@ cd "${packagedir}"
 sudo puavo-install-deps
 debian/rules get-orig-source
 puavo-dch
-dpkg-buildpackage -us -uc -sa --source-option='--compression=gzip'
+if [ "${CI_TARGET_ARCH}" = amd64 ]; then
+    dpkg-buildpackage -us -uc -sa --source-option='--compression=gzip'
+fi
+
+dpkg-buildpackage -B -us -uc -sa --source-option='--compression=gzip'
 
 git_branch=$(echo "${GIT_BRANCH}" | cut -d / -f 2)
 APTIREPO_BRANCH=${APTIREPO_BRANCH:-"git-${git_branch}"}
