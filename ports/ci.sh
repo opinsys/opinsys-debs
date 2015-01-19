@@ -20,7 +20,7 @@ cd "${packagedir}"
 sudo puavo-install-deps
 debian/rules get-orig-source
 puavo-dch
-if [ "${CI_TARGET_ARCH}" = amd64 ]; then
+if [ "${CI_TARGET_ARCH}" = i386 ]; then
     dpkg-buildpackage -us -uc -sa --source-option='--compression=gzip'
 else
     dpkg-buildpackage -B -uc
