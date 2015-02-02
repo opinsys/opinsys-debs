@@ -1,3 +1,9 @@
+libverto (0.2.6-8+opinsys1) trusty; urgency=medium
+
+  * Fix version number.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Mon, 02 Feb 2015 15:03:50 +0200
+
 libverto (0.2.6-1opinsys1) trusty; urgency=medium
 
   * Update to new upstream version
