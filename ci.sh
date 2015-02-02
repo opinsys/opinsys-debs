@@ -20,7 +20,7 @@ cd "${packagedir}"
 sudo puavo-install-deps
 debian/rules get-orig-source
 if [ "${CI_TARGET_ARCH}" = i386 ]; then
-    dpkg-buildpackage -us -uc -sa --source-option='--compression=gzip'
+    dpkg-buildpackage -us -uc -sa --source-option='--compression=bzip2'
 else
     dpkg-buildpackage -B -uc
 fi
