@@ -209,7 +209,7 @@ binary-arch: build-arch install
 binary: binary-indep binary-arch
 .PHONY: build clean configure binary-indep binary-arch binary install
 
-SRC_VERSION := $(shell dpkg-parsechangelog | sed -r -n -e 's/^Version: (([0-9]+):)?([^+]+)(\+dfsg)?-.*/\3/p')
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 get-orig-source:
 	wget http://web.mit.edu/kerberos/dist/krb5/1.12/krb5-$(SRC_VERSION)-signed.tar -O ../krb5-$(SRC_VERSION)-signed.tar
 	tar -x -f ../krb5-$(SRC_VERSION)-signed.tar -C ..
