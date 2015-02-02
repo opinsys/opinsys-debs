@@ -4,7 +4,7 @@ krb5 (1.12.1+dfsg-10+opinsys1) precise; urgency=low
   * Included additional patches:
     - debian/patches/opinsys-increase-max-number-of-realms
 
- -- Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>  Thus, 09 Oct 2014 14:23:33 +0300
+ -- Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>  Thu, 09 Oct 2014 14:23:33 +0300
 
 krb5 (1.12.1+dfsg-10) unstable; urgency=medium
 
