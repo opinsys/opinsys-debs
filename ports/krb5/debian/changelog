@@ -1,4 +1,16 @@
-krb5 (1.12.1-1opinsys1) precise; urgency=low
+krb5 (1.12.1-14+opinsys1) precise; urgency=medium
+
+  * Fix multiarch builds by not generating debian/changelog
+  * Version number is semantically wrong now: this package is not
+    packaged 14 times in Debian. It should be 1.12.1-0+opinsys2. But
+    previous production version was
+    1.12.1-13+precise+master.21fcec099230abffa0181ee8ac21e6f11630bb85
+    so this just tries to be a bit newer. Version number must be fixed
+    when a newer upstream version is packaged.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 03 Feb 2015 10:32:35 +0200
+
+krb5 (1.12.1-0+opinsys1) precise; urgency=low
 
   * Update to new upstream version using debian packaging as base
   * Included additional patches:
