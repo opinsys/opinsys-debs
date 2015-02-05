@@ -45,6 +45,12 @@ script
 	fi
     fi
 
+    # Tell plymouth to quit and wait for it, because deactivating and quitting
+    # plymouth from lightdm is not reliable... on some machines a blank screen
+    # is shown instead.  "xrandr --auto" later will fix that, but doing it
+    # like this is better (and some other fix is better still).
+    plymouth --wait --quit || true
+
     exec lightdm
 end script
 
