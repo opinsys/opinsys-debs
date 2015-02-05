@@ -38,5 +38,5 @@ override_dh_makeshlibs:
 
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 get-orig-source:
-	wget https://launchpad.net/lightdm/1.10/1.10.3/+download/lightdm-$(SRC_VERSION).tar.xz -O ../lightdm-$(SRC_VERSION).orig.tar.xz
-	tar -J -x -f ../lightdm-$(SRC_VERSION).orig.tar.xz --strip-components=1 -C .
+	wget http://archive.ubuntu.com/ubuntu/pool/main/l/lightdm/lightdm_$(SRC_VERSION).orig.tar.gz -O ../lightdm_$(SRC_VERSION).orig.tar.gz
+	tar -zxf ../lightdm_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
