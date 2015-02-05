@@ -1,3 +1,9 @@
+lightdm (1.10.1-0ubuntu1+opinsys1) trusty; urgency=medium
+
+  * Force plymouth to quit before starting lightdm from upstart-script.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Thu, 05 Feb 2015 16:35:47 +0200
+
 lightdm (1.10.1-0ubuntu1) trusty; urgency=medium
 
   * New upstream release:
