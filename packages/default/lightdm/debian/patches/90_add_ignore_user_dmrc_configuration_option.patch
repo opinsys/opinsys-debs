@@ -1,7 +1,6 @@
-Index: lightdm-1.10.1/common/dmrc.c
-===================================================================
---- lightdm-1.10.1.orig/common/dmrc.c	2014-06-12 15:14:12.258348305 +0300
-+++ lightdm-1.10.1/common/dmrc.c	2014-06-12 15:14:12.246348135 +0300
+diff -ruN lightdm.orig/common/dmrc.c lightdm/common/dmrc.c
+--- lightdm.orig/common/dmrc.c	2014-04-08 07:30:25.000000000 +0300
++++ lightdm/common/dmrc.c	2015-02-07 08:25:50.090203064 +0200
 @@ -27,6 +27,10 @@
  
      dmrc_file = g_key_file_new ();
@@ -24,15 +23,14 @@ Index: lightdm-1.10.1/common/dmrc.c
      data = g_key_file_to_data (dmrc_file, &length, NULL);
  
      /* Update the users .dmrc */
-Index: lightdm-1.10.1/data/lightdm.conf
-===================================================================
---- lightdm-1.10.1.orig/data/lightdm.conf	2014-06-12 15:15:31.667492549 +0300
-+++ lightdm-1.10.1/data/lightdm.conf	2014-06-12 15:15:42.083642619 +0300
-@@ -53,6 +53,7 @@
+diff -ruN lightdm.orig/data/lightdm.conf lightdm/data/lightdm.conf
+--- lightdm.orig/data/lightdm.conf	2014-09-11 04:07:11.000000000 +0300
++++ lightdm/data/lightdm.conf	2015-02-07 08:25:23.426202566 +0200
+@@ -60,6 +60,7 @@
  # greeter-show-manual-login = True if the greeter should offer a manual login option
  # greeter-show-remote-login = True if the greeter should offer a remote login option
  # user-session = Session to load for users
 +# ignore-user-dmrc = True if user ~/.dmrc file should be ignored
+ # allow-user-switching = True if allowed to switch users
  # allow-guest = True if guest login is allowed
  # guest-session = Session to load for guests (overrides user-session)
- # session-wrapper = Wrapper script to run session with
