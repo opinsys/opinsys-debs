@@ -1,3 +1,10 @@
+ekapeli (2015-02-09-0+opinsys1) trusty; urgency=medium
+
+  * New release, actually old but includes SpelEtt and
+    Ekapeli-Maahanmuuttaja.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Mon, 09 Feb 2015 13:15:42 +0200
+
 ekapeli (1.97-0+opinsys1) trusty; urgency=low
 
   * New release.
