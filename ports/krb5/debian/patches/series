@@ -23,3 +23,8 @@ debian-local/0022-Fix-krb5-config-paths.patch
 debian-local/0023-Use-isystem-for-include-paths.patch
 upstream/0024-Return-only-new-keys-in-randkey-CVE-2014-5351.patch
 opinsys-increase-max-number-of-realms
+upstream/0025-Fix-build-on-systems-without-RTM_OLD.patch
+upstream/0026-Remove-rtm_type_name.patch
+upstream/0027-Fix-LDAP-misused-policy-name-crash-CVE-2014-5353.patch
+0028-Support-keyless-principals-in-LDAP-CVE-2014-5354.patch
+upstream/0029-MITKRB5-SA-2015-0001.patch
