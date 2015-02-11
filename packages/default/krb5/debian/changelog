@@ -1,3 +1,9 @@
+krb5 (1.12.1-14+opinsys2) precise; urgency=medium
+
+  * Pick patches from Debian krb5 1.12.1+dfsg-17
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 11 Feb 2015 12:40:39 +0200
+
 krb5 (1.12.1-14+opinsys1) precise; urgency=medium
 
   * Fix multiarch builds by not generating debian/changelog
