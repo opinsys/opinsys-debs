@@ -1,3 +1,77 @@
+libvirt (1.2.9-9) unstable; urgency=medium
+
+  * [4c14b83] qemu: Don't try to parse -help for new QEMU.
+    Closes: #777138, #775773
+    Thanks to Mathieu Malaterre for the debugging
+  * [1addae5] Force capability refresh on upgrades. This makes sure we
+    refresh the capabilities at least once when upgrading from Wheezy.
+    (Closes: #731815)
+
+ -- Guido Günther <agx@sigxcpu.org>  Fri, 06 Feb 2015 15:40:21 +0100
+
+libvirt (1.2.9-8) unstable; urgency=medium
+
+  * [885f33d] Fix CVE-2015-0236.
+    Patches cherry-picked from upstream (Closes: #776065)
+
+ -- Guido Günther <agx@sigxcpu.org>  Fri, 23 Jan 2015 19:01:40 +0100
+
+libvirt (1.2.9-7) unstable; urgency=medium
+
+  * [d7df883] CVE-2014-8131: Fix possible deadlock and segfault in
+    qemuConnectGetAllDomainStats()
+    (Closes: #773858)
+  * [d0085e0] qemu: bulk stats: Fix logic in monitor handling
+  * [b5e081c] CVE-2014-8135: storage: fix crash caused by no check return
+    before set close
+    (Closes: #773855)
+  * [a5452de] CVE-2014-8136: qemu: migration: Unlock vm on failed ACL check in
+    protocol v2 APIs
+    (Closes: #773856)
+  * [5aaafc9] qemu: Fix crash in tunnelled migration (Closes: #773503)
+  * [87b3713] lxc: Fix crash when using interface type 'direct'
+    Thanks to Bastian Blank for the patch (Closes: #769600)
+  * [17807c0] Document surprises on CPU microcode updates (Closes: #773706)
+  * [66a3ca6] Install lock drivers (Closes: #773706)
+  * [f6ffda7] vbox: fix a bug in _machineStateInactive (Closes: #770202)
+
+ -- Guido Günther <agx@sigxcpu.org>  Wed, 24 Dec 2014 10:33:31 +0100
+
+libvirt (1.2.9-6) unstable; urgency=medium
+
+  * [9779548] Add a python build-dependency for the docs build
+    (Closes: #770775)
+
+ -- Guido Günther <agx@sigxcpu.org>  Sun, 23 Nov 2014 18:47:42 +0100
+
+libvirt (1.2.9-5) unstable; urgency=medium
+
+  [ Guido Günther ]
+  * [5c47e64] Pre-Depend on init-system-helpers.
+    Thanks to intrigeri and Bastien ROUCARIES (Closes: #769551, #766362)
+  * [9aa75f7] util: Prepare URI formatting for libxml2 >= 2.9.2
+    (Closes: #769653)
+
+  [ Ian Campbell ]
+  * [bfe835f] Specify "pygrub" by default for libxl backend guests.
+    Using an absolute path prevents libxl from providing the correct
+    default. (Closes: #770485)
+
+ -- Guido Günther <agx@sigxcpu.org>  Sun, 23 Nov 2014 14:57:13 +0100
+
+libvirt (1.2.9-4) unstable; urgency=medium
+
+  * [4cdad47] Allow backported versions of dh-systemd
+  * [fb4bf47] Add suggests to libvirt-daemon-system to libvirt-daemon
+    (Closes: #767343)
+  * [e4f03ca] Check if the directories exist before removing them
+    rmdir returns nonzero otherwise and this is more strict than just using
+    || true. (Closes: #767672)
+  * [030fd97] CVE-2014-7823: dumpxml: security hole with migratable flag
+    (Closes: #769149)
+
+ -- Guido Günther <agx@sigxcpu.org>  Wed, 12 Nov 2014 08:11:17 +0100
+
 libvirt (1.2.9-3) unstable; urgency=medium
 
   * [28dd361] Remove obsolete conffiles in libvirt-bin too. Depending on the
