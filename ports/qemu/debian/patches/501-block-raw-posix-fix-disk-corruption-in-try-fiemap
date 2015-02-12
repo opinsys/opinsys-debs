@@ -1,0 +1,36 @@
+commit 38c4d0aea3e1264c86e282d99560330adf2b6e25
+Author: Tony Breeds <tony@bakeyournoodle.com>
+Date:   Fri Sep 26 09:14:11 2014 +1000
+
+    block/raw-posix: Fix disk corruption in try_fiemap
+    
+    Using fiemap without FIEMAP_FLAG_SYNC is a known corrupter.
+    
+    Add the FIEMAP_FLAG_SYNC flag to the FS_IOC_FIEMAP ioctl.  This has
+    the downside of significantly reducing performance.
+    
+    Reported-By: Michael Steffens <michael_steffens@posteo.de>
+    Signed-off-by: Tony Breeds <tony@bakeyournoodle.com>
+    Cc: Kevin Wolf <kwolf@redhat.com>
+    Cc: Markus Armbruster <armbru@redhat.com>
+    Cc: Stefan Hajnoczi <stefanha@redhat.com>
+    Cc: Max Reitz <mreitz@redhat.com>
+    Cc: Pádraig Brady <pbrady@redhat.com>
+    Cc: Eric Blake <eblake@redhat.com>
+    Reviewed-by: Eric Blake <eblake@redhat.com>
+    Reviewed-by: Max Reitz <mreitz@redhat.com>
+    Signed-off-by: Kevin Wolf <kwolf@redhat.com>
+
+Index: qemu-2.0.0+dfsg/block/raw-posix.c
+===================================================================
+--- qemu-2.0.0+dfsg.orig/block/raw-posix.c
++++ qemu-2.0.0+dfsg/block/raw-posix.c
+@@ -1309,7 +1309,7 @@ static int64_t coroutine_fn raw_co_get_b
+ 
+     f.fm.fm_start = start;
+     f.fm.fm_length = (int64_t)nb_sectors * BDRV_SECTOR_SIZE;
+-    f.fm.fm_flags = 0;
++    f.fm.fm_flags = FIEMAP_FLAG_SYNC;
+     f.fm.fm_extent_count = 1;
+     f.fm.fm_reserved = 0;
+     if (ioctl(s->fd, FS_IOC_FIEMAP, &f) == -1) {
