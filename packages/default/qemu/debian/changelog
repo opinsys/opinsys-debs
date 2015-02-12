@@ -1,4 +1,4 @@
-qemu (2.0.0+dfsg-2ubuntu1.10) trusty; urgency=low
+qemu (2.0.0+dfsg-2ubuntu1.10) precise; urgency=low
 
   * Apply an upstream qemu patch to fix issues with persistent grants
     on qcow images accessed by dom0 (LP: #1394327).
