@@ -1,4 +1,4 @@
-libvirt (1.2.9-9) unstable; urgency=medium
+libvirt (1.2.9-9) precise; urgency=medium
 
   * [4c14b83] qemu: Don't try to parse -help for new QEMU.
     Closes: #777138, #775773
