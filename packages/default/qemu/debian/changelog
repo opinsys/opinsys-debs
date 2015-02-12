@@ -1,3 +1,69 @@
+qemu (2.0.0+dfsg-2ubuntu1.10) trusty; urgency=low
+
+  * Apply an upstream qemu patch to fix issues with persistent grants
+    on qcow images accessed by dom0 (LP: #1394327).
+
+ -- Stefan Bader <stefan.bader@canonical.com>  Mon, 15 Dec 2014 09:56:34 +0100
+
+qemu (2.0.0+dfsg-2ubuntu1.9) trusty-security; urgency=medium
+
+  * SECURITY UPDATE: code execution via savevm data
+    - debian/patches/CVE-2014-7840.patch: validate parameters in
+      arch_init.c.
+    - CVE-2014-7840
+  * SECURITY UPDATE: code execution via cirrus vga blit regions
+    (LP: #1400775)
+    - debian/patches/CVE-2014-8106.patch: properly validate blit regions in
+      hw/display/cirrus_vga.c.
+    - CVE-2014-8106
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Wed, 10 Dec 2014 16:00:51 -0500
+
+qemu (2.0.0+dfsg-2ubuntu1.8) trusty-proposed; urgency=medium
+
+  * debian/qemu-system-x86.qemu-kvm.upstart: create /dev/kvm in a
+    container. (LP: #1370199)
+  * Cherrypick upstream patch to fix intermittent qemu-img corruption
+    (LP: #1368815)
+    - 501-block-raw-posix-fix-disk-corruption-in-try-fiemap
+    - (note - 502-block-raw-posic-use-seek-hole-ahead-of-fiemap (which was
+      also needed in utopic) appears to be unneeded here as the code being
+      changed has not yet been switched to using try_fiemap)
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Thu, 20 Nov 2014 11:24:51 -0600
+
+qemu (2.0.0+dfsg-2ubuntu1.7) trusty-security; urgency=medium
+
+  * SECURITY UPDATE: information disclosure via vga driver
+    - debian/patches/CVE-2014-3615.patch: return the correct memory size,
+      sanity check register writes, and don't use fixed buffer sizes in
+      hw/display/qxl.c, hw/display/vga.c, hw/display/vga_int.h,
+      ui/spice-display.c.
+    - CVE-2014-3615
+  * SECURITY UPDATE: denial of service via slirp NULL pointer deref
+    - debian/patches/CVE-2014-3640.patch: make sure socket is not just a
+      stub in slirp/udp.c.
+    - CVE-2014-3640
+  * SECURITY UPDATE: possible privilege escalation via vmware-vga driver
+    - debian/patches/CVE-2014-3689.patch: verify rectangles in
+      hw/display/vmware_vga.c.
+    - CVE-2014-3689
+  * SECURITY UPDATE: denial of service and possible privilege escalation
+    via vmstate_xhci_event
+    - debian/patches/CVE-2014-5263.patch: fix unterminated field list in
+      hw/usb/hcd-xhci.c.
+    - CVE-2014-5263
+  * SECURITY UPDATE: possible privilege escalation via pcihp out-of-bounds
+    - debian/patches/CVE-2014-5388.patch: fix bounds checking in
+      hw/acpi/pcihp.c.
+    - CVE-2014-5388
+  * SECURITY UPDATE: denial of service via VNC console
+    - debian/patches/CVE-2014-7815.patch: validate bits_per_pixel in
+      ui/vnc.c.
+    - CVE-2014-7815
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Tue, 11 Nov 2014 14:17:45 -0500
+
 qemu (2.0.0+dfsg-2ubuntu1.6) trusty-proposed; urgency=medium
 
   * Support incoming migration from 12.04 (LP: #1374612)
