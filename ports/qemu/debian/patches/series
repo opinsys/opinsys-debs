@@ -32,3 +32,13 @@ CVE-2014-0223.patch
 CVE-2014-3461.patch
 CVE-2014-3471.patch
 ubuntu/add-machine-type-pc-1.0-qemu-kvm-for-live-migrate-co.patch
+CVE-2014-3615.patch
+CVE-2014-3640.patch
+CVE-2014-3689.patch
+CVE-2014-5263.patch
+CVE-2014-5388.patch
+CVE-2014-7815.patch
+501-block-raw-posix-fix-disk-corruption-in-try-fiemap
+CVE-2014-7840.patch
+CVE-2014-8106.patch
+upstream-xen_disk-fix-unmapping-of-persistent-grants.patch
