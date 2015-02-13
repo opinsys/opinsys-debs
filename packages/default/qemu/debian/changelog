@@ -1,3 +1,9 @@
+qemu (2.0.0+dfsg-2ubuntu1.10+opinsys1) precise; urgency=low
+
+  * Build for precise.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Fri, 13 Feb 2015 08:34:22 +0200
+
 qemu (2.0.0+dfsg-2ubuntu1.10) trusty; urgency=low
 
   * Apply an upstream qemu patch to fix issues with persistent grants

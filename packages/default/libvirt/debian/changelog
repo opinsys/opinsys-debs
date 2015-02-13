@@ -1,3 +1,9 @@
+libvirt (1.2.9-9+opinsys1) precise; urgency=low
+
+  * Rebuild for precise.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Fri, 13 Feb 2015 08:35:33 +0200
+
 libvirt (1.2.9-9) unstable; urgency=medium
 
   * [4c14b83] qemu: Don't try to parse -help for new QEMU.
