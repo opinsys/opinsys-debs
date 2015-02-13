@@ -1,3 +1,9 @@
+libvirt (1.2.9-9+opinsys2) precise; urgency=low
+
+  * Do not pre-depend on init-system-helpers.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Fri, 13 Feb 2015 10:16:32 +0200
+
 libvirt (1.2.9-9+opinsys1) precise; urgency=low
 
   * Rebuild for precise.
