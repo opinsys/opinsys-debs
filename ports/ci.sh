@@ -30,5 +30,6 @@ APTIREPO_BRANCH=${APTIREPO_BRANCH:-"git-${git_branch}"}
 
 if [ -n "${APTIREPO_REMOTE}" ]; then
     aptirepo-upload -r "${APTIREPO_REMOTE}" \
-        -b "${APTIREPO_BRANCH}" ../${package}*.changes
+        -b "${APTIREPO_BRANCH}" \
+        -c "${CI_TARGET_DIST}" ../${package}*.changes
 fi
