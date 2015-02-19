@@ -1,0 +1,37 @@
+#!/usr/bin/make -f
+
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+
+CONFIGURE_EXTRA_FLAGS += --with-libgcrypt
+CONFIGURE_EXTRA_FLAGS += --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH)
+CONFIGURE_EXTRA_FLAGS += --disable-rpath
+
+%:
+	dh $@ --parallel --with autoreconf
+
+override_dh_auto_configure:
+	dh_auto_configure -- $(CONFIGURE_EXTRA_FLAGS)
+
+override_dh_installexamples:
+	dh_installexamples -a -X .deps -X Makefile -X .gitignore
+
+override_dh_installchangelogs:
+	dh_installchangelogs NEWS
+
+#
+# mansyntax.sh test duplicates functionality of debhelper and requires presence
+# of en_US.utf8 locale. Ensure it is not run by providing fake man(1) tool.
+#
+override_dh_auto_test:
+	PATH=$(CURDIR)/debian:$$PATH dh_auto_test -a
+
+override_dh_strip:
+	dh_strip -a --dbg-package=libssh2-1-dbg
+
+PACKAGE = libssh2
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+.PHONY: get-orig-source
+get-orig-source:
+	wget -c http://www.libssh2.org/download/libssh2-$(SRC_VERSION).tar.gz -O ../$(TARBALL)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .

@@ -1,0 +1,44 @@
+Source: ipxe
+Section: admin
+Priority: optional
+Maintainer: Bastian Blank <waldi@debian.org>
+Build-Depends:
+ debhelper (>> 9), dh-exec,
+ genisoimage, syslinux-common,
+ binutils-dev, zlib1g-dev,
+Standards-Version: 3.9.1
+Homepage: http://ipxe.org/
+#Vcs-Git: git://git.debian.org/collab-maint/ipxe.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/ipxe.git;a=summary
+
+Package: ipxe
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Description: PXE boot firmware
+ iPXE is network boot firmware.  It supports a variety of network cards,
+ including some wireless cards, and variety of network protocols (traditional
+ DHCP, BOOTP and TFTP and also HTTP, iSCSI, SAN via FCoE and Infiniband). It
+ supports scripting.
+ .
+ It is possible to use iPXE as a PXE ROM in the network card or to
+ chainload it from other boot methods.
+ .
+ This package provides boot code for all supported network cards in one
+ binary and several bootable formats.
+
+Package: ipxe-qemu
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Description: PXE boot firmware - ROM images for qemu
+ iPXE is network boot firmware.  It supports a variety of network cards,
+ including some wireless cards, and variety of network protocols (traditional
+ DHCP, BOOTP and TFTP and also HTTP, iSCSI, SAN via FCoE and Infiniband). It
+ supports scripting.
+ .
+ It is possible to use iPXE as a PXE ROM in the network card or to
+ chainload it from other boot methods.
+ .
+ This package provides boot code for the qemu emulated network cards in
+ as boot ROMs.

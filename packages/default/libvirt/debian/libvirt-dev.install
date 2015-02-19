@@ -1,0 +1,6 @@
+usr/lib/libvirt.so
+usr/lib/libvirt-lxc.so
+usr/lib/libvirt-qemu.so
+usr/include/*
+usr/lib/pkgconfig/*
+usr/share/libvirt/api/*-api.xml

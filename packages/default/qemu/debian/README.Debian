@@ -1,0 +1,16 @@
+QEMU/kvm pc-1.0 Machine Type migration
+===============================
+In 14.04 Ubuntu switched from the qemu-kvm source tree to the qemu source tree.
+The pc-1.0 machine type in the two source trees differed.  This made
+live migration of a pc-1.0 machine type guest from a 12.04 host to a 14.04
+host fail.  Fixing this transparently is impossible at this point as it
+would break migration from pc-1.0 machine type VMs started in 14.04.
+
+To work around this, a new machine type, called pc-1.0-qemu-kvm and aliased
+to "pc-1.0-precise", has been introduced.  To accept incoming migration from
+a pc-1.0 machine from another 14.04 host, simply use "-M pc-1.0" as before.
+To accept incoming migration from a pc-1.0 machine from a 12.04 host,
+use "-M pc-1.0-precise".  This will require the kvm-ipxe-precise package to
+be installed, which provides the ipxe-roms used by that machine type.
+
+ -- Serge Hallyn <serge.hallyn@ubuntu.com>  Mon, 06 Oct 2014 17:11:54 -0500
