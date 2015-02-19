@@ -1,0 +1,23 @@
+From f2db11303d78f9e5693d2f1c5c355bbf47b6a40d Mon Sep 17 00:00:00 2001
+From: Bastian Blank <waldi@debian.org>
+Date: Sat, 4 Oct 2014 20:24:18 +0200
+Subject: rom-change-banner-timeout.diff
+
+---
+ src/arch/i386/prefix/romprefix.S | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/arch/i386/prefix/romprefix.S b/src/arch/i386/prefix/romprefix.S
+index 7bc4fe8..87a6f47 100644
+--- a/src/arch/i386/prefix/romprefix.S
++++ b/src/arch/i386/prefix/romprefix.S
+@@ -26,7 +26,9 @@ FILE_LICENCE ( GPL2_OR_LATER )
+ #define PCI_FUNC_MASK 0x07
+ 
+ /* ROM banner timeout, converted to a number of (18Hz) timer ticks. */
++#ifndef ROM_BANNER_TIMEOUT_TICKS
+ #define ROM_BANNER_TIMEOUT_TICKS ( ( 18 * ROM_BANNER_TIMEOUT ) / 10 )
++#endif
+ 
+ /* Allow payload to be excluded from ROM size
+  */

@@ -1,0 +1,37 @@
+From: =?utf-8?q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Date: Tue, 26 Jun 2012 09:30:39 +0200
+Subject: Debianize systemd service files
+
+---
+ daemon/libvirtd.service.in      | 4 ++--
+ tools/libvirt-guests.service.in | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/daemon/libvirtd.service.in b/daemon/libvirtd.service.in
+index 1759ac8..5269a7f 100644
+--- a/daemon/libvirtd.service.in
++++ b/daemon/libvirtd.service.in
+@@ -10,8 +10,8 @@ Documentation=http://libvirt.org
+ 
+ [Service]
+ Type=notify
+-EnvironmentFile=-/etc/sysconfig/libvirtd
+-ExecStart=@sbindir@/libvirtd $LIBVIRTD_ARGS
++EnvironmentFile=-/etc/default/libvirtd
++ExecStart=@sbindir@/libvirtd $libvirtd_opts
+ ExecReload=/bin/kill -HUP $MAINPID
+ KillMode=process
+ Restart=on-failure
+diff --git a/tools/libvirt-guests.service.in b/tools/libvirt-guests.service.in
+index cc04b6d..fc353f0 100644
+--- a/tools/libvirt-guests.service.in
++++ b/tools/libvirt-guests.service.in
+@@ -5,7 +5,7 @@ Documentation=man:libvirtd(8)
+ Documentation=http://libvirt.org
+ 
+ [Service]
+-EnvironmentFile=-/etc/sysconfig/libvirt-guests
++EnvironmentFile=-/etc/default/libvirt-guests
+ # Hack just call traditional service until we factor
+ # out the code
+ ExecStart=@libexecdir@/libvirt-guests.sh start

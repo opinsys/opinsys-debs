@@ -1,0 +1,46 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+export ISOLINUX_BIN=/usr/lib/syslinux/
+
+VERSION := $(shell dpkg-parsechangelog | sed -ne 's,^Version: *\(.*\)$$,\1,p')
+
+%:
+	+dh $@ 
+
+override_dh_auto_configure:
+	cp debian/config/* src/config/local
+
+src/bin/% src/bin-x86_64-efi/%:
+	$(MAKE) -C src V=1 NO_WERROR=1 VERSION="$(VERSION)" $(subst src/,,$@)
+
+src/bin-efi/%.efirom: src/bin/%.rom src/bin-x86_64-efi/%.efirom
+	@[ -d $(dir $@) ] || mkdir $(dir $@)
+	src/util/catrom.pl $^ > $@
+
+override_dh_auto_build: $(shell grep -hoE 'src/bin(-[^/]*)?/\S+' debian/*.install)
+
+override_dh_auto_clean:
+	$(MAKE) -C src veryclean
+	rm -fr src/bin*
+	rm -f src/config/local/*
+
+.NOTPARALLEL:
+.SECONDARY:
+
+# Stuff for get-orig-source.
+git_commit := $(shell dpkg-parsechangelog | sed -r -n -e 's/^Version: .*\+git-[0-9]+\.(.*)-.*/\1/p')
+version_prefix := $(shell dpkg-parsechangelog | sed -ne 's/^Version.*git-\(.*\)\..*/\1/p')
+
+get-orig-source:
+	# Grab the latest snapshot of the upstream git repository
+	[ ! -d ipxe-snapshot ] || rm -rf ipxe-snapshot
+	git clone git://git.ipxe.org/ipxe.git ipxe-snapshot
+	cd ipxe-snapshot && \
+		git archive --format=tar --prefix=ipxe-1.0.0+git-$(version_prefix).$(git_commit)/ $(git_commit) |\
+			gzip -9 --no-name > ../../ipxe_1.0.0+git-$(version_prefix).$(git_commit).orig.tar.gz
+	rm -rf ipxe-snapshot
+	tar -z -x -f ../ipxe_1.0.0+git-$(version_prefix).$(git_commit).orig.tar.gz --strip-components=1 -C .
