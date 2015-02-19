@@ -1,0 +1,10 @@
+Package: globilab
+Version: 2.1.16
+Architecture: all
+Maintainer: Yuvalal Liron <yuvalal@globisens.com>
+Description: GlobiLab is a data analysis software with sensors
+ GlobiLab for middle to high school science students incorporates
+ sophisticated data analysis, lab reporting tools, plus wireless communication
+ for full setup and control of the Labdisc and built-in sensors.
+ GlobiLab software also integrates GPS data logging, plotting your real data
+ over a Google map.
