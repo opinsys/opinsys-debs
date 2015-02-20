@@ -1,13 +1,10 @@
-Index: globilab/Makefile
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ globilab/Makefile	2015-02-19 15:00:35.554945517 +0200
-@@ -0,0 +1,8 @@
+diff -ruN globilab.orig/Makefile globilab/Makefile
+--- globilab.orig/Makefile	1970-01-01 03:00:00.000000000 +0300
++++ globilab/Makefile	2015-02-20 09:58:31.838684298 +0200
+@@ -0,0 +1,6 @@
 +all:
 +
 +install:
-+	mkdir -p $(DESTDIR)/usr
-+	cp -ar usr/local $(DESTDIR)/usr
-+	cp -ar usr/share $(DESTDIR)/usr
++	cp -a usr $(DESTDIR)/
 +
 +clean:
