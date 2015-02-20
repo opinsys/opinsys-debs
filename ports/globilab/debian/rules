@@ -24,8 +24,8 @@ URL=http://www.globisens.net/sites/default/files/docs/support/$(UPSTREAM_DEB)
 
 get-orig-source:
 	wget $(URL) -O ../$(UPSTREAM_DEB)
-	mkdir -p ../GlobiLab-$(SRC_VERSION)
-	dpkg -x ../$(UPSTREAM_DEB) ../GlobiLab-$(SRC_VERSION)
-	tar -C .. -zcf ../GlobiLab-$(SRC_VERSION).orig.tar.gz GlobiLab-$(SRC_VERSION)
-	rm -rf ../GlobiLab-$(SRC_VERSION)
-	tar -zxf ../GlobiLab-$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
+	mkdir -p ../globilab-$(SRC_VERSION)
+	dpkg -x ../$(UPSTREAM_DEB) ../globilab-$(SRC_VERSION)
+	tar -C .. -zcf ../globilab_$(SRC_VERSION).orig.tar.gz globilab-$(SRC_VERSION)
+	rm -rf ../globilab-$(SRC_VERSION)
+	tar -zxf ../globilab_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .

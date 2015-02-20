@@ -1,7 +1,13 @@
+Source: globilab
+Section: restricted/science
+Priority: optional
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+
 Package: globilab
-Version: 2.1.16
-Architecture: all
-Maintainer: Yuvalal Liron <yuvalal@globisens.com>
+Architecture: i386
+Depends: ${misc:Depends}
 Description: GlobiLab is a data analysis software with sensors
  GlobiLab for middle to high school science students incorporates
  sophisticated data analysis, lab reporting tools, plus wireless communication
