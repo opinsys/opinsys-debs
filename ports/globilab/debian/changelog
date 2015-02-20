@@ -1,3 +1,11 @@
+globilab (2.1.16-0+opinsys2) trusty; urgency=medium
+
+  * Add some udev rules for globilab and do not try to use sudo with rfcomm.
+    We are not quite sure how these affect the functionality, but when quickly
+    tested with these changes the devices seem to work.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Fri, 20 Feb 2015 10:52:39 +0200
+
 globilab (2.1.16-0+opinsys1) trusty; urgency=low
 
   * Initial release.
