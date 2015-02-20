@@ -1,0 +1,12 @@
+diff -ruN globilab.orig/usr/local/Globisens/bash/Globi_BT globilab/usr/local/Globisens/bash/Globi_BT
+--- globilab.orig/usr/local/Globisens/bash/Globi_BT	2013-02-13 22:27:09.000000000 +0200
++++ globilab/usr/local/Globisens/bash/Globi_BT	2015-02-20 10:42:25.019755572 +0200
+@@ -22,7 +22,7 @@
+ 	while [ -e /dev/rfcomm$I ]; do
+            ((I++))
+ 	done
+-	sudo rfcomm bind /dev/rfcomm$I $ADDR 1
++	rfcomm bind /dev/rfcomm$I $ADDR 1
+ 	echo $NAME rfcomm$I
+    fi;
+ done

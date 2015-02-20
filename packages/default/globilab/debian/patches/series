@@ -1,1 +1,2 @@
 opinsys-add-makefile.patch
+opinsys-remove-rfcomm-sudo.patch
