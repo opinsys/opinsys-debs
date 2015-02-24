@@ -1,3 +1,9 @@
+xautomation (1.09-1+opinsys1) trusty; urgency=medium
+
+  * Add get-orig-source target to enable CI builds.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 24 Feb 2015 13:33:25 +0200
+
 xautomation (1.09-1) unstable; urgency=medium
 
   * QA upload, orphaning package. See #738476.
