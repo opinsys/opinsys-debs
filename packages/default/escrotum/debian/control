@@ -1,0 +1,22 @@
+Source: escrotum
+Section: utils
+Priority: optional
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.5
+Homepage: https://github.com/Roger/escrotum
+
+Package: escrotum
+Architecture: all
+Depends: ${misc:Depends}, python, python-gtk2
+Description: Linux screen capture using pygtk, inspired by scrot
+ Why? Because scrot has glitches when selection is used in refreshing
+ windows.
+ .
+ Features
+   - fullscreen screenshots
+   - partial(selection) screenshots
+   - window screenshot(click to select)
+   - screenshot by xid
+   - store the image to the clipboard
+ .
