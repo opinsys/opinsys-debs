@@ -1,0 +1,11 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: pycharm
+Source: https://github.com/Roger/escrotum/releases/tag/0.2.1
+
+Files: *
+Copyright: 2014 Roger Duran
+License: GPLv3+
+
+Files: debian/*
+Copyright: 2015 Opinsys Oy
+License: GPLv3+
