@@ -1,0 +1,52 @@
+Files under debian/:
+--------------------
+This package was debianized by Aurelien Jarno <aurel32@debian.org> on
+Sat, 18 Oct 2003 19:50:44 +0200.
+It is currently maintained by Kapil Hari Paranjape
+<kapil@debian.org>.
+
+The files under debian/ constitute source for the Debian packaging.
+Each such file should be deemed to carry a notice as follows:
+
+   Copyright (c) 2003 Aurelien Jarno
+   Copyright (c) 2007 Kapil Hari Paranjape
+
+   This program is free software: you can redistribute it and/or
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation, either version 3 of the
+   License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+Upstream source:
+----------------
+The upstream source was downloaded from http://hoopajoo.net/projects/xautomation.html
+
+The upstream author is Steve Slaven <bpk@hoopajoo.net>
+
+The upstream source contains copyright assertions of the
+following form (taken from xte.c):
+
+ *  Copyright (c) 2002 Steve Slaven, All Rights Reserved.
+ *  
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License as
+ *  published by the Free Software Foundation; either version 2 of
+ *  the License, or (at your option) any later version.
+ *  
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+
+Full texts of licenses:
+-----------------------
+
+On Debian systems, the complete text of the GNU General Public
+License(s) can be found in the files "/usr/share/common-licenses/GPL*".
+
+--
+End of debian/copyright.

@@ -1,0 +1,193 @@
+xautomation (1.09-1) unstable; urgency=medium
+
+  * QA upload, orphaning package. See #738476.
+  * New upstream release:
+    - Repackage using dh.
+    - Set to source format 3.0 quilt.
+    - Update Vcs-* fields to point directly to xautomation.
+    - Remove debian/patches, the patch has been merged upstream.
+    - Bump to debhelper compatitility 9.
+    - Update to S-V 3.9.5, no changes required.
+  * Update package description. Thanks to Reuben Thomas <rrt@sc3d.org>
+    (Closes: #578644)
+
+ -- Ana Beatriz Guerrero Lopez <ana@debian.org>  Fri, 07 Mar 2014 23:29:24 +0100
+
+xautomation (1.03-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Fix FTBFS with binutils-gold. (Closes: #556688)
+  * Add build-depend on quilt and some small changes in debian/rules to enable
+    patching.
+
+ -- Ana Beatriz Guerrero Lopez <ana@debian.org>  Mon, 12 Sep 2011 21:17:26 +0200
+
+xautomation (1.03-1) unstable; urgency=low
+
+  * New Upstream Release (1.03).
+    - fixes for different keyboard layouts and multi_key sequences
+      from Marco Steinacher. Closes: #523199.
+    - upstream "Changelog" is back.
+      + debian/upstream.changelog: removed; not required.
+      + debian/rules: restore dh_installchangelogs to have
+        no arguments
+  * debian/control:
+    - Bumped Standards-Version to 3.8.1. No other changes required.
+    - Bumped debhelper dependency to 5.0.0. No other changes required.
+  * debian/compat: Debhelper dependency level to 5 as lower levels
+    are deprecated.
+
+ -- Kapil Hari Paranjape <kapil@debian.org>  Thu, 28 May 2009 11:10:31 +0530
+
+xautomation (1.02-1) unstable; urgency=low
+
+  * New Upstream Release (1.02).
+  * Added upstream changelog based on upstream web site
+    and changelog from version 1.01
+    - debian/upstream.changelog: the actual file.
+    - debian/rules: change name of upstream changelog
+      in call to dh_installchangelogs.
+  * debian/control:
+    - Added Vcs-Svn and Vcs-Browser tags pointing to Debian's
+      "collab-maint" repository.
+    - Bumped Standards-Version to 3.8.0. No other changes required.
+
+ -- Kapil Hari Paranjape <kapil@debian.org>  Sun, 15 Jun 2008 07:22:08 +0530
+
+xautomation (1.01-1) unstable; urgency=low
+
+  * New Upstream Release (1.01)
+    - incorporated manpages from Debian.
+    - link only to needed libraries.
+    - fix compile warnings in xmousepos.c
+  * Incorporated autotools in build process following
+    /usr/share/doc/autotools-dev/README.Debian.gz.
+    Thanks to Henrique de Moraes Holschuh.
+    - debian/control:
+      + added "automake" to Build-Depends
+      + added "automake1.4" and "autoconf2.13" to
+        Build-Conflicts
+    - debian/rules:
+      + set variable "CONFFLAGS" using DEB_* variables.
+      + modified "configure-stamp" and "clean" rules.
+  * Cleaned up debian/ following upstream's incorporation
+    of Debian patches and man pages.
+    - debian/*.[0-9]: removed as these are now in upstream
+      source.
+    - debian/control: removed "quilt" from Build-Depends.
+    - debian/patches: removed this directory as it is not
+      required.
+    - debian/rules: no longer include make snippet for quilt.
+    - debian/manpages: no longer required as manpages are
+      installed by upstream Makefile.
+  * Added debian/watch file from qa.debian.org. Thanks people.
+
+ -- Kapil Hari Paranjape <kapil@debian.org>  Sat, 16 Feb 2008 07:00:25 +0530
+
+xautomation (0.99-1) unstable; urgency=low
+
+  * New Maintainer. Closes: #390832.
+    Thanks to Aurelien Jarno, the previous maintainer.
+  * New Upstream Release (0.99)
+    - Added support for non-US keyboards. Closes: #415451.
+      Thanks to Mitchell N Charity for pointing this out.
+    - New binary "xmousepos".
+  * debian/rules:
+    - removed "rm -f kbd.h" from "clean" rule.
+    - changed "make" and "rm" calls in "clean" rule
+      to catch errors.
+    - added patch/unpatch rules using "quilt".
+  * debian/control:
+    - Standards Version 3.7.3. No changes required.
+    - Moved Homepage to its own field.
+    - Removed author name from package description.
+    - added "quilt" to Build-Depends.
+  * debian/visgrep.1: Fixed hyphen-used-as-minus-sign.
+  * debian/xmousepos.1: Added this manpage as none is provided
+    upstream.
+  * debian/manpages: Added entry for "xmousepos.1" manpage.
+  * debian/patches:
+    - avoid_extra_libs:
+      + patched "configure" to avoid linking all
+        the binaries with "libpng".
+      + patched "Makefile.in" to avoid linking "xmousepos"
+        with "libXtst".
+    - avoid_extra_libs_upstream:
+      + above patches applied to "configure.in" and "Makefile.am"
+        for upstream sources.
+      + This patch not used by quilt to avoid extract "configure"
+        calls during build.
+  * debian/copyright: Added clarifications regarding the location of
+    license assertions.
+  * debian/*.[1-7]: Added copyright assertions at the beginning and
+    authorship remark at the end of all manpages.
+
+ -- Kapil Hari Paranjape <kapil@debian.org>  Mon, 17 Dec 2007 08:30:09 +0530
+
+xautomation (0.96-5) unstable; urgency=low
+
+  * Orphaning this package, setting maintainer field to
+    packages@qa.debian.org.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sat, 30 Sep 2006 18:18:49 +0200
+
+xautomation (0.96-4) unstable; urgency=low
+
+  * Bumped Standards-Version to 3.7.2 (No changes).
+  * xte.c, xte.1: s/Backspace/BackSpace/ (closes: bug#369295).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Mon, 29 May 2006 00:57:54 +0200
+
+xautomation (0.96-3) unstable; urgency=low
+
+  * Replaced build-dependency on xlibs-dev by libxtst-dev, libx11-dev.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Fri,  2 Dec 2005 23:46:04 +0100
+
+xautomation (0.96-2) unstable; urgency=low
+
+  * Bumped Standards-Version to 3.6.2 (No changes).
+  * Don't ship README file, it is useless.
+  * Added an xautomation manpage that lists all the xautomation packages
+    (closes: bug#321914).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Tue,  9 Aug 2005 01:16:26 +0200
+
+xautomation (0.96-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Wed,  9 Jun 2004 16:15:58 +0200
+
+xautomation (0.94-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Wed, 21 Apr 2004 18:57:36 +0200
+
+xautomation (0.93-2) unstable; urgency=low
+
+  * Added a patch from James Cameron to make visgrep return a status code
+    according to the result of the search (closes: bug#244813).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Tue, 20 Apr 2004 18:37:46 +0200
+
+xautomation (0.93-1) unstable; urgency=low
+
+  * New upstream version. 
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 28 Dec 2003 23:10:33 +0100
+
+xautomation (0.92-2) unstable; urgency=low
+
+  * Fixed an error with getopt (closes: bug#223939). Thanks to 
+    Vincent Bernat for the patch, which also fixes a lot of warnings.
+  
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 14 Dec 2003 14:29:12 +0100
+
+xautomation (0.92-1) unstable; urgency=low
+
+  * Initial Release (closes: bug#216421).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sat, 18 Oct 2003 21:35:04 +0200
+
