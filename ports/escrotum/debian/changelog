@@ -1,3 +1,9 @@
+escrotum (0.2.1-0+opinsys3) trusty; urgency=medium
+
+  * Add X-Python-Version >= 2.7
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 24 Feb 2015 13:34:23 +0200
+
 escrotum (0.2.1-0+opinsys2) trusty; urgency=medium
 
   * Add python-setuptools to build dependencies.
