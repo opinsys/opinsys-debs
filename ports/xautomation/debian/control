@@ -1,0 +1,23 @@
+Source: xautomation
+Section: x11
+Priority: extra
+Maintainer: Debian QA Group <packages@qa.debian.org>
+Build-Depends: debhelper (>= 9.0.0), libxtst-dev, libx11-dev,
+ libpng-dev, automake,
+Vcs-Svn: svn://svn.debian.org/svn/collab-maint/deb-maint/xautomation
+Vcs-Browser: http://svn.debian.org/wsvn/collab-maint/deb-maint/xautomation
+Homepage: http://hoopajoo.net/projects/xautomation.html
+Standards-Version: 3.9.5
+
+Package: xautomation
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Control X from the command line, and find things on the screen
+ Control X from the command line for scripts, and do "visual scraping" to
+ find things on the screen. The control interface allows mouse movement,
+ clicking, button up/down, key up/down, etc, using the XTest extension.
+ The visgrep program find images inside of images and reports the
+ coordinates, allowing programs to find buttons, etc, on the screen to click
+ on.
+ .
+ If you just want to control X, you may find xdotool easier to use.
