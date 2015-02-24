@@ -1,3 +1,9 @@
+escrotum (0.2.1-0+opinsys2) trusty; urgency=medium
+
+  * Add python-setuptools to build dependencies.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 24 Feb 2015 13:19:02 +0200
+
 escrotum (0.2.1-0+opinsys1) trusty; urgency=medium
 
   * Initial release.
