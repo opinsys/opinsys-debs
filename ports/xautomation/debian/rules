@@ -2,3 +2,10 @@
 
 %:
 	dh $@
+
+PACKAGE := $(shell dpkg-parsechangelog | sed -r -n 's/^Source: //p')
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -r -n 's/^Version: (([0-9]+):)?(.*)-.*/\3/p')
+get-orig-source:
+	wget http://hoopajoo.net/static/projects/xautomation-$(SRC_VERSION).tar.gz -O \
+		../$(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+	tar -z -x -f ../$(PACKAGE)_$(SRC_VERSION).orig.tar.gz --strip-components=1
