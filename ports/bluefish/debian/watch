@@ -1,0 +1,3 @@
+version=3
+opts=uversionmangle=s/-(rc\d+)/~$1/,pgpsigurlmangle=s/$/.sig/ \
+ http://www.bennewitz.com/bluefish/stable/source/bluefish-([\d\.]+(?:-rc\d+)?).tar.(?:gz|bz2)

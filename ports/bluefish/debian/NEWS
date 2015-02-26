@@ -1,0 +1,14 @@
+bluefish (2.0.1-1) unstable; urgency=low
+
+  This is Bluefish 2.0 and it will will replace your existing Bluefish 1.0
+  installation. It comes with several new feature, like autocompletion and
+  code/block folding.
+
+  There was a package split. Binary (bluefish), highlighting files and
+  autocompletion data (bluefish-data) and plugins (bluefish-plugins)
+  are provided in separate packages. For the case you observe a crash and
+  you want to send us a backtrace, the debugging symbols are shipped with
+  a separate package (bluefish-dbg) too.
+
+ -- Daniel Leidert (dale) <daniel.leidert@wgdd.de>  Sun, 27 Jun 2010 00:02:15 +0200
+

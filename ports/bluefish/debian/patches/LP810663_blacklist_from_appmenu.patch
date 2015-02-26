@@ -1,0 +1,19 @@
+Description: Blacklist bluefish from global menu on Ubuntu
+ bluefish (2.0.3-1ubuntu1) oneiric
+Author: Ken VanDine <ken.vandine@canonical.com>
+Origin: Ubuntu
+Bug-Ubuntu: http://bugs.launchpad.net/bugs/810663
+Forwarded: not-needed
+Last-Update: 2011-07-14
+
+--- a/desktop-data/bluefish.desktop.in
++++ b/desktop-data/bluefish.desktop.in
+@@ -3,7 +3,7 @@
+ _Name=Bluefish Editor
+ _Comment=Web Development Editor
+ _Keywords=programming;code;html;php;python;
+-Exec=bluefish %F
++Exec=env UBUNTU_MENUPROXY= bluefish %F
+ Icon=bluefish
+ Terminal=false
+ Type=Application
