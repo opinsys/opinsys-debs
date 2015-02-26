@@ -50,3 +50,8 @@ else
 	dh_gencontrol -- -Vvendor:Browser='iceweasel | iceape'
 endif
 
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+.PHONY: get-orig-source
+get-orig-source:
+	wget http://www.bennewitz.com/bluefish/stable/source/bluefish-$(SRC_VERSION).tar.gz -O ../bluefish_$(SRC_VERSION).orig.tar.gz
+	tar -z -x -f ../bluefish_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
