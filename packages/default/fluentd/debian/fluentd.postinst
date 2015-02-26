@@ -9,6 +9,8 @@ set -e
 case "$1" in
   configure)
       adduser --no-create-home --disabled-password --disabled-login --system --group puavo
+      mkdir -p /var/log/fluentd
+      chown puavo /var/log/fluentd
     ;;
   abort-upgrade)
     ;;
