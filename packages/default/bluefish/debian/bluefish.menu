@@ -1,0 +1,6 @@
+?package(bluefish):\
+  needs="X11"\
+  section="Applications/Web Development"\
+  title="Bluefish"\
+  icon="/usr/share/pixmaps/bluefish.xpm"\
+  command="/usr/bin/bluefish"
