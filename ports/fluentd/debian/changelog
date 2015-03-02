@@ -1,3 +1,9 @@
+fluentd (0.10.57-0+opinsys1) trusty; urgency=medium
+
+  * New upstream release.
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 02 Mar 2015 13:41:09 +0200
+
 fluentd (0.10.55-1+opinsys1) trusty; urgency=medium
 
   * Write plain json data to /var/log/fluentd one file for each month
