@@ -1,3 +1,7 @@
+fluentd (0.10.57-1+opinsys1) trusty; urgency=medium
+
+  * Remove match all default config
+
 fluentd (0.10.57-0+opinsys1) trusty; urgency=medium
 
   * New upstream release.
