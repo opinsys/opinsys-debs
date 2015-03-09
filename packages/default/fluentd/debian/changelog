@@ -1,3 +1,9 @@
+fluentd (0.10.57-2+opinsys1) trusty; urgency=medium
+
+  * Add logrotate
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Mon, 09 Mar 2015 10:52:27 +0200
+
 fluentd (0.10.57-1+opinsys1) trusty; urgency=medium
 
   * Remove match all default config
