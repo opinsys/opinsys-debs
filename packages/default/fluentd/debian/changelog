@@ -1,3 +1,9 @@
+fluentd (0.10.57-3+opinsys1) trusty; urgency=medium
+
+  * Do not relay internal fluent.* messages
+
+ -- Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>  Wed, 18 Mar 2015 10:11:28 +0200
+
 fluentd (0.10.57-2+opinsys1) trusty; urgency=medium
 
   * Add logrotate
