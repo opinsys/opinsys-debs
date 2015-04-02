@@ -1,1 +1,2 @@
 opinsys-child-negotiation.patch
+fix-unsafe-signal-handling.patch
