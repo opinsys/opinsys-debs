@@ -1,0 +1,32 @@
+Index: nbd-3.3/nbd-server.c
+===================================================================
+--- nbd-3.3.orig/nbd-server.c	2015-03-31 13:39:30.108139614 +0300
++++ nbd-3.3/nbd-server.c	2015-04-01 11:09:37.972907427 +0300
+@@ -168,6 +168,7 @@
+ /** Global flags: */
+ #define F_OLDSTYLE 1	  /**< Allow oldstyle (port-based) exports */
+ #define F_LIST 2	  /**< Allow clients to list the exports on a server */
++#define F_SAVECHILDREN 4  /**< Do not kill children on SIGTERM */
+ GHashTable *children;
+ char pidfname[256]; /**< name of our PID file */
+ char pidftemplate[256]; /**< template to be used for the filename of the PID file */
+@@ -894,6 +895,7 @@
+ 		{ "port", 	FALSE, PARAM_STRING,	&(genconftmp.modernport), 0 },
+ 		{ "includedir", FALSE, PARAM_STRING,	&cfdir,                   0 },
+ 		{ "allowlist",  FALSE, PARAM_BOOL,	&(genconftmp.flags),      F_LIST },
++		{ "savechildren", FALSE, PARAM_BOOL,	&(genconftmp.flags),      F_SAVECHILDREN },
+ 	};
+ 	PARAM* p=gp;
+ 	int p_size=sizeof(gp)/sizeof(PARAM);
+@@ -2556,7 +2558,10 @@
+ 	for(;;) {
+ 		if (is_sigterm_caught) {
+ 			is_sigterm_caught = 0;
+-			g_hash_table_foreach(children, killchild, NULL);
++
++			if (!(glob_flags & F_SAVECHILDREN))
++				g_hash_table_foreach(children, killchild, NULL);
++
+ 			unlink(pidfname);
+ 
+ 			exit(EXIT_SUCCESS);

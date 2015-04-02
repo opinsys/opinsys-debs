@@ -1,2 +1,3 @@
 opinsys-child-negotiation.patch
 fix-unsafe-signal-handling.patch
+make-children-killing-optional.patch
