@@ -1,2 +1,2 @@
 version=3
-http://downloads.mozdev.org/flashblock /flashblock/flashblock-([0-9\.]*).xpi debian xpi-repack
+http://downloads.mozdev.org/flashblock /flashblock/flashblock-([0-9\.a-z]*).xpi debian xpi-repack
