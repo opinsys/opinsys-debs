@@ -8,3 +8,8 @@
 
 override_dh_auto_configure:
 	dh_auto_configure -- --disable-glinjectlib --disable-assert --disable-ffmpeg-versions
+
+SRC_VERSION := $(shell dpkg-parsechangelog | awk '$$1 == "Version:" { print $$2 }')
+get-orig-source:
+	wget http://ppa.launchpad.net/maarten-baert/simplescreenrecorder/ubuntu/pool/main/s/simplescreenrecorder/simplescreenrecorder_$(SRC_VERSION).tar.gz -O ../simplescreenrecorder_$(SRC_VERSION).tar.gz
+	tar --exclude=debian -zxf ../simplescreenrecorder_$(SRC_VERSION).tar.gz --strip-components=1 -C .
