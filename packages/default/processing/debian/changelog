@@ -1,3 +1,9 @@
+processing (2.2.1-0+opinsys1) trusty; urgency=low
+
+  * Fix some basic issues in packaging.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Thu, 09 Apr 2015 15:00:14 +0300
+
 processing (2.2.1-0) trusty; urgency=low
 
   * Initial package for processing.
