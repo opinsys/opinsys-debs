@@ -1,0 +1,60 @@
+Index: processing/processing
+===================================================================
+--- processing.orig/processing	2014-05-20 04:17:29.000000000 +0300
++++ processing/processing	2015-04-09 12:53:16.748723740 +0300
+@@ -70,10 +70,21 @@
+ APPDIR=`dirname "$APPDIR"`
+ log APPDIR
+ 
+-# Try using a local JDK from the same directory as this script
+-JDKDIR=`readlink -f "$APPDIR/java"`
+-make_jdkcp "$JDKDIR"
+-log SUCCESS
++for javadir in /opt/java/jre* /opt/java/jdk*; do
++  if [ -d "$javadir" ]; then
++    JDKDIR=$javadir
++    make_jdkcp "$JDKDIR"
++    log SUCCESS
++    break
++  fi
++done
++
++if [ $SUCCESS -ne 1 ]; then
++  # Try using a local JDK from the same directory as this script
++  JDKDIR=`readlink -f "$APPDIR/java"`
++  make_jdkcp "$JDKDIR"
++  log SUCCESS
++fi
+ 
+ # Local JDK found?
+ if [ $SUCCESS -ne 1 ]; then
+Index: processing/processing-java
+===================================================================
+--- processing.orig/processing-java	2014-05-20 04:17:30.000000000 +0300
++++ processing/processing-java	2015-04-09 12:53:31.660529072 +0300
+@@ -70,10 +70,21 @@
+ APPDIR=`dirname "$APPDIR"`
+ log APPDIR
+ 
+-# Try using a local JDK from the same directory as this script
+-JDKDIR=`readlink -f "$APPDIR/java"`
+-make_jdkcp "$JDKDIR"
+-log SUCCESS
++for javadir in /opt/java/jre* /opt/java/jdk*; do
++  if [ -d "$javadir" ]; then
++    JDKDIR=$javadir
++    make_jdkcp "$JDKDIR"
++    log SUCCESS
++    break
++  fi
++done
++
++if [ $SUCCESS -ne 1 ]; then
++  # Try using a local JDK from the same directory as this script
++  JDKDIR=`readlink -f "$APPDIR/java"`
++  make_jdkcp "$JDKDIR"
++  log SUCCESS
++fi
+ 
+ # Local JDK found?
+ if [ $SUCCESS -ne 1 ]; then
