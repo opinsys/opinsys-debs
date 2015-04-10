@@ -8,7 +8,7 @@ Homepage: https://processing.org
 
 Package: processing
 Architecture: i386
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, oracle-java
 Description: Processing
  Processing is a programming language, development environment, and online
  community.  Since 2001, Processing has promoted software literacy within
