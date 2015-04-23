@@ -1,0 +1,41 @@
+Source: ktouch
+Section: kde
+Priority: optional
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+XSBC-Original-Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
+Uploaders: Eshat Cakar <info@eshat.de>,
+Build-Depends: kde-sc-dev-latest (>= 4:4.10.1),
+ cmake, debhelper (>= 7.3.16), pkg-kde-tools (>= 0.12),
+ kdelibs5-dev (>= 4:4.13.3), libqt4-opengl-dev, libxkbfile-dev
+Standards-Version: 3.9.3
+Homepage: http://edu.kde.org/
+Vcs-Browser: http://bazaar.launchpad.net/~kubuntu-packagers/kubuntu-packaging/ktouch
+Vcs-Bzr: https://code.launchpad.net/~kubuntu-packagers/kubuntu-packaging/ktouch
+X-Vcs-Debian-Browser: http://git.debian.org/?p=pkg-kde/kde-sc/ktouch.git
+X-Vcs-Debian-Git: git://git.debian.org/pkg-kde/kde-sc/ktouch.git
+
+Package: ktouch
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ktouch-data (>= ${source:Version}),
+ libqt4-sql-sqlite, qtdeclarative4-kqtquickcharts-1
+Suggests: khelpcenter4
+Description: touch typing tutor for KDE
+ KTouch is an aid for learning how to type with speed and accuracy.  It
+ provides a sample text to type and indicates which fingers should be used for
+ each key.
+ .
+ A collection of lessons are included for a wide range of different languages
+ and keyboard layouts, and typing statistics are used to dynamically adjust the
+ level of difficulty.
+ .
+ This package is part of the KDE education module.
+
+Package: ktouch-data
+Architecture: all
+Breaks: ktouch (<< 4:4.7.2)
+Replaces: ktouch (<< 4:4.7.2)
+Depends: ${misc:Depends}
+Description: data files for ktouch
+ This package contains the architecture-independent data files for ktouch.
+ .
+ This package is part of the KDE education module.
