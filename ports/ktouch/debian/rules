@@ -4,3 +4,9 @@ include /usr/share/pkg-kde-tools/qt-kde-team/2/debian-qt-kde.mk
 
 override_dh_auto_configure:
 	$(overridden_command) -- -DKDEEDU_KTOUCH_BUILD_WITH_PHONON=ON
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+get-orig-source:
+	wget http://archive.ubuntu.com/ubuntu/pool/universe/k/ktouch/ktouch_$(SRC_VERSION).orig.tar.xz \
+	  -O ../ktouch_$(SRC_VERSION).orig.tar.xz
+	tar --strip-components=1 -C . -Jxf ../ktouch_$(SRC_VERSION).orig.tar.xz
