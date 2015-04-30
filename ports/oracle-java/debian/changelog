@@ -1,3 +1,9 @@
+oracle-java (1.7.79-0+opinsys1) trusty; urgency=medium
+
+  * Update to Java 7u79
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Thu, 30 Apr 2015 07:57:30 +0300
+
 oracle-java (1.7.75-0+opinsys1) trusty; urgency=medium
 
   * Update to Java 7u75
