@@ -1,0 +1,69 @@
+commit 1cffbd9a8e96642bdbabf4e40829a5f1473b5bf9
+Author: Chris Wilson <chris@chris-wilson.co.uk>
+Date:   Tue Jan 13 10:50:36 2015 +0000
+
+    sna: Combine slave CRTC offsets with rotation
+    
+    When applying both a slave offset and an output rotation, order is
+    important. To get the order right, we need to combine the two into a
+    single transformation.
+    
+    Reported-by: Maarten Lankhorst <maarten.lankhorst@canonical.com>
+    Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+
+diff --git a/src/sna/sna_display.c b/src/sna/sna_display.c
+index 569c585..0657c47 100644
+--- a/src/sna/sna_display.c
++++ b/src/sna/sna_display.c
+@@ -6696,6 +6696,7 @@ sna_crtc_redisplay__fallback(xf86CrtcPtr crtc, RegionPtr region, struct kgem_bo
+ 	ScreenPtr screen = sna->scrn->pScreen;
+ 	DrawablePtr draw = crtc_source(crtc, &sx, &sy);
+ 	PictFormatPtr format;
++	PictTransform T;
+ 	PicturePtr src, dst;
+ 	PixmapPtr pixmap;
+ 	int depth, error;
+@@ -6735,9 +6736,14 @@ sna_crtc_redisplay__fallback(xf86CrtcPtr crtc, RegionPtr region, struct kgem_bo
+ 	if (!src)
+ 		goto free_pixmap;
+ 
+-	error = SetPictureTransform(src, &crtc->crtc_to_framebuffer);
+-	if (error)
+-		goto free_src;
++	pixman_transform_init_translate(&T, sx << 16, sy << 16);
++	pixman_transform_multiply(&T, &T, &crtc->crtc_to_framebuffer);
++	if (!sna_transform_is_integer_translation(&T, &sx, &sy)) {
++		error = SetPictureTransform(src, &T);
++		if (error)
++			goto free_src;
++		sx = sy = 0;
++	}
+ 
+ 	if (crtc->filter && crtc->transform_in_use)
+ 		SetPicturePictFilter(src, crtc->filter,
+@@ -6789,6 +6795,7 @@ sna_crtc_redisplay__composite(xf86CrtcPtr crtc, RegionPtr region, struct kgem_bo
+ 	DrawablePtr draw = crtc_source(crtc, &sx, &sy);
+ 	struct sna_composite_op tmp;
+ 	PictFormatPtr format;
++	PictTransform T;
+ 	PicturePtr src, dst;
+ 	PixmapPtr pixmap;
+ 	const BoxRec *b;
+@@ -6829,9 +6836,14 @@ sna_crtc_redisplay__composite(xf86CrtcPtr crtc, RegionPtr region, struct kgem_bo
+ 	if (!src)
+ 		goto free_pixmap;
+ 
+-	error = SetPictureTransform(src, &crtc->crtc_to_framebuffer);
+-	if (error)
+-		goto free_src;
++	pixman_transform_init_translate(&T, sx << 16, sy << 16);
++	pixman_transform_multiply(&T, &T, &crtc->crtc_to_framebuffer);
++	if (!sna_transform_is_integer_translation(&T, &sx, &sy)) {
++		error = SetPictureTransform(src, &T);
++		if (error)
++			goto free_src;
++		sx = sy = 0;
++	}
+ 
+ 	if (crtc->filter && crtc->transform_in_use)
+ 		SetPicturePictFilter(src, crtc->filter,
