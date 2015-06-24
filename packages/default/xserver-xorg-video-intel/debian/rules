@@ -62,3 +62,10 @@ generate-snapshot:
 	git archive --format=tar --prefix=$(SOURCE_NAME)-$(UPSTREAM_VERSION)/ $(UPSTREAM_BRANCH) \
 	  | gzip -9 > $(ORIG)
 	pristine-tar commit $(ORIG) $(UPSTREAM_BRANCH)
+
+PACKAGE = xf86-video-intel
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+get-orig-source:
+	wget -c http://xorg.freedesktop.org/archive/individual/driver/$(PACKAGE)-$(SRC_VERSION).tar.gz -O ../$(TARBALL)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
