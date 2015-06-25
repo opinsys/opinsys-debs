@@ -1,0 +1,26 @@
+--- a/tools/synclient.c
++++ b/tools/synclient.c
+@@ -406,9 +406,7 @@
+  unwind:
+     XFree(properties);
+     XFreeDeviceList(info);
+-    if (!dev)
+-        fprintf(stderr, "Unable to find a synaptics device.\n");
+-    else if (error && dev) {
++    if (error && dev) {
+         XCloseDevice(dpy, dev);
+         dev = NULL;
+     }
+--- a/tools/syndaemon.c
++++ b/tools/syndaemon.c
+@@ -529,9 +529,7 @@
+  unwind:
+     XFree(properties);
+     XFreeDeviceList(info);
+-    if (!dev)
+-        fprintf(stderr, "Unable to find a synaptics device.\n");
+-    else if (error && dev) {
++    if (error && dev) {
+         XCloseDevice(dpy, dev);
+         dev = NULL;
+     }

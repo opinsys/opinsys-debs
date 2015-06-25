@@ -1,0 +1,23 @@
+do not use the synaptics driver for devices advertising themselves as keyboards
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=524130
+
+diff --git a/conf/11-x11-synaptics.fdi b/conf/11-x11-synaptics.fdi
+index a898875..8714a59 100644
+--- a/conf/11-x11-synaptics.fdi
++++ b/conf/11-x11-synaptics.fdi
+@@ -9,6 +9,7 @@
+ <deviceinfo version="0.2">
+   <device>
+     <match key="info.capabilities" contains="input.touchpad">
++      <match key="info.capabilities" contains_not="input.keyboard">
+         <merge key="input.x11_driver" type="string">synaptics</merge>
+         <!-- Arbitrary options can be passed to the driver using
+              the input.x11_options property since xorg-server-1.5. -->
+@@ -34,6 +35,7 @@
+         <match key="info.product" contains="Apple|bcm5974">
+             <merge key="input.x11_options.SoftButtonAreas" type="string">0 0 0 0 0 0 0 0</merge>
+         </match>
++      </match>
+     </match>
+ 
+     <match

@@ -1,0 +1,126 @@
+--- a/include/synaptics-properties.h
++++ b/include/synaptics-properties.h
+@@ -143,6 +143,9 @@
+ #define SYNAPTICS_PROP_PRESSURE_MOTION_FACTOR "Synaptics Pressure Motion Factor"
+ 
+ /* 8 bit (BOOL) */
++#define SYNAPTICS_PROP_RESOLUTION_DETECT "Synaptics Resolution Detect"
++
++/* 8 bit (BOOL) */
+ #define SYNAPTICS_PROP_GRAB "Synaptics Grab Event Device"
+ 
+ /* 8 bit (BOOL), 1 value, tap-and-drag */
+--- a/man/synaptics.man
++++ b/man/synaptics.man
+@@ -461,6 +461,18 @@
+ TapAndDragGesture option to false. Property: "Synaptics Gestures"
+ .
+ .TP
++.BI "Option \*ResolutionDetect\*q \*q" boolean \*q
++Allow or prevent the synaptics driver from reporting the size of the
++touchpad to the X server.  The X server normally uses this information
++to scale movements so that touchpad movement corresponds visually to
++mouse cursor movements on the screen.  However, in some rare cases where
++the touchpad height/width ratio is significantly different from the
++laptop, it can cause the mouse cursor to skip pixels in the X or Y axis.
++This option allows disabling this scaling behavior, which can provide
++smoother mouse movement in such cases.
++Property: "Synaptics Resolution Detect"
++.
++.TP
+ .BI "Option \*qVertResolution\*q \*q" integer \*q
+ Resolution of X coordinates in units/millimeter. The value is used
+ together with HorizResolution to compensate unequal vertical and
+@@ -941,6 +953,10 @@
+ FLOAT, 2 values, min, max.
+ 
+ .TP 7
++.BI "Synaptics Resolution Detect"
++8 bit (BOOL).
++
++.TP 7
+ .BI "Synaptics Grab Event Device"
+ 8 bit (BOOL).
+ 
+--- a/src/properties.c
++++ b/src/properties.c
+@@ -87,6 +87,7 @@
+ Atom prop_coastspeed = 0;
+ Atom prop_pressuremotion = 0;
+ Atom prop_pressuremotion_factor = 0;
++Atom prop_resolution_detect = 0;
+ Atom prop_grab = 0;
+ Atom prop_gestures = 0;
+ Atom prop_capabilities = 0;
+@@ -343,6 +344,10 @@
+         InitFloatAtom(pInfo->dev, SYNAPTICS_PROP_PRESSURE_MOTION_FACTOR, 2,
+                       fvalues);
+ 
++    prop_resolution_detect =
++        InitAtom(pInfo->dev, SYNAPTICS_PROP_RESOLUTION_DETECT, 8, 1,
++                 &para->resolution_detect);
++
+     prop_grab =
+         InitAtom(pInfo->dev, SYNAPTICS_PROP_GRAB, 8, 1,
+                  &para->grab_event_device);
+@@ -776,6 +781,12 @@
+         para->press_motion_min_z = press[0];
+         para->press_motion_max_z = press[1];
+     }
++    else if (property == prop_resolution_detect) {
++        if (prop->size != 1 || prop->format != 8 || prop->type != XA_INTEGER)
++            return BadMatch;
++
++        para->resolution_detect = *(BOOL*)prop->data;
++    }
+     else if (property == prop_grab) {
+         if (prop->size != 1 || prop->format != 8 || prop->type != XA_INTEGER)
+             return BadMatch;
+--- a/src/synaptics.c
++++ b/src/synaptics.c
+@@ -787,6 +787,7 @@
+         xf86SetIntOption(opts, "PressureMotionMinZ", pressureMotionMinZ);
+     pars->press_motion_max_z =
+         xf86SetIntOption(opts, "PressureMotionMaxZ", pressureMotionMaxZ);
++    pars->resolution_detect = xf86SetBoolOption(opts, "ResolutionDetect", TRUE);
+ 
+     pars->min_speed = xf86SetRealOption(opts, "MinSpeed", 0.4);
+     pars->max_speed = xf86SetRealOption(opts, "MaxSpeed", 0.7);
+@@ -1399,7 +1400,7 @@
+     }
+ 
+     /* X valuator */
+-    if (priv->minx < priv->maxx) {
++    if (priv->minx < priv->maxx && priv->synpara.resolution_detect) {
+         min = priv->minx;
+         max = priv->maxx;
+     }
+@@ -1417,7 +1418,7 @@
+     xf86InitValuatorDefaults(dev, 0);
+ 
+     /* Y valuator */
+-    if (priv->miny < priv->maxy) {
++    if (priv->miny < priv->maxy && priv->synpara.resolution_detect) {
+         min = priv->miny;
+         max = priv->maxy;
+     }
+--- a/src/synapticsstr.h
++++ b/src/synapticsstr.h
+@@ -174,6 +174,7 @@
+     int press_motion_max_z;     /* finger pressure at which maximum pressure motion factor is applied */
+     double press_motion_min_factor;     /* factor applied on speed when finger pressure is at minimum */
+     double press_motion_max_factor;     /* factor applied on speed when finger pressure is at minimum */
++    Bool resolution_detect;     /* report pad size to xserver? */
+     Bool grab_event_device;     /* grab event device for exclusive use? */
+     Bool tap_and_drag_gesture;  /* Switches the tap-and-drag gesture on/off */
+     unsigned int resolution_horiz;      /* horizontal resolution of touchpad in units/mm */
+--- a/tools/synclient.c
++++ b/tools/synclient.c
+@@ -136,6 +136,7 @@
+     {"PressureMotionMaxZ",    PT_INT,    1, 255,   SYNAPTICS_PROP_PRESSURE_MOTION,	32,	1},
+     {"PressureMotionMinFactor", PT_DOUBLE, 0, 10.0,SYNAPTICS_PROP_PRESSURE_MOTION_FACTOR,	0 /*float*/,	0},
+     {"PressureMotionMaxFactor", PT_DOUBLE, 0, 10.0,SYNAPTICS_PROP_PRESSURE_MOTION_FACTOR,	0 /*float*/,	1},
++    {"ResolutionDetect",      PT_BOOL,   0, 1,     SYNAPTICS_PROP_RESOLUTION_DETECT,	8,      0},
+     {"GrabEventDevice",       PT_BOOL,   0, 1,     SYNAPTICS_PROP_GRAB,	8,	0},
+     {"TapAndDragGesture",     PT_BOOL,   0, 1,     SYNAPTICS_PROP_GESTURES,	8,	0},
+     {"AreaLeftEdge",          PT_INT,    0, 10000, SYNAPTICS_PROP_AREA,	32,	0},

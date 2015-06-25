@@ -1,0 +1,6 @@
+usr/lib/xorg/modules/input/*.so
+usr/bin/*
+usr/share/man
+usr/share/X11
+debian/local/51-synaptics-quirks.conf	usr/share/X11/xorg.conf.d
+debian/local/66-xorg-synaptics-quirks.rules	lib/udev/rules.d

@@ -1,0 +1,15 @@
+Index: xserver-xorg-input-synaptics/src/synaptics.c
+===================================================================
+--- xserver-xorg-input-synaptics.orig/src/synaptics.c	2011-07-05 11:54:48.311347674 +0300
++++ xserver-xorg-input-synaptics/src/synaptics.c	2011-07-05 11:54:51.321347674 +0300
+@@ -499,8 +499,8 @@
+     clickFinger2 = (priv->has_right || priv->has_middle) ? 1 : 3;
+     clickFinger3 = (priv->has_right || priv->has_middle) ? 1 : 2;
+ 
+-    /* Enable vert edge scroll if we can't detect doubletap */
+-    vertEdgeScroll = priv->has_double ? FALSE : TRUE;
++    /* Enable vert edge scroll */
++    vertEdgeScroll = TRUE;
+     horizEdgeScroll = FALSE;
+ 
+     /* Enable twofinger scroll if we can detect doubletap */
