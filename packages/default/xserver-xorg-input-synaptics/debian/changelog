@@ -1,0 +1,1844 @@
+xserver-xorg-input-synaptics (1.8.1-1ubuntu1) utopic; urgency=medium
+
+  * Merge from released sid.
+  * Drop postinst file, only needed for updating from synaptics <= 1.4.1.
+  * Remaining changes:
+    - A bunch of behavioral patches.
+    - Install some behavioral quirks.
+
+ -- Maarten Lankhorst <maarten.lankhorst@ubuntu.com>  Mon, 22 Sep 2014 09:44:47 +0200
+
+xserver-xorg-input-synaptics (1.8.1-1) unstable; urgency=medium
+
+  * New upstream release
+  - eventcomm: ensure we're on the same clock as the server (closes: #760779)
+  - Limit the movement to 20 mm per event (closes: #672601)
+
+  [ Maarten Lankhorst ]
+  * Drop libmtdev-dev, unused in 1.8.0.
+  * Add dependency on libxtst-dev again to enable support for XRecord.
+    (closes: #759345)
+
+ -- maximilian attems <maks@debian.org>  Wed, 16 Jul 2014 22:04:44 +0200
+
+xserver-xorg-input-synaptics (1.8.0-1) unstable; urgency=medium
+
+  [ Julien Cristau ]
+  * Remove Cyril from Uploaders.
+
+ -- maximilian attems <maks@debian.org>  Sat, 12 Jul 2014 19:20:04 +0200
+
+xserver-xorg-input-synaptics (1.8.0-1~exp2ubuntu3) utopic; urgency=medium
+
+  * Rebuild for new xorg-server abi.
+
+ -- Maarten Lankhorst <maarten.lankhorst@ubuntu.com>  Wed, 10 Sep 2014 16:29:27 +0200
+
+xserver-xorg-input-synaptics (1.8.0-1~exp2ubuntu2) utopic; urgency=medium
+
+  * Remerge from debian-experimental to pick up libxtst-dev.
+    - Fixes touchpad sometimes not disabling by allowing
+      'syndaemon -R' to use XRecord correctly. (LP: #1323006)
+
+ -- Maarten Lankhorst <maarten.lankhorst@ubuntu.com>  Tue, 15 Jul 2014 15:07:15 +0200
+
+xserver-xorg-input-synaptics (1.8.0-1~exp2ubuntu1) utopic; urgency=medium
+
+  * Merge from debian-experimental.
+
+ -- Maarten Lankhorst <maarten.lankhorst@ubuntu.com>  Wed, 02 Jul 2014 16:36:40 +0200
+
+xserver-xorg-input-synaptics (1.8.0-1~exp2) experimental; urgency=medium
+
+  * Mark libevdev-dev build dependency [linux-any]. (closes: #749286)
+    Thanks to Pino Toscano <pino@debian.org>.
+
+ -- maximilian attems <maks@debian.org>  Wed, 28 May 2014 05:46:25 +0200
+
+xserver-xorg-input-synaptics (1.8.0-1~exp1) experimental; urgency=medium
+
+  [ Maarten Lankhorst ]
+  * Drop libxtst-dev conflicts, add libevdev-dev.
+
+  [ maximilian attems ]
+  * New upstream release (closes: #743488).
+    - Revert "Purge scrollbuttons (repeat)" (closes: #722006).
+    - support newer Thinkpads (closes: #705807)
+  * add myself to Uploaders.
+
+ -- maximilian attems <maks@debian.org>  Fri, 23 May 2014 18:27:28 +0200
+
+xserver-xorg-input-synaptics (1.7.99.1-0ubuntu1) UNRELEASED; urgency=medium
+
+  * Merge from unreleased debian-experimental. (LP: #1294515)
+
+ -- Maarten Lankhorst <maarten.lankhorst@ubuntu.com>  Wed, 26 Mar 2014 10:02:42 +0100
+
+xserver-xorg-input-synaptics (1.7.3-1ubuntu1) trusty; urgency=low
+
+  * Merge from debian-unstable.
+  * Drop long disabled patches from the archive.
+    - 105_correct_multifinger_click.patch
+    - 116_xi2_1.patch
+    - 117_gestures.patch
+    - 119_active_area_touches.patch
+    - 120_active_touches_num_fingers.patch
+    - 121_semi-mt_num_fingers.patch
+    - 123_order_ProcessTouch_for_numFingers.patch  
+  * Fixes xserver 1.15 compatibility. (LP: #1276875)
+
+ -- Robert Hooker <sarvatt@ubuntu.com>  Thu, 06 Feb 2014 11:11:26 -0500
+
+xserver-xorg-input-synaptics (1.7.3-1) unstable; urgency=medium
+
+  [ Michele Cane ]
+  * New upstream release.
+
+ -- Julien Cristau <jcristau@debian.org>  Sun, 19 Jan 2014 11:46:16 +0100
+
+xserver-xorg-input-synaptics (1.7.2-1) unstable; urgency=medium
+
+  [ Michele Cane ]
+  * New upstream release.
+  * Bump Standard-Version to 3.9.5, no changes needed.
+  * Refresh patches.
+
+  [ Julien Cristau ]
+  * Disable silent build rules and silent test failures.
+
+ -- Julien Cristau <jcristau@debian.org>  Sun, 15 Dec 2013 19:07:48 +0100
+
+xserver-xorg-input-synaptics (1.7.1-2) unstable; urgency=low
+
+  * Add Breaks on kde-config-touchpad (<< 0.8.1-2~) because of #722058
+    (closes: #722006).
+
+ -- Julien Cristau <jcristau@debian.org>  Sun, 22 Sep 2013 16:17:34 +0200
+
+xserver-xorg-input-synaptics (1.7.1-1) unstable; urgency=low
+
+  [ Maarten Lankhorst ]
+  * New upstream release.
+  * Add -dbg package
+
+  [ Timo Aaltonen ]
+  * control: Bump policy to 3.9.4, no changes.
+
+  [ Julien Cristau ]
+  * Don't use BUG_RETURN_VAL if it's not defined (added in xserver 1.13)
+
+ -- Julien Cristau <jcristau@debian.org>  Thu, 05 Sep 2013 22:27:28 +0200
+
+xserver-xorg-input-synaptics (1.7.1-0ubuntu2) trusty; urgency=medium
+
+  * Rebuild for xorg 1.15 abi.
+
+ -- Maarten Lankhorst <maarten.lankhorst@ubuntu.com>  Wed, 05 Feb 2014 09:40:08 +0000
+
+xserver-xorg-input-synaptics (1.7.1-0ubuntu1) saucy; urgency=low
+
+  * Merge from unreleased debian git.
+
+ -- Maarten Lankhorst <maarten.lankhorst@ubuntu.com>  Thu, 25 Jul 2013 15:35:14 +0200
+
+xserver-xorg-input-synaptics (1.6.3-0ubuntu1.1) raring; urgency=low
+
+  * Merge from unreleased debian git.
+  * 130_reset-num_active_touches-on-deviceoff.patch, use-sigsafe-logging.patch:
+    Dropped, upstream.
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Fri, 08 Feb 2013 13:40:38 +0200
+
+xserver-xorg-input-synaptics (1.6.2-2) unstable; urgency=low
+
+  * Pull latest synaptics-1.6-branch:
+    - Reset num_active_touches on DeviceOff (closes: #681796).  Fixes memory
+      corruption leading to crashes.
+
+ -- Julien Cristau <jcristau@debian.org>  Mon, 01 Oct 2012 21:55:06 +0200
+
+xserver-xorg-input-synaptics (1.6.2-1ubuntu6) raring; urgency=low
+
+  * use-sigsafe-logging.patch: Upstream commit from master, use signal
+    safe logging with input ABI 18. (LP: #1100586)
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Thu, 17 Jan 2013 10:46:59 +0200
+
+xserver-xorg-input-synaptics (1.6.2-1ubuntu5) quantal; urgency=low
+
+  * Added 130_reset-num_active_touches-on-deviceoff.patch (LP: #956071)
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Thu, 30 Aug 2012 20:13:39 +0300
+
+xserver-xorg-input-synaptics (1.6.2-1ubuntu4) quantal-proposed; urgency=low
+
+  [ Maarten Lankhorst ]
+  * Add -dbg package
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Tue, 14 Aug 2012 19:10:16 +0300
+
+xserver-xorg-input-synaptics (1.6.2-1ubuntu3) quantal-proposed; urgency=low
+
+  * control: Bump the build-depends for new xserver.
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Wed, 01 Aug 2012 14:27:06 +0300
+
+xserver-xorg-input-synaptics (1.6.2-1ubuntu2) quantal-proposed; urgency=low
+
+  * Removed patches:
+    - 125_option_rec_revert.patch
+    - 126_ubuntu_xi22.patch
+  * Bump xserver to 1.12 minimum
+
+ -- Maarten Lankhorst <maarten.lankhorst@canonical.com>  Thu, 28 Jun 2012 21:49:46 +0200
+
+xserver-xorg-input-synaptics (1.6.2-1ubuntu1) quantal; urgency=low
+
+  * Merged from Debian unstable
+  * Removed patches that were cherry picked commits and now in 1.6.2:
+    - 201-Avoid-out-of-bounds-access-by-running-num_active_tou.patch
+    - 202-Ignore-pre-existing-touches.patch
+    - 203-Fix-coasting-for-negative-ScrollDelta.patch
+    - 204-Reset-open-slots-array-on-device-disable.patch
+    - 205-Reset-hw-x-y-to-INT_MIN-and-skip-HandleState-until-w.patch
+    - 206-Don-t-allow-for-scroll-distances-of-0-49965.patch
+  * Remaining patches:
+    - 101_resolution_detect_option.patch
+    - 103_enable_cornertapping.patch
+    - 104_always_enable_tapping.patch
+    - 106_always_enable_vert_edge_scroll.patch
+    - 115_evdev_only.patch
+    - 118_quell_error_msg.patch
+    - 124_syndaemon_events.patch
+    - 125_option_rec_revert.patch
+    - 126_ubuntu_xi22.patch
+    - 128_disable_three_click_action.patch
+    - 129_disable_three_touch_tap.patch
+
+ -- Maarten Lankhorst <maarten.lankhorst@canonical.com>  Thu, 14 Jun 2012 09:35:21 +0200
+
+xserver-xorg-input-synaptics (1.6.2-1) unstable; urgency=low
+
+  * New upstream release, from the 1.6 branch.
+
+ -- Cyril Brulebois <kibi@debian.org>  Wed, 13 Jun 2012 22:22:42 +0200
+
+xserver-xorg-input-synaptics (1.6.1-1ubuntu2) quantal-proposed; urgency=low
+
+  * Enable right button clickpad area by default (LP: #972727)
+    - Upstream has this enabled. We had it disabled for Precise due to the
+      feature landing well after feature freeze. This change puts us back in
+      sync with upstream.
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Thu, 07 Jun 2012 10:07:18 -0700
+
+xserver-xorg-input-synaptics (1.6.1-1ubuntu1) quantal; urgency=low
+
+  * Merged from Debian unstable
+  * Refreshed patches for indentation changes
+    - 101_resolution_detect_option.patch
+    - 118_quell_error_msg.patch
+    - 124_syndaemon_events.patch
+    - 125_option_rec_revert.patch
+  * Add temporary patches, for upstream git commits on synaptics-1.6-branch
+  * Fix memory corruption by driver (LP: #941953) FDo #49439
+   - 201-Avoid-out-of-bounds-access-by-running-num_active_tou.patch
+   - 202-Ignore-pre-existing-touches.patch
+  * Fix FDo #49966
+   - 203-Fix-coasting-for-negative-ScrollDelta.patch
+  * Fix jumpy cursor after suspend/resume
+   - 204-Reset-open-slots-array-on-device-disable.patch
+  * Fix another resume bug
+   - 205-Reset-hw-x-y-to-INT_MIN-and-skip-HandleState-until-w.patch
+  * Fix division by 0 or infinite loop with zero scroll distance FDo #49965
+   - 206-Don-t-allow-for-scroll-distances-of-0-49965.patch
+
+ -- Maarten Lankhorst <maarten.lankhorst@canonical.com>  Mon, 21 May 2012 14:14:49 +0200
+
+xserver-xorg-input-synaptics (1.6.1-1) unstable; urgency=low
+
+  [ Julien Cristau ]
+  * The mtdev build-dep is linux-only (closes: #672572).  Thanks, Pino
+    Toscano!
+
+  [ Cyril Brulebois ]
+  * New upstream release, from the 1.6 branch.
+
+ -- Cyril Brulebois <kibi@debian.org>  Sun, 20 May 2012 16:50:18 +0200
+
+xserver-xorg-input-synaptics (1.6.0-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Cyril Brulebois <kibi@debian.org>  Mon, 07 May 2012 01:13:08 +0200
+
+xserver-xorg-input-synaptics (1.6.0-0ubuntu1) quantal; urgency=low
+
+  * Update to upstream version 1.6.0
+    - Bug fixes only
+    - Fully fixes touchpad bugs on suspend/resume (LP: #968845)
+  * Drop patches merged upstream
+    - 200_fix_four_tap.patch
+    - 201_fix_touch_count.patch
+    - 202_touch_record_bounds_check.patch
+    - 203_fix_coasting_speed.patch
+    - 204_monotonicise_hw_timestamp.patch
+    - 205_end_touches_on_disable.patch
+  * Refreshed 130_dont_enable_rightbutton_area.patch
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Mon, 07 May 2012 12:22:23 -0700
+
+xserver-xorg-input-synaptics (1.5.99.904-2) unstable; urgency=low
+
+  * Add a build-dep on libmtdev-dev now that X server 1.12 is in sid,
+    for XI 2.2 support.
+
+ -- Cyril Brulebois <kibi@debian.org>  Tue, 01 May 2012 15:02:43 +0200
+
+xserver-xorg-input-synaptics (1.5.99.904-1) unstable; urgency=low
+
+  * New upstream release candidate (1.6 RC4).
+
+ -- Cyril Brulebois <kibi@debian.org>  Fri, 27 Apr 2012 19:52:44 +0000
+
+xserver-xorg-input-synaptics (1.5.99.902-1) unstable; urgency=low
+
+  * New upstream release candidate (1.6 RC2).
+
+ -- Cyril Brulebois <kibi@debian.org>  Mon, 02 Apr 2012 01:12:26 +0000
+
+xserver-xorg-input-synaptics (1.5.99.902-0ubuntu5.1) precise-proposed; urgency=low
+
+  * debian/patches/204_monotonicise_hw_timestamp.patch:
+    - Cherry-pick patch from upstream to ensure the timestamps used when
+      determining velocities are monotonic.  In certain circumstances the
+      timestamps from hardware events can be less than the timestamps
+      from the preceeding artificially-generated events.
+      + Fixes occasional huge jumps in pointer position.
+      + Fixes two-finger scrolling in GTK+3 windows (such as Nautilus and
+        Evolution) failing some time after login. (LP: #982771)
+  * debian/patches/205_end_touches_on_disable.patch:
+    - Upstream patch to reset touch state on device disable.
+      + Fixes touchpad not working after suspend on some MacBook models
+        (LP: #968845)
+
+ -- Christopher James Halse Rogers <raof@ubuntu.com>  Tue, 24 Apr 2012 14:32:49 +1000
+
+xserver-xorg-input-synaptics (1.5.99.902-0ubuntu5) precise-proposed; urgency=low
+
+  * Fix coasting speed on multitouch touchpads (LP: #930938)
+    - Add patch 203_fix_coasting_speed.patch
+
+ -- Chow Loong Jin <hyperair@debian.org>  Fri, 13 Apr 2012 16:14:04 +0800
+
+xserver-xorg-input-synaptics (1.5.99.902-0ubuntu4) precise; urgency=low
+
+  * Fix crash on Apple trackpads when touching with more than 10 fingers
+    (LP: #974017)
+    - Add temporary patch 202_touch_record_bounds_check.patch
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Mon, 09 Apr 2012 11:44:26 -0700
+
+xserver-xorg-input-synaptics (1.5.99.902-0ubuntu3) precise; urgency=low
+
+  * Fix bad default for two touch tap as middle button click (LP: #973783)
+    - Fixed 104_always_enable_tapping.patch
+    - Refreshed 129_disable_three_touch_tap.patch
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Wed, 04 Apr 2012 14:42:34 -0700
+
+xserver-xorg-input-synaptics (1.5.99.902-0ubuntu2) precise; urgency=low
+
+  * Fix three touch taps and clicks on some trackpads (LP: #971783)
+    - Add temporary patch 201_fix_touch_count.patch
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Mon, 02 Apr 2012 11:33:58 -0700
+
+xserver-xorg-input-synaptics (1.5.99.902-0ubuntu1) precise; urgency=low
+
+  * New upstream release
+  * Drop patches merged upstream
+    - 200_fix_clickfinger_non-clickpads.patch
+    - 201_fix_clickfinger_clickpad_actions.patch
+  * Revert upstream behavior change: enabling right button area by default
+    - Too late to enable in Precise
+  * Fix erroneous tap actions on four-touch tap (LP: #963327)
+    - Add temporary patch 200_fix_four_tap.patch
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Thu, 29 Mar 2012 15:31:40 -0700
+
+xserver-xorg-input-synaptics (1.5.99.901-1) unstable; urgency=low
+
+  * New upstream release candidate (1.6 RC1):
+    - Add support for ClickPads.
+  * Multitouch isn't enabled yet (it would require a newer server anyway).
+
+ -- Cyril Brulebois <kibi@debian.org>  Tue, 20 Mar 2012 21:40:10 +0000
+
+xserver-xorg-input-synaptics (1.5.99.901-0ubuntu2) precise; urgency=low
+
+  * Disable three touch tap in favor of uTouch gestures (LP: #961725)
+    - See
+      https://lists.ubuntu.com/archives/ubuntu-desktop/2012-February/003694.html
+      for details.
+    - Add 129_disable_three_touch_tap.patch
+  * Fix click actions for non-clickpad touchpads (LP: #960108)
+    - Add temporary patch 200_fix_clickfinger_non-clickpads.patch
+  * Fix click action finger count calculation (LP: #961738)
+    - Add temporary patch 201_fix_clickfinger_clickpad_actions.patch
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Wed, 21 Mar 2012 16:00:26 -0700
+
+xserver-xorg-input-synaptics (1.5.99.901-0ubuntu1) precise; urgency=low
+
+  * New upstream release
+    - Includes ClickPad support
+    - Fixes ClickPad click action interference
+    - Re-enables ClickPad support by default (LP: #955404)
+    - Everything else is bug fixes
+  * Remove 129_clickpad.patch, it has been merged upstream
+  * Bump lintian standards to 3.9.3
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Thu, 15 Mar 2012 17:58:09 -0700
+
+xserver-xorg-input-synaptics (1.5.99~git20120223-0ubuntu2) precise; urgency=low
+
+  * Disable ClickPad support when there is no physical right button
+    (LP: #941046)
+    - This re-enables click actions, which was enabled by default previously
+    - Users can enable ClickPad support through xorg.conf, xinput, or synclient
+    - See
+      https://lists.ubuntu.com/archives/ubuntu-desktop/2012-February/003751.html
+      for the discussion guiding this change.
+  * Refresh ClickPad support patch with changes from upstream review
+    - No new functionality
+  * Remove bottom area mask for Dell netbook clickpads with two buttons
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Fri, 02 Mar 2012 13:33:26 -0700
+
+xserver-xorg-input-synaptics (1.5.99~git20120223-0ubuntu1) precise; urgency=low
+
+  * Update to latest code in git (0a2fd56)
+    - Only includes bug fixes
+  * Drop temporary patches that have been merged upstream:
+    - 129_tmp_pointer_drift.patch
+    - 130_tmp_touch_count_fix.patch
+  * Revert tap-and-drag locking default change (LP: #934770)
+    - Drop 127_default_drag_lock.patch
+  * Add ClickPad support (LP: #932947)
+    - Add 129_clickpad.patch
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Thu, 23 Feb 2012 11:54:37 -0800
+
+xserver-xorg-input-synaptics (1.5.99~git20120220-0ubuntu3) precise; urgency=low
+
+  * Fix crash on multitouch devices when disabled while typing (LP: #931344)
+    - Add temporary patch 130_tmp_touch_count_fix.patch
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Tue, 21 Feb 2012 16:22:17 +0100
+
+xserver-xorg-input-synaptics (1.5.99~git20120220-0ubuntu2) precise; urgency=low
+
+  * Prevent trackpad pointer drift (LP: #921082)
+    - Add temporary patch 129_tmp_pointer_drift.patch from upstream
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Mon, 20 Feb 2012 11:55:23 +0100
+
+xserver-xorg-input-synaptics (1.5.99~git20120220-0ubuntu1) precise; urgency=low
+
+  * Update to latest code in git (f9a9065)
+    - Scale single-touch values to multitouch axes (LP: #936856)
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Mon, 20 Feb 2012 11:13:10 +0100
+
+xserver-xorg-input-synaptics (1.5.0+git20120210-0ubuntu2) precise; urgency=low
+
+  * Enable tap-and-drag locked drags by default
+  * Disable three-click action by default so three touch gestures work
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Mon, 13 Feb 2012 20:51:56 -0800
+
+xserver-xorg-input-synaptics (1.5.0+git20120210-0ubuntu1) precise; urgency=low
+
+  * Update to latest code in git (e6032c3)
+  * Drop 127_multitouch.patch, merged upstream
+  * Drop 126_default_speed.patch, no longer necessary
+  * Refresh 125_option_rec_revert.patch
+  * Add 126_ubuntu_xi22.patch for ubuntu frankenserver support
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Fri, 10 Feb 2012 18:27:53 -0800
+
+xserver-xorg-input-synaptics (1.5.0+git20120101-1ubuntu2) precise; urgency=low
+
+  * Add some error handling so eventcomm-test doesn't segfault
+    - Modified 127_multitouch.patch
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Thu, 19 Jan 2012 17:44:47 -0800
+
+xserver-xorg-input-synaptics (1.5.0+git20120101-1ubuntu1) precise; urgency=low
+
+  * Add multitouch support
+    - Add 127_multitouch.patch
+  * Bump Build-Depends for x11proto-input-dev to 2.1.99.5
+  * Remove obsolete dependencies on utouch-grail and old xserver-xorg-core
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Thu, 19 Jan 2012 16:39:31 -0800
+
+xserver-xorg-input-synaptics (1.5.0+git20120101-1ubuntu1~nomt3) precise; urgency=low
+
+  * Fix default speed due to change in motion estimation
+    - Add 126_default_speed.patch
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Thu, 12 Jan 2012 03:59:25 -0800
+
+xserver-xorg-input-synaptics (1.5.0+git20120101-1ubuntu1~nomt2) precise; urgency=low
+
+  * Drop patch 122_revert_pressure_finger_default.patch, merged upstream
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Mon, 09 Jan 2012 07:03:52 -0800
+
+xserver-xorg-input-synaptics (1.5.0+git20120101-1ubuntu1~nomt1) precise; urgency=low
+
+  * Lower xserver-xorg-dev build dep for Precise's X server
+  * Revert xf86OptionRec upstream changes
+    - This particular API change will not be in Precise's X server
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Mon, 09 Jan 2012 07:00:49 -0800
+
+xserver-xorg-input-synaptics (1.5.0+git20120101-1) experimental; urgency=low
+
+  * New upstream snapshot:
+    - Merge from upstream master up to 9f9b55ab55.
+  * Build against Xserver 1.12 RC1.
+
+ -- Cyril Brulebois <kibi@debian.org>  Sun, 01 Jan 2012 07:54:51 +0100
+
+xserver-xorg-input-synaptics (1.5.0-2ubuntu1~nomt1) UNRELEASED; urgency=low
+
+  * Merge from Debian testing.  Remaining Ubuntu changes:
+    - 101_resolution_detect_option.patch:
+      + Provide an option to prevent synaptics from communicating the
+        touchpad size to the xserver. (LP: 327428)
+    - 103_enable_cornertapping.patch:
+      + Enable right/middle clicks by tapping in the bottom- and top-right
+        corners.
+    - 104_always_enable_tapping.patch:
+      + Enable tapping regardless of the presence of physical buttons.
+    - 106_always_enable_vert_edge_scroll.patch:
+      + Enable vertical edge tapping by default even if we enable two-finger
+        scrolling as well.
+    - 115_evdev_only.patch:
+      + Only bind to /dev/input/event* evdev devices (LP 624985)
+    - 118_quell_error_msg.patch:
+      + Don't print error "Unable to find a synaptics device" when used
+        on system that doesn't have a touchpad anyway. (LP: 716712)
+    - 122_revert_pressure_finger_default.patch:
+      + Fix spurious right click events on some trackpads (LP: 742213)
+    - 124_syndaemon_events.patch:
+      + Drain spurious events from XRecord connection as a work around
+        for a buggy X server. (LP: 754470)
+    - debian/control:
+      + Depend on udev.
+      + Move libxtst-dev to Build-Conflicts so syndaemon does not use XRecord,
+        preventing a wide range of crashes in _CallCallbacks. (LP: 774978)
+    - debian/gbp.conf:
+      + Specify ‘ubuntu’ branch.
+    - debian/local/51-synaptics-quirks.conf:
+      + Split out our synaptics quirks into 51-synaptics-quirks.conf
+    - debian/local/66-xorg-synaptics.rules:
+      + Add the udev rule back for tagging specific machines to be quirked.
+    - debian/xserver-xorg-input-synaptics.postinst.in:
+      + Trigger udev to pick up new udev rules
+  * Temporarily drop multitouch patches for X server 1.11 bringup:
+    + 116_xi2_1.patch
+    + 117_gestures.patch
+    + 119_active_area_touches.patch
+    + 120_active_touches_num_fingers.patch
+    + 121_semi-mt_num_fingers.patch
+    + 123_order_ProcessTouch_for_numFingers.patch
+  * debian/patches/122_revert_pressure_finger_default.patch:
+    + Refresh for new upstream
+
+ -- Christopher James Halse Rogers <raof@ubuntu.com>  Mon, 19 Dec 2011 11:10:25 +1100
+
+xserver-xorg-input-synaptics (1.5.0-2) unstable; urgency=low
+
+  * Cherry-pick to fix regression on powerpc (Closes: #649002):
+    - b7e65f04f: Revert the switch from TEST_BIT to BitIsOn.
+
+ -- Cyril Brulebois <kibi@debian.org>  Mon, 12 Dec 2011 13:28:36 +0100
+
+xserver-xorg-input-synaptics (1.5.0-1) unstable; urgency=low
+
+  [ Timo Aaltonen ]
+  * New upstream release.
+
+ -- Cyril Brulebois <kibi@debian.org>  Fri, 11 Nov 2011 17:15:22 +0100
+
+xserver-xorg-input-synaptics (1.4.1-1ubuntu2) oneiric; urgency=low
+
+  * Really install the quirks files, and rename the udev rules file
+    to emphasize that it's about quirks.
+  * postinst: Bump the version check to run udevadm trigger on upgrade.
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Thu, 29 Sep 2011 22:16:55 +0300
+
+xserver-xorg-input-synaptics (1.4.1-1ubuntu1) oneiric; urgency=low
+
+  * Merge from Debian unstable, remaining changes:
+    - 101_resolution_detect_option.patch:
+      + Provide an option to prevent synaptics from communicating the
+        touchpad size to the xserver. (LP: 327428)
+    - 103_enable_cornertapping.patch:
+      + Enable right/middle clicks by tapping in the bottom- and top-right
+        corners.
+    - 104_always_enable_tapping.patch:
+      + Enable tapping regardless of the presence of physical buttons.
+    - 106_always_enable_vert_edge_scroll.patch:
+      + Enable vertical edge tapping by default even if we enable two-finger
+        scrolling as well.
+    - 115_evdev_only.patch:
+      + Only bind to /dev/input/event* evdev devices (LP 624985)
+    - 116_xi2_1.patch:
+    - 117_gestures.patch:
+      + multitouch and uTouch gesture support
+    - 118_quell_error_msg.patch:
+      + Don't print error "Unable to find a synaptics device" when used
+        on system that doesn't have a touchpad anyway. (LP: 716712)
+    - 119_active_area_touches.patch:
+    - 120_active_touches_num_fingers.patch:
+    - 121_semi-mt_num_fingers.patch:
+      + Fix handling for SemiMultitouch trackpads with integrated buttons
+        (LP: 736523)
+    - 122_revert_pressure_finger_default.patch:
+      + Fix spurious right click events on some trackpads (LP: 742213)
+    - 123_order_ProcessTouch_for_numFingers.patch:
+      + Fix jumpy cursor on multitouch trackpads (LP: 751525)
+    - 124_syndaemon_events.patch:
+      + Drain spurious events from XRecord connection as a work around
+        for a buggy X server. (LP: 754470)
+    - debian/control:
+      + Add depends on libmtdev and libutouch-grail
+      + Build-depend on multitouch-enabled inputproto.
+      + Depend on multitouch-enabled xserver.
+      + Depend on udev.
+      + Move libxtst-dev to Build-Conflicts so syndaemon does not use XRecord,
+        preventing a wide range of crashes in _CallCallbacks. (LP: 774978)
+    - debian/gbp.conf:
+      + Specify ‘ubuntu’ branch.
+    - debian/local/51-synaptics-quirks.conf:
+      + Split out our synaptics quirks into 51-synaptics-quirks.conf
+    - debian/local/66-xorg-synaptics.rules:
+      + Add the udev rule back for tagging specific machines to be quirked.
+    - debian/xserver-xorg-input-synaptics.postinst.in:
+      + Trigger udev to pick up new udev rules
+  * Drop 114_jumpy_cursor_first_part.patch, fixed upstream.
+  * Update 115_evdev_only.patch to apply.
+  * Update 117_gestures.patch to apply.
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Tue, 05 Jul 2011 16:40:31 +0300
+
+xserver-xorg-input-synaptics (1.4.1-1) unstable; urgency=low
+
+  * New upstream release:
+    - Fix some typos in documentation (Closes: #622663).
+    - Fix “syndaemon consumes 100% CPU” (LP: #754470).
+  * Bump Standards-Version to 3.9.2 (no changes).
+  * Refresh patch:
+    - 02-do-not-use-synaptics-for-keyboards.patch to cope with the lines
+      removed in d25ba5e11d.
+  * Drop patch:
+    - 03-man-no-hal.patch, superseded by upstream commit e49d5d07c7.
+
+ -- Cyril Brulebois <kibi@debian.org>  Tue, 28 Jun 2011 15:38:13 +0200
+
+xserver-xorg-input-synaptics (1.4.0-1) unstable; urgency=low
+
+  * New upstream release:
+    + Fix the FTBFS on GNU/kFreeBSD.
+
+ -- Cyril Brulebois <kibi@debian.org>  Sat, 05 Mar 2011 16:26:01 +0100
+
+xserver-xorg-input-synaptics (1.3.99.901-1) unstable; urgency=low
+
+  * New upstream release.
+  * Disable patch: 01-synaptics-dont-grab-if-not-on-current-VT.patch (no
+    longer applies, needs to be sent/discussed upstream anyway).
+
+ -- Cyril Brulebois <kibi@debian.org>  Mon, 21 Feb 2011 04:27:15 +0100
+
+xserver-xorg-input-synaptics (1.3.0-2) unstable; urgency=low
+
+  * Switch to Architecture: any, adding armhf support (Closes: #604672).
+  * Switch to dh:
+    - Use debhelper 8.
+    - Use dh-autoreconf.
+    - Bump xserver-xorg-dev build-dep for dh_xsf_substvars and xsf
+      debhelper sequence.
+  * Remove xsfbs accordingly.
+  * Get rid of xfree86-* packages in Conflicts/Replaces/Provides.
+  * Bump Standards-Version to 3.9.1 (no changes needed).
+
+ -- Cyril Brulebois <kibi@debian.org>  Sat, 05 Feb 2011 14:40:47 +0100
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu15) oneiric; urgency=low
+
+  * Also build-conflict with libxtst-dev as to make sure it's not present in
+    e.g. local debug builds.
+
+ -- Loïc Minier <loic.minier@ubuntu.com>  Fri, 10 Jun 2011 18:01:59 +0200
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu14) oneiric; urgency=low
+
+  * Drop libxtst-dev build dependency so syndaemon does not use XRecord,
+    preventing a wide range of crashes in _CallCallbacks. (LP: #774978)
+
+ -- Robert Hooker <sarvatt@ubuntu.com>  Mon, 23 May 2011 10:13:09 -0400
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu13) oneiric; urgency=low
+
+  * Re-add 116_resolution_detect_option.patch as 101_resolution_detect_option.patch:
+    - This patch was introduced in 1.2.2-2ubuntu7 but got erroneously dropped in the
+      merge for 1.3.99+git20110116.0e27ce3a-0ubuntu1.
+      (LP: #327428)
+
+ -- Bryce Harrington <bryce@ubuntu.com>  Fri, 20 May 2011 11:14:44 -0700
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu12) natty; urgency=low
+
+  * syndaemon: Drain spurious events from XRecord connection as a work around
+    for a buggy X server. This keeps syndaemon from busy looping
+    (LP: #754470)
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Thu, 14 Apr 2011 14:15:33 -0400
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu11) natty; urgency=low
+
+  * Fix jumpy cursor on multitouch trackpads (LP: #751525)
+    - Added 123_order_ProcessTouch_for_numFingers.patch
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Tue, 05 Apr 2011 11:03:12 -0400
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu10) natty; urgency=low
+
+  * Ensure touch mask exists before clearing it (LP: #747126)
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Fri, 01 Apr 2011 08:40:59 -0400
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu9) natty; urgency=low
+
+  * Fix handling for SemiMultitouch trackpads with integrated buttons
+    (LP: #736523)
+    - Added 119_active_area_touches.patch
+    - Added 120_active_touches_num_fingers.patch
+    - Added 121_semi-mt_num_fingers.patch
+  * Fix spurious right click events on some trackpads (LP: #742213)
+    - Added 122_revert_pressure_finger_default.patch
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Wed, 30 Mar 2011 10:54:50 -0400
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu8) natty; urgency=low
+
+  * Disable SemiMultitouch devices, we don't support them yet (LP: #723905)
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Tue, 15 Mar 2011 16:16:21 -0400
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu7) natty; urgency=low
+
+  * Set event window correctly for global gesture event
+    (LP: #728696)
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Fri, 04 Mar 2011 15:40:43 -0500
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu6) natty; urgency=low
+
+  * Fix silly typo in patch name
+
+ -- Bryce Harrington <bryce@ubuntu.com>  Wed, 02 Mar 2011 13:06:17 -0800
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu5) natty; urgency=low
+
+  * Add 118_quell_error_msg.patch:  Don't print error "Unable to find a
+    synaptics device" when used on system that doesn't have a touchpad anyway.
+    (LP: #716712)
+  * Renumber patches 200 and 201 to 116 and 117 so are consistent with the
+    other ubuntu patches.
+
+ -- Bryce Harrington <bryce@ubuntu.com>  Wed, 02 Mar 2011 12:16:32 -0800
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu4) UNRELEASED; urgency=low
+
+  * Add in xi 2.1 support and uTouch gesture support
+    - Added 200_xi2.1.patch
+    - Added 201_gestures.patch
+    - Add depends on libmtdev and libutouch-grail
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Sun, 20 Feb 2011 19:23:11 -0500
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu3) natty; urgency=low
+
+  * debian/control: Bump build-depend on xserver-xorg-dev to really, really
+    build against Xserver 1.10
+
+ -- Christopher James Halse Rogers <raof@ubuntu.com>  Tue, 01 Feb 2011 20:46:57 +1100
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu2) natty; urgency=low
+
+  * Rebuild against Xserver 1.10
+
+ -- Bryce Harrington <bryce@ubuntu.com>  Mon, 31 Jan 2011 18:37:55 -0800
+
+xserver-xorg-input-synaptics (1.3.99+git20110116.0e27ce3a-0ubuntu1) natty; urgency=low
+
+  [ Cyril Brulebois ]
+  * Switch to Architecture: any, adding armhf support (Closes: #604672).
+
+  [ Christopher James Halse Rogers ]
+  * Merge from (unreleased) Debian experimental.  Remaining Ubuntu changes:
+    - Split out our synaptics quirks into 51-synaptics-quirks.conf
+    - Add the udev rule back for tagging specific machines to be quirked
+    - Trigger udev in postinst to pick up udev rules
+    - add Depend: on udev
+    - 103_enable_cornertapping.patch: Enable right/middle clicks by
+      tapping in the bottom- and top-right corners.
+    - 104_always_enable_tapping.patch: Enable tapping regardless of the
+      presence of physical buttons.
+    - 106_always_enable_vert_edge_scroll.patch: Enable vertical edge
+      tapping by default even if we enable two-finger scrolling as well.
+    - 114_jumpy_cursor_first_part.patch: Adds a property to enable filtering
+      jumpy cursor problems on some machines.
+    - Specify ‘ubuntu’ branch in gbp.conf
+    - 115_evdev_only.patch: Only bind to /dev/input/event* evdev devices
+      (LP 624985)
+  * Update to git snapshot to fix build against Xserver 1.10 input API
+  * debian/patches/01-synaptics-dont-grab-if-not-on-current-VT.patch:
+    - Refresh for new upstream.
+  * debian/patches/114_jumpy_cursor_first_part.patch:
+    - Refresh for new upstream.  Drop the multi-touch chunk of the quirk,
+      as that is handled by upstream commit a6ca4d25.
+
+ -- Christopher James Halse Rogers <raof@ubuntu.com>  Tue, 25 Jan 2011 20:01:58 +1100
+
+xserver-xorg-input-synaptics (1.3.0-1) experimental; urgency=low
+
+  [ Robert Hooker ]
+  * New upstream release.
+  * Bump xutils-dev requirement for new util-macros.
+
+  [ Cyril Brulebois ]
+  * Remove TODO from xserver-xorg-input-synaptics.docs, dropped upstream.
+
+ -- Cyril Brulebois <kibi@debian.org>  Fri, 19 Nov 2010 23:49:14 +0100
+
+xserver-xorg-input-synaptics (1.2.2-4) experimental; urgency=low
+
+  * Merge xsfbs to get unversioned Provides.
+
+ -- Cyril Brulebois <kibi@debian.org>  Sat, 16 Oct 2010 14:40:22 +0200
+
+xserver-xorg-input-synaptics (1.2.2-3) experimental; urgency=low
+
+  [ Mattia Dongili ]
+  * add dependency to libxtst-dev to enable XRecord support in
+    syndaemon (closes: #598834).
+
+  [ Cyril Brulebois ]
+  * Build against Xserver 1.9.1 rc1.
+
+ -- Cyril Brulebois <kibi@debian.org>  Wed, 13 Oct 2010 00:26:45 +0200
+
+xserver-xorg-input-synaptics (1.2.2-2ubuntu7) natty; urgency=low
+
+  * Add 116_resolution_detect_option.patch: Provide an option to prevent
+    synaptics from communicating the touchpad size to the xserver.  This
+    can be used to solve problems where differences in touchpad and screen
+    dimensions cause the mouse pointer to skip pixels when moving.
+    (LP: #327428)
+
+ -- Bryce Harrington <bryce@ubuntu.com>  Wed, 01 Dec 2010 17:03:44 -0800
+
+xserver-xorg-input-synaptics (1.2.2-2ubuntu6) natty; urgency=low
+
+  * Add quirk for Dell Inspiron 6400 to register taps more reliably.
+    The touchpad hardware occasionally sends invalid (1, 5855) coords
+    for taps, which the driver then interprets as a corner tap, which
+    by default get ignored.  Instead of ignoring them, we treat them
+    as left-button clicks.
+    (LP #133060)
+
+ -- Bryce Harrington <bryce@ubuntu.com>  Wed, 01 Dec 2010 12:32:39 -0800
+
+xserver-xorg-input-synaptics (1.2.2-2ubuntu5) maverick; urgency=low
+
+  * 115_evdev_only.patch was added but never applied. (LP: #624985)
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Sat, 18 Sep 2010 15:19:21 +0200
+
+xserver-xorg-input-synaptics (1.2.2-2ubuntu4) maverick; urgency=low
+
+  [Chase Douglas]
+  * 115_evdev_only.patch:
+    - Prevent non-evdev devices from firing the eventcomm AutoDevProbe callback
+      (LP: #624985)
+
+ -- Bryce Harrington <bryce@ubuntu.com>  Wed, 15 Sep 2010 16:27:29 -0700
+
+xserver-xorg-input-synaptics (1.2.2-2ubuntu3) maverick; urgency=low
+
+  * Rebuild against new Xserver 1.9 ABI
+
+ -- Christopher James Halse Rogers <raof@ubuntu.com>  Mon, 09 Aug 2010 21:47:56 +1000
+
+xserver-xorg-input-synaptics (1.2.2-2ubuntu2) maverick; urgency=low
+
+  * 51-synaptics-quirks.conf, 66-xorg-synaptics.rules:
+    - Put back quirk for Inspiron 1120 which was probably lost in a merge.
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Fri, 06 Aug 2010 12:26:59 +0200
+
+xserver-xorg-input-synaptics (1.2.2-2ubuntu1) maverick; urgency=low
+
+  [ Robert Hooker ]
+  * Merge from debian unstable, remaining changes:
+    - Split out our synaptics quirks into 51-synaptics-quirks.conf
+    - Add the udev rule back for tagging specific machines to be quirked
+    - 103_enable_cornertapping.patch: Enable right/middle clicks by
+      tapping in the bottom- and top-right corners.
+    - 104_always_enable_tapping.patch: Enable tapping regardless of the
+      presence of physical buttons.
+    - 106_always_enable_vert_edge_scroll.patch: Enable vertical edge
+      tapping by default even if we enable two-finger scrolling as well.
+    - 114_jumpy_cursor_first_part.patch: Adds a property to enable filtering
+      jumpy cursor problems on some machines.
+  * Add a dependency on udev.
+
+  [ Christopher James Halse Rogers ]
+  * debian/gbp.conf:
+    - Make git-buildpackage less annoying by specifying “ubuntu” as our debian
+      branch.
+
+ -- Robert Hooker <sarvatt@ubuntu.com>  Mon, 07 Jun 2010 19:07:59 -0400
+
+xserver-xorg-input-synaptics (1.2.2-2) unstable; urgency=low
+
+  * Cherry-pick patch from upstream git to add the xorg.conf.d snippet.
+  * Replace our local copy with that one.
+  * Build-Depend on new xserver-xorg-dev, which lets us install the snippet to
+    /usr/share/X11/xorg.conf.d.
+  * Drop postinst, we don't need to trigger udev anymore.
+  * Sanitize installation of manpage into the package.
+  * Update to new xsfbs, use ${xinpdriver:Depends} in debian/control.
+  * Drop dependency on udev, since we have no udev rules or trigger.
+
+  [ Cyril Brulebois ]
+  * Add myself to Uploaders.
+  * Bump Standards-Version from 3.8.3 to 3.8.4 (no changes needed).
+
+ -- Cyril Brulebois <kibi@debian.org>  Sat, 17 Apr 2010 17:48:26 +0200
+
+xserver-xorg-input-synaptics (1.2.2-1ubuntu2) lucid; urgency=low
+
+  * 10-synaptics.conf: Use 'MatchDevicePath "/dev/input/event*"'.
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Thu, 01 Apr 2010 14:34:20 +0300
+
+xserver-xorg-input-synaptics (1.2.2-1ubuntu1) lucid; urgency=low
+
+  * Merge from Debian unstable. (LP: #546933)
+  * Rewrite old quirks to use ID_INPUT.tags.
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Wed, 31 Mar 2010 00:27:07 +0300
+
+xserver-xorg-input-synaptics (1.2.2-1) unstable; urgency=low
+
+  [ Timo Aaltonen ]
+  * New upstream release.
+  * Add xserver-xorg-input-synaptics-dev for the header and .pc files.
+    (LP: #340340)
+  * Run udevadm trigger on postinst, and depend on udev [linux-any].
+  * Add 10-synaptics.conf.
+  * Drop Ubuntu specific quirks from the udev rules, add a placeholder.
+
+  [ Julien Cristau ]
+  * Add hurd-i386 to the Architecture field.  Requested by Samuel Thibault.
+  * Drop references to hal from debian/NEWS, README.Debian and synaptics(4)
+    (closes: #564549).
+  * Rename the build directory to not include DEB_BUILD_GNU_TYPE for no
+    good reason.  Thanks, Colin Watson!
+
+  [ Brice Goglin ]
+  * Fix reference to the synaptics manpage in README.Debian,
+    closes: #568628.
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Tue, 30 Mar 2010 21:51:15 +0300
+
+xserver-xorg-input-synaptics (1.2.1-1) unstable; urgency=low
+
+  [ Timo Aaltonen ]
+  * New upstream release.
+
+  [ Cyril Brulebois ]
+  * Add ${misc:Depends} to Depends.
+  * Remove hardcoded libxi6 from Depends, and wrap them.
+  * Upload to unstable.
+
+ -- Cyril Brulebois <kibi@debian.org>  Fri, 08 Jan 2010 00:55:04 +0100
+
+xserver-xorg-input-synaptics (1.2.0-3ubuntu1) lucid; urgency=low
+
+  * Merge from Debian experimental, remaining changes:
+    - 103_enable_cornertapping.patch: Enable right/middle clicks by
+      tapping in the bottom- and top-right corners.
+    - 104_always_enable_tapping.patch: Enable tapping regardless of the
+      presence of physical buttons.
+    - 106_always_enable_vert_edge_scroll.patch: Enable vertical edge 
+      tapping by default even if we enable two-finger scrolling as well.
+  * Disabled until fixed to apply and work:
+    - 114_jumpy_cursor_first_part.patch
+  * Dropped, using udev now:
+    - 115_jumpy_cursor_second_part.patch
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Mon, 07 Dec 2009 22:58:38 +0200
+
+xserver-xorg-input-synaptics (1.2.0-3) experimental; urgency=low
+
+  [ Julien Cristau ]
+  * Install an udev rule instead of an fdi file on linux.
+  * Build against xserver 1.7 (closes: #549109).
+  * Add sh4 and kfreebsd-{amd64,i386} to the arch list (closes: #557881,
+    #559401).
+
+  [ Cyril Brulebois ]
+  * Upload to experimental.
+
+ -- Cyril Brulebois <kibi@debian.org>  Sat, 05 Dec 2009 21:27:48 +0100
+
+xserver-xorg-input-synaptics (1.2.0-2) unstable; urgency=low
+
+  [ Mattia Dongili ]
+  * Negate the match on keyboard capabilities in the default fdi file
+    (closes: #557252).
+
+ -- Mattia Dongili <malattia@debian.org>  Sat, 21 Nov 2009 13:00:37 +0900
+
+xserver-xorg-input-synaptics (1.2.0-1) unstable; urgency=low
+
+  [ Mattia Dongili ]
+  * Finally package the new upstream release.
+  * Remove 02-mention-tapping-in-manpage-notes.patch now included upstream.
+  * All the SHM code has been removed from synclient and syndaemon
+    (closes: 523652 and closes: 534333 and also closes: #548357). Also add a
+    note in the NEWS file.
+  * Do not use the synaptics driver for devices advertising keyboard
+    capabilities (closes: 524130).
+  * Refresh patch 01-synaptics-dont-grab-if-not-on-current-VT.patch.
+  * Add versioned Build-Depends on libxi-dev (closes: #538299).
+  * The driver now handles duplicate configuration in both an fdi file and
+    xorg.conf, see http://bugs.freedesktop.org/show_bug.cgi?id=24814
+    (closes: #532995).
+  * Make lintian happier: update Standard-Version and debhelper dependency.
+
+ -- Mattia Dongili <malattia@debian.org>  Thu, 19 Nov 2009 21:24:49 +0900
+
+xserver-xorg-input-synaptics (1.1.2-1ubuntu7) karmic; urgency=low
+
+  * debian/patches:
+    - 115_jumpy_cursor_second_part.patch: Set AreaBottomEdge to
+      4100 for Inspiron 1011 and Inspiron 1012. 
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Wed, 14 Oct 2009 16:55:16 +0200
+
+xserver-xorg-input-synaptics (1.1.2-1ubuntu6) karmic; urgency=low
+
+  * debian/patches:
+    - Split 114_jumpy_cursor_threshold.patch into 
+      114_jumpy_cursor_first_part.patch and
+      115_jumpy_cursor_second_part.patch so as to keep options
+      which belong in the fdi file separate from the code.
+    - 115_jumpy_cursor_second_part.patch:
+      + Add quirk for Inspiron 1012.
+    - Remove 114_jumpy_cursor_threshold.patch_old.
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Mon, 05 Oct 2009 12:09:14 +0200
+
+xserver-xorg-input-synaptics (1.1.2-1ubuntu5) karmic; urgency=low
+
+  * Add lpia to the list of Architectures.  LP: #413579.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Mon, 07 Sep 2009 10:44:54 -0700
+
+xserver-xorg-input-synaptics (1.1.2-1ubuntu4) karmic; urgency=low
+
+  * debian/patches:
+    - 112_jumpy_cursor_quirks.patch:
+      + Drop patch.
+    - 114_jumpy_cursor_threshold.patch:
+      + Replace 112_jumpy_cursor_quirks.patch.
+      + Make the threshold an XInput property.
+      + Add quirk for Dell Mini10v and for HP Mini 1000 in the
+        fdi file.
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Wed, 02 Sep 2009 10:44:28 +0200
+
+xserver-xorg-input-synaptics (1.1.2-1ubuntu3) karmic; urgency=low
+
+  * debian/patches:
+    - 112_jumpy_cursor_quirks.patch: Make sure that the quirk
+      affects only the Dell Mini 10v (LP: #405943).
+    - 103_enable_cornertapping.patch: Don't trigger middle click
+      when tapping on the top right corner button (LP: #386017).
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Mon, 17 Aug 2009 10:31:14 +0200
+
+xserver-xorg-input-synaptics (1.1.2-1ubuntu2) karmic; urgency=low
+
+  * debian/patches:
+    - 105_correct_multifinger_click.patch: Drop patch as it breaks
+      the expected behavior for multitouch clicking (LP: #320585).
+    - 111_add_active_area.patch: Backport "Synaptics Area" property
+      from upstream (LP: #402863).
+    - 112_jumpy_cursor_quirks.patch: Add Quirk for Dell Mini 10v 
+      touchpad (LP: #402863).
+    - 113_add_capabilities.patch: Backport read-only "Synaptics 
+      Capabilities" property from upstream.
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Wed, 22 Jul 2009 10:42:11 +0200
+
+xserver-xorg-input-synaptics (1.1.2-1ubuntu1) karmic; urgency=low
+
+  * Merge from Debian unstable, Remaining changes:
+    - Restore the Ubuntu patch series. (LP: #378391)
+     - 103_enable_cornertapping.patch: Enable right/middle clicks by
+       tapping in the bottom- and top-right corners.
+     - 104_always_enable_tapping.patch: Enable tapping regardless of the
+       presence of physical buttons.
+     - 105_correct_multifinger_click.patch: Swap the right/middle clicks
+       generated by multi-finger tapping.
+     - 106_always_enable_vert_edge_scroll.patch: Enable vertical edge 
+       tapping by default even if we enable two-finger scrolling as well.
+     - 110_remove_bound_auto_adjust.patch: Don't auto-adjust to bounds of
+       the hardware scroll area.
+
+ -- Robert Hooker (Sarvatt) <sarvatt@gmail.com>  Sun, 28 Jun 2009 18:13:52 -0400
+
+xserver-xorg-input-synaptics (1.1.2-1) unstable; urgency=low
+
+  [ Mattia Dongili ]
+  * New upstream release.
+  * Replace 02-mention-tapping-in-manpage-notes.patch with the patch accepted
+    upstream (1f499d).
+  * Refresh patch 01-synaptics-dont-grab-if-not-on-current-VT.patch.
+  * Update README.Debian's date signature with the last modification time
+    (closes: #531999).
+
+ -- Mattia Dongili <malattia@debian.org>  Sat, 06 Jun 2009 13:32:59 +0900
+
+xserver-xorg-input-synaptics (1.1.1~git20090510-1) unstable; urgency=low
+
+  [ David Nusinow ]
+  * Add NEWS.Debian entry about enabling tapping again (closes: #497523)
+
+  [ Mattia Dongili ]
+  * Link to xserver-xorg reportbug script
+  * Merge current upstream fixes:
+    - Edge calculation fixes bring back vertical scrolling (closes: #523946)
+    - Fix float properties handling on 64bit arches (closes: #525473)
+  * Remove Suggests for [kq]synaptics which are not in the repository anymore
+    (closes: #498299) and suggest gpointing-device-settings (replacement of
+    gsynaptics) and touchfreeze instead
+  * Remove the upstream NEWS file which doesn't exist anymore
+  * Updates to the README.Debian to make sure we mention how to customize the
+    fdi configuration
+
+ -- Mattia Dongili <malattia@debian.org>  Mon, 11 May 2009 23:08:15 +0900
+
+xserver-xorg-input-synaptics (1.1.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Upload to unstable.
+
+ -- Julien Cristau <jcristau@debian.org>  Thu, 09 Apr 2009 01:34:19 +0100
+
+xserver-xorg-input-synaptics (0.99.3-3) experimental; urgency=low
+
+  [ Julien Cristau ]
+  * Get rid of the xfree86-driver-synaptics transitional package.  It was
+    already a transitional package in etch.
+
+  [ Timo Aaltonen ]
+  * Rename the source package to xserver-xorg-input-synaptics, since 
+    it's hosted on freedesktop now and to be consistent with the rest
+    of the input drivers.
+
+ -- Julien Cristau <jcristau@debian.org>  Mon, 26 Jan 2009 09:08:10 +0100
+
+xfree86-driver-synaptics (0.99.3-2ubuntu4) jaunty; urgency=low
+
+  * debian/patches/110_remove_bound_auto_adjust.patch:
+    - Small change to make sure that the driver does not
+      auto-adjust to the bounds of the hardware scroll area
+      as this causes problem to the touchpads of Acer Aspire
+      One units (LP: #320632).
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Thu, 26 Mar 2009 17:00:52 +0100
+
+xfree86-driver-synaptics (0.99.3-2ubuntu3) jaunty; urgency=low
+
+  * debian/patches/109_override_alps_settings.patch:
+    - Add customised settings for ALPS touchpad (LP: #320632):
+      o Enable vertTwoFingerScroll by default.
+      o Set RightEdge to 900.
+      o Set ClickTime to 0.
+      o Set SingleTapTimeout to 0.
+      o Set MinSpeed to 0.45.
+      o Set MaxSpeed to 0.75.
+  * debian/patches/107_reduce_cursor_speed.patch:
+    - drop and merge with 109_override_alps_settings.patch.
+
+ -- Alberto Milone (tseliot) <albertomilone@alice.it>  Sat, 28 Feb 2009 10:20:08 +0100
+
+xfree86-driver-synaptics (0.99.3-2ubuntu2) jaunty; urgency=low
+
+  [Alberto Milone]
+  * debian/patches/105_always_enable_multifinger_click.patch:
+    - Drop patch
+  * debian/patches/105_correct_multifinger_click.patch:
+    - Fix inverted buttons
+    - Restore ability to drag and drop with physical buttons
+    (LP: #320632)
+
+ -- Alberto Milone (tseliot) <albertomilone@alice.it>  Sat, 31 Jan 2009 18:48:37 +0100
+
+xfree86-driver-synaptics (0.99.3-2ubuntu1) jaunty; urgency=low
+
+  * Merge from Debian experimental.
+  * Revive syndaemon_xinput_props.patch, now refreshed as 108.
+    Thanks to John S. Gruber for noticing it was dropped in haste.
+    (LP: #321355)
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Mon, 26 Jan 2009 09:57:07 +0200
+
+xfree86-driver-synaptics (0.99.3-2) experimental; urgency=low
+
+  * Update our copy of xsfbs to get a fixed serverabi rule and generate
+    Provides/Depends correctly.
+  * Refresh patch 01-synaptics-dont-grab-if-not-on-current-VT.patch.
+
+ -- Julien Cristau <jcristau@debian.org>  Mon, 26 Jan 2009 04:43:08 +0100
+
+xfree86-driver-synaptics (0.99.3-1ubuntu2) jaunty; urgency=low
+
+  [ Alberto Milone (tseliot) ]
+  * 103_enable_cornertapping.patch:
+    - Update patch for the new upstream release. (LP: #320632)
+  * 104_always_enable_tapping.patch:
+    - Enable tapping even when a physical left button is available. (LP: #320585)
+  * 105_always_enable_multifinger_click.patch:
+    - Enable multifinger click (where available) even when physical right/middle
+      buttons are available. (LP: #320585)
+  * 106_always_enable_vert_edge_scroll.patch:
+    - Enable scrolling even when doubletap is available. (LP: #320632)
+  * 107_reduce_cursor_speed.patch:
+    - Reduce the cursor speed. (LP: #320639)
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Sat, 24 Jan 2009 20:29:04 +0200
+
+xfree86-driver-synaptics (0.99.3-1ubuntu1) jaunty; urgency=low
+
+  * Merge from Debian experimental.
+  * Drop obsolete patches:
+    -101_no_horizscroll.patch
+    -102_dont_check_abi.diff
+    -104_syndaemon_xinput_props.patch
+    -105_no_bcm5974_shmconfig.patch
+  * Update 103_enable_cornertapping.patch to apply.
+
+ -- Timo Aaltonen <tjaalton@ubuntu.com>  Fri, 23 Jan 2009 14:30:34 +0200
+
+xfree86-driver-synaptics (0.99.3-1) experimental; urgency=low
+
+  [ Timo Aaltonen ]
+  * Run autoreconf at build time; build-depend on automake, libtool and
+    xutils-dev.
+
+  [ Julien Cristau ]
+  * Add watch file.
+  * New upstream release.
+  * Build against xserver 1.6 rc1.
+  * Handle parallel builds.
+
+ -- Julien Cristau <jcristau@debian.org>  Wed, 21 Jan 2009 22:27:10 +0100
+
+xfree86-driver-synaptics (0.15.2-0ubuntu5) intrepid; urgency=low
+
+  * Cherry-picked commit db6e63, "Return correctly on successful property
+    setting"
+  * debian/patches/104_syndaemon_xinput_props.patch:  Add support for XInput
+    device properties to syndaemon.
+  * debian/patches/105_no_bcm5974_shmconfig.patch: Remove the SHMConfig
+    enabling line from the bcm5974 section of the fdi file. (LP: #282004)
+
+ -- William Grant <wgrant@ubuntu.com>  Mon, 13 Oct 2008 21:48:05 +1100
+
+xfree86-driver-synaptics (0.15.2-0ubuntu4) intrepid; urgency=low
+
+  * Cherry-picked commit 355e845, "Adjust to new property API".
+    (LP: #274728)
+  * Refresh patches 101 & 102.
+  * Bump the build-dep on libxi-dev and xserver-xorg-dev.
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Mon, 29 Sep 2008 10:23:16 +0300
+
+xfree86-driver-synaptics (0.15.2-0ubuntu3) intrepid; urgency=low
+
+  * Also build for lpia; LP: #275158.
+
+ -- Loic Minier <lool@dooz.org>  Sat, 27 Sep 2008 16:11:42 +0200
+
+xfree86-driver-synaptics (0.15.2-0ubuntu2) intrepid; urgency=low
+
+  [ Alberto Milone ]
+  * 103_enable_cornertapping.patch:
+    - Revert some defaults back to previous values, to fix corner tapping
+      and MaxTapMove. (LP: #271823)
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Tue, 23 Sep 2008 10:46:44 +0300
+
+xfree86-driver-synaptics (0.15.2-0ubuntu1) intrepid; urgency=low
+
+  * New upstream release. (LP: #262276, #268071, #247433, #262305)
+  * Drop 101_ubuntu.diff, superseded by input properties.
+  * Drop 103_fix_off_by_one.diff, applied upstream.
+  * 101_no_horizscroll.patch:
+    - Disable horizontal scrolling by defaulting to FALSE instead of changing
+      the fdi file.
+  * 102_dont_check_abi.diff:
+    - Remove one more check from src/synaptics.c, which was added recently.
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Fri, 12 Sep 2008 01:32:57 +0300
+
+xfree86-driver-synaptics (0.15.0+git20080820-1ubuntu5) intrepid; urgency=low
+
+  * Rebuild to fix dependency against xserver-xorg-core.
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Wed, 03 Sep 2008 17:45:20 +0300
+
+xfree86-driver-synaptics (0.15.0+git20080820-1ubuntu4) intrepid; urgency=low
+
+  * Run autoreconf at build time; build-depend on automake, libtool and
+    xutils-dev.
+  * Enable 102 again, since the problem with it was that Makefile.in was
+    not regenerated.
+  * Add 103_fix_off_by_one.diff to fix the number of arguments for 
+    properties. Thanks William Grant!
+  * Pull 3d39926875446e from upstream/master: 
+    - Re-enable TapButtons and CornerButtons to work by default.
+    (LP: #262292)
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Sat, 30 Aug 2008 18:20:14 +0300
+
+xfree86-driver-synaptics (0.15.0+git20080820-1ubuntu3) intrepid; urgency=low
+
+  * Disable 102 for now, since the property stuff doesn't seem to be 
+    working right. (LP: #262986)
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Sat, 30 Aug 2008 16:52:51 +0300
+
+xfree86-driver-synaptics (0.15.0+git20080820-1ubuntu2) intrepid; urgency=low
+
+  * 102_dont_check_abi.diff:
+    - Don't check ABI_MAJOR, since we have all that's needed for 
+      properties.
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Sat, 30 Aug 2008 13:27:54 +0300
+
+xfree86-driver-synaptics (0.15.0+git20080820-1ubuntu1) intrepid; urgency=low
+
+  * Merge from Debian experimental, remaining changes:
+    - debian/control:
+      + Drop the dummy package
+      + Change the maintainer address
+    - debian/patches:
+      101_ubuntu.diff
+      + Various fixes, split this.
+    - fdi/11-x11-synaptics.fdi
+      + Modify to disable horizontal scrolling like our dexconf used to do.
+  * Pull in support for input properties.
+  * Drop 102_polling.diff, since it's upstream.
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Thu, 28 Aug 2008 02:09:47 +0300
+
+xfree86-driver-synaptics (0.15.0+git20080820-1) experimental; urgency=low
+
+  * Update to latest upstream git
+  * Remove patches merged upstream:
+    - 02-scandir-dev-input.patch
+    - 03-escape-dashes-in-manpages.patch
+    - 04-delibcwrap.patch
+  * Update debian/rules (taken from the evdev driver) for the autotoolized build
+  * Refresh 01-synaptics-dont-grab-if-not-on-current-VT.patch
+  * Cherry pick appletouch support from upstream
+
+ -- Mattia Dongili <malattia@debian.org>  Sun, 24 Aug 2008 17:44:12 +0900
+
+xfree86-driver-synaptics (0.14.7~git20070706-2.2) experimental; urgency=low
+
+  * Build against xserver 1.5 rc5.
+
+ -- Julien Cristau <jcristau@debian.org>  Mon, 14 Jul 2008 16:14:31 +0200
+
+xfree86-driver-synaptics (0.14.7~git20070706-3) unstable; urgency=low
+
+  * Add appletouch support in the fdi file (Closes: #495799).
+  * Install the fdi file with 0644 permissions.
+  * Updated xserver-xorg-input-synaptics.README.Debian to mention automatic
+    configuration and show a clearer example for the Server (manual)
+    configuration (Closes: #443995 and also Closes: #492120).
+
+ -- Mattia Dongili <malattia@debian.org>  Wed, 27 Aug 2008 23:05:42 +0900
+
+xfree86-driver-synaptics (0.14.7~git20070706-2.1.lenny1) unstable; urgency=low
+
+  * Add 10-synaptics.fdi, installed in /usr/share/hal/fdi/policy/20thirdparty,
+    to get the driver loaded automatically if a touchpad is detected
+    (closes: #464662).
+  * Add patch from xorg git to fix usage of the EVIOCGBIT ioctl()
+    (closes: #493101).
+
+ -- Julien Cristau <jcristau@debian.org>  Mon, 18 Aug 2008 01:41:39 +0200
+
+xfree86-driver-synaptics (0.14.7~git20070706-2.1ubuntu4) intrepid; urgency=low
+
+  * Fix the fdi file to disable horizontal scrolling like dexconf used
+    to do.
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Mon, 18 Aug 2008 16:27:30 +0300
+
+xfree86-driver-synaptics (0.14.7~git20070706-2.1ubuntu3) intrepid; urgency=low
+
+  * Enable input-hotplug: install 10-synaptics.fdi in 
+    /usr/share/hal/fdi/policy/20thirdparty.
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Fri, 01 Aug 2008 09:58:32 +0300
+
+xfree86-driver-synaptics (0.14.7~git20070706-2.1ubuntu2) intrepid; urgency=low
+
+  * Rebuild against the new xserver-xorg-dev.
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Mon, 07 Jul 2008 17:45:08 +0300
+
+xfree86-driver-synaptics (0.14.7~git20070706-2.1ubuntu1) intrepid; urgency=low
+
+  * Merge from debian unstable, remaining changes:
+    - Rename the source
+    - debian/control:
+      + Drop the dummy package
+      + Change the maintainer address.
+      + Add quilt to build-deps.
+    - Makefile: Add -fno-stack-protector.
+    - debian/patches:
+      100_fix_vt_handling.diff
+      + Something is opening the device even after we've switched away
+        from the VT. The easiest way to handle this is to refuse to open
+        unless we're on the current VT.
+      101_ubuntu.diff
+      + Various fixes, split this.
+      102_polling.diff
+      + Added a patch which increases the polling timeout to save some
+        battery life
+
+ -- Bryce Harrington <bryce@ubuntu.com>  Mon, 09 Jun 2008 22:27:20 -0700
+
+xfree86-driver-synaptics (0.14.7~git20070706-2.1) unstable; urgency=low
+
+  * Non-maintainer upload, with Mattia's agreement.
+  * Add patch to fix the build with xserver 1.5, which removed the libc
+    wrapper (closes: #471494).
+  * Add armel and armeb to the Architecture field (closes: #461551).
+
+ -- Julien Cristau <jcristau@debian.org>  Mon, 02 Jun 2008 12:21:39 +0200
+
+xfree86-driver-synaptics (0.14.7~git20070706-2) unstable; urgency=low
+
+  * 01-synaptics-dont-grab-if-not-on-current-VT.patch from Matthew Garrett in
+    Ubuntu's 0.14.6-0ubuntu10 (Closes: #437273)
+  * 02-scandir-dev-input.patch to scan all the event devices in /dev/input
+    (Closes: #455994)
+  * update xsfbs
+
+ -- Mattia Dongili <malattia@debian.org>  Tue, 01 Jan 2008 12:38:13 +0900
+
+xfree86-driver-synaptics (0.14.7~git20070706-1ubuntu4) hardy; urgency=low
+
+  * 102_polling.diff:
+    - Added a patch which increases the polling timeout to save some
+      battery life (LP: #184398).
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Wed, 27 Feb 2008 11:58:01 +0200
+
+xfree86-driver-synaptics (0.14.7~git20070706-1ubuntu3) hardy; urgency=low
+
+  * debian/patches/101_ubuntu.diff:
+    - extend to support disabling the touchpad
+    - remove unused bits of the patch
+
+ -- Scott James Remnant <scott@ubuntu.com>  Tue, 22 Jan 2008 13:40:07 +0000
+
+xfree86-driver-synaptics (0.14.7~git20070706-1ubuntu2) hardy; urgency=low
+
+  * Change the source name to match Debian.
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Fri, 11 Jan 2008 11:59:09 +0200
+
+xserver-xorg-input-synaptics (0.14.7~git20070706-1ubuntu1) hardy; urgency=low
+
+  * Merge with Debian unstable, remaining changes:
+    - Rename the source
+    - debian/control:
+      + Drop the dummy package
+      + Change the maintainer address.
+      + Add quilt to build-deps.
+    - Makefile: Add -fno-stack-protector.
+    - debian/patches:
+      100_fix_vt_handling.diff
+      + Something is opening the device even after we've switched away
+        from the VT. The easiest way to handle this is to refuse to open
+        unless we're on the current VT.
+      101_ubuntu.diff
+      + Various fixes, split this.
+
+ -- Timo Aaltonen <tepsipakki@ubuntu.com>  Fri, 09 Nov 2007 02:23:16 +0200
+
+xfree86-driver-synaptics (0.14.7~git20070706-1) unstable; urgency=low
+
+  * build with xserver-xorg-core 1.4 (Closes: #442314)
+  * update to current git
+  * update xsfbs
+
+ -- Mattia Dongili <malattia@debian.org>  Mon, 17 Sep 2007 15:25:56 +0900
+
+xfree86-driver-synaptics (0.14.7~git20070517-2) unstable; urgency=low
+
+  * use xsfbs to build the driver and automagically get xserver-xorg deps
+    (Closes: #425818)
+
+ -- Mattia Dongili <malattia@debian.org>  Thu, 31 May 2007 14:17:31 +0900
+
+xfree86-driver-synaptics (0.14.7~git20070517-1) unstable; urgency=low
+
+  * git snapshot of the driver:
+    - from commit e6595886d7ae3a1730cd0d9f86fd0f305c0743c2
+      "[...] synaptics, alps and appletouch pads all work approximately
+      identically without requiring model-specific configuration"
+      (Closes: #351621) (Closes: #406499)
+    - from commit 88211ca60be7cc74015ad4158722e5950884bd78
+      "Don't match wacom tablets in the event device probing."
+      (Closes: #383711)
+    - from commit 473912f50ffd2b26bd2f638f9d87f86cf60e2dd6
+      "Add a config option to prevent the driver from grabbing the event
+      device for exclusive use" (Closes: #380705)
+    - from commit 2d06ab1d2b3170b6fa44b945376b2ad4cd682af9
+      "Allow to easily switch between move and scroll"
+      (Closes: #411266)
+  * set Maintaner to the XSF and me as Uploader
+
+ -- Mattia Dongili <malattia@debian.org>  Thu, 17 May 2007 19:34:22 +0900
+
+xfree86-driver-synaptics (0.14.6-2) unstable; urgency=low
+
+  * Build using Debian's xserver-xorg-dev instead of the package's
+    provided subtree (which is taken from XFree86-4.3.0).
+ 
+ -- Mattia Dongili <malattia@debian.org>  Wed, 03 Jan 2007 18:38:40 +0100
+
+xserver-xorg-input-synaptics (0.14.6-0ubuntu10) gutsy; urgency=low
+
+  * Bodge around LP: #68370. Something is opening the device even after 
+    we've switched away from the VT. The easiest way to handle this is 
+    to refuse to open unless we're on the current VT.
+
+ -- Matthew Garrett <mjg59@srcf.ucam.org>  Tue, 09 Oct 2007 21:08:23 +0100
+
+xserver-xorg-input-synaptics (0.14.6-0ubuntu9) gutsy; urgency=low
+
+  * Actually include the parameter setting code
+
+ -- Matthew Garrett <mjg59@srcf.ucam.org>  Mon, 17 Sep 2007 17:56:53 +0100
+
+xserver-xorg-input-synaptics (0.14.6-0ubuntu8) gutsy; urgency=low
+
+  * Fix the build system so it works properly on 64-bit platforms
+  * Add initial support for setting some paramaters via X
+
+ -- Matthew Garrett <mjg59@srcf.ucam.org>  Sun, 16 Sep 2007 18:18:17 +0100
+
+xserver-xorg-input-synaptics (0.14.6-0ubuntu7) feisty; urgency=low
+
+  * X and Y size calculations were inverted for edge scrolling
+  * Additionally, the values were scaled incorrectly (LP: #95858)
+
+ -- Matthew Garrett <mjg59@srcf.ucam.org>  Sun, 25 Mar 2007 16:13:42 +0100
+
+xserver-xorg-input-synaptics (0.14.6-0ubuntu6) feisty; urgency=low
+
+  * Set defaults based on values the kernel gives us, rather than making stuff
+    up in an utterly miserable manner. This upload brought to you by Milton
+    Nero, a deeply flavoured oat stout. 
+
+ -- Matthew Garrett <mjg59@srcf.ucam.org>  Sat, 24 Mar 2007 15:08:26 +0000
+
+xserver-xorg-input-synaptics (0.14.6-0ubuntu5) feisty; urgency=low
+
+  * Attempt to set more reasonable defaults for appletouch devices. Better
+    now, but still not perfect. 
+
+ -- Matthew Garrett <mjg59@srcf.ucam.org>  Sat, 24 Mar 2007 02:44:11 +0000
+
+xserver-xorg-input-synaptics (0.14.6-0ubuntu4) feisty; urgency=low
+
+  * debian/control: Update maintainer fields according to debian-
+    maintainer-field spec.
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 12 Mar 2007 14:58:39 +0000
+
+xserver-xorg-input-synaptics (0.14.6-0ubuntu3) edgy; urgency=low
+
+  * Add the ugly ALPS hack back
+
+ -- Matthew Garrett <mjg59@srcf.ucam.org>  Mon,  7 Aug 2006 22:55:42 +0100
+
+xserver-xorg-input-synaptics (0.14.6-0ubuntu2) edgy; urgency=low
+
+  * Disable Stack Protection for this package for now (module loading fails
+    due to missing symbols)
+
+ -- Rodrigo Parra Novo <rodarvus@ubuntu.com>  Mon, 31 Jul 2006 09:39:16 -0300
+
+xserver-xorg-input-synaptics (0.14.6-0ubuntu1) edgy; urgency=low
+
+  * New Upstream release
+  * New versioned Build-Depends on xserver-xorg-dev (>= 1.1.1)
+  * New versioned Build-Depends on xserver-xorg-core (>= 1.1.1)
+  * Fixed debian/rules to match current Makefile rules (based on Debian
+    xfree86-driver-synaptics package)
+  * Fixed Makefile and manual page, also based on Debian xfree86-driver-synaptics
+  * Dropped Alps patches - unfortunately they don't apply anymore
+
+ -- Rodrigo Parra Novo <rodarvus@ubuntu.com>  Thu, 27 Jul 2006 12:18:18 -0300
+
+xfree86-driver-synaptics (0.14.5-1) unstable; urgency=low
+
+  * New upstream release.
+  * Motion with pressure sensitivity merged upstream. (Closes: #337350)
+ 
+ -- Mattia Dongili <malattia@debian.org>  Sun, 04 Jun 2006 19:45:35 +0200
+
+xfree86-driver-synaptics (0.14.4-5) unstable; urgency=low
+
+  * Added m68k to the Achitecture: field.
+ 
+ -- Mattia Dongili <malattia@debian.org>  Sun, 30 Apr 2006 20:17:23 +0200
+ 
+xfree86-driver-synaptics (0.14.4-4) unstable; urgency=low
+
+  * Upload to unstable (Closes: #362108)
+  * Added xorg-driver-synaptics to the Provides, Conflicts,
+    Replaces list to ease Ubuntu mixed migrations (et al.)
+ 
+ -- Mattia Dongili <malattia@debian.org>  Mon, 27 Mar 2006 18:16:48 +0200
+ 
+xfree86-driver-synaptics (0.14.4-3) experimental; urgency=low
+  
+  * building the driver as a shared object, this fixes a lintian warning
+    and better fits in the modular xorg structure.
+ 
+ -- Mattia Dongili <malattia@debian.org>  Wed, 22 Mar 2006 22:33:39 +0100
+ 
+xfree86-driver-synaptics (0.14.4-2) experimental; urgency=low
+  
+  * New binary package name to follow modular xorg naming.
+  * Now suggesting the driver's graphical configuration tools.
+  * README.Debian: removed note about the 2.6.8 patch I removed recently.
+ 
+ -- Mattia Dongili <malattia@debian.org>  Sun, 19 Mar 2006 17:01:09 +0100
+ 
+xfree86-driver-synaptics (0.14.4-1) unstable; urgency=low
+  
+  * New upstream version.
+  * Upstream added an -K command line option to syndaemon to ignore
+    Modifier+AnyKey combos (closes: #335888).
+  * Removed the rediffed patch against Debian's 2.6.8 kernel.
+ 
+ -- Mattia Dongili <malattia@debian.org>  Mon, 07 Nov 2005 22:54:40 +0100
+
+xserver-xorg-input-synaptics (0.14.3+seriouslythistime-0ubuntu4) dapper; urgency=low
+
+  * New versioned Build-Depends on xserver-xorg-dev (>= 1.1.1)
+  * New versioned Build-Depends on xserver-xorg-core (>= 1.1.1)
+
+ -- Rodrigo Parra Novo <rodarvus@ubuntu.com>  Thu, 27 Jul 2006 11:59:57 -0300
+
+xserver-xorg-input-synaptics (0.14.3+seriouslythistime-0ubuntu3) dapper; urgency=low
+
+  * Horrible workaround to avoid massive ALPS-related suckage
+
+ -- Matthew Garrett <mjg59@srcf.ucam.org>  Wed, 22 Mar 2006 21:02:26 +0000
+
+xserver-xorg-input-synaptics (0.14.3+seriouslythistime-0ubuntu2) dapper; urgency=low
+
+  * Build with -fPIC to fix FTBFS
+
+ -- Tollef Fog Heen <tfheen@ubuntu.com>  Wed, 11 Jan 2006 16:20:57 +0100
+
+xserver-xorg-input-synaptics (0.14.3+seriouslythistime-0ubuntu1) dapper; urgency=low
+
+  * Bounce straight back to 0.14.3.
+
+ -- Daniel Stone <daniel.stone@ubuntu.com>  Tue, 25 Oct 2005 19:12:28 +1000
+
+xorg-driver-synaptics (0.14.3+revertedto+0.13.6-0ubuntu3) breezy; urgency=low
+
+  * Change dependency on xserver-xorg to -core (closes: Ubuntu#15902).
+
+ -- Daniel Stone <daniel.stone@ubuntu.com>  Fri, 16 Sep 2005 17:42:34 +1000
+
+xorg-driver-synaptics (0.14.3+revertedto+0.13.6-0ubuntu2) breezy; urgency=low
+
+  * Build client utilities without includes from Xincludes.
+
+ -- Daniel Stone <daniel.stone@ubuntu.com>  Wed,  7 Sep 2005 16:31:51 +1000
+
+xorg-driver-synaptics (0.14.3+revertedto+0.13.6-0ubuntu1) breezy; urgency=low
+
+  * Revert to old upstream version for preview at least, as the new was quite
+    catastrophically broken with ALPS.  Fixed some, broke a lot (closes:
+    Ubuntu#14480).
+  * Backport the confused-finger-count patch.
+  * Hillariously, dpkg-source ignores deleted files, which means that
+    Xincludes stuff keeps getting resurrected.  Change $(X_INCLUDES_ROOT) to
+    /usr in include paths (except for the server DDK) to ensure that we get
+    the installed headers, not the braindead included ones.
+
+ -- Daniel Stone <daniel.stone@ubuntu.com>  Wed,  7 Sep 2005 11:07:06 +1000
+
+xorg-driver-synaptics (0.14.3-1ubuntu2) breezy; urgency=low
+
+  * Move to /usr/lib/xorg for the modular server, and build-depend on
+    xserver-xorg-dev.
+  * Switch dependency to xserver-xorg-core, version it.
+  * Start building synaptics_drv.so instead of .o.
+
+ -- Daniel Stone <daniel.stone@ubuntu.com>  Fri,  2 Sep 2005 12:08:27 +1000
+
+xorg-driver-synaptics (0.14.3-1ubuntu1) breezy; urgency=low
+
+  * Merge with Debian.
+  * New upstream release:
+    + Fixes confused finger count with low pressure on some HPs (closes:
+      Ubuntu#14155).
+  * Remove unnecessary files in Xincludes from x11proto-core-dev and
+    x11proto-input-dev.
+
+ -- Daniel Stone <daniel.stone@ubuntu.com>  Thu,  1 Sep 2005 16:24:27 +1000
+ 
+xfree86-driver-synaptics (0.14.3-1) unstable; urgency=low
+  
+  * New upstream version.
+  * Updated README.Debian to reflect newer X.Org dependencies.
+ 
+ -- Mattia Dongili <malattia@debian.org>  Fri, 22 Jul 2005 21:17:37 +0200
+ 
+xfree86-driver-synaptics (0.14.2-2) unstable; urgency=low
+  
+  * Can now install together with xorg (closes: #318118).
+ 
+ -- Mattia Dongili <malattia@debian.org>  Wed, 29 Jun 2005 12:00:00 +0200
+ 
+xfree86-driver-synaptics (0.14.2-1) unstable; urgency=low
+  
+  * New upstream release.
+  * Added notes to README.Debian to run syndaemon from .xinitrc 
+    (closes: #296485)
+ 
+ -- Mattia Dongili <malattia@debian.org>  Wed, 18 May 2005 00:24:14 +0200
+ 
+xfree86-driver-synaptics (0.14.1-1) unstable; urgency=low
+  
+  * New upstream release.
+ 
+ -- Mattia Dongili <malattia@debian.org>  Tue, 15 Mar 2005 22:33:25 +0100
+ 
+xfree86-driver-synaptics (0.14.0-1) unstable; urgency=low
+
+  * New upstream release:
+    - now correcly removes the shared memory segment when exiting X 
+      (closes: #263382).
+
+ -- Mattia Dongili (ma.d.) <dongili@supereva.it>  Mon, 10 Jan 2005 21:14:44 +0100
+
+xfree86-driver-synaptics (0.13.6-2) unstable; urgency=low
+
+  * Install in /usr/X11R6/lib as all the xfree drivers on 64 bit archs.  (closes: #280658)
+  * Provided an alternative patch for debian-kernel users. (closes: #282359)
+
+ -- Mattia Dongili (ma.d.) <dongili@supereva.it>  Sat, 18 Dec 2004 20:07:15 +0100
+
+xfree86-driver-synaptics (0.13.6-1) unstable; urgency=low
+  
+  * New upstream.
+ 
+ -- Mattia Dongili (ma.d.) <dongili@supereva.it>  Sun, 24 Oct 2004 22:14:32 +0200
+
+xfree86-driver-synaptics (0.13.5-2) unstable; urgency=low
+  
+  * Re-fixed synaptics_drv.o mode to 0644 (why did it reappear?).
+ 
+ -- Mattia Dongili (ma.d.) <dongili@supereva.it>  Thu, 19 Aug 2004 16:09:56 +0200
+
+xfree86-driver-synaptics (0.13.5-1) unstable; urgency=low
+  
+  * New upstream.
+ 
+ -- Mattia Dongili (ma.d.) <dongili@supereva.it>  Sun, 08 Aug 2004 12:41:38 +0200
+
+xfree86-driver-synaptics (0.13.4-1) unstable; urgency=low
+
+  * New upstream.
+ 
+ -- Mattia Dongili (ma.d.) <dongili@supereva.it>  Tue, 27 Jul 2004 22:44:16 +0200
+
+xfree86-driver-synaptics (0.13.3-1) unstable; urgency=low
+
+  * New upstream.
+  * Fixed synaptics_drv.o mode to 0644.
+
+ -- Mattia Dongili (ma.d.) <dongili@supereva.it>  Thu, 20 Jun 2004 15:59:25 +0200
+
+xfree86-driver-synaptics (0.13.2-1) unstable; urgency=low
+
+  * New upstream.
+  * Fixed middle mouse button emulation. (closes: #247219)
+  * Fixed detection of ALPS touchpads when using a 2.6 linux kernel. (closes: #245682)
+  * Made double clicks faster. (closes: #248826)
+  * Uploaded with the correct upstream changelog. (closes: #248811)
+
+ -- Mattia Dongili (ma.d.) <dongili@supereva.it>  Tue, 11 May 2004 09:59:15 +0200
+ 
+xfree86-driver-synaptics (0.13.0-1) unstable; urgency=low
+
+  * New upstream.
+
+ -- Mattia Dongili (ma.d.) <dongili@supereva.it>  Tue, 27 Apr 2004 17:07:26 +0200
+ 
+xfree86-driver-synaptics (0.12.5-1) unstable; urgency=low
+
+  * New upstream. (closes: #239329)
+
+ -- Mattia Dongili (ma.d.) <dongili@supereva.it>  Sat, 20 Mar 2004 12:58:37 +0100
+ 
+xfree86-driver-synaptics (0.12.4-1) unstable; urgency=low
+
+  * Initial Release. (closes: #219163, #231763)
+
+ -- Mattia Dongili (ma.d.) <dongili@supereva.it>  Tue,  2 Mar 2004 11:42:05 +0100
+

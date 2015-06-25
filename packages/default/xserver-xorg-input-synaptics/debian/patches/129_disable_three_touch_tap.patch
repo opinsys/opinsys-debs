@@ -1,0 +1,11 @@
+--- a/src/synaptics.c
++++ b/src/synaptics.c
+@@ -633,7 +633,7 @@ static void set_default_parameters(Input
+     /* Enable tap */
+     tapButton1 = 1;
+     tapButton2 = 3;
+-    tapButton3 = 2;
++    tapButton3 = 0; /* Disabled by default so three-touch gestures work */
+ 
+     /* Enable multifinger-click if only have one physical button,
+        otherwise clickFinger is always button 1. */

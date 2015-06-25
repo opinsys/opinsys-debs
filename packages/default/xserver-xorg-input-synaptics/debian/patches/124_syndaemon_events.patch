@@ -1,0 +1,41 @@
+From b68ca129acfe56714a79230aa07c2b4b0249fb42 Mon Sep 17 00:00:00 2001
+From: Chase Douglas <chase.douglas@canonical.com>
+Date: Fri, 15 Apr 2011 15:23:17 -0400
+Subject: [PATCH xf86-input-synaptics] Drain XRecord connection of any events after handling replies
+
+If the X server sends an event to the XRecord connection the event
+will never be handled. This will cause the event queue to fill up in
+Xlib and lead to syndaemon running away at 100% cpu usage.
+
+This change drains any events from the connection. It's not a fix for
+the underlying bug in the server or Xlib, but it does paper over the
+issue for now.
+
+https://bugs.launchpad.net/bugs/754470
+http://bugs.freedesktop.org/show_bug.cgi?id=31921
+
+Signed-off-by: Chase Douglas <chase.douglas@canonical.com>
+---
+I'm offering this up as a work around for whatever real bug exists. It
+probably should not be committed upstream though.
+
+ tools/syndaemon.c |    8 ++++++++
+ 1 files changed, 8 insertions(+), 0 deletions(-)
+
+--- a/tools/syndaemon.c
++++ b/tools/syndaemon.c
+@@ -450,6 +450,14 @@
+                         event.type);
+             }
+ 
++            /* If there are any events left over, they are in error. Drain them
++             * from the connection queue so we don't get stuck. */
++            while (XEventsQueued(dpy_data, QueuedAlready) > 0) {
++                XEvent event;
++                XNextEvent(dpy_data, &event);
++                fprintf(stderr, "bad event received, major opcode %d\n", event.type);
++            }
++
+             if (!ignore_modifier_keys && cbres.key_event) {
+                 disable_event = 1;
+             }

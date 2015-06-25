@@ -1,0 +1,13 @@
+Index: xserver-xorg-input-synaptics/src/synaptics.c
+===================================================================
+--- xserver-xorg-input-synaptics.orig/src/synaptics.c	2012-02-13 20:30:53.165083092 -0800
++++ xserver-xorg-input-synaptics/src/synaptics.c	2012-02-13 20:32:17.402508282 -0800
+@@ -497,7 +497,7 @@
+        otherwise clickFinger is always button 1. */
+     clickFinger1 = 1;
+     clickFinger2 = (priv->has_right || priv->has_middle) ? 1 : 3;
+-    clickFinger3 = (priv->has_right || priv->has_middle) ? 1 : 2;
++    clickFinger3 = 0; /* Disabled by default so three-touch gestures work */
+ 
+     /* Enable vert edge scroll */
+     vertEdgeScroll = TRUE;
