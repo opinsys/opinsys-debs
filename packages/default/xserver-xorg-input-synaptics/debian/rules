@@ -25,3 +25,10 @@ override_dh_auto_configure:
 
 override_dh_auto_test:
 	dh_auto_test -- VERBOSE=1
+
+PACKAGE = xf86-input-synaptics
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+get-orig-source:
+	wget -c http://xorg.freedesktop.org/archive/individual/driver/$(PACKAGE)-$(SRC_VERSION).tar.gz -O ../$(TARBALL)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
