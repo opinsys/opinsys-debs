@@ -1,0 +1,76 @@
+Index: src/tuxpaint.c
+===================================================================
+RCS file: /cvsroot/tuxpaint/tuxpaint/src/tuxpaint.c,v
+retrieving revision 1.880
+diff -u -r1.880 tuxpaint.c
+--- tuxpaint/src/tuxpaint.c	30 May 2015 22:43:24 -0000	1.880
++++ tuxpaint/src/tuxpaint.c	18 Aug 2015 10:39:29 -0000
+@@ -1891,7 +1891,7 @@
+ static void handle_keymouse_buttons(SDLKey key, int *whicht, int *whichc, SDL_Rect real_r_tools);
+ static void handle_active(SDL_Event * event);
+ static char *remove_slash(char *path);
+-/*static char *replace_tilde(const char* const path);*/
++static char *replace_tilde(const char* const path, const char* const home);
+ #ifdef NO_SDLPANGO
+ static void anti_carriage_return(int left, int right, int cur_top,
+ 				 int new_top, int cur_bot, int line_width);
+@@ -17055,29 +17055,27 @@
+ }
+ 
+ /* replace '~' at the beginning of a path with home directory */
+-/*
+-static char *replace_tilde(const char* const path)
++static char *replace_tilde(const char* const path, const char* const home)
+ {
+     char *newpath;
+     int newlen;
+ 
+     int len = strlen(path);
+-    
++
+     if (!len)
+         return strdup("");
+-    
++
+     if (path[0] == '~')
+     {
+-        newlen = strlen(getenv("HOME")) + len;
+-        newpath = malloc(sizeof(char)*newlen);
+-        sprintf(newpath, "%s%s", getenv("HOME"), path+1);  
++        newlen = strlen(home) + len + 1;
++        newpath = malloc(sizeof(char) * newlen);
++        snprintf(newpath, newlen, "%s%s", home, &path[1]);
+     }
+     else
+         newpath = strdup(path);
+-    
++
+     return newpath;
+ }
+-*/
+ 
+ /* For right-to-left languages, when word-wrapping, we need to
+    make sure the text doesn't end up going from bottom-to-top, too! */
+@@ -21833,11 +21831,19 @@
+     tmpcfg_merge(&tmpcfg, &tmpcfg_sys);
+   }
+   tmpcfg_merge(&tmpcfg, &tmpcfg_usr);
+-	
+-	if(tmpcfg.savedir)
++
++  if(tmpcfg.savedir)
+   {
+     free((char*)savedir);
+-    savedir = tmpcfg.savedir;
++#ifdef _WIN32
++    savedir = strdup(tmpcfg.savedir);
++#else
++    if (home) {
++      savedir = replace_tilde(tmpcfg.savedir, home);
++    } else {
++      savedir = strdup(tmpcfg.savedir);
++    }
++#endif
+   }
+ 
+   datadir = tmpcfg.datadir ? tmpcfg.datadir : savedir;
