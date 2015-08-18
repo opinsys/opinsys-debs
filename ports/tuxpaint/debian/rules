@@ -163,5 +163,11 @@ binary-arch: build install
 	dh_md5sums -a
 	dh_builddeb -a
 
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+get-orig-source:
+	wget http://archive.ubuntu.com/ubuntu/pool/universe/t/tuxpaint/tuxpaint_$(SRC_VERSION).orig.tar.gz -O ../tuxpaint_$(SRC_VERSION).orig.tar.gz
+	tar -zx -f ../tuxpaint_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
+
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install configure
+.PHONY: build clean binary-indep binary-arch binary install configure \
+        get-orig-source
