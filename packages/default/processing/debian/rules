@@ -13,5 +13,5 @@ SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):
 get-orig-source:
 	wget http://download.processing.org/processing-$(SRC_VERSION)-linux32.tgz \
 	  -O ../processing_$(SRC_VERSION).orig.tar.gz
-	tar --exclude=./java -zxf ../processing_$(SRC_VERSION).orig.tar.gz \
+	tar -zxf ../processing_$(SRC_VERSION).orig.tar.gz \
 	  --strip-components=1 -C .

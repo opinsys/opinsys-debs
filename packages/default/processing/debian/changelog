@@ -1,3 +1,10 @@
+processing (3.0b5-0+opinsys1) trusty; urgency=medium
+
+  * Update processing to version 3.0b5.  Use the internal java, because
+    it appears it is needed after update to Oracle Java 8.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Wed, 26 Aug 2015 13:38:44 +0300
+
 processing (2.2.1-0+opinsys2) trusty; urgency=low
 
   * Apparently processing does not work unless /opt/processing/java exists
