@@ -1,0 +1,17 @@
+--- /dev/null	2015-08-26 13:24:36.257203085 +0300
++++ ekapeli-alku/Makefile	2015-08-26 15:18:02.458033034 +0300
+@@ -0,0 +1,14 @@
++.PHONY: all
++all:
++
++.PHONY: installdirs
++installdirs:
++	mkdir -p $(DESTDIR)/opt/ekapeli-alku
++
++.PHONY: install
++install: installdirs
++	install Ekapeli-Alku.x86 $(DESTDIR)/opt/ekapeli-alku/Ekapeli-Alku.x86
++	cp -pR Ekapeli-Alku_Data $(DESTDIR)/opt/ekapeli-alku/Ekapeli-Alku_Data
++
++.PHONY: clean
++clean:

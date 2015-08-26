@@ -1,0 +1,13 @@
+Source: ekapeli-alku
+Section: games
+Priority: extra
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8.0.0), unzip
+Standards-Version: 3.9.3
+Homepage: http://www.lukimat.fi/lukeminen/materiaalit/ekapeli/ekapeli-alku
+
+Package: ekapeli-alku
+Architecture: all
+Depends: ${misc:Depends}
+Description: Ekapeli-Alku
+ Ekapeli-Alku.
