@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+ZIPBALL = Ekapeli_Alku_$(SRC_VERSION)_linux.zip
+
+.PHONY: get-orig-source
+get-orig-source:
+	wget https://ekapeli.lukimat.fi/files/tmp/$(ZIPBALL) -O../$(ZIPBALL)
+	unzip ../$(ZIPBALL)
+	tar -C .. -zcf ../ekapeli-alku_$(SRC_VERSION).orig.tar.gz \
+	    ekapeli-alku/Ekapeli-Alku_Data ekapeli-alku/Ekapeli-Alku.x86
