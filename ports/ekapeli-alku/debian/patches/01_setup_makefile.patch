@@ -1,17 +1,23 @@
 --- /dev/null	2015-08-26 13:24:36.257203085 +0300
-+++ ekapeli-alku/Makefile	2015-08-26 16:18:57.757447926 +0300
-@@ -0,0 +1,15 @@
++++ ekapeli-alku/Makefile	2015-08-27 07:36:54.727130137 +0300
+@@ -0,0 +1,21 @@
++prefix = /usr/local
++datarootdir = $(prefix)/share
++
 +.PHONY: all
 +all:
 +
 +.PHONY: installdirs
 +installdirs:
 +	mkdir -p $(DESTDIR)/opt/ekapeli-alku
++	mkdir -p $(DESTDIR)$(datarootdir)/applications
 +
 +.PHONY: install
 +install: installdirs
-+	install Ekapeli-Alku.x86 $(DESTDIR)/opt/ekapeli-alku/Ekapeli-Alku.x86
++	install -m 644 ekapeli-alku.desktop \
++		$(DESTDIR)$(datarootdir)/applications
 +	install -m 644 ekapeli_alku_title.png $(DESTDIR)/opt/ekapeli-alku
++	install Ekapeli-Alku.x86 $(DESTDIR)/opt/ekapeli-alku/Ekapeli-Alku.x86
 +	cp -pR Ekapeli-Alku_Data $(DESTDIR)/opt/ekapeli-alku/Ekapeli-Alku_Data
 +
 +.PHONY: clean

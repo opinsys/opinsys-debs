@@ -3,6 +3,9 @@
 %:
 	dh $@
 
+override_dh_auto_install:
+	dh_auto_install -- prefix=/usr
+
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 ZIPBALL = Ekapeli_Alku_$(SRC_VERSION)_linux.zip
 ICONURL = http://www.lukimat.fi/lukeminen/materiaalit/ekapeli/ekapeli-alku/ekapeli_alku_title.png
