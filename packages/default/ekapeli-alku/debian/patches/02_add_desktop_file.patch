@@ -1,0 +1,11 @@
+--- /dev/null	2015-08-26 13:24:36.257203085 +0300
++++ ekapeli-alku/ekapeli-alku.desktop	2015-08-26 16:34:46.630814260 +0300
+@@ -0,0 +1,8 @@
++[Desktop Entry]
++Name=Ekapeli Alku
++Exec=/opt/ekapeli-alku/Ekapeli-Alku.x86
++Type=Application
++Terminal=false
++Icon=/opt/ekapeli-alku/ekapeli_alku_title.png
++StartupNotify=true
++Categories=Education;Games;
