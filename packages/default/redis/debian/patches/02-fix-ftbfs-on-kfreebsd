@@ -1,0 +1,12 @@
+diff -urN redis-2.8.14-orig/src/fmacros.h redis-2.8.14/src/fmacros.h
+--- redis-2.8.14-orig/src/fmacros.h	2014-09-01 08:00:38.000000000 -0700
++++ redis-2.8.14/src/fmacros.h	2014-09-01 12:11:41.581060181 -0700
+@@ -40,7 +40,7 @@
+ #define _ALL_SOURCE
+ #endif
+ 
+-#if defined(__linux__) || defined(__OpenBSD__)
++#if defined(__linux__) || defined(__OpenBSD__) || defined(__GLIBC__)
+ #define _XOPEN_SOURCE 700
+ /*
+  * On NetBSD, _XOPEN_SOURCE undefines _NETBSD_SOURCE and
