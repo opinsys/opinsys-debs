@@ -1,0 +1,24 @@
+#!/usr/bin/make -f
+
+unexport CFLAGS
+
+ifneq (,$(filter $(shell dpkg-architecture -qDEB_HOST_ARCH),armel hurd-i386 kfreebsd-amd64 kfreebsd-i386 s390 sparc))
+export FORCE_LIBC_MALLOC = yes
+endif
+
+%:
+	dh $@
+
+override_dh_auto_test:
+	# Testsuite requires working TCP/IP and a non-interactive mode
+
+override_dh_auto_install:
+
+.PHONY: override_dh_strip
+override_dh_strip:
+	dh_strip -predis-server --dbg-package=redis-server-dbg
+	dh_strip -predis-tools --dbg-package=redis-tools-dbg
+
+clean:
+	dh $@
+	rm -f src/release.h
