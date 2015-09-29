@@ -61,9 +61,6 @@ cleanbuilddir/racket::
 debian/racket-arch.mk: debian/racket-arch.c
 	touch debian/mzconfig.h && cpp -Isrc -Idebian -o - $< | tail -1 > $@
 
-get-orig-source:
-	git archive --format=tar --prefix=racket-${UPSTREAM}/ upstream/${UPSTREAM} | gzip -9 > ../${ORIG}
-
 PATCH_EXPORT_SCRIPT = /usr/share/gitpkg/hooks/quilt-patches-deb-export-hook
 
 export-patches: 
@@ -73,3 +70,8 @@ export-patches:
 	bash $(PATCH_EXPORT_SCRIPT)
 
 .PHONY: git-orig-source export-patches
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+get-orig-source:
+	wget http://archive.ubuntu.com/ubuntu/pool/universe/r/racket/racket_$(SRC_VERSION).orig.tar.gz -O ../racket_$(SRC_VERSION).orig.tar.gz
+	tar -zx -f ../racket_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
