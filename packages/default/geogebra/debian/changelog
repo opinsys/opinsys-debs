@@ -1,3 +1,10 @@
+geogebra (5.0.155.0-0+opinsys1) trusty; urgency=medium
+
+  * Update to upstream version 5.0.155.0-43168
+    - upstream source is constructed simply from geogebra5_5.0.155.0-43168_i386.deb
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Tue, 29 Sep 2015 13:47:36 +0300
+
 geogebra (5.0.4.0-0+opinsys1) trusty; urgency=low
 
   * Update to upstream version 5.0.4.0-36450

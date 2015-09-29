@@ -1,19 +1,21 @@
---- /dev/null
-+++ geogebra-4.2.47.0/Makefile
-@@ -0,0 +1,17 @@
+--- /dev/null	2015-09-29 12:58:16.837430918 +0300
++++ geogebra/Makefile	2015-09-29 13:54:33.071314740 +0300
+@@ -0,0 +1,19 @@
 +all:
 +	gunzip usr/share/man/man1/geogebra.1.gz
 +
 +install:
 +	mkdir -p $(DESTDIR)/etc/geogebra
 +	install -m 644 etc/geogebra/geogebra.conf $(DESTDIR)/etc/geogebra
-+
++	
 +	mkdir -p $(DESTDIR)/usr/share
-+	cp -ar usr/share/pixmaps $(DESTDIR)/usr/share
-+	cp -ar usr/share/icons $(DESTDIR)/usr/share
 +	cp -ar usr/share/applications $(DESTDIR)/usr/share
-+	cp -ar usr/share/geogebra $(DESTDIR)/usr/share
-+
++	cp -ar usr/share/geogebra     $(DESTDIR)/usr/share
++	cp -ar usr/share/icons        $(DESTDIR)/usr/share
++	cp -ar usr/share/man          $(DESTDIR)/usr/share
++	cp -ar usr/share/mime         $(DESTDIR)/usr/share
++	cp -ar usr/share/pixmaps      $(DESTDIR)/usr/share
++	
 +	mkdir -p $(DESTDIR)/usr/bin
 +	install -m 755 usr/bin/geogebra $(DESTDIR)/usr/bin
 +
