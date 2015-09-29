@@ -1,5 +1,5 @@
 Source: r8168
-Section: non-free/kernel
+Section: universe
 Priority: extra
 Maintainer: Andreas Beckmann <anbe@debian.org>
 Uploaders: Dmitry Smirnov <onlyjob@member.fsf.org>
