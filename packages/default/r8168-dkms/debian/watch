@@ -1,0 +1,10 @@
+version=3
+
+# The upstream download page at
+# http://www.realtek.com/downloads/downloadsView.aspx?Langid=1&PNid=13&PFid=5&Level=5&Conn=4&DownTypeID=3&GetDown=false#2
+# uses javascript to actually generate the download URL which finally
+# redirects to a dynamically created ftp account like
+# ftp://user:password@ip.ip.ip.ip/path/to/r8168-(.*).tar.bz2
+
+# But there exists an unofficial mirror at http://code.google.com/p/r8168/
+http://r8168dl.appspot.com .*/r8168-([\d\.]+)\.(?:tar\.gz|tar\.bz2|tar\.xz)
