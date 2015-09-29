@@ -1,3 +1,52 @@
+nvidia-graphics-drivers-304 (304.128-0ubuntu0.0.1) trusty-security; urgency=medium
+
+  [ Alberto Milone ]
+  * debian/templates/dkms.conf.in:
+    - Drop patches for Linux 3.19 and 4.0.
+  * New upstream release:
+    - Removed libvdpau and libvdpau_trace from the NVIDIA driver
+      package. VDPAU is not supported on the legacy hardware
+      supported on the release 304 legacy driver branch. The
+      libvdpau_nvidia vendor library is still included, so users who
+      wish to use VDPAU with newer hardware that still works with
+      release 304 drivers may install libvdpau from packages provided
+      by the OS vendor where available, or from the source code
+      available at:
+      http://people.freedesktop.org/~aplattner/vdpau/
+  * SECURITY UPDATE:
+    - CVE-2015-5950 (LP: #1489391).
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Wed, 16 Sep 2015 16:55:41 +0200
+
+nvidia-graphics-drivers-304 (304.125-0ubuntu0.0.2) trusty-proposed; urgency=medium
+
+  * debian/templates/control.in:
+    - Avoid circular dependencies. The nvidia driver will depend on
+      nvidia-opencl-icd-$ver, which, in turn, will pull in
+      nvidia-libopencl1-$ver. The open icd (i.e. ocl-icd-libopencl1)
+      is also available for use as an alternative.
+  * debian/substvars:
+    - Drop lts-utopic and lts-vivid, as depending on xserver-xorg-core and on the ABI is enough.
+  * debian/templates/dkms.conf.in,
+    debian/dkms/patches/buildfix_kernel_3.19.patch,
+    debian/dkms/patches/buildfix_kernel_4.0.patch:
+    - Add support for Linux 3.19 and Linux 4.0 (LP: #1465706).
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Tue, 23 Jun 2015 11:56:01 +0200
+
+nvidia-graphics-drivers-304 (304.125-0ubuntu0.0.1) trusty-security; urgency=medium
+
+  [ Alberto Milone ]
+  * New upstream release.
+  * debian/substvars:
+    - Add support for video ABIs up to 19.
+  * debian/templates/dkms_nvidia.conf.in:
+    - Drop the patches for recent kernels.
+  * SECURITY UPDATE:
+    - CVE-2014-8091, CVE-2014-8098, CVE-2014-8298 (LP: #1400673).
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Tue, 09 Dec 2014 18:42:30 +0100
+
 nvidia-graphics-drivers-304 (304.117-0ubuntu1) trusty; urgency=low
 
   * debian/templates/control.in:
