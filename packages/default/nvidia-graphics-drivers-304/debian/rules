@@ -406,5 +406,5 @@ clean:: regen-from-templates
 DEB_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(.*\)/\1/p')
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 get-orig-source:
-	wget https://launchpad.net/ubuntu/trusty/+source/nvidia-graphics-drivers-304/$(DEB_VERSION)/+files/nvidia-graphics-drivers-304_$(SRC_VERSION).orig.tar.gz -O ../nvidia-graphics-drivers-304_$(SRC_VERSION).orig.tar.gz
+	wget http://archive.ubuntu.com/ubuntu/pool/restricted/n/nvidia-graphics-drivers-304/nvidia-graphics-drivers-304_$(SRC_VERSION).orig.tar.gz -O ../nvidia-graphics-drivers-304_$(SRC_VERSION).orig.tar.gz
 	tar -z -x -f ../nvidia-graphics-drivers-304_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .

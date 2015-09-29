@@ -15,12 +15,12 @@ Depends: x11-common (>= 1:7.0.0), make, sed (>> 3.0), dkms, linux-libc-dev, libc
  patch, acpid, lib32gcc1 [amd64], libc6-i386 [amd64],
  ${shlibs:Depends}, ${misc:Depends}, ${xviddriver:Depends}
 Recommends: nvidia-settings (>= 331.20),
- libcuda1-304, nvidia-libopencl1-304, nvidia-opencl-icd-304
+ libcuda1-304, nvidia-opencl-icd-304
 Provides: xorg-driver-binary, nvidia-driver-binary, ${xviddriver:Provides}
 Conflicts: xorg-driver-binary
 Replaces: xorg-driver-binary
 XB-Modaliases: ${modaliases}
-Description: NVIDIA legacy binary driver - version 304.117
+Description: NVIDIA legacy binary driver - version 304.128
  The binary driver provide optimized hardware acceleration of OpenGL
  applications via a direct-rendering X Server. AGP, PCIe, SLI, TV-out
  and flat panel displays are also supported.
@@ -33,12 +33,12 @@ Description: NVIDIA legacy binary driver - version 304.117
  GPUs such as GeForce series 6 or newer are supported.
  .
  Release Notes and supported GPUs:
- http://www.nvidia.com/object/linux-display-amd64-304.117-driver.html
+ http://www.nvidia.com/object/linux-display-amd64-304.128-driver.html
  .
 
 Package: nvidia-304-dev
 Architecture: i386 amd64
-Depends: ${misc:Depends}, nvidia-304 (>= 304.117)
+Depends: ${misc:Depends}, nvidia-304 (>= 304.128)
 Description: NVIDIA binary Xorg driver development files
  This package contains the NVIDIA binary Xorg driver
  development files.
@@ -79,10 +79,11 @@ Description: NVIDIA OpenCL Driver and ICD Loader library
 
 Package: nvidia-opencl-icd-304
 Architecture: i386 amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Provides: opencl-icd
-Conflicts: opencl-icd
-Replaces: opencl-icd
+Depends: ${shlibs:Depends}, ${misc:Depends}, nvidia-libopencl1-304 | ocl-icd-libopencl1
+Enhances: libopencl1
+Conflicts: nvidia-opencl-icd
+Replaces: nvidia-opencl-icd
+Provides: nvidia-opencl-icd, opencl-icd
 Description: NVIDIA OpenCL ICD
  OpenCL (Open Computing Language) is a multivendor open standard for
  general-purpose parallel programming of heterogeneous systems that include
