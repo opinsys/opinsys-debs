@@ -16,3 +16,10 @@ override_dh_dkms:
 
 # do nothing
 override_dh_auto_configure override_dh_auto_build override_dh_auto_test override_dh_auto_install override_dh_auto_clean:
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+get-orig-source:
+	wget http://archive.ubuntu.com/ubuntu/pool/multiverse/r/r8168/r8168_$(SRC_VERSION).orig.tar.bz2 \
+	  -O ../r8168_$(SRC_VERSION).orig.tar.bz2
+	tar -jx -f ../r8168_$(SRC_VERSION).orig.tar.bz2 \
+	  --strip-components=1 -C .
