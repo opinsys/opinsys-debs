@@ -1,0 +1,15 @@
+--- /dev/null	2015-09-24 16:45:23.406165968 +0300
++++ ekapeli-alku/ekapeli	2015-10-06 16:04:00.821369922 +0300
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++# Hardware acceleration has bugs on Trusty with
++#   00:02.0 VGA compatible controller [0300]:
++#     Intel Corporation 82Q963/Q965 Integrated Graphics Controller [8086:2992]
++#     (rev 02)"
++# to the extent we disable the acceleration (letters are not drawn, bad).
++if [ -n "$(lspci -d 8086:2992)" ]; then
++  export LIBGL_ALWAYS_SOFTWARE=1
++fi
++
++exec /opt/ekapeli-alku/Ekapeli-Alku.x86
