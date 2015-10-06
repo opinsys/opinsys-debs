@@ -3,7 +3,7 @@
 @@ -0,0 +1,8 @@
 +[Desktop Entry]
 +Name=Ekapeli Alku
-+Exec=/opt/ekapeli-alku/Ekapeli-Alku.x86
++Exec=/opt/ekapeli-alku/ekapeli
 +Type=Application
 +Terminal=false
 +Icon=/opt/ekapeli-alku/ekapeli_alku_title.png

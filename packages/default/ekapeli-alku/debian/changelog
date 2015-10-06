@@ -1,3 +1,10 @@
+ekapeli-alku (15-0+opinsys3) trusty; urgency=low
+
+  * Add lspci check to disable hardware acceleration for one particular
+    VGA chipset (Intel Corporation 82Q963/Q965 Integrated Graphics).
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Tue, 06 Oct 2015 16:08:38 +0300
+
 ekapeli-alku (15-0+opinsys2) trusty; urgency=medium
 
   * Add ekapeli-alku.desktop.
