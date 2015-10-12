@@ -1,0 +1,13 @@
+Source: jazz-plugin
+Section: universe/sound
+Priority: extra
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+Homepage: http://jazz-soft.net/
+
+Package: jazz-plugin
+Architecture: i386
+Depends: ${misc:Depends}
+Description: Jazz Plugin
+ Jazz Plugin from http://jazz-soft.net/.
