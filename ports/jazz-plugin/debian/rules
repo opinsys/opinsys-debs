@@ -1,0 +1,21 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_install:
+	dh_auto_install -- prefix=/usr
+
+override_dh_shlibdeps:
+
+override_dh_strip:
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+
+.PHONY: get-orig-source
+get-orig-source:
+	wget -O Jazz-Plugin-1-4-32.so.gz \
+            http://jazz-soft.net/download/Jazz-Plugin/1.4/Jazz-Plugin-1-4-32.so.gz
+	tar -C .. \
+            -zcf ../jazz-plugin_$(SRC_VERSION).orig.tar.gz \
+	    jazz-plugin/Jazz-Plugin-1-4-32.so.gz jazz-plugin/Makefile

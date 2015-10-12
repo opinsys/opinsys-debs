@@ -1,0 +1,5 @@
+jazz-plugin (1.4-0+opinsys1) trusty; urgency=low
+
+  * Add jazz-plugin from http://jazz-soft.net/download/Jazz-Plugin/.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Mon, 12 Oct 2015 10:43:17 +0300
