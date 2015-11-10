@@ -1,3 +1,9 @@
+bcmwl (6.30.223.248+bdcom-0ubuntu7+opinsys2) trusty; urgency=medium
+
+  * Fix debian/changelog to use trusty as the suite.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 10 Nov 2015 15:14:18 +0200
+
 bcmwl (6.30.223.248+bdcom-0ubuntu7+opinsys1) wily; urgency=medium
 
   * debian/scripts/opinsys-get-orig-source: download upstream source
