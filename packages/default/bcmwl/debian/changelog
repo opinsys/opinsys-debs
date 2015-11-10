@@ -1,3 +1,9 @@
+bcmwl (6.30.223.248+bdcom-0ubuntu7+opinsys1) wily; urgency=medium
+
+  * debian/scripts/opinsys-get-orig-source: download upstream source
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 10 Nov 2015 14:55:04 +0200
+
 bcmwl (6.30.223.248+bdcom-0ubuntu7) wily; urgency=medium
 
   * debian/bcmwl-kernel-source.modaliases: really fix matching for model 43b1,
