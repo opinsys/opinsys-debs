@@ -18,7 +18,13 @@ fi
 
 cd "${packagedir}"
 sudo puavo-install-deps
-debian/rules get-orig-source
+
+if [ -x debian/scripts/opinsys-get-orig-source ]; then
+    debian/scripts/opinsys-get-orig-source
+else
+    debian/rules get-orig-source
+fi
+
 if [ "${CI_TARGET_ARCH}" = i386 ]; then
     dpkg-buildpackage -us -uc -sa --source-option='--compression=gzip'
 else
