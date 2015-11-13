@@ -1,0 +1,751 @@
+#!/bin/bash
+
+# kdump-config
+# Copyright (C) 2007-2009 Hewlett-Packard Development Company, L.P.
+# Written by Terry Loftin <terry.loftin@hp.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+# kdump-config
+# 	a shell script utility to manage:
+#	* loading a kdump kernel
+#	* unloading a kdump kernel
+#	* saving a vmcore kdump kernel
+#	* determining the status of kdump
+#	* propagate ssh key to remote host
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+NAME=${NAME:="kdump-config"}
+
+. /lib/lsb/init-functions
+. /lib/init/vars.sh
+
+# Global Setup
+KDUMP_DEFAULTS=/etc/default/kdump-tools
+[ -r $KDUMP_DEFAULTS ] && . $KDUMP_DEFAULTS
+
+KEXEC=/sbin/kexec
+[ -e $KEXEC ] || exit 1;
+
+KVER=`uname -r`
+ARCH=`uname -m`
+
+# Set up defaults
+KDUMP_SYSCTL=${KDUMP_SYSCTL:="kernel.panic_on_oops=1"}
+KDUMP_COREDIR=${KDUMP_COREDIR:=/var/crash}
+KDUMP_DUMP_DMESG=${KDUMP_DUMP_DMESG:=1}
+MAKEDUMP_ARGS=${MAKEDUMP_ARGS:="-c -d 31"}
+KDUMP_CMDLINE_APPEND=${KDUMP_CMDLINE_APPEND:="irqpoll maxcpus=1 nousb systemd.unit=kdump-tools.service"}
+[ -d $KDUMP_COREDIR ] || mkdir -p $KDUMP_COREDIR ;
+
+IOMEM_ADDR=`grep -i "Crash kernel" /proc/iomem | sed "s/-..*//" | sed "s/^[ 0]*/0x/"`
+
+# Constants
+vmcore_file=/proc/vmcore
+sys_kexec_crash=/sys/kernel/kexec_crash_loaded
+sys_fadump_enabled=/sys/kernel/fadump_enabled
+sys_fadump_registered=/sys/kernel/fadump_registered
+kexec_cmd_file=$KDUMP_COREDIR/kexec_cmd
+
+# DUMP_MODE = kdump/fadump
+# The default dump mode is kdump.
+DUMP_MODE="kdump"
+
+# If /sys/kernel/fadump_enabled is set to `1`, use fadump as dump mechanism
+if [ -e $sys_fadump_enabled ] && [ `cat $sys_fadump_enabled` -eq 1 ]; then
+	DUMP_MODE="fadump"
+fi
+
+# Utility Functions
+#
+function kdump_help()
+{
+cat <<EOHELP
+Usage:
+kdump-config {help|test|show|status|load|unload|savecore|propagate}"
+  help      - print this page
+  test      - Do a dry-run of kdump kernel load command by showing
+              the kernels and parameters that will be used and echo'ing
+              the kexec command. The kexec command will not be executed.
+              If using fadump, check if required sysfs directories exist.
+  show      - Show dump mode, status, any current parameters.
+              Show kexec command for kdump.
+  status    - evaluate /sys/kernel/{kexec_crash_loaded,fadump_registered}
+              depending on dump mode. Print appropriate message
+  load      - Locate the kdump kernel, debug kernel, and establish links for
+              makedumpfile.  Then load the kdump kernel using kexec
+              If using fadump, register.
+  unload    - unload the kdump kernel using kexec
+              If using fadump, unregister.
+  savecore  - use previously made links to save /proc/vmcore
+  propagate - Send public ssh key to remote host for passwordless connection
+
+EOHELP
+}
+
+function kdump_show()
+{
+	echo "DUMP_MODE:        $DUMP_MODE"
+	echo "USE_KDUMP:        $USE_KDUMP"
+	echo "KDUMP_SYSCTL:     $KDUMP_SYSCTL"
+	echo "KDUMP_COREDIR:    $KDUMP_COREDIR"
+	if [ "$DUMP_MODE" == "kdump" ]; then
+		echo "crashkernel addr: $IOMEM_ADDR"
+	fi
+
+	if [ -n "$SSH" ];then
+		echo "SSH:              $SSH"
+		SSH_KEY="${SSH_KEY:=/root/.ssh/kdump_id_rsa}"
+		echo "SSH_KEY:          $SSH_KEY"
+	fi
+	if [ -n "$NFS" ]; then
+		echo "NFS:              $NFS"
+	fi
+
+	if [ -n "$SSH" ] || [ -n "$NFS" ]; then
+		HOSTTAG="${HOSTTAG:=ip}"
+		echo "HOSTTAG:          $HOSTTAG"
+	fi
+
+	if [ "$DUMP_MODE" == "fadump" ]; then
+		if [ -e $sys_fadump_registered ] &&
+			[ `cat $sys_fadump_registered` -eq 1 ] ; then
+			echo "current state:    ready to fadump";
+		else
+			echo "current state:    Not ready to fadump";
+		fi
+		return 0
+	fi
+
+	if [ -e $sys_kexec_crash -a `cat $sys_kexec_crash` -eq 1 ] ; then
+		echo "current state:    ready to kdump";
+	else
+		echo "current state:    Not ready to kdump";
+	fi
+	echo
+	echo "kexec command:"
+	echo -n "  "
+	if [ -e $kexec_cmd_file ] ; then
+		cat $kexec_cmd_file ;
+	else
+		echo "no kexec command recorded"
+	fi
+}
+
+function kdump_test()
+{
+	echo "USE_KDUMP:         $USE_KDUMP"
+	echo "KDUMP_SYSCTL:      $KDUMP_SYSCTL"
+	echo "KDUMP_COREDIR:     $KDUMP_COREDIR"
+	echo "crashkernel addr:  $IOMEM_ADDR"
+	echo "kdump kernel addr: $KDUMP_ADDR"
+	echo "kdump kernel:"
+	echo "   $KDUMP_KERNEL"
+	echo "kdump initrd: "
+	echo "  $KDUMP_INITRD"
+	echo "kexec command to be used:"
+	echo "  $KEXEC_CMD"
+}
+
+# check_fadump_support:  Other miscellaneous checks go here:
+# 1: if USE_KDUMP is 0, don't set up fadump.
+# 2: -e /sys/kernel/fadump_registered indicates that this kernel
+#    thinks it supports fadump
+#
+# Returns: none. prints warnings or exit
+function check_fadump_support()
+{
+	if [ -z "$USE_KDUMP" -o "$USE_KDUMP" == "0" ] ; then
+		log_failure_msg "$KDUMP_DEFAULTS: USE_KDUMP is not set or zero"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+	if [ ! -e $sys_fadump_registered ]; then
+		log_failure_msg "fadump is not configured in this kernel."
+		log_failure_msg "Try passing \"fadump=on\" to enable fadump"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+        if [ -n "$NFS" ] && [ -n "$SSH" ];then
+		log_failure_msg "\$SSH and \$NFS cannot be defined concurrently"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+}
+
+# check_kdump_support:  Other miscellaneous checks go here:
+# 1: if USE_KDUMP is 0, don't set up kdump.
+# 2: -e /sys/kernel/kexec_crash loaded indicates that this kernel
+#    thinks it supports kdump
+# 3: the current kernel should have booted with a crashkernel= command
+#    line parameter.
+#
+# Returns: none. prints warnings or exit
+function check_kdump_support()
+{
+	if [ -z "$USE_KDUMP" -o "$USE_KDUMP" == "0" ] ; then
+		log_failure_msg "$KDUMP_DEFAULTS: USE_KDUMP is not set or zero"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+	if [ ! -e $sys_kexec_crash ] ; then
+		log_failure_msg "kdump is not supported by this kernel"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+	CRASHKERNEL=`grep -i crashkernel= /proc/cmdline`;
+	if [ -z "$CRASHKERNEL" ] ; then
+		log_failure_msg "no crashkernel= parameter in the kernel cmdline"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+        if [ -n "$NFS" ] && [ -n "$SSH" ];then
+		log_failure_msg "\$SSH and \$NFS cannot be defined concurrently"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+}
+
+# check_relocatable: check if the given kernel config is relocatable
+# Arguments:
+#   1: the config file to check
+# Returns: 0 if the given kernel config indicates a relocatable kernel.
+#          1 otherwise.
+function check_relocatable()
+{
+	if [ "$ARCH" = "ia64" ]; then
+		# Linux is always relocatable on ia64
+		return 0
+	elif grep -q 'CONFIG_RELOCATABLE=y' $1; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+# Find the kexec/kdump kernel and possibly a corresponding initrd.
+# A kdump kernel does not need to match the `uname -r` of the booted kernel.
+#
+# Use the following priorites in determining the kdump kernel:
+#	 1. An explicit Kdump kernel in the defaults file overrides all
+#    2. Use the current running kernel if it is relocatable.
+#	 3. Give up.  Note, a kdump kernel is required.
+#
+# Returns: 0/1 (success/fail)
+# Returns: none. prints warnings or exit
+# Sets:    KDUMP_KERNEL, KDUMP_INITRD
+function locate_kdump_kernel()
+{
+	# 1:  User may have specified the KDUMP_KERNEL and KDUMP_INITRD 
+	#     explicitly.   Test for existance and either use it or fail.
+	if [ -n "$KDUMP_KERNEL" ] ; then
+		if [ ! -e "$KDUMP_KERNEL" ] ; then
+			log_failure_msg "$KDUMP_DEFAULTS: KDUMP_KERNEL does not exist: $KDUMP_KERNEL"
+			[ ! $DRY_RUN ] && exit 1;
+		elif [ -n "$KDUMP_INITRD" -a ! -e "$KDUMP_INITRD" ] ; then
+			log_failure_msg "$KDUMP_DEFAULTS: KDUMP_INITRD does not exist: $KDUMP_INITRD"
+			[ ! $DRY_RUN ] && exit 1;
+		fi
+		return 0;
+	fi
+
+	# 2: The currently running kernel may be relocatable.  If so, then
+	#    use the currently running kernel as the crash kernel.
+	if check_relocatable /boot/config-$KVER; then
+		if [ -f /boot/vmlinuz-$KVER ]; then
+			KDUMP_KERNEL=/boot/vmlinuz-$KVER
+		elif [ -f /boot/vmlinux-$KVER ]; then
+			KDUMP_KERNEL=/boot/vmlinux-$KVER
+		else
+			KDUMP_KERNEL=
+		fi
+		if [ -f /boot/initrd.img-$KVER ]; then
+			KDUMP_INITRD=/boot/initrd.img-$KVER
+		else
+			KDUMP_INITRD=
+		fi
+		KDUMP_ADDR="relocatable"
+		return 0;
+	fi
+
+	# If the kdump kernel is not relocatable, we need to make sure it was
+	# built to start at the crashkernel= address.  IOMEM_ADDR is already
+	# set...
+	if [ -z "$KDUMP_CONFIG" ] ; then return 0 ; fi
+
+	if check_relocatable $KDUMP_CONFIG; then
+		KDUMP_ADDR="relocatable"
+	else
+		KDUMP_ADDR=`grep CONFIG_PHYSICAL_START $KDUMP_CONFIG | sed "s/CONFIG_PHYSICAL_START=//"`
+		# compare the two
+		if [ "$KDUMP_ADDR" != "$IOMEM_ADDR" ] ; then
+			log_failure_msg "kdump kernel relocation address does not match crashkernel parameter"
+	        [ ! $DRY_RUN ] && exit 1;
+			return 1;
+		fi
+	fi
+
+	return 0;
+}
+
+# Register firmware-assisted dump as the dump mechanism
+# Returns: none. prints warnings or exit
+function fadump_register()
+{
+	# set fadump registered sys node to `1` to register fadump
+	if [ "`cat $sys_fadump_registered`" -ne 1 ]; then
+		echo 1 > $sys_fadump_registered
+	fi
+	rc=`cat $sys_fadump_registered`
+	if [ $rc -ne 1 ] ; then
+		log_failure_msg "fadump registering failed"
+		logger -t $NAME "fadump registering failed"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+
+	log_success_msg "fadump registered successfully"
+	logger -t $NAME "fadump registered successfully"
+
+	# Last step: make sure panic_on_oops is enabled
+        PANIC_ON_OOPS=`/sbin/sysctl kernel.panic_on_oops | cut -d" " -f3`
+        if [ $PANIC_ON_OOPS != "1" ] ; then
+                sysctl -w kernel.panic_on_oops=1 >/dev/null
+        fi
+}
+
+# Returns: none. prints warnings or exit
+function fadump_unregister()
+{
+	# set fadump registered sys node to `0` to un-register fadump
+	if [ "`cat $sys_fadump_registered`" -ne 0 ]; then
+		echo 0 > $sys_fadump_registered
+	fi
+	rc=`cat $sys_fadump_registered`
+	if [ $rc -ne 0 ] ; then
+		log_failure_msg "fadump un-registering failed"
+		logger -t $NAME "fadump un-registering failed"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+
+	log_success_msg "fadump un-registered successfully"
+	logger -t $NAME "fadump un-registered successfully"
+}
+
+#
+# Load the already determined kdump kernel and kdump initrd using kexec
+# 	1: A KDUMP_CMDLINE in the defaults file overrides all.
+#	2: Use /proc/cmdline
+#			a. strip out the crashkernel= parameter.
+#			b. strip out the abm= parameter.
+#			c. append KDUMP_CMDLINE_APPEND from defaults file
+# Sets:    KEXEC_CMD
+# Returns: none. prints warnings or exit
+function kdump_load()
+{
+	# assemble the kexec command used to load the kdump kernel
+	KEXEC_CMD="$KEXEC -p"
+
+	# Different kernel types allow/require different options:
+	# The only special case here is that x86, x86_64 elf style
+	# binaries require the --args-linux argument.
+	if [ "$ARCH" != "ia64" ] ; then
+		ELF_TST=`file $KDUMP_KERNEL | grep ELF`
+		if [ -n "$ELF_TST" ] ; then
+			KEXEC_CMD="$KEXEC_CMD --args-linux"
+		fi
+	fi
+		
+	# KDUMP_KEXEC_ARGS, if non-empty, comes from the defaults file.
+	if [ -n "$KDUMP_KEXEC_ARGS" ] ; then
+		KEXEC_CMD="$KEXEC_CMD $KDUMP_KEXEC_ARGS"
+	fi
+
+	# Assemble the --commmand-line:
+	if [ -z "$KDUMP_CMDLINE" ] ; then
+		KDUMP_CMDLINE=`cat /proc/cmdline | \
+		sed -r -e 's/(^| )crashkernel=[^ ]*//g' \
+		       -e 's/(^| )abm=[^ ]*//g'`
+	fi
+	KDUMP_CMDLINE="$KDUMP_CMDLINE $KDUMP_CMDLINE_APPEND"
+	KEXEC_CMD="$KEXEC_CMD --command-line=\"$KDUMP_CMDLINE\""
+
+	# Assemble the --initrd:
+	if [ -e "$KDUMP_INITRD" ] ; then
+		KEXEC_CMD="$KEXEC_CMD --initrd=$KDUMP_INITRD"
+	fi
+
+	# Finally, add the kernel:
+	KEXEC_CMD="$KEXEC_CMD $KDUMP_KERNEL"
+
+	if [ $DRY_RUN ] ; then return 0; fi
+
+	eval $KEXEC_CMD
+
+	if [ $? == 0 ]; then
+		log_success_msg "loaded kdump kernel"
+		logger -t $NAME "$KEXEC_CMD"
+		logger -t $NAME "loaded kdump kernel"
+		echo "$KEXEC_CMD" >$kexec_cmd_file
+	else
+		log_failure_msg "failed to load kdump kernel"
+		logger -t $NAME "failed to load kdump kernel"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+
+	# Last step: make sure panic_on_oops is enabled
+        PANIC_ON_OOPS=`/sbin/sysctl kernel.panic_on_oops | cut -d" " -f3`
+        if [ $PANIC_ON_OOPS != "1" ] ; then
+                sysctl -w kernel.panic_on_oops=1 >/dev/null
+        fi
+
+}
+
+# Returns: none. prints warnings or exit
+function kdump_unload()
+{
+	$KEXEC -p -u
+	if [ $? == 0 ]; then
+		log_success_msg "unloaded kdump kernel"
+		logger -t $NAME "unloaded kdump kernel"
+	else
+		log_failure_msg "failed to unload kdump kernel"
+		logger -t $NAME "failed to unload kdump kernel"
+		[ ! $DRY_RUN ] && exit 1;
+	fi
+}
+
+#
+# Return the name of the subdirectory to store core file.
+#	Will add hostname/IP according to the value of
+#	HOSTTAG if networked dump is selected
+
+function define_stampdir()
+{
+	STAMP=$1
+	HOSTTAG="${HOSTTAG:=ip}"
+
+	if [ -z "$SSH" ] && [ -z "$NFS" ]; then
+		echo "$KDUMP_COREDIR/$STAMP"
+	elif [ "$HOSTTAG" = "hostname" ];then
+		echo "$KDUMP_COREDIR/$(hostname)-$STAMP"
+	else
+		THIS_HOST="$(hostname -I)"
+		set -- $THIS_HOST
+		THIS_HOST=$1
+		echo "$KDUMP_COREDIR/$THIS_HOST-$STAMP"
+	fi
+}
+
+
+# Saving the vmcore:
+#	Our priorities are:
+#	  1. If the makedumpfile config link is valid, use that
+#	  2. else if the vmlinux link is valid, use that
+#	  3. else fallback to using:  makedumpfile -d 1 -c
+#	  4. else use cp
+#
+# Returns: 0/1 (success/fail)
+# Sets: KDUMP_STAMPDIR, KDUMP_COREFILE
+function kdump_save_core()
+{
+	KDUMP_STAMP=`date +"%Y%m%d%H%M"`
+	KDUMP_STAMPDIR=$(define_stampdir $KDUMP_STAMP)
+	KDUMP_CORETEMP="$KDUMP_STAMPDIR/dump-incomplete"
+	KDUMP_COREFILE="$KDUMP_STAMPDIR/dump.$KDUMP_STAMP"
+	KDUMP_DMESGFILE="$KDUMP_STAMPDIR/dmesg.$KDUMP_STAMP"
+
+	# If we use NFS, verify that we can mount the FS
+	#
+	if [ -n "$NFS" ];then
+		log_action_msg "Mounting NFS mountpoint $NFS ..."
+		mount -t nfs -o nolock -o tcp -o soft -o timeo=5 -o retrans=5 $NFS $KDUMP_COREDIR
+		ERROR=$?
+		if [ $ERROR -ne 0 ];then
+			log_failure_msg "$NAME: Unable to mount remote NFS directory $NFS. Cannot save core"
+			logger -t $NAME "Unable to mount remote NFS directory $NFS. Cannot save core"
+			return 1;
+		fi
+
+		# FS is mounted, see if we can write to it
+		#
+		mkdir -p $KDUMP_STAMPDIR
+		ERROR=$?
+
+		if [ $ERROR -ne 0 ];then
+			log_failure_msg "$NAME: Unable to write to the remote NFS directory $NFS. Cannot save core"
+			logger -t $NAME "Unable to write to the remote NFS directory $NFS. Cannot save core"
+			umount $KDUMP_COREDIR
+			UMNT_ERROR=$?
+			if [ $UMNT_ERROR -ne 0 ];then
+				log_failure_msg "$NAME: Unable to cleanly unmount the NFS file system"
+				logger -t $NAME "Unable to cleanly unmount the NFS file system"
+			fi
+		else
+			log_action_msg "Dumping to NFS mountpoint $NFS/$KDUMP_STAMP"
+			logger -t $NAME "Dumping to NFS mountpoint $NFS/$KDUMP_STAMP"
+		fi
+	else
+		mkdir -p $KDUMP_STAMPDIR
+	fi
+
+	log_action_msg "running makedumpfile $MAKEDUMP_ARGS $vmcore_file $KDUMP_CORETEMP"
+	makedumpfile $MAKEDUMP_ARGS $vmcore_file $KDUMP_CORETEMP
+	ERROR=$?
+	if [ $ERROR -ne 0 ] ; then
+		log_failure_msg "$NAME: makedumpfile failed, falling back to 'cp'"
+		logger -t $NAME "makedumpfile failed, falling back to 'cp'"
+		KDUMP_CORETEMP="$KDUMP_STAMPDIR/vmcore-incomplete"
+		KDUMP_COREFILE="$KDUMP_STAMPDIR/vmcore.$KDUMP_STAMP"
+		cp $vmcore_file $KDUMP_CORETEMP
+		ERROR=$?
+	fi
+
+	# did we succeed?
+	if [ $ERROR == 0 ]; then
+		mv $KDUMP_CORETEMP $KDUMP_COREFILE
+		log_success_msg "$NAME: saved vmcore in $KDUMP_STAMPDIR"
+		logger -t $NAME "saved vmcore in $KDUMP_STAMPDIR"
+		sync
+	else
+		log_failure_msg "$NAME: failed to save vmcore in $KDUMP_STAMPDIR"
+		logger -t $NAME "failed to save vmcore in $KDUMP_STAMPDIR"
+	fi
+
+	# dump the dmesg buffer
+	if [ "$KDUMP_DUMP_DMESG" -eq 1 ] ; then
+            log_action_msg "running makedumpfile --dump-dmesg $vmcore_file $KDUMP_DMESGFILE"
+            makedumpfile --dump-dmesg $vmcore_file $KDUMP_DMESGFILE
+            ERROR=$?
+            if [ $ERROR -ne 0 ] ; then
+                log_failure_msg "$NAME: makedumpfile --dump-dmesg failed. dmesg content will be unavailable"
+                logger -t $NAME "makedumpfile --dump-dmesg failed. dmesg content will be unavailable"
+            fi
+
+	    # did we succeed?
+	    if [ $ERROR == 0 ]; then
+		log_success_msg "$NAME: saved dmesg content in $KDUMP_STAMPDIR"
+		logger -t $NAME "saved dmesg content in $KDUMP_STAMPDIR"
+		sync
+	    else
+		log_failure_msg "$NAME: failed to save dmesg content in $KDUMP_STAMPDIR"
+		logger -t $NAME "failed to save dmesg content in $KDUMP_STAMPDIR"
+	    fi
+	fi
+	# If we use NFS, umount the remote FS
+	#
+	if [ -n "$NFS" ];then
+		umount $KDUMP_COREDIR
+		UMNT_ERROR=$?
+		if [ $UMNT_ERROR -ne 0 ] ; then
+			log_failure_msg "$NAME: Unable to cleanly unmount the NFS file system"
+			logger -t $NAME "Unable to cleanly unmount the NFS file system"
+		fi
+	fi
+
+	return $ERROR
+}
+
+function kdump_save_core_to_ssh()
+{
+	KDUMP_SSH_KEY="${SSH_KEY:=/root/.ssh/kdump_id_rsa}"
+	KDUMP_REMOTE_HOST="$SSH"
+
+	KDUMP_STAMP=`date +"%Y%m%d%H%M"`
+	KDUMP_STAMPDIR=$(define_stampdir $KDUMP_STAMP)
+
+	KDUMP_CORETEMP="$KDUMP_STAMPDIR/dump-incomplete"
+	KDUMP_COREFILE="$KDUMP_STAMPDIR/dump.$KDUMP_STAMP"
+	KDUMP_TMPDMESG="/tmp/dmesg.$KDUMP_STAMP"
+	KDUMP_DMESGFILE="$KDUMP_STAMPDIR/dmesg.$KDUMP_STAMP"
+	ERROR=0
+
+	ssh -i $KDUMP_SSH_KEY $KDUMP_REMOTE_HOST mkdir -p $KDUMP_STAMPDIR
+	ERROR=$?
+	# If remote connections fails, no need to continue
+	if [ $ERROR -ne 0 ] ; then
+		log_failure_msg "$NAME: Unable to reach remote server $KDUMP_REMOTE_HOST. No reason to continue"
+		logger -t $NAME "Unable to reach remote server $KDUMP_REMOTE_HOST. No reason to continue"
+		return 1
+	fi
+
+	# Add '-F' [flatten] to MAKEDUMP_ARGS, if not there:
+	[ "${MAKEDUMP_ARGS#-F*}" != "${MAKEDUMP_ARGS}" ] || MAKEDUMP_ARGS="${MAKEDUMP_ARGS} -F"
+	log_action_msg "sending makedumpfile $MAKEDUMP_ARGS $vmcore_file to $KDUMP_REMOTE_HOST : $KDUMP_CORETEMP"
+	makedumpfile $MAKEDUMP_ARGS $vmcore_file | ssh -i $KDUMP_SSH_KEY $KDUMP_REMOTE_HOST dd of=$KDUMP_CORETEMP
+	ERROR=$?
+	if [ $ERROR -ne 0 ] ; then
+		log_failure_msg "$NAME: makedumpfile failed, falling back to 'scp'"
+		logger -t $NAME "makedumpfile failed, falling back to 'scp'"
+		KDUMP_CORETEMP="$KDUMP_STAMPDIR/vmcore-incomplete"
+		KDUMP_COREFILE="$KDUMP_STAMPDIR/vmcore.$KDUMP_STAMP"
+		scp -i $KDUMP_SSH_KEY $vmcore_file $KDUMP_REMOTE_HOST:$KDUMP_CORETEMP
+		if [ $? -ne 0 ];then
+			log_failure_msg "$NAME: makedumpfile scp failed. The vmcore file will  not be available"
+			logger -t $NAME "makedumpfile scp failed. The vmcore file will  not be available"
+		else
+			ERROR=0
+		fi
+	else
+		ERROR=0
+	fi
+
+	# did we succeed?
+	if [ $ERROR -ne 0 ]; then
+		log_failure_msg "$NAME: failed to save vmcore in $KDUMP_REMOTE_HOST:$KDUMP_STAMPDIR"
+		logger -t $NAME "failed to save vmcore in $KDUMP_REMOTE_HOST:$KDUMP_STAMPDIR"
+		sync
+	else
+		ssh -i $KDUMP_SSH_KEY $KDUMP_REMOTE_HOST mv $KDUMP_CORETEMP $KDUMP_COREFILE
+		log_success_msg "$NAME: saved vmcore in $KDUMP_REMOTE_HOST:$KDUMP_STAMPDIR"
+		logger -t $NAME "saved vmcore in $KDUMP_REMOTE_HOST:$KDUMP_STAMPDIR"
+	fi
+
+	# dump the dmesg buffer
+        if [ "$KDUMP_DUMP_DMESG" -eq 1 ] ; then
+	    log_action_msg "running makedumpfile --dump-dmesg $vmcore_file $KDUMP_TMPDMESG"
+	    makedumpfile --dump-dmesg $vmcore_file $KDUMP_TMPDMESG
+	    ERROR=$?
+	    if [ $ERROR -ne 0 ] ; then
+		    log_failure_msg "$NAME: makedumpfile --dump-dmesg failed. dmesg content will be unavailable"
+		    logger -t $NAME "makedumpfile --dump-dmesg failed. dmesg content will be unavailable"
+	    else
+		    scp -i $KDUMP_SSH_KEY $KDUMP_TMPDMESG $KDUMP_REMOTE_HOST:$KDUMP_DMESGFILE
+		    ERROR=$?
+	    fi
+
+	    # did we succeed?
+	    if [ $ERROR == 0 ]; then
+		    log_success_msg "$NAME: saved dmesg content in $KDUMP_REMOTE_HOST:$KDUMP_STAMPDIR"
+		    logger -t $NAME "saved dmesg content in $KDUMP_REMOTE_HOST:$KDUMP_STAMPDIR"
+		    return 0;
+	    else
+		    log_failure_msg "$NAME: failed to save dmesg content in $KDUMP_REMOTE_HOST:$KDUMP_STAMPDIR"
+		    logger -t $NAME "failed to save dmesg content in $KDUMP_REMOTE_HOST:$KDUMP_STAMPDIR"
+		    return 1;
+	    fi
+	fi
+}
+
+function kdump_propagate()
+{
+	KDUMP_SSH_KEY="${SSH_KEY:=/root/.ssh/kdump_id_rsa}"
+	KDUMP_REMOTE_HOST="$SSH"
+
+	# ssh key propagation is only needed
+	# if remote ssh dump is configured
+	if [ -z "$KDUMP_REMOTE_HOST" ];then
+		log_failure_msg "$NAME: Remote ssh dump is not configured. No reason to propagate"
+		logger -t $NAME "Remote ssh dump is not configured. No reason to propagate"
+		return 1;
+	fi
+
+	# Verify if the provided key exists and create it if needed
+	if [ -f "$KDUMP_SSH_KEY" ];then
+		echo "Using existing key $KDUMP_SSH_KEY"
+	else
+		echo "Need to generate a new ssh key..."
+		/usr/bin/ssh-keygen -t rsa -f $KDUMP_SSH_KEY -N "" 2>&1 > /dev/null
+	fi
+
+	KDUMP_SSH_USER=${KDUMP_REMOTE_HOST%@*}
+	KDUMP_SSH_TARGET=${KDUMP_REMOTE_HOST#*@}
+
+	ssh-copy-id -i $KDUMP_SSH_KEY $KDUMP_SSH_USER@$KDUMP_SSH_TARGET &>/dev/null
+	ERROR=$?
+
+	if [ $ERROR -ne 0 ];then
+		log_failure_msg "$NAME: $KDUMP_SSH_KEY failed to be sent to $KDUMP_REMOTE_HOST"
+		logger -t $NAME "$KDUMP_SSH_KEY failed to be sent to $KDUMP_REMOTE_HOST"
+		return 1;
+	else
+		logger -t $NAME "propagated ssh key $KDUMP_SSH_KEY to server $KDUMP_REMOTE_HOST"
+		echo "propagated ssh key $KDUMP_SSH_KEY to server $KDUMP_REMOTE_HOST"
+		return 0;
+	fi
+
+}
+
+
+
+case "$1" in
+  test)
+	DRY_RUN="true"
+	if [ "$DUMP_MODE" == "fadump" ]; then
+		check_fadump_support
+	else
+		check_kdump_support;
+		locate_kdump_kernel;
+		kdump_load;
+		kdump_test
+	fi
+	;;
+  show)
+	DRY_RUN="true"
+	if [ "$DUMP_MODE" == "fadump" ]; then
+		check_fadump_support;
+	else
+		check_kdump_support;
+	fi
+	kdump_show
+	;;
+  load)
+	if [ "$DUMP_MODE" == "fadump" ]; then
+		check_fadump_support;
+		fadump_register
+	else
+		check_kdump_support;
+		locate_kdump_kernel;
+		kdump_load
+	fi
+	;;
+  unload)
+	if [ "$DUMP_MODE" == "fadump" ]; then
+		fadump_unregister
+	else
+		kdump_unload
+	fi
+	;;
+  status)
+	if [ "$DUMP_MODE" == "fadump" ]; then
+		check_fadump_support
+		if [ `cat $sys_fadump_registered` -eq 1 ] ; then
+			echo "current state   : ready to fadump";
+		else
+			echo "current state   : Not ready to fadump";
+		fi
+	else
+		check_kdump_support;
+		if [ `cat $sys_kexec_crash` -eq 1 ] ; then
+			echo "current state   : ready to kdump";
+		else
+			echo "current state   : Not ready to kdump";
+		fi
+	fi
+	exit 0;
+	;;
+  savecore)
+	if ! [ -z $SSH ];then
+		kdump_save_core_to_ssh
+	else
+		kdump_save_core
+	fi
+	exit $?
+	;;
+  propagate)
+	kdump_propagate;
+	;;
+  help|-h*|--h*)
+	kdump_help
+	;;
+  *)
+	echo "Usage: $0 {help|test|show|status|load|unload|savecore|propagate}"
+	exit 1
+	;;
+esac
+
+exit 0
