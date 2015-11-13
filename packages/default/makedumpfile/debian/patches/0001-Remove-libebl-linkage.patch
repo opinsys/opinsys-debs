@@ -3,12 +3,12 @@ Description: Remove libebl from link options
  Makefile |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Index: makedumpfile-1.5.6/Makefile
+Index: makedumpfile/Makefile
 ===================================================================
---- makedumpfile-1.5.6.orig/Makefile	2014-04-25 11:19:24.465438172 +0200
-+++ makedumpfile-1.5.6/Makefile	2014-04-25 11:19:24.465438172 +0200
-@@ -51,7 +51,7 @@
- SRC_ARCH = arch/arm.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c
+--- makedumpfile.orig/Makefile	2015-11-13 14:51:07.526119493 +0200
++++ makedumpfile/Makefile	2015-11-13 14:51:07.526119493 +0200
+@@ -52,7 +52,7 @@
+ SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c
  OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
  
 -LIBS = -ldw -lbz2 -lebl -ldl -lelf -lz

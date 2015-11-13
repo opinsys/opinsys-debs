@@ -1,8 +1,8 @@
-Index: makedumpfile-1.5.6/Makefile
+Index: makedumpfile/Makefile
 ===================================================================
---- makedumpfile-1.5.6.orig/Makefile	2014-04-25 11:24:21.000000000 +0200
-+++ makedumpfile-1.5.6/Makefile	2014-04-25 11:31:06.845448020 +0200
-@@ -77,26 +77,18 @@
+--- makedumpfile.orig/Makefile	2015-11-13 14:51:36.862214248 +0200
++++ makedumpfile/Makefile	2015-11-13 14:51:36.862214248 +0200
+@@ -80,26 +80,18 @@
  
  makedumpfile: $(SRC_BASE) $(OBJ_PART) $(OBJ_ARCH)
  	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -o $@ $< $(LIBS)
