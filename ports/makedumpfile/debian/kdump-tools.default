@@ -1,0 +1,92 @@
+# kdump-tools configuration
+# ---------------------------------------------------------------------------
+# USE_KDUMP - controls kdump will be configured
+#     0 - kdump kernel will not be loaded
+#     1 - kdump kernel will be loaded and kdump is configured
+# KDUMP_SYSCTL - controls when a panic occurs, using the sysctl 
+#     interface.  The contents of this variable should be the
+#     "variable=value ..." portion of the 'sysctl -w ' command.
+#     If not set, the default value "kernel.panic_on_oops=1" will
+#     be used.  Disable this feature by setting KDUMP_SYSCTL=" "
+#     Example - also panic on oom:
+#         KDUMP_SYSCTL="kernel.panic_on_oops=1 vm.panic_on_oom=1"
+#
+USE_KDUMP=0
+#KDUMP_SYSCTL="kernel.panic_on_oops=1"
+
+
+# ---------------------------------------------------------------------------
+# Kdump Kernel:
+# KDUMP_KERNEL - A full pathname to a kdump kernel.
+# KDUMP_INITRD - A full pathname to the kdump initrd (if used).
+#     If these are not set, kdump-config will try to use the current kernel
+#     and initrd if it is relocatable.  Otherwise, you will need to specify 
+#     these manually.
+#KDUMP_KERNEL=
+#KDUMP_INITRD=
+
+
+# ---------------------------------------------------------------------------
+# vmcore Handling:
+# KDUMP_COREDIR - local path to save the vmcore to.
+# KDUMP_FAIL_CMD - This variable can be used to cause a reboot or
+#     start a shell if saving the vmcore fails.  If not set, "reboot -f"
+#     is the default.
+#     Example - start a shell if the vmcore copy fails:
+#         KDUMP_FAIL_CMD="echo 'makedumpfile FAILED.'; /bin/bash; reboot -f"
+# KDUMP_DUMP_DMESG - This variable controls if the dmesg buffer is dumped.
+#     If unset or set to 1, the dmesg buffer is dumped. If set to 0, the dmesg
+#     buffer is not dumped.
+KDUMP_COREDIR="/var/crash"
+#KDUMP_FAIL_CMD="reboot -f"
+#KDUMP_DUMP_DMESG=
+
+
+# ---------------------------------------------------------------------------
+# Makedumpfile options:
+# MAKEDUMP_ARGS - extra arguments passed to makedumpfile (8).  The default,
+#     if unset, is to pass '-c -d 31' telling makedumpfile to use compression
+#     and reduce the corefile to in-use kernel pages only.
+#MAKEDUMP_ARGS="-c -d 31"
+
+
+# ---------------------------------------------------------------------------
+# Kexec/Kdump args
+# KDUMP_KEXEC_ARGS - Additional arguments to the kexec command used to load
+#     the kdump kernel
+#     Example - Use this option on x86 systems with PAE and more than 
+#     4 gig of memory:
+#         KDUMP_KEXEC_ARGS="--elf64-core-headers"
+# KDUMP_CMDLINE - The default is to use the contents of /proc/cmdline.  
+#     Set this variable to override /proc/cmdline.
+# KDUMP_CMDLINE_APPEND - Additional arguments to append to the command line 
+#     for the kdump kernel.  If unset, it defaults to "irqpoll maxcpus=1 nousb"
+#KDUMP_KEXEC_ARGS=""
+#KDUMP_CMDLINE=""
+#KDUMP_CMDLINE_APPEND="irqpoll maxcpus=1 nousb systemd.unit=kdump-tools.service"
+
+# ---------------------------------------------------------------------------
+# Architecture specific Overrides:
+
+# ---------------------------------------------------------------------------
+# Remote dump facilities:
+# SSH - username and hostname of the remote server that will receive the dump
+# 	and dmesg files.
+# SSH_KEY - Full path of the ssh private key to be used to login to the remote
+# 	    server. use kdump-config propagate to send the public key to the
+# 	    remote server
+# HOSTTAG - Select if hostname of IP address will be used as a prefix to the
+#           timestamped directory when sending files to the remote server.
+#           'ip' is the default.
+# NFS -     Hostname and mount point of the NFS server configured to receive
+#           the crash dump. The syntax must be {HOSTNAME}:{MOUNTPOINT} 
+#           (e.g. remote:/var/crash)
+#
+# SSH="<user at server>"
+#
+# SSH_KEY="<path>"
+#
+# HOSTTAG="hostname|[ip]"
+# 
+# NFS="<nfs mount>"
+#

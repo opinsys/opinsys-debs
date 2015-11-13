@@ -1,0 +1,14 @@
+[Unit]
+Description=Kernel crash dump capture service
+After=network-online.target
+
+[Service]
+Type=oneshot
+StandardOutput=syslog+console
+EnvironmentFile=/etc/default/kdump-tools
+ExecStart=/etc/init.d/kdump-tools start
+ExecStop=/etc/init.d/kdump-tools stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,46 @@
+# kdump-tools
+
+description	"kdump-tools"
+author	 "Louis Bouchard <louis.bouchard@ubuntu.com>"
+
+start on starting rc-sysinit
+stop on runlevel [!2345]
+
+console output
+
+task
+
+script
+    PATH=/bin:/usr/bin:/sbin:/usr/sbin
+
+    . /lib/lsb/init-functions
+    . /lib/init/vars.sh
+
+    VMCORE_FILE=/proc/vmcore
+    KDUMP_SCRIPT=/usr/sbin/kdump-config
+    KDUMP_DEFAULTS=/etc/default/kdump-tools
+    [ -r $KDUMP_DEFAULTS ] && . $KDUMP_DEFAULTS
+
+    [ ${USE_KDUMP:-0} -ne 0 ] || exit 0;
+
+    #
+    # If we have a /proc/vmcore, then we just panic'd
+    #
+    if [ -e $VMCORE_FILE -a -s $VMCORE_FILE ]; then
+        $KDUMP_SCRIPT savecore
+        if [ $? -ne 0 -a -n "$KDUMP_FAIL_CMD" ] ; then
+            $KDUMP_FAIL_CMD ;
+        else
+	    #
+	    # Since we panic'd, reboot to a normal system
+	    #
+            date -R ;
+            reboot -f ;
+        fi
+    #
+    # Else, we've just booted and need to load the kdump kernel
+    #
+    else
+        $KDUMP_SCRIPT load
+    fi
+end script

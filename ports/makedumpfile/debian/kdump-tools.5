@@ -1,0 +1,352 @@
+.\"
+.TH "kdump-tools.conf" "5" "February 2015" "kdump-tools v1.1.4" "Linux System Administrator's Manual"
+.SH NAME
+kdump-tools.conf \- configuration file for the kdump-tools init script
+.SH SYNOPSIS
+.TP
+.B /etc/default/kdump-tools
+.SH DESCRIPTION
+.PP 
+.B kdump-tools
+manages the kdump feature of the Linux kernel.  The 
+.I /etc/default/kdump-tools 
+file contains local configuration settings of kdump.
+.PP
+This file is sourced into a shell script, so it's format should be consistent
+with shell scripting.
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.SH OPTIONS
+.TP
+.B USE_KDUMP 
+Controls whether or not 
+.B kdump-tools 
+will take any action.
+If not set or 0, the 
+.B kdump-tools
+init script will not run.
+.TP
+.B KDUMP_SYSCTL
+Controls when a panic occurs, using the 
+.BR sysctl (8)
+interface.  Each time a kdump kernel is loaded, 
+.RI \*(lq "sysctl -w $KDUMP_SYSCTL" \*(rq
+is also executed, thus allowing the system adiminstrator 
+to maintain customizable conditions for a kdump.  
+The contents of this variable should be the
+.RI \*(lq "variable=value ..." \*(rq 
+portion of the 
+.RI \*(lq "sysctl -w" \*(rq 
+command.  If not set, 
+.RI \*(lq  "kernel.panic_on_oops=1" \*(rq
+will be used.  This feature can be disabled by setting 
+.br
+.B KDUMP_SYSCTL=\*(lq  \*(rq
+
+See
+.BR sysctl (8)
+for more info.
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.TP
+.B KDUMP_KERNEL 
+A full pathname to a kdump kernel (the kernel that is kexec'd at crash time
+in a reserved memory area, exposing the old kernel's memory for dumping).  If
+not set, 
+.B kdump-config 
+will use the boot kernel as the kdump kernel if it is relocatable; otherwise
+you must set
+.B KDUMP_KERNEL
+in order for
+.B kdump-tools
+to work.
+.TP
+.B KDUMP_INITRD
+A full pathname to the kdump initrd (if used).  If 
+.I KDUMP_KERNEL
+is set and 
+.I KDUMP_INITRD
+is not set, a warning message will be printed, and an initrd will not be used.
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.TP
+.B KDUMP_COREDIR
+Full path to a directory where the vmcore will be saved.
+Date stamped subdirectories are created each time a vmcore file is processed.
+If not set, 
+.I /var/crash
+will be used.
+.TP
+.B KDUMP_FAIL_CMD
+This variable specifies a command to run if the vmcore save fails.
+If not set, no special action is taken.
+.TP
+.B KDUMP_DUMP_DMESG
+This variable controls if the dmesg buffer is dumped.
+If not set or set to 1, the dmesg buffer is dumped.
+If set to 0, the dmesg buffer is not dumped.
+.\"
+.\" 
+.\"
+.TP
+.B MAKEDUMP_ARGS
+Extra arguments passed to 
+.BR makedumpfile (8).
+If not set, 
+.RI \*(lq "-c -d 31" \*(rq 
+will be used.  This tells makedumpfile to use compression, 
+and reduce the corefile to in-use kernel pages only.  See 
+.BR makedumpfile (8)
+for details.
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.TP
+.B KDUMP_KEXEC_ARGS
+Additional arguments to the kexec command used to load the kdump kernel.
+.TP
+.B KDUMP_CMDLINE
+Normally, the current kernel commandline is obtained from 
+.IR /proc/cmdline .  
+Set this variable to override 
+.IR /proc/cmdline .
+.TP
+.B KDUMP_CMDLINE_APPEND
+Additional arguments to append to the command line for the kdump kernel.  
+If not set,  
+.RI \*(lq "irqpoll maxcpus=1 nousb" \*(rq
+will be used.
+.TP
+.B SSH
+username and hostname of the remote server that will receive the dump
+and dmesg files.
+.I username@hostname
+format must be used.
+.TP
+.B SSH_KEY
+Full path of the ssh private key to be used to login to the remote server.
+Use
+.RI \*(lq "kdump-config propagate" \*(rq
+to send the public key to the remote server.
+If not set, the default
+.I /root/.ssh/kdump_id_rsa
+will be used
+.TP
+.B HOSTTAG
+Select if hostname of IP address will be used as a prefix to the
+timestamped directory when sending files to the remote server.
+If not set,
+.RI \*(lq "ip" \*(rq
+will be used.
+.TP
+.B NFS
+Hostname and mount point of the NFS server configured to receive the crash dump.
+The syntax must be HOSTNAME:MOUNTPOINT (e.g.
+.I remote:/var/crash
+)
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.SH USAGE
+.PP 
+.B kdump-tools 
+is as automated as can be at this point but there are some
+prerequisites to using it.  Additionally, some manual configuration
+is still required. 
+.PP
+By default, kernel dumps are stored locally on the system.
+.B kdump-tools
+can be configured to store the kernel dumps on a remote server accessible
+through the network.
+.SS Manual Configuration
+.IP 1. 
+.B USE_KDUMP 
+is set to 0 by default.  To enable
+.BR kdump-tools ,
+edit the 
+.I /etc/default/kdump-tools
+configuration file and set 
+.BR USE_KDUMP=1 .
+.\"
+.\"
+.IP 2. 
+.B Kernel Command line parameters
+\- the kernel must be booted with a 
+.IR crashkernel = 
+command line parameter.  Some example crashkernel parameters:
+.nf
+    ia64:       \fIcrashkernel=384M\fR
+    x86:        \fIcrashkernel=128M\fR
+    x86_64:     \fIcrashkernel=256M\fR
+.fi
+
+Some users may also want to add 
+.I nmi_watchdog=1 
+on certain systems.  The nmi watchdog will cause the kernel to panic 
+(and kdump) if a system hang is detected.
+
+The kernel command line parameter is generally set in one of these files:
+.IR /etc/default/grub ,
+.IR /boot/grub/menu.lst ,
+.IR /etc/elilo.conf ,
+or
+.IR /etc/lilo.conf .
+If the command line parameter is changed, a reboot is required in
+order for it to take effect.
+.\"
+.\"
+.IP 3. 
+.B Architectural considerations
+.RS
+.IP A)
+.B
+x86 && PAE && memory > 4 Gigabytes
+\- use
+.I
+KDUMP_KEXEC_ARGS="--elf64-core-headers"
+.IP B)
+.B
+x86 and x86_64
+\- Some systems can take advantage of the nmi watchdog.  Add
+.I
+nmi_watchdog=1
+to the boot commandline to turn on the watchdog.
+The nmi interrupt will call panic if activated.
+.IP C)
+.B
+ia64
+\- Some systems may need
+.IR KDUMP_KEXEC_ARGS="--noio" .
+Use this if the system hangs after a panic, but before the kdump kernel
+begins to boot.
+.RE
+.\"
+.\"
+.SS Networked kernel dump Configuration
+.IP 1.
+Either use
+.B SSH
+or
+.B NFS
+to choose which protocol to use to remotely access the target server.
+.IP 2
+For
+.B SSH
+.I username@hostname
+needs to be provided along with an appropriate
+.B SSH_KEY
+definition or use
+.RI \*(lq "kdump-config propagate" \*(rq
+to propagate a new default ssh key.
+.PP
+.IP 3
+For
+.B NFS
+the remote server name must be provided along with the directory where
+files are to be copied.
+.SS Prerequisites
+.IP 1. 
+.B Boot Kernel Configuration
+\- The boot kernel must be configured with
+.IR CONFIG_KEXEC=y
+and, if it is also to be used as the kdump kernel,
+.IR CONFIG_CRASHDUMP=y .
+
+For ia64, only makedumpfile level 1 will work if the
+memory model selected is
+.IR CONFIG_DISCONTIG . 
+.IR CONFIG_SPARSEMEM
+is recommended instead.
+.\"
+.\"
+.IP 2. 
+.B Kdump Kernel Configuration
+\- The kdump kernel must be relocated or relocatable.  ia64 is relocatable by
+default, but x86, x86_64, and powerpc must be built with
+.IR CONFIG_RELOCATABLE=y .
+Other architectures may require a predermined start location via
+.IR CONFIG_PHYSICAL_START .
+If the boot kernel is relocatable,
+.B kdump-tools
+will automatically use that kernel. 
+Otherwise, a relocatable or relocated kernel will need to be provided.
+The kdump kernel can be specified in the 
+.I /etc/default/kdump-tools 
+file.
+Set the 
+.B KDUMP_KERNEL 
+variable and if necessary the 
+.B KDUMP_INITRD 
+variable to point to the provided kernel and its initrd.
+
+The kdump kernel must be configured with:
+.B CONFIG_CRASH_DUMP=y
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.SH EXAMPLES
+.PP
+Also panic and kdump on oom:
+.RS
+KDUMP_SYSCTL="kernel.panic_on_oops=1 vm.panic_on_oom=1"
+.RE
+.PP 
+Use this option on x86 systems with PAE and more than 4 gig of memory:
+.RS
+KDUMP_KEXEC_ARGS="--elf64-core-headers"
+.RE
+.PP
+This option starts a shell if 
+.B kdump-tools 
+cannot save the vmcore file:
+.RS
+KDUMP_FAIL_CMD="/bin/bash; reboot -f"
+.RE
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.SH FILES
+.TP 25
+.I /etc/init.d/kdump-tools
+an init script to automatically load a kdump kernel, or save a vmcore and reboot.
+.TP 25
+.I /etc/default/kdump-tools
+the
+.B kdump-tools 
+configuration file
+.TP 25
+.I /var/crash/kernel_link
+a link to the current debug kernel
+.TP 25
+.I /var/crash/kexec_cmd
+the last kexec_cmd executed by 
+.B kdump-config
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.SH DIAGNOSTICS
+.PP
+See
+.BR kdump-config (8)
+for explanations of various error messages.
+.\"
+.\" # ---------------------------------------------------------------------------
+.\"
+.SH SEE ALSO
+.PP 
+.I /usr/share/doc/kdump-tools/README
+.br
+.I /usr/share/doc/kdump-tools/README.Debian
+.br
+.BR kdump-config (8),
+.BR kexec (8),
+.BR sysctl (8),
+.BR makedumpfile (8),
+.BR crash (8),
+.BR gdb (1),
+.SH AUTHOR
+.PP 
+Terry Loftin <terry.loftin@hp.com>
