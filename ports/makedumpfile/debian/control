@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Louis Bouchard <louis.bouchard@ubuntu.com>
 Standards-Version: 3.9.5
 Build-Depends: debhelper (>= 7.0.50), libelf-dev, libz-dev, libdw-dev (>= 0.141-2ubuntu1),
-                libbz2-dev, dh-systemd (>=1.5)
+                libbz2-dev
 Vcs-Git: git://git.debian.org/collab-maint/makedumpfile.git
 Vcs-Browser: http://git.debian.org/?p=collab-maint/makedumpfile.git;a=summary
 
