@@ -1,3 +1,10 @@
+makedumpfile (1:1.5.9-0+opinsys1) trusty; urgency=medium
+
+  * New upstream release.
+  * Removed dh_systemd usage.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Fri, 13 Nov 2015 16:08:46 +0200
+
 makedumpfile (1:1.5.8-4) sid; urgency=medium
 
   * Add cherry-pick of commits b859e0a, f1cea98, 3cc296c, 70ce1a2, 
