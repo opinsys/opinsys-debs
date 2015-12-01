@@ -1,7 +1,0 @@
-#!/bin/sh
-
-set -eu
-
-SRC_VERSION=$(dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
-wget "http://sourceforge.net/projects/makedumpfile/files/makedumpfile/${SRC_VERSION}/makedumpfile-${SRC_VERSION}.tar.gz" -O "../makedumpfile_${SRC_VERSION}.orig.tar.gz"
-tar -z -x -f "../makedumpfile_${SRC_VERSION}.orig.tar.gz" --strip-components=1 -C .

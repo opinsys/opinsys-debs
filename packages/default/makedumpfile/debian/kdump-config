@@ -46,6 +46,7 @@ ARCH=`uname -m`
 KDUMP_SYSCTL=${KDUMP_SYSCTL:="kernel.panic_on_oops=1"}
 KDUMP_COREDIR=${KDUMP_COREDIR:=/var/crash}
 KDUMP_DUMP_DMESG=${KDUMP_DUMP_DMESG:=1}
+KDUMP_DIR="/var/lib/kdump"
 MAKEDUMP_ARGS=${MAKEDUMP_ARGS:="-c -d 31"}
 KDUMP_CMDLINE_APPEND=${KDUMP_CMDLINE_APPEND:="irqpoll maxcpus=1 nousb systemd.unit=kdump-tools.service"}
 [ -d $KDUMP_COREDIR ] || mkdir -p $KDUMP_COREDIR ;
@@ -152,11 +153,121 @@ function kdump_test()
 	echo "crashkernel addr:  $IOMEM_ADDR"
 	echo "kdump kernel addr: $KDUMP_ADDR"
 	echo "kdump kernel:"
-	echo "   $KDUMP_KERNEL"
+	if [ -h "$KDUMP_KERNEL" ];then
+		echo "   "$(file $KDUMP_KERNEL)
+	else
+		echo "   "$KDUMP_KERNEL
+	fi
 	echo "kdump initrd: "
-	echo "  $KDUMP_INITRD"
+	if [ -h "$KDUMP_INITRD" ];then
+		echo "   "$(file $KDUMP_INITRD)
+	else
+		echo "   "$KDUMP_INITRD
+	fi
 	echo "kexec command to be used:"
 	echo "  $KEXEC_CMD"
+}
+
+# Check if symlinks are correctly set if $KDUMP_DIR
+# is used to store smaller initrd.img files (Ubuntu only)
+# Returns: 0/1/2 (success/broken/absent)
+#
+function check_symlink()
+{
+symlink=$1
+
+	if [ -h "$KDUMP_DIR/$symlink" ];then
+		linkedfile=$(file "$KDUMP_DIR/$symlink" | rev | cut -d" " -f1 | rev)
+		if [ -e "$linkedfile" ];then
+			return 0
+		else
+			return 1
+		fi
+	else
+		return 2
+	fi
+}
+
+# Create a symlink
+function create_symlink()
+{
+link=$1
+	target=${link%-$KVER}
+	log_action_msg "Creating symlink $KDUMP_DIR/$target"
+	if [ $target == "vmlinuz" ];then
+		ln -fs /boot/$link $KDUMP_DIR/$target
+	else
+		ln -fs $KDUMP_DIR/$link $KDUMP_DIR/$target
+	fi
+}
+
+# Verify that the version of the symlink target
+# is equal to the current running kernel version
+# Returns : 0 if versions are the same, 1 otherwise
+function symlink_current()
+{
+target=$1
+
+	linkedfile=$(file $KDUMP_DIR/$target | rev | cut -d" " -f1 | rev)
+	if [ $target == "vmlinuz" ];then
+		linkversion=${linkedfile#/boot/vmlinuz-}
+	else
+		linkversion=${linkedfile#$KDUMP_DIR/initrd.img-}
+	fi
+
+	if [ $linkversion != $KVER ];then
+		return 1
+	else
+		return 0
+	fi
+}
+
+# If $KDUMP_DIR is used to hold smaller initrd.img,
+# verify if the proper symlinks are in place for
+# initrd.img and vmlinuz.
+# If no link is found new links are created.
+# If they are found to be broken, remove the broken
+# links and recreate them
+# If existing links do not point to the running kernel
+# remove them and create new links
+# Nothing is created if DRY_RUN = true. Only reporting
+# is done.
+# Returns: none. prints warnings or exit
+# Creates: $KDUMP_DIR/vmlinuz $KDUMP_DIR/initrd.img
+function manage_symlinks()
+{
+	if [ -d "$KDUMP_DIR" ];then
+		for symlink in initrd.img vmlinuz;do
+			check_symlink $symlink
+			ret=$?
+			if [ $ret == 2 ];then
+				log_failure_msg "Missing symlink : $KDUMP_DIR/$symlink"
+				if [ ! $DRY_RUN ];then
+					create_symlink $symlink-$KVER
+				fi
+			elif [ $ret == 1 ];then
+				log_failure_msg "Broken symlink : $(file $KDUMP_DIR/$symlink)"
+				if [ ! $DRY_RUN ];then
+					rm -f $KDUMP_DIR/$symlink
+					create_symlink $symlink-$KVER
+				fi
+			elif [ $ret == 0 ];then
+				symlink_current $symlink
+				current=$?
+				if [ $current == 1 ];then
+					log_action_msg "$KDUMP_DIR/$symlink pointing to wrong file"
+					if [ ! $DRY_RUN ];then
+						rm -f $KDUMP_DIR/$symlink
+						create_symlink $symlink-$KVER
+					fi
+				fi
+			else
+				### Should never get here
+				log_failure_msg "Invalid return code from check_symlink()"
+			fi
+		done
+	fi
+	return 0
 }
 
 # check_fadump_support:  Other miscellaneous checks go here:
@@ -679,6 +790,7 @@ case "$1" in
 		check_fadump_support
 	else
 		check_kdump_support;
+		manage_symlinks;
 		locate_kdump_kernel;
 		kdump_load;
 		kdump_test
@@ -699,6 +811,7 @@ case "$1" in
 		fadump_register
 	else
 		check_kdump_support;
+		manage_symlinks;
 		locate_kdump_kernel;
 		kdump_load
 	fi
@@ -719,7 +832,9 @@ case "$1" in
 			echo "current state   : Not ready to fadump";
 		fi
 	else
+		DRY_RUN=true
 		check_kdump_support;
+		manage_symlinks;
 		if [ `cat $sys_kexec_crash` -eq 1 ] ; then
 			echo "current state   : ready to kdump";
 		else

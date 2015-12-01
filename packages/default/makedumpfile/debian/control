@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Louis Bouchard <louis.bouchard@ubuntu.com>
 Standards-Version: 3.9.5
 Build-Depends: debhelper (>= 7.0.50), libelf-dev, libz-dev, libdw-dev (>= 0.141-2ubuntu1),
-                libbz2-dev
+                libbz2-dev, dh-systemd (>=1.5), po-debconf
 Vcs-Git: git://git.debian.org/collab-maint/makedumpfile.git
 Vcs-Browser: http://git.debian.org/?p=collab-maint/makedumpfile.git;a=summary
 
@@ -21,7 +21,7 @@ Description: VMcore extraction tool
 
 Package: kdump-tools
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, makedumpfile, kexec-tools
+Depends: ${shlibs:Depends}, ${misc:Depends}, makedumpfile, kexec-tools, debconf
 Description: scripts and tools for automating kdump (Linux crash dumps)
  kdump-tools provides an init script and a configuration script for
  automating the use of kdump.  It uses the makedumpfile utility to
