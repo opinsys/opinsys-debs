@@ -1,7 +1,7 @@
-Index: makedumpfile/Makefile
+Index: makedumpfile-1.5.9/Makefile
 ===================================================================
---- makedumpfile.orig/Makefile	2015-11-13 14:51:36.862214248 +0200
-+++ makedumpfile/Makefile	2015-11-13 14:51:36.862214248 +0200
+--- makedumpfile-1.5.9.orig/Makefile	2015-11-24 12:59:52.503286944 +0100
++++ makedumpfile-1.5.9/Makefile	2015-11-24 12:59:52.499286944 +0100
 @@ -80,26 +80,18 @@
  
  makedumpfile: $(SRC_BASE) $(OBJ_PART) $(OBJ_ARCH)

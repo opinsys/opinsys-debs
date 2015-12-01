@@ -1,9 +1,95 @@
-makedumpfile (1:1.5.9-0+opinsys1) trusty; urgency=medium
+makedumpfile (1:1.5.9-1) sid; urgency=medium
 
-  * New upstream release.
-  * Removed dh_systemd usage.
+  * New upstream version includes :
+    o Parallel compression
+     - Add the new option "--num-threads" to enable parallel compression
+       for faster processing. This option intends parallel compression
+       while --split intends parallel i/o, they try to solve different
+       bottlenecks.
 
- -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Fri, 13 Nov 2015 16:08:46 +0200
+    o Change the way to choose the non-cyclic mode
+     - Add the new option "--work-dir" to specify the directory used to
+       store the bitmap. This is the alternative to the combination of
+       --non-cyclic and TMPDIR.
+
+    o Support new kernels
+     - The supported kernel is updated to 4.2 in this version.
+
+    Changelog:
+    o New feature
+        - [PATCH] Support ARM64. (by Pratyush Anand) 94d47d1
+        - [PATCH 1/2] Enable compressed dump formats for Xen. (by Petr Tesarik) 349a0ed
+        - [PATCH 2/2] Remove notes about ELF being the only available format for Xen dumps.
+          (by Petr Tesarik) 5cab480
+        - [PATCH v5 01/10] Add readpage_kdump_compressed_parallel. (by Qiao Nuohan) 5fab021
+        - [PATCH v5 02/10] Add mappage_elf_parallel. (by Qiao Nuohan) edca232
+        - [PATCH v5 03/10] Add readpage_elf_parallel. (by Qiao Nuohan) 7f15b41
+        - [PATCH v5 04/10] Add read_pfn_parallel. (by Qiao Nuohan) a7243fe
+        - [PATCH v5 05/10] Add function to initial bitmap for parallel use. (by Qiao Nuohan) 56a6bc4
+        - [PATCH v5 06/10] Add filter_data_buffer_parallel. (by Qiao Nuohan) 2a7cb9f
+        - [PATCH v5 07/10] Add write_kdump_pages_parallel to allow parallel process. (by Qiao Nuohan) c2595d9
+        - [PATCH v5 08/10] Initial and free data used for parallel process. (by Qiao Nuohan) 4538848
+        - [PATCH v5 09/10] Make makedumpfile available to read and compress pages parallelly.
+          (by Qiao Nuohan) b265102
+        - [PATCH v5 10/10] Add usage and manual about multiple threads process. (by Qiao Nuohan) b18a8a6
+
+    o Bugfix
+        - [PATCH] Correct vmap_area_list support for i386 and ppc32. (by Atsushi Kumagai) 4194d7b
+        - [PATCH] Free pages aren't removed in non-cyclic mode. (by Atsushi Kumagai) d64cf7f
+        - [PATCH v2] Fix a bug in generating incomplete kdump core. (by Zhou Wenjian) 9cee495
+        - [PATCH] Remove the double free of sph. (by Chao Fan) 72dec41
+        - [PATCH 1/2] sadump: Change bit order. (by HATAYAMA Daisuke) 5f15256
+        - [PATCH 2/2] sadump: Perform explicit zero page filtering. (by HATAYAMA Daisuke) 19b3a91
+
+    o Cleanup
+        - [PATCH 01/13] Organize bitmap structure for cyclic logic. (by Atsushi Kumagai) 5fc24bf
+        - [PATCH 02/13] Add option to specify working directory for the bitmap. (by Atsushi Kumagai) 5c5a8b8
+        - [PATCH 03/13] Integrate the entry point of is_dumpable(). (by Atsushi Kumagai) 5c8c680
+        - [PATCH 04/13] Integrate the main logic of writing kdump file. (by Atsushi Kumagai) d18796d
+        - [PATCH 05/13] Communalize the function for creating 1st bitmap. (by Atsushi Kumagai) b00a7b0
+        - [PATCH 06/13] Remove the old logic of writing kdump pages. (by Atsushi Kumagai) 4d55542
+        - [PATCH 07/13] Integrate filtering process for ELF path. (by Atsushi Kumagai) 679a818
+        - [PATCH 08/13] Remove the old logic of writing ELF pages. (by Atsushi Kumagai) 672354b
+        - [PATCH 09/13] Adjust --mem-usage path to the new code. (by Atsushi Kumagai) 57153b0
+        - [PATCH 10/13] Adjust --split/--reassemble path to the new code. (by Atsushi Kumagai) 95435de
+        - [PATCH 11/13] Adjust refiltering path to the new code. (by Atsushi Kumagai) c7fb41c
+        - [PATCH 12/13] Adjust sadump path to the new code. (by Atsushi Kumagai) edd2bf2
+        - [PATCH 13/13] Remove --non-cyclic option. (by Atsushi Kumagai) a117ae9
+        - [PATCH] Optimise the function reserve_diskspace. (by Zhou Wenjian) 3605073
+        - [PATCH v2] Add description of pages lost by ENOSPACE in IMPLEMENTATION. (by Zhou Wenjian) 0e20f33
+        - [PATCH 1/2] Enable compressed dump formats for Xen. (by Petr Tesarik) 349a0ed
+        - [PATCH 2/2] Remove notes about ELF being the only available format for Xen dumps.
+          (by Petr Tesarik) 5cab480
+        - [PATCH v2] Code changes to satisfy the coverity scan. (by Chao Fan) 0c65e38
+        - [PATCH] Improve performance for parallel compression with zlib. (by Atsushi Kumagai) 3ef6629
+
+  * Debian specific enhancements :
+
+    - kdump-tools now make use of smaller initrd.img files created in
+    /var/lib/kdump. This avoid optential OOM when the size of the initrd.img
+    becomes larger (LP: #1496317).  Implementation details are :
+
+      o New kernel hooks are added to create smaller initrd.img files when new
+        kernel packages are installed :
+          /etc/kernel/postrm.d/kdump-tools
+          /etc/kernel/postinst.d/kdump-tools
+
+      o kdump-config is responsible for the maintenance of symbolic links used
+        to point to the appropriate vmlinuz & initrd files. Link maintenance
+        is done at each boot by kdump-config. New links will point to the
+        files named after the running kernel.
+
+      o The KDUMP_KERNEL and KDUMP_INITRD configuration variables are now
+        now enabled and use the symbolic links :
+          /var/lib/kdump/vmlinuz
+          /var/lib/kdump/initrd.img
+
+      o kdump-config has been adapted to show the symbolic link information
+
+    - kdump-tools is now enabled by default.  When installed a prompt will
+      propose to override the default value.
+
+ -- Louis Bouchard <louis.bouchard@ubuntu.com>  Tue, 24 Nov 2015 12:38:06 +0100
 
 makedumpfile (1:1.5.8-4) sid; urgency=medium
 

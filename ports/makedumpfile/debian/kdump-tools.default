@@ -11,7 +11,7 @@
 #     Example - also panic on oom:
 #         KDUMP_SYSCTL="kernel.panic_on_oops=1 vm.panic_on_oom=1"
 #
-USE_KDUMP=0
+USE_KDUMP=1
 #KDUMP_SYSCTL="kernel.panic_on_oops=1"
 
 
@@ -22,8 +22,8 @@ USE_KDUMP=0
 #     If these are not set, kdump-config will try to use the current kernel
 #     and initrd if it is relocatable.  Otherwise, you will need to specify 
 #     these manually.
-#KDUMP_KERNEL=
-#KDUMP_INITRD=
+KDUMP_KERNEL=/var/lib/kdump/vmlinuz
+KDUMP_INITRD=/var/lib/kdump/initrd.img
 
 
 # ---------------------------------------------------------------------------
