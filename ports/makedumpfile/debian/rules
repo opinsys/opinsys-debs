@@ -11,8 +11,3 @@ override_dh_installinit:
 	# (which just unloads the kdump kernel) so that we can catch crashes
 	# all the way until actual shutdown.
 	dh_installinit -pkdump-tools -- start 11 2 3 4 5 .
-
-override_dh_install:
-	dh_install
-	install -D -m 755 debian/kernel-postinst-generate-initrd debian/kdump-tools/etc/kernel/postinst.d/kdump-tools
-	install -D -m 755 debian/kernel-postrm-delete-initrd debian/kdump-tools/etc/kernel/postrm.d/kdump-tools
