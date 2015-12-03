@@ -4,7 +4,7 @@
 	dh $@
 
 override_dh_auto_build:
-	dh_auto_build -- LINKTYPE=dynamic
+	dh_auto_build -- LINKTYPE=dynamic TARGET=$(shell dpkg-architecture -qDEB_BUILD_ARCH)
 
 override_dh_installinit:
 	# Start right after syslog is available, and don't bother stopping

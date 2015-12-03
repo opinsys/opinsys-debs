@@ -1,8 +1,21 @@
-Index: makedumpfile-1.5.9/Makefile
+Index: makedumpfile/Makefile
 ===================================================================
---- makedumpfile-1.5.9.orig/Makefile	2015-11-24 12:59:52.503286944 +0100
-+++ makedumpfile-1.5.9/Makefile	2015-11-24 12:59:52.499286944 +0100
-@@ -80,26 +80,18 @@
+--- makedumpfile.orig/Makefile	2015-12-03 14:54:09.352683856 +0200
++++ makedumpfile/Makefile	2015-12-03 14:55:15.148921965 +0200
+@@ -15,9 +15,10 @@
+ 		    -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+ # LDFLAGS = -L/usr/local/lib -I/usr/local/include
+ 
+-HOST_ARCH := $(shell uname -m)
++HOST_ARCH := $(shell dpkg-architecture -qDEB_HOST_ARCH)
++
+ # Use TARGET as the target architecture if specified.
+-# Defaults to uname -m
++# Defaults to dpkg-architecture -qDEB_HOST_ARCH
+ ifeq ($(strip($TARGET)),)
+ TARGET := $(HOST_ARCH)
+ endif
+@@ -80,26 +81,18 @@
  
  makedumpfile: $(SRC_BASE) $(OBJ_PART) $(OBJ_ARCH)
  	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -o $@ $< $(LIBS)
