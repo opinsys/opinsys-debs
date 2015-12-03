@@ -1,3 +1,9 @@
+makedumpfile (1:1.5.9-1+opinsys3) trusty; urgency=medium
+
+  * Fix cross compilation.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Thu, 03 Dec 2015 14:56:36 +0200
+
 makedumpfile (1:1.5.9-1+opinsys2) trusty; urgency=medium
 
   * Do not install non-existing kernel post{inst,rm} scripts
