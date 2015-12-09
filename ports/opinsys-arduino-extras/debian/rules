@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_fixperms:
+override_dh_shlibdeps:
+override_dh_strip:
+
+PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+.PHONY: get-orig-source
+get-orig-source:
+	sh debian/fetch_and_unpack.sh
+	tar -C .. -zcf ../opinsys-arduino-extras_$(SRC_VERSION).orig.tar.gz \
+            opinsys-arduino-extras/usr
