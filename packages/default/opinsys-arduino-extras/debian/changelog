@@ -1,0 +1,5 @@
+opinsys-arduino-extras (1.0-0+opinsys1) trusty; urgency=low
+
+  * Initial release.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Wed, 09 Dec 2015 10:59:06 +0200

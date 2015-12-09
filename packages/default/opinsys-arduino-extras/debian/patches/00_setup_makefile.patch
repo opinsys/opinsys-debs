@@ -1,0 +1,10 @@
+--- /dev/null	2015-12-09 08:59:25.965816070 +0200
++++ opinsys-arduino-extras/Makefile	2015-12-09 11:30:39.000981085 +0200
+@@ -0,0 +1,7 @@
++all:
++
++install:
++	mkdir -p $(DESTDIR)/
++	cp -a usr $(DESTDIR)/
++
++clean:
