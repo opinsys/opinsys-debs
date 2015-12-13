@@ -4,3 +4,6 @@ wpasupplicant binary: possible-gpl-code-linked-with-openssl
 
 # These are numerous and unlikely to be fixed anytime soon, filter them out.
 wpasupplicant binary: hyphen-used-as-minus-sign
+
+# false positive spelling complaints
+wpasupplicant binary: spelling-error-in-binary sbin/wpa_supplicant ment meant
