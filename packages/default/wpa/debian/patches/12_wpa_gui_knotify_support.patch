@@ -2,9 +2,15 @@ Description: Use KDE's KNotify when running under KDE
 Author: Raphael Geissert <geissert@debian.org>
 Bug-Debian: http://bugs.debian.org/582793
 ---
+---
+ wpa_supplicant/wpa_gui-qt4/wpagui.cpp |   18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+Index: b/wpa_supplicant/wpa_gui-qt4/wpagui.cpp
+===================================================================
 --- a/wpa_supplicant/wpa_gui-qt4/wpagui.cpp
 +++ b/wpa_supplicant/wpa_gui-qt4/wpagui.cpp
-@@ -17,11 +17,14 @@
+@@ -11,11 +11,14 @@
  #endif /* CONFIG_NATIVE_WINDOWS */
  
  #include <cstdio>
@@ -19,15 +25,15 @@ Bug-Debian: http://bugs.debian.org/582793
  
  #include "wpagui.h"
  #include "dirent.h"
-@@ -1339,10 +1342,21 @@ void WpaGui::createTrayIcon(bool trayOnl
+@@ -1336,10 +1339,21 @@ void WpaGui::createTrayIcon(bool trayOnl
  void WpaGui::showTrayMessage(QSystemTrayIcon::MessageIcon type, int sec,
  			     const QString & msg)
  {
 -	if (!QSystemTrayIcon::supportsMessages())
-+	if (isVisible() || !tray_icon || !tray_icon->isVisible())
++	if (isVisible() || !tray_icon || !tray_icon->isVisible() || quietMode)
  		return;
  
--	if (isVisible() || !tray_icon || !tray_icon->isVisible())
+-	if (isVisible() || !tray_icon || !tray_icon->isVisible() || quietMode)
 +	/* first try to use KDE's notifications system if running under
 +	 * a KDE session */
 +	if (getenv("KDE_FULL_SESSION") != NULL) {

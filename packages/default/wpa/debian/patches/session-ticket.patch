@@ -11,7 +11,7 @@ Index: b/src/crypto/tls_openssl.c
 ===================================================================
 --- a/src/crypto/tls_openssl.c
 +++ b/src/crypto/tls_openssl.c
-@@ -917,6 +917,7 @@ struct tls_connection * tls_connection_i
+@@ -1060,6 +1060,7 @@ struct tls_connection * tls_connection_i
  #ifdef SSL_OP_NO_COMPRESSION
  	options |= SSL_OP_NO_COMPRESSION;
  #endif /* SSL_OP_NO_COMPRESSION */
