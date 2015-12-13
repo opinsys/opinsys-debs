@@ -2,43 +2,43 @@
 ------------------------
 
 This "wpa" source package merges wpa_supplicant and hostapd sources, which are
-maintained in one source repository[1] upstream and share considerable/ 
-duplicate amounts of source. Starting with the 1.x branch, both wpa_supplicant 
-and hostapd are built from this common source package for Debian, while not 
-released together as tarball by upstream, the source can be obtained from the 
+maintained in one source repository[1] upstream and share considerable/
+duplicate amounts of source. Starting with the 1.x branch, both wpa_supplicant
+and hostapd are built from this common source package for Debian, while not
+released together as tarball by upstream, the source can be obtained from the
 upstream git repositories.
 
 The preferred way to generate the orig.tar.gz is by calling
 
  $ debian/rules get-orig-source
 
-which will clone the upstream git repository under $TMPDIR, using mktemp(1), 
-and create a new tarballs based on the git tag corresponding to the top most 
+which will clone the upstream git repository under $TMPDIR, using mktemp(1),
+and create a new tarball based on the git tag corresponding to the top most
 entry in debian/changelog. This newly generated tarball will be stored as
 ../wpa_${VERSION}.orig.tar.gz or ../tarballs/wpa_${VERSION}.orig.tar.gz, if
-a directory called ../tarballs/ exists. Eventually existing tarballs 
+a directory called ../tarballs/ exists. Eventually existing tarballs
 corresponding to the current version will not be overwritten.
 
 Required dependencies to generate a new orig.tar.gz:
 - a SUSv3 compatible shell, like dash or bash
 - dpkg-parsechangelog, available from dpkg-dev
 - git
-- gzip, available from gzip or busybox
+- xz, available from xz-utils or busybox
 - mktemp and rm, available from coreutils or busybox
 - sed, available from sed or busybox
 - tar, available from tar or busybox
 
-It is recommended to base tarballs for development snapshots of "wpa" on 
-according git tag from the upstream git repository, the available git tags
+It is recommended to base tarballs for development snapshots of "wpa" on
+according git tags from the upstream git repository, the available git tags
 can be queried by:
 
  $ git clone git://w1.fi/srv/git/hostap-1.git	# 1.x branch
 
 or
 
- $ git clone git://w1.fi/srv/git/hostap.git	# development branch
+ $ git clone git://w1.fi/srv/git/hostap.git	# >= 2.x branches
 
-changing into the corresponding directory (hostap-1 or hostapd) and calling 
+changing into the corresponding directory (hostap-1 or hostapd) and calling
 git tag.
 
  $ cd hostapd-1
@@ -62,7 +62,7 @@ Exporting commits between "hostap_1_0_rc3" and "hostap_1_0":
 
  $ git format-patch hostap_1_0_rc3..hostap_1_0
 
-In both cases numbered patches will be dropped in the base directory of the 
+In both cases numbered patches will be dropped in the base directory of the
 git clone. These numbered patches can be imported to the Debian package using
 standard procedures for "3.0 (quilt)" source packages.
 
@@ -75,9 +75,37 @@ Tarballs can also be created manually from the upstream git repository:
 	--prefix="wpa-1.0/" \
 		hostap_1_0 \
 			README COPYING patches src wpa_supplicant hostapd | \
-				gzip -c9 > wpa_1.0.orig.tar.gz
+				xz -c6 > wpa_1.0.orig.tar.gz
 
 Arbitrary git tags or commit IDs can be used for this purpose.
+
+
+Upstream git snapshots can be exported by using a specially crafted version
+syntax used in the top most (pending) changelog entry. The required syntax for
+correctly parsing this is:
+
+ <upstream_version>+git<date>.<revision>+<git_hash>-<debian_revision>
+ upstream_version := [0-9\.]*   --> 2.0
+ date             := [0-9]*     --> 20131120 (YYYYMMDD)
+ revision         := [0-9]*     --> 1
+ git_hash         := [0-9a-f]*  --> 594516b
+ debian_revision  := [0-9*]     --> 1
+
+e.g.:
+
+ 2.0+git20131120.1+594516b-1
+
+Technically any incrementing number can be used for <date>, but it's strongly
+recommended to use YYYYMMDD (date --utc +%Y%m%d) and follow it by an
+strictly incrementing arbitrary revision number (typically '.1'). The supplied
+git hash can be abbreviated, but must be unique (see git describe, without
+leading 'g').
+
+The debian/rules get-orig-source target will automatically switch between
+hostapd-1.git and hostapd.git (for >= 2.0) as needed, but it will only fetch
+the explicitly specified version from a properly formatted, top most,
+debian/changelog entry; it will not fetch the last upstream release or git
+HEAD automatically.
 
 
 The Debian packaging for wpa_supplicant/ hostapd is maintained in a subversion
@@ -92,9 +120,9 @@ The development mailing list and its mailing list archive is located at:
 
 Work for the wpa package can be coordinated on this mailing list through:
 
- <pkg-wpa-devel@lists.alioth.debian.org>
+ Debian wpasupplicant Maintainers <pkg-wpa-devel@lists.alioth.debian.org>
 
- -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 10 May 2012 22:29:24 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Sat, 28 Dec 2013 22:37:03 +0100
 
 [1]	http://hostap.epitest.fi/gitweb/gitweb.cgi?p=hostap-1.git [1.x branch]
 	http://hostap.epitest.fi/gitweb/gitweb.cgi?p=hostap.git [development]

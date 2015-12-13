@@ -30,7 +30,7 @@ fi
 
 HOSTAPD_BIN="/usr/sbin/hostapd"
 HOSTAPD_PNAME="hostapd"
-HOSTAPD_PIDFILE="/var/run/hostapd.$IFACE.pid"
+HOSTAPD_PIDFILE="/run/hostapd.$IFACE.pid"
 HOSTAPD_OMIT_PIDFILE="/run/sendsigs.omit.d/hostapd.$IFACE.pid"
 
 if [ ! -x "$HOSTAPD_BIN" ]; then
