@@ -345,7 +345,7 @@ group or gid specified by the GROUP= crtl_interface parameter).
 
 	# the default ctrl_interface option used in the example file
 	# /usr/share/doc/wpasupplicant/examples/wpa-roam.conf
-        ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+        ctrl_interface=DIR=/run/wpa_supplicant GROUP=netdev
 
 To interact with the supplicant, the wpa_cli (command line) and wpa_gui (QT)
 have been provided. With these you may connect, disconnect, add/delete new
