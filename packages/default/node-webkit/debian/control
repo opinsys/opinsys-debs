@@ -7,7 +7,7 @@ Standards-Version: 3.9.3
 Homepage: https://github.com/rogerwang/node-webkit
 
 Package: node-webkit
-Architecture: i386
+Architecture: amd64
 Depends: ${misc:Depends}, openssl, zlib1g, libnss3
 Description: Call all Node.js modules directly from DOM
  node-webkit is an app runtime based on Chromium and node.js. You can write
