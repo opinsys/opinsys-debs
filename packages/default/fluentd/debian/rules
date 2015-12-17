@@ -7,13 +7,10 @@
 PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 
-INSTALL_DIR = $(CURDIR)/debian/fluentd/usr/lib/fluentd-gem
-override_dh_auto_install:
-	mkdir -p $(CURDIR)/debian/fluentd/etc/fluent/conf.d
-	mkdir -p $(INSTALL_DIR)
-	GEM_HOME=$(INSTALL_DIR) gem1.9.1 install --version $(SRC_VERSION) $(PACKAGE)
+INSTALL_DIR = $(CURDIR)/fluentd/usr/lib/fluentd-gem
 
-
-# Just to not break the generic ci.sh on the root
 get-orig-source:
-	@echo using rubygems to get the source during install
+	mkdir -p $(CURDIR)/fluentd/etc/fluent/conf.d
+	mkdir -p $(INSTALL_DIR)
+	GEM_HOME=$(INSTALL_DIR) gem2.1 install --version $(SRC_VERSION) $(PACKAGE)
+	tar -C .. -zcf ../fluentd_$(SRC_VERSION).orig.tar.gz fluentd/fluentd
