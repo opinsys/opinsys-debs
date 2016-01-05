@@ -2,12 +2,12 @@ Source: fluentd
 Section: utils
 Priority: optional
 Maintainer: Esa-Matti Suuronen <esa-matti.suuronen@opinsys.fi>
-Build-Depends: debhelper (>= 7.0.50~), ruby2.1, ruby2.1-dev
+Build-Depends: debhelper (>= 7.0.50~), ruby, ruby-dev
 Standards-Version: 3.9.3
 
 Package: fluentd
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ruby2.1
+Depends: ${shlibs:Depends}, ${misc:Depends}, ruby
 Description:  tool to collect events and logs
  "Fluentd" is an open-source tool to collect events and logs. 150+ plugins
  instantly enables you to store the massive data for Log Search (like
