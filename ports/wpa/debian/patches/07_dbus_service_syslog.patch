@@ -10,7 +10,7 @@ Author: Kel Modderman <kel@otaku42.de>
  [D-BUS Service]
  Name=fi.epitest.hostap.WPASupplicant
 -Exec=@BINDIR@/wpa_supplicant -u
-+Exec=@BINDIR@/wpa_supplicant -u -s -O /var/run/wpa_supplicant
++Exec=@BINDIR@/wpa_supplicant -u -s -O /run/wpa_supplicant
  User=root
  SystemdService=wpa_supplicant.service
 --- a/wpa_supplicant/dbus/fi.w1.wpa_supplicant1.service.in
@@ -19,7 +19,7 @@ Author: Kel Modderman <kel@otaku42.de>
  [D-BUS Service]
  Name=fi.w1.wpa_supplicant1
 -Exec=@BINDIR@/wpa_supplicant -u
-+Exec=@BINDIR@/wpa_supplicant -u -s -O /var/run/wpa_supplicant
++Exec=@BINDIR@/wpa_supplicant -u -s -O /run/wpa_supplicant
  User=root
  SystemdService=wpa_supplicant.service
 --- a/wpa_supplicant/systemd/wpa_supplicant.service.in
@@ -29,7 +29,7 @@ Author: Kel Modderman <kel@otaku42.de>
  Type=dbus
  BusName=fi.epitest.hostap.WPASupplicant
 -ExecStart=@BINDIR@/wpa_supplicant -u
-+ExecStart=@BINDIR@/wpa_supplicant -u -s -O /var/run/wpa_supplicant
++ExecStart=@BINDIR@/wpa_supplicant -u -s -O /run/wpa_supplicant
  
  [Install]
  WantedBy=multi-user.target
