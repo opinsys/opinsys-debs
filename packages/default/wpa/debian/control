@@ -1,38 +1,40 @@
 Source: wpa
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: Debian wpasupplicant Maintainers <pkg-wpa-devel@lists.alioth.debian.org>
+Uploaders: Stefan Lippers-Hollmann <s.l-h@gmx.de>,
+ Jan Dittberner <jandd@debian.org>
 Section: net
 Priority: optional
-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-XSBC-Original-Maintainer: Debian/Ubuntu wpasupplicant Maintainers <pkg-wpa-devel@lists.alioth.debian.org>
-Uploaders: Kel Modderman <kel@otaku42.de>,
- Stefan Lippers-Hollmann <s.l-h@gmx.de>,
- Jan Dittberner <jandd@debian.org>
 Build-Depends: debhelper (>> 9.20120115),
- libdbus-glib-1-dev,
+ libdbus-1-dev,
  libssl-dev,
  libqt4-dev,
- libdbus-1-dev,
  libncurses5-dev,
  libpcsclite-dev,
- libnl-3-dev (>= 3.2.3-2~) [linux-any],
- libnl-genl-3-dev (>= 3.2.3-2~) [linux-any],
- libnl-route-3-dev (>= 3.2.3-2~) [linux-any],
+ libnl-3-dev [linux-any],
+ libnl-genl-3-dev [linux-any],
+ libnl-route-3-dev [linux-any],
  libpcap-dev [kfreebsd-any],
  libbsd-dev [kfreebsd-any],
+ libreadline-dev,
  pkg-config,
  qt4-qmake,
  docbook-to-man,
- docbook-utils
-Build-Conflicts: libqt3-dev
-Standards-Version: 3.9.3
-Vcs-Svn: svn://anonscm.debian.org/svn/pkg-wpa/wpa/trunk/
+ docbook-utils,
+ android-headers,
+Standards-Version: 3.9.6
 Vcs-Browser: http://anonscm.debian.org/viewvc/pkg-wpa/wpa/trunk/
+Vcs-Svn: svn://anonscm.debian.org/pkg-wpa/wpa/trunk/
 Homepage: http://w1.fi/wpa_supplicant/
 
 Package: hostapd
 Architecture: linux-any kfreebsd-any
 Multi-Arch: foreign
-Depends: ${shlibs:Depends}, ${misc:Depends}, lsb-base (>= 3.2-13), initscripts (>= 2.88dsf-13.3)
-Description: user space IEEE 802.11 AP and IEEE 802.1X/WPA/WPA2/EAP Authenticator
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
+ lsb-base
+Breaks: initscripts (<< 2.88dsf-13.3)
+Description: IEEE 802.11 AP and IEEE 802.1X/WPA/WPA2/EAP Authenticator
  Originally, hostapd was an optional user space component for Host AP
  driver. It adds more features to the basic IEEE 802.11 management
  included in the kernel driver: using external RADIUS authentication
@@ -55,7 +57,10 @@ Description: user space IEEE 802.11 AP and IEEE 802.1X/WPA/WPA2/EAP Authenticato
 Package: wpagui
 Architecture: linux-any kfreebsd-any
 Multi-Arch: foreign
-Depends: ${shlibs:Depends}, ${misc:Depends}, wpasupplicant (>= 0.7.3~), libqt4-svg
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
+ wpasupplicant (>= 0.7.3~),
+ libqt4-svg
 Recommends: menu
 Description: graphical user interface for wpa_supplicant
  wpagui provides a Qt interface for choosing which configured network
@@ -66,8 +71,13 @@ Description: graphical user interface for wpa_supplicant
 Package: wpasupplicant
 Architecture: linux-any kfreebsd-any
 Multi-Arch: foreign
-Depends: ${shlibs:Depends}, ${misc:Depends}, lsb-base (>= 3.0-6), adduser, initscripts (>= 2.88dsf-13.3)
-Suggests: wpagui, libengine-pkcs11-openssl
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
+ lsb-base,
+ adduser
+Suggests: wpagui,
+ libengine-pkcs11-openssl
+Breaks: initscripts (<< 2.88dsf-13.3)
 Description: client support for WPA and WPA2 (IEEE 802.11i)
  WPA and WPA2 are methods for securing wireless networks, the former
  using IEEE 802.1X, and the latter using IEEE 802.11i. This software
@@ -75,11 +85,13 @@ Description: client support for WPA and WPA2 (IEEE 802.11i)
  association with IEEE 802.11i networks.
 
 Package: wpasupplicant-udeb
+Architecture: linux-any
 Section: debian-installer
 Priority: standard
-Architecture: linux-any
+Depends: ${shlibs:Depends},
+ ${misc:Depends},
+ busybox-udeb
 Package-Type: udeb
-Depends: ${shlibs:Depends}, ${misc:Depends}, busybox-udeb
 Description: Client support for WPA and WPA2 (IEEE 802.11i)
  WPA and WPA2 are methods for securing wireless networks, the former
  using IEEE 802.1X, and the latter using IEEE 802.11i. This software
