@@ -1,3 +1,9 @@
+flashblock (1.5.20-1ubuntu1) trusty; urgency=medium
+
+  * Update to Flashblock 1.5.20.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Mon, 18 Jan 2016 09:28:02 +0200
+
 flashblock (1.5.19a1-1ubuntu1) trusty; urgency=medium
 
   * Update to Flashblock 1.5.19a1.
