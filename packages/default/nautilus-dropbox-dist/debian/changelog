@@ -1,3 +1,9 @@
+nautilus-dropbox-dist (3.12.6-0+opinsys1) trusty; urgency=medium
+
+  * New upstream release.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Tue, 02 Feb 2016 12:43:19 +0200
+
 nautilus-dropbox-dist (2.10.29-0+opinsys1) trusty; urgency=medium
 
   * New upstream release.
