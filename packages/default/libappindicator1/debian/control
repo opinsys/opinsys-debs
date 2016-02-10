@@ -55,10 +55,10 @@ Description: Python bindings for libappindicator
 Package: libappindicator1
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support,
 Depends: ${shlibs:Depends},
          ${misc:Depends},
 Recommends: indicator-application (>= 0.2.93),
+Multi-Arch: same
 Description: Application Indicators
  A library and indicator to take menus from applications and place them in
  the panel.
@@ -103,10 +103,10 @@ Description:  Application Indicators
 Package: libappindicator3-1
 Section: libs
 Architecture: any
-Pre-Depends: multiarch-support,
 Depends: ${shlibs:Depends},
          ${misc:Depends},
 Recommends: indicator-application (>= 0.2.93),
+Multi-Arch: same
 Description: Application Indicators
  A library and indicator to take menus from applications and place them in
  the panel.
