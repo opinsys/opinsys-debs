@@ -91,3 +91,10 @@ override_dh_auto_clean:
 	dh_auto_clean
 	rm -rf build
 
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+
+.PHONY: get-orig-source
+get-orig-source:
+	wget -O ../libappindicator_$(SRC_VERSION).orig.tar.gz http://archive.ubuntu.com/ubuntu/pool/main/liba/libappindicator/libappindicator_$(SRC_VERSION).orig.tar.gz
+	tar -zxf ../libappindicator_$(SRC_VERSION).orig.tar.gz \
+          --strip-components=1 -C .
