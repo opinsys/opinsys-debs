@@ -48,8 +48,10 @@ override_dh_makeshlibs:
 	dh_makeshlibs -plibindicator7 -V 'libindicator7 (>= 0.4.90)'
 	dh_makeshlibs -plibindicator3-7 -V 'libindicator3-7 (>= 0.4.90)'
 
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+
 .PHONY: get-orig-source
 get-orig-source:
-	wget -O ../libindicator_$(SRC_VERSION).orig.tar.gz http://archive.ubuntu.com/ubuntu/pool/main/liba/libindicator/libindicator_$(SRC_VERSION).orig.tar.gz
+	wget -O ../libindicator_$(SRC_VERSION).orig.tar.gz http://archive.ubuntu.com/ubuntu/pool/main/libi/libindicator/libindicator_$(SRC_VERSION).orig.tar.gz
 	tar -zxf ../libindicator_$(SRC_VERSION).orig.tar.gz \
 	  --strip-components=1 -C .
