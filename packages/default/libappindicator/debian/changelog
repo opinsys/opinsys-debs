@@ -1,3 +1,9 @@
+libappindicator (12.10.1+13.10.20130920-0ubuntu4.1+opinsys1) trusty; urgency=medium
+
+  * Some multi-arch fixes.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi> Wed, 10 Feb 2016 13:41:57 +0200
+
 libappindicator (12.10.1+13.10.20130920-0ubuntu4.1) trusty; urgency=medium
 
   * src/app-indicator.c: scroll-event: change parameter to the right type
