@@ -1,0 +1,937 @@
+libindicator (12.10.2+14.04.20141007.1-0ubuntu1) trusty; urgency=low
+
+  [ Marco Trevisan (Treviño) ]
+  * IndicatorNG: Reverse the scroll delta on left scroll events (LP: #1342731)
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 07 Oct 2014 15:24:09 +0000
+
+libindicator (12.10.2+14.04.20140402-0ubuntu1) trusty; urgency=low
+
+  [ William Hua ]
+  * Don't load using the icon info structure if it's a GBytesIcon. (LP:
+    #1293548)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 02 Apr 2014 14:50:52 +0000
+
+libindicator (12.10.2+14.04.20140304-0ubuntu1) trusty; urgency=low
+
+  [ Marco Trevisan (Treviño) ]
+  * IndicatorImageHelper: always try to use a GIcon or the filename as
+    source of the GdkImage We don't need to fallback to pure pixbuf,
+    unless an indicator provided a custom icon that is not in the
+    current theme path. This helps a lot in reducing the Unity7 workload
+    as this decreases the cases where we need to encode the pixbuf
+    contents, send them via dbus to unity, encode them back, reload to a
+    new pixbuf... Also thanks to this, the library clients can load the
+    actual icon, scaled at the value they want. (LP: #784055)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 04 Mar 2014 10:58:35 +0000
+
+libindicator (12.10.2+14.04.20140218-0ubuntu1) trusty; urgency=low
+
+  [ Marco Trevisan (Treviño) ]
+  * IndicatorObject: add parent_window parameter to IndicatorEntry
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 18 Feb 2014 15:45:39 +0000
+
+libindicator (12.10.2+14.04.20140129-0ubuntu1) trusty; urgency=low
+
+  [ Colin Watson ]
+  * Use named icons rather than (deprecated) stock items. (LP: #1262626)
+
+  [ Lars Uebernickel ]
+  * Don't treat deprecation warnings as errors and fix indicator-ng test
+    for gtk 3.10. (LP: #1262626)
+  * indicator-ng: support "submenu-action" on root menu items (LP:
+    #793450)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 29 Jan 2014 16:47:10 +0000
+
+libindicator (12.10.2+14.04.20131125-0ubuntu2) trusty; urgency=medium
+
+  * Build with -Wno-error=deprecated-declarations.
+
+ -- Matthias Klose <doko@ubuntu.com>  Thu, 19 Dec 2013 13:37:49 +0100
+
+libindicator (12.10.2+14.04.20131125-0ubuntu1) trusty; urgency=low
+
+  [ Charles Kerr ]
+  * When we can't get a handle to the bus, exit gracefully instead of
+    crashing. (LP: #1218222)
+
+  [ Lars Uebernickel ]
+  * Warn when an indicator doesn't get respawned anymore.
+  * indicator-ng: always create entry.label and entry.image They used to
+    be created lazily when the root menu item changed to include and
+    image or a label. However, there is no way to notify a panel that
+    this happened. Panels connect to notify signals on these widgets
+    when an entry gets added. If the widgets don't exist from the very
+    beginning, the panel won't update when they change. . (LP: #1220204)
+  * Allow setting different positions for each profile in indicator
+    files The 'Position' key in a profile section has precedence over
+    the global 'Position' key, but otherwise the same semantics. We need
+    this along with lp:~larsu/unity8/per-profile-indicator-positions to
+    enable different positioning on the desktop and phone.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 517
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 25 Nov 2013 03:55:11 +0000
+
+libindicator (12.10.2+13.10.20130913-0ubuntu2) saucy; urgency=low
+
+  * libindicator/indicator-ng.c: backport fix for indicator icons not 
+    updating sometimes (lp: #1220204)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 18 Oct 2013 13:15:30 -0400
+
+libindicator (12.10.2+13.10.20130913-0ubuntu1) saucy; urgency=low
+
+  [ Lars Uebernickel ]
+  * Expose scrolling and middle clicking to fix bug #1221242 and
+    #1204036 (make scrolling and middle clicking work on the sound
+    indicator). (LP: #1221242, #1204036)
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 511
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 13 Sep 2013 15:15:37 +0000
+
+libindicator (12.10.2+13.10.20130823-0ubuntu1) saucy; urgency=low
+
+  [ Marco Trevisan (Treviño) ]
+  * IndicatorDesktopShortcuts: add support to Path key for shortcut
+    items. (LP: #1113883)
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 509
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 23 Aug 2013 02:08:00 +0000
+
+libindicator (12.10.2+13.10.20130731-0ubuntu1) saucy; urgency=low
+
+  [ Charles Kerr ]
+  * in indicator-loader3, if we're looking at an ng-style indicator,
+    show all of its profiles instead of just one.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 507
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 31 Jul 2013 02:02:40 +0000
+
+libindicator (12.10.2+13.10.20130719-0ubuntu1) saucy; urgency=low
+
+  [ Marco Trevisan (Treviño) ]
+  * IndicatorDesktopShortcuts: fix memory leak, free groupheader.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 505
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 19 Jul 2013 02:03:03 +0000
+
+libindicator (12.10.2+13.10.20130702-0ubuntu1) saucy; urgency=low
+
+  [ Lars Uebernickel ]
+  * Add support for indicators to tell the panel where they'd like to
+    appear Merged from lp:~larsu/libindicator/positionable
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 503
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 02 Jul 2013 02:02:39 +0000
+
+libindicator (12.10.2+13.10.20130628-0ubuntu1) saucy; urgency=low
+
+  [ Charles Kerr ]
+  * Fixes a crasher bug in ng's parsing of the response to
+    org.freedesktop.DBus.StartServiceByName: The result's variant format
+    is "(u)", not "u".
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 501
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 28 Jun 2013 02:02:40 +0000
+
+libindicator (12.10.2daily13.06.19.1-0ubuntu1) saucy; urgency=low
+
+  [ Charles Kerr ]
+  * in indicator_ng_update_entry, unconditionally call set_label,
+    set_icon, set_accessible. Previously these were only called if the
+    respective fields weren't NULL, which made it impossible to, for
+    example, turn off a label or icon once it had been set.
+
+  [ Ted Gould ]
+  * Remove the GTK2 version of the tools.
+
+  [ Didier Roche ]
+  * Add missing conflicts/replaces
+
+  [ Lars Uebernickel ]
+  * Merge lp:~larsu/new-indicator-file-format IndicatorNg: update
+    indicator file format The old file format had some shortcomings: (1)
+    It was impossible to efficiently reuse a menu for different
+    profiles, because the profile name was implicit in the object path.
+    The only way to do this was to export the same menu twice. Now,
+    object paths have to be set explicitly in the indicator file. (2)
+    The well-known dbus name of a service and the name of its service
+    file were similar but slightly different
+    (com.canonical.indicator.test vs com.canonical.test.indicator),
+    which caused some confusion on when to use which. Now, the file name
+    *is* the bus name, and the `BusName` key has been dropped. The new
+    file format is documented in README.
+  * Merge lp:~larsu/call-ido-init
+  * indicator-ng: properly fail when keyfile doesn't exist.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 499
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 19 Jun 2013 10:45:13 +0000
+
+libindicator (12.10.2daily13.06.07-0ubuntu1) saucy; urgency=low
+
+  [ Ted Gould ]
+  * Migrating away from deprecated gtk_icon_info_free().
+
+  [ William Hua ]
+  * Use GIcon's serialization/deserialization interface for indicator
+    icons so that we can load icons as PNG data transmitted over the
+    bus.
+
+  [ Marco Trevisan (Treviño) ]
+  * IndicatorDesktopShortcuts: Use the proper way to create an AppInfo
+    from command-line Removed the hack that we used to create a .desktop
+    app-info from a locally generated keyfile, using
+    g_app_info_create_from_commandline instead. (LP: #1168373)
+  * tests: fix compilation and make check.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 492
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 07 Jun 2013 02:02:37 +0000
+
+libindicator (12.10.2daily13.05.02-0ubuntu1) saucy; urgency=low
+
+  * Automatic snapshot from revision 487
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 02 May 2013 22:59:05 +0000
+
+libindicator (12.10.2daily13.04.10-0ubuntu1) raring; urgency=low
+
+  [ Marco Trevisan (Treviño) ]
+  * Libindicator should use startup-notify when launching application
+    shortcuts (LP: #1166890)
+  * Opening new-window from quicklist static action does not focus the
+    newly opened window (LP: #1164483)
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 486
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 10 Apr 2013 02:02:06 +0000
+
+libindicator (12.10.2daily13.04.09-0ubuntu1) raring; urgency=low
+
+  * Automatic snapshot from revision 484
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 09 Apr 2013 02:02:03 +0000
+
+libindicator (12.10.2daily13.04.08-0ubuntu1) raring; urgency=low
+
+  [ Marco Trevisan (Treviño) ]
+  * Opening calendar/contacts from quicklist does not focus the new
+    window (LP: #1164483)
+  * Libindicator should pass platform-data when launching application
+    shortcuts (LP: #1164470)
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 483
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 08 Apr 2013 02:02:11 +0000
+
+libindicator (12.10.2daily13.02.25-0ubuntu1) raring; urgency=low
+
+  * Automatic snapshot from revision 479
+
+ -- Automatic PS uploader <ps-jenkins@lists.canonical.com>  Mon, 25 Feb 2013 02:03:13 +0000
+
+libindicator (12.10.2daily13.02.19-0ubuntu1) raring; urgency=low
+
+  [ Michael Terry ]
+  * indicatordir is now multiarch, breaking unity (LP: #1126360)
+
+  [ Automatic PS uploader ]
+  * Automatic snapshot from revision 477
+
+ -- Automatic PS uploader <ps-jenkins@lists.canonical.com>  Tue, 19 Feb 2013 02:02:26 +0000
+
+libindicator (12.10.2daily13.02.15-0ubuntu1) raring; urgency=low
+
+  [ Mathieu Trudel-Lapierre ]
+  * debian/control:
+    - Reorganize Build-Depends for clarity.
+    - Update style to be consistent with other indicator stack packages.
+    - Bump debhelper Build-Depends to (>= 9).
+    - Drop Build-Depends on cdbs.
+    - Add a Build-Depends on gnome-common.
+    - Update Vcs-Bzr, Vcs-Browser and add a notice to uploaders.
+    - Add the proper Pre-Depends: multiarch to libindicator3-7.
+  * debian/rules:
+    - Convert to using the dh9 sequencer.
+    - Override dh_autoreconf to run autogen.sh and not call configure.
+    - Use calls to dh_install per-package to use the right source
+      directories.
+    - Add and export DPKG_GENSYMBOLS_CHECK_LEVEL.
+  * debian/compat: bump compat level to 9. 
+  * debian/*.install: drop the debian/tmp/gtk* path elements and update for
+    multiarch.
+
+  [ Didier Roche ]
+  * Automatic snapshot from revision 473 (bootstrap)
+
+  [ Automatic PS uploader ]
+  * Automatic snapshot from revision 475
+
+ -- Automatic PS uploader <ps-jenkins@lists.canonical.com>  Fri, 15 Feb 2013 07:46:53 +0000
+
+libindicator (12.10.1-0ubuntu1) quantal; urgency=low
+
+  * New upstream release.
+    - remove the 'cloak' code that caused libreoffice's menubars in unity to be 
+      greyed out after opening any dialog or switching windows (LP: #1045372)
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Wed, 19 Sep 2012 16:00:14 -0400
+
+libindicator (12.10.0-0ubuntu2) quantal; urgency=low
+
+  * Backport a fix so that libroffice doesn't hang on on startup (LP: #1045372)
+
+ -- Didier Roche <didrocks@ubuntu.com>  Mon, 17 Sep 2012 11:13:49 +0200
+
+libindicator (12.10.0-0ubuntu1) quantal; urgency=low
+
+  * New upstream release.
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 12 Jul 2012 17:44:46 +0200
+
+libindicator (0.5.0-0ubuntu1) precise; urgency=low
+
+  * New upstream release.
+    * Validate images in image_helper_update() (LP: #946408)
+
+ -- Charles Kerr <charles.kerr@canonical.com>  Wed, 11 Apr 2012 10:54:42 -0500
+
+libindicator (0.4.95-0ubuntu1) precise; urgency=low
+
+  * New upstream release.
+    * Fix a free that shouldn't be (LP: #969360)
+    * Spelling mistake in error message (LP: #948391)
+    * Add coverage build targets
+    * Fix building AUTHORS and Changelog at dist time
+
+ -- Ted Gould <ted@ubuntu.com>  Wed, 04 Apr 2012 14:39:16 -0500
+
+libindicator (0.4.94-0ubuntu2) precise; urgency=low
+
+  * Revert r457 it's creating invalid free errors
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 02 Apr 2012 11:09:03 +0200
+
+libindicator (0.4.94-0ubuntu1) precise; urgency=low
+
+  * New upstream release.
+    * Fix a leaked GError (LP: #965459)
+    * Fix memory leak when the proxy's name changes.
+
+ -- Charles Kerr <charles.kerr@canonical.com>  Thu, 29 Mar 2012 13:56:59 -0700
+
+libindicator (0.4.93-0ubuntu1) precise; urgency=low
+
+  * New upstream release.
+    * Fix branching past initialization of variables (LP: #939061)
+    * Support new FD.o Desktop Actions (LP: #942042)
+    * Fix valgrind error on unload (LP: #719457)
+
+ -- Ted Gould <ted@ubuntu.com>  Wed, 07 Mar 2012 14:14:07 -0600
+
+libindicator (0.4.92-0ubuntu2) precise; urgency=low
+
+  * Backport support for the fdo desktop action spec, that's required
+    to get unity lists to work with the new syntax (lp: #942042)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 02 Mar 2012 12:08:09 +0100
+
+libindicator (0.4.92-0ubuntu1) precise; urgency=low
+
+  * New upstream release.
+    * Removing unenforcable consts (LP: #937387)
+    * Explicitly add in gmodule as a required library
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 23 Feb 2012 00:27:38 -0600
+
+libindicator (0.4.91-0ubuntu3) precise; urgency=low
+
+  * Restore revision dropped by error, change to format v1 for that
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 15 Feb 2012 13:09:05 +0100
+
+libindicator (0.4.91-0ubuntu2) precise; urgency=low
+
+  * Upstream Merge
+    * Increasing the test timeout to ensure that's not our issue
+  * debian/rules: Adding messages
+
+ -- Ted Gould <ted@ubuntu.com>  Tue, 14 Feb 2012 21:11:29 -0600
+
+libindicator (0.4.91-0ubuntu1) precise; urgency=low
+
+  * New upstream release.
+    * Visibility fixes for indicators using that functionality
+    * Ensure that parent_object is more aggressively set
+    * Fix memory leak on groups of items in desktop files (lp: #923629)
+  * Dropping debian/patches
+  * Upstream Merge
+    * Explicitly add in gmodule as a required library
+  * debian/control, debian/rules:
+    * Adding in autoreconf support
+    * Adding a check rule and requiring new build deps
+
+ -- Ted Gould <ted@ubuntu.com>  Tue, 14 Feb 2012 14:29:51 -0600
+
+libindicator (0.4.90-0ubuntu4) precise; urgency=low
+
+  * libindicator/indicator-object.c
+    - revert disabling visibility, there is now a better fix for disappearing
+      in indicator-appmenu
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Thu, 26 Jan 2012 00:24:06 -0500
+
+libindicator (0.4.90-0ubuntu3) precise; urgency=low
+
+  * libindicator/indicator-object.c
+    - basically disable the new visibility stuff because it breaks appmenus
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Wed, 25 Jan 2012 18:08:31 -0500
+
+libindicator (0.4.90-0ubuntu2) precise; urgency=low
+
+  * debian/control
+    - dropped the Conflicts with libindicator6 and libindicator3-6
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Tue, 24 Jan 2012 21:44:30 -0500
+
+libindicator (0.4.90-0ubuntu1) precise; urgency=low
+
+  [ Ted Gould ]
+  * New upstream release.
+    * Support hiding and showing indicators
+    * Track the parent object in the entry
+    * Adding activate function to include Window ID
+  * debian/control: Bumping ABI version of lib
+
+  [ Ken VanDine ]
+  * debian/control
+    - set ubuntu-desktop VCS and maintainer
+  * debian/rules
+    - Updated shlibs
+  * debian/libindicator3-dev.install
+    - include headers 
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Tue, 24 Jan 2012 12:13:51 -0500
+
+libindicator (0.4.1-1) experimental; urgency=low
+
+  * Merge from Ubuntu.
+    + Re-enable GTK3 packages.
+    + Link to libm to prevent FTBFS.
+      Closes: #640459
+  * Set single-debian-patch in debian/source/options.
+
+ -- Evgeni Golov <evgeni@debian.org>  Sun, 02 Oct 2011 15:08:46 +0200
+
+libindicator (0.4.1-0ubuntu1) oneiric; urgency=low
+
+  * New upstream release.
+    * Ensure loader doesn't use menu proxy
+
+ -- Ted Gould <ted@ubuntu.com>  Wed, 28 Sep 2011 10:51:08 -0500
+
+libindicator (0.4.0-0ubuntu1) oneiric; urgency=low
+
+  * New upstream release.
+    * Add libm to linking to fix FTBFS (LP: #840514) 
+
+ -- Ted Gould <ted@ubuntu.com>  Mon, 19 Sep 2011 21:54:32 -0500
+
+libindicator (0.3.93-0ubuntu2) oneiric; urgency=low
+
+  * Drop the Breaks: against old versions of libindicator and libindicator3;
+    there are no file conflicts between the libraries, so this doesn't
+    accurately reflect the package relationships but does make it harder to
+    calculate upgrades from natty.  LP: #839098.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Thu, 01 Sep 2011 14:22:12 -0700
+
+libindicator (0.3.93-0ubuntu1) oneiric; urgency=low
+
+  * debian/rules: 
+    - update the translations template
+
+  [ Ted Gould ]
+  * New upstream release
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 11 Aug 2011 21:16:12 +0200
+
+libindicator (0.3.92-0ubuntu1) oneiric; urgency=low
+
+  * New upstream release.
+    * Adding support for a secondary activate signal
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 21 Jul 2011 10:39:10 -0500
+
+libindicator (0.3.91-0ubuntu1) oneiric; urgency=low
+
+  * New upstream release.
+    * Fix signals with NULL entries in the loader
+    * Adding a comment for setting up debugging options
+    * Adding annotations for GIR files
+    * Fixing watchers hashtable to detect when we have none
+    * Fix testing so no tests are XFAIL anymore
+    * Adding a replace mode for testing indicator services
+    * Watching new services when the name switches
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 14 Jul 2011 13:37:42 -0500
+
+libindicator (0.3.90-0ubuntu1) oneiric; urgency=low
+
+  [ Ted Gould ]
+  * New upstream release.
+    * Build Fixes
+    * Adding license to test files (LP: #684886)
+    * Bump API/ABI versions appropriately and make easier to edit them in
+      the future
+    * Adding a name-hint to the indicator entries
+    * Merging scroll functions into a single good one (LP: #804618)
+  * debian/*install, control: Changing ABI version number bump in package names
+  * debian/rules: Making GTK2 the special case as GTK3 is default now
+  * debian/*install: Fixing pkgconfig file names
+
+  [ Ken VanDine ]
+  * debian/rules
+    - Simplify the dual builds with cdbs
+    - Fixed package names to match soname
+  * debian/*.install fixed paths to work with the dual builds change
+  * tools/Makefile.in
+    - Fixed path for xsessiondir
+  * debian/control
+    - Fixed package names to match soname
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Thu, 07 Jul 2011 10:18:04 -0400
+
+libindicator (0.3.22-1) unstable; urgency=low
+
+  * Merge new upstream from Ubuntu.
+
+ -- Evgeni Golov <evgeni@debian.org>  Tue, 29 Mar 2011 10:07:03 +0200
+
+libindicator (0.3.22-0ubuntu2) oneiric; urgency=low
+
+  * debian/libindicator3-dev.install
+    - Don't install the headers twice, we only need them in libindicator-dev
+  * debian/control
+    - Make libindicator3-dev depend on libindicator-dev (LP: #3803136)
+    - Bump standards version to 3.9.2
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Wed, 29 Jun 2011 10:39:15 +0100
+
+libindicator (0.3.22-0ubuntu1) natty; urgency=low
+
+  * New upstream release.
+    * Adding the ability to know the environment the indicator
+      object is in. (LP: #703555)
+
+ -- Ted Gould <ted@ubuntu.com>  Wed, 23 Mar 2011 13:21:49 -0500
+
+libindicator (0.3.21-1) unstable; urgency=low
+
+  * Merge new upstream from Ubuntu.
+  * debian/control:
+    + Improve descriptions of the GTK3 packages.
+    + Standards-Version: 3.9.1
+  * Disable GTK3 packages until libgtk-3-dev is in unstable.
+
+ -- Evgeni Golov <evgeni@debian.org>  Sun, 20 Mar 2011 15:58:35 +0100
+
+libindicator (0.3.21-0ubuntu1) natty; urgency=low
+
+  * New upstream release.
+    ∘ Don't check for TargetEnvironment on the desktop group
+
+ -- Ted Gould <ted@ubuntu.com>  Wed, 16 Mar 2011 13:29:21 -0500
+
+libindicator (0.3.20-0ubuntu1) natty; urgency=low
+
+  * New upstream release.
+    * Use the "TargetEnvironment" key in shortcuts
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 03 Mar 2011 14:02:12 -0600
+
+libindicator (0.3.19-0ubuntu3) natty; urgency=low
+
+  * debian/control
+    - More renaming of Depends to libgtk-3-dev
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Wed, 23 Feb 2011 12:08:03 -0500
+
+libindicator (0.3.19-0ubuntu2) natty; urgency=low
+
+  * debian/control:
+    - Use new build-depends for libgtk-3-dev
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Wed, 23 Feb 2011 08:49:50 -0500
+
+libindicator (0.3.19-0ubuntu1) natty; urgency=low
+
+  * debian/rules
+    - Updated shlibs
+
+  [Ted Gould]
+  * New upstream release.
+    ∘ Adding in a11y description support
+    ∘ Fixing distcheck (LP: #587811)
+  * debian/*: Changing the library major version from 2 to 3
+  * debian/control: Adding Breaks for the previous library rev
+    so that users don't end up with systems that use both.
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Thu, 17 Feb 2011 14:04:55 -0500
+
+libindicator (0.3.18-0ubuntu1) natty; urgency=low
+
+  * New upstream release.
+    * Adding a signal for scrolling that includes the entry
+  * debian/rules: Updating shlibs 
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 27 Jan 2011 15:31:04 -0600
+
+libindicator (0.3.17-0ubuntu1~ppa1) natty; urgency=low
+
+  * New upstream release.
+    * Fixing catching services dropping off
+
+ -- Ted Gould <ted@ubuntu.com>  Fri, 14 Jan 2011 11:09:36 -0600
+
+libindicator (0.3.16-0ubuntu1) natty; urgency=low
+
+  * New upstream release.
+    * GDBus Port
+  * debian/control: Migrating library versions from 1 to 2
+  * debian/control: Dropping dbus-glib as a build-dep
+  * debian/libindicator-tools: Removing indicator-loader3
+  * debian/libindicator3-dev: Adding in the include files for this
+    version of the library.
+
+  [ Ken VanDine ]
+  * debian/control: 
+    - libindicator2 Breaks libindicator1
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 13 Jan 2011 12:49:25 -0600
+
+libindicator (0.3.15-0ubuntu2) natty; urgency=low
+
+  * debian/control: 
+    - dropped libindicator-debugenv package
+  * -debian/libindicator-debugenv.install
+  * debian/libindicator-tools.install
+    - Install indicator-loader and indicator-loader3 in the 
+    libindicator-tools package (means it depends on both gtk2 and gtk3)
+    - Install sample xsession env in pkgdatadir for developer use
+  * tools/Makefile.am
+    - Install 80indicator-debugging in pkgdatadir
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Mon, 06 Dec 2010 10:19:58 -0500
+
+libindicator (0.3.15-0ubuntu1) natty; urgency=low
+
+  * debian/rules
+    - Added build targets to build with gtk3 enabled in additional to
+      default build with gtk2
+  * debian/control
+    - Updated build depends to support building with gtk+-3.0
+    - Added dh-autoreconf build depends
+    - Added libindicator3-1, libindicator3-dev, libindicator3-tools binaries
+      binaries
+  * libindicator/Makefile.am and tools/Makefile.am
+    - Fixes needed for building with-gtk=3
+
+  [ Ted Gould ]
+  * New upstream release.
+    * Adding a small file to set debugging environment variables
+    * Allowing to build for GTK 2/3 and build parallel libraries
+  * debian/control: Adding package libindicator-debugenv
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Wed, 24 Nov 2010 18:29:40 -0500
+
+libindicator (0.3.14-0ubuntu1) maverick; urgency=low
+
+  * New upstream release.
+    * Adding a function to signal a menu is shown (LP: #637692)
+    * Changing indicator directory to '4'
+  * debian/source:
+    - don't use quilt format, it's making the daily build not working
+  * debian/control:
+    - rename to soname bump
+    - put the Vcs-Bzr to point the right official branch
+  * debian/libindicator1.install: rename to soname bump
+  * debian/rules:
+    - update MAKESHLIBS_ARGS
+
+  [Ted Gould]
+  * debian/rules:
+    - removing simple-patchsys
+
+ -- Didier Roche <didrocks@ubuntu.com>  Wed, 22 Sep 2010 18:09:44 +0200
+
+libindicator (0.3.13-0ubuntu1) maverick; urgency=low
+
+  * New upstream release.
+    * Adding a menu_show signal
+
+ -- Ted Gould <ted@ubuntu.com>  Wed, 15 Sep 2010 11:46:37 -0500
+
+libindicator (0.3.12-0ubuntu1) maverick; urgency=low
+
+  * New upstream release.
+    * Removing a g_error that was breaking Unity on failed icons
+  * dropping workaround-icon-crash.patch: 
+
+ -- Ted Gould <ted@ubuntu.com>  Wed, 18 Aug 2010 11:05:51 -0500
+
+libindicator (0.3.11-0ubuntu2) maverick; urgency=low
+
+  * workaround-icon-crash.patch: 
+    - change from Mikkel Kamstrup Erlandsen to workaround a crasher in the 
+       new version
+  * debian/control:
+    - updated the gtk build requirement
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 13 Aug 2010 11:40:29 +0200
+
+libindicator (0.3.11-0ubuntu1) maverick; urgency=low
+
+  * New upstream release.
+    * Allowing absolute paths in the image name (LP: #564034)
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 12 Aug 2010 14:42:46 -0500
+
+libindicator (0.3.10-1) unstable; urgency=low
+
+  * Merging new upstream release from Ubuntu.
+
+ -- Evgeni Golov <evgeni@debian.org>  Sun, 25 Jul 2010 12:08:48 +0200
+
+libindicator (0.3.10-0ubuntu1) maverick; urgency=low
+
+  * New upstream release.
+    * Fixing unwatching crash (LP: #603489)
+    * Adding configurable timeout for slow test systems
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 15 Jul 2010 10:02:56 -0500
+
+libindicator (0.3.9-1) unstable; urgency=low
+
+  * Merging new upstream release and some changes from Ubuntu.
+  * Don't drop debian/source/*
+  * Standards-Version: 3.9.0
+
+ -- Evgeni Golov <evgeni@debian.org>  Wed, 14 Jul 2010 10:07:36 +0200
+
+libindicator (0.3.9-0ubuntu2) maverick; urgency=low
+
+  * Merged in fix for (LP: #603489)
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Fri, 09 Jul 2010 15:24:33 -0400
+
+libindicator (0.3.9-0ubuntu1) maverick; urgency=low
+
+  * New upstream release.
+    * Removing checking for style properties that aren't used.
+    * Make it so that a watcher dying is the same as unregistering.
+  * Merge debian changes
+  	* Drop debian/source/*
+  * debian/control: Switch VCS for this branch to be the indicator
+    applet developers branch.
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 08 Jul 2010 15:19:08 -0500
+
+libindicator (0.3.8-2) UNRELEASED; urgency=low
+
+  * Revert cdbs drop, as requested by the Ubuntu maintainers.
+  * Update Maintainer and Vcs-* fields for pkg-ayatana.
+
+ -- Evgeni Golov <evgeni@debian.org>  Wed, 16 Jun 2010 09:54:50 +0200
+
+libindicator (0.3.8-1) unstable; urgency=low
+
+  * Merge Ubuntu package into Debian.
+    Closes: #549999
+  * debian/copyright:
+    + Update to machine readable format.
+  * debian/control:
+    + Drop cdbs Build-Dep, bump debhelper to >=7.
+    + Standards-Version 3.8.4.
+    + Update Vcs-* fields.
+    + Drop GNOME from Description, the package is not GNOME specific.
+    + Slightly update Description, thanks lintian.
+  * debian/rules:
+    + Use minimal debhelper 7 rules without cdbs.
+    + Disable tests for now, they fail (launchpad 587811)
+  * debian/source/format:
+    + Add file, make package 3.0 (quilt).
+
+ -- Evgeni Golov <evgeni@debian.org>  Mon, 07 Jun 2010 11:21:32 +0200
+
+libindicator (0.3.8-0ubuntu1) lucid; urgency=low
+
+  * New upstream release.
+    * Adding template files to tarball
+
+ -- Ted Gould <ted@ubuntu.com>  Fri, 09 Apr 2010 12:56:19 -0500
+
+libindicator (0.3.7-0ubuntu1~ppa1) lucid; urgency=low
+
+  * New upstream release.
+    * Use the domain in desktop files for shortcuts (LP: #549322)
+
+ -- Ted Gould <ted@ubuntu.com>  Fri, 09 Apr 2010 12:53:39 -0500
+
+libindicator (0.3.6-0ubuntu1) lucid; urgency=low
+
+  * Upstream release 0.3.6
+    * Adding in scroll signals for the indicators
+  * debian/rules: Updating shlibs 
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 18 Mar 2010 11:10:20 -0500
+
+libindicator (0.3.5-0ubuntu1) lucid; urgency=low
+
+  * Upstream release 0.3.5
+    * Adding in a image loader helper for indicators.
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 11 Mar 2010 14:27:04 -0600
+
+libindicator (0.3.4-0ubuntu1) lucid; urgency=low
+
+  * Upstream Release 0.3.4
+    * Reducing gio-unix dependency to 2.22
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 25 Feb 2010 11:27:18 -0600
+
+libindicator (0.3.3-0ubuntu2) lucid; urgency=low
+
+  * debian/control:
+    Reducing libglib dependency down to 2.22 for Karmic builds
+
+ -- Ted Gould <ted@ubuntu.com>  Wed, 24 Feb 2010 21:05:01 -0600
+
+libindicator (0.3.3-0ubuntu1) lucid; urgency=low
+
+  * debian/control:
+    - build-depends on libglib2.0-dev
+  * debian/rules:
+    - updated shlibs version
+
+  [ Ted Gould ]
+  * Upstream release 0.3.3
+    * Adding new object for parsing desktop files for Shortcuts
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 18 Feb 2010 17:32:08 +0100
+
+libindicator (0.3.2-0ubuntu1) lucid; urgency=low
+
+  * Upstream release 0.3.2
+    * Various fixes to timeout handling in services and the
+      service manager.
+    * Fix test suite when run headless
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 04 Feb 2010 17:40:06 -0800
+
+libindicator (0.3.1-0ubuntu1) lucid; urgency=low
+
+  * Upstream release 0.3.1
+    * Adding in entry ordering.
+    * Adding in the code to restart services
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 21 Jan 2010 13:15:07 -0600
+
+libindicator (0.3.0-0ubuntu1) lucid; urgency=low
+
+  * debian/control:
+    - Added description for libindicator-tools
+
+  [Ted Gould]
+  * Upstream 0.3.0 Release 
+    * Adds a new tool to load indicators from the command line.
+    * Adds an object for loading indicators.
+    * Changes the indicator interface to be object based.
+  * debian/control, debian/libindicator0: Adding in a new packages
+    for the binary library.
+  * debian/control, debian/libindicator-tools: Adding in a new
+    package for the tools of libindicator.
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Thu, 10 Dec 2009 12:11:49 -0500
+
+libindicator (0.2.1-0ubuntu2~ppa1) karmic; urgency=low
+
+  * Adding in service management code.
+  * debian/control: Adding a target for libindicator0
+  * Adding libindicator0.install and libindicator-dev.install
+
+ -- Ted Gould <ted@ubuntu.com>  Wed, 04 Nov 2009 08:19:01 -0600
+
+libindicator (0.2.1-0ubuntu1) karmic; urgency=low
+
+  * Upstream release 0.2.1 (LP: #446619)
+    * Puts a copyright header on the header file.  Should have
+      been there all along.
+
+ -- Ted Gould <ted@ubuntu.com>  Fri, 09 Oct 2009 08:12:18 +0200
+
+libindicator (0.2.0-0ubuntu1) karmic; urgency=low
+
+  * Upstream release 0.2.0 (LP: #427443):
+    - Use silent automake mode.
+    - Tag for final release.
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 10 Sep 2009 20:22:45 +0200
+
+libindicator (0.2.0~bzr325-0ubuntu1) karmic; urgency=low
+
+  [ Ted Gould ]
+  * New version (LP: #417039)
+  * Merging in the seperation from indicator-applet
+  * debian/* Removing all of the indicator-applet stuff
+  * Setting the icon path in the .pc file.
+  * Merging onto the main packaging branch.
+  * Renaming the second Bonobo server description file to match that
+    of the FastUserSwitchApplet.
+  * Upstream merge for better naming of the applet.
+  * Updating from upstream with two (count them) two applets
+    installed in the source.
+  * debian/control: Adding information on indicator-applet-sus which
+    is a different applet for the SUS indicator.
+  * debian/indicator-applet.install: Making it more specific so that
+    it doesn't grab the directories that now have additional files
+    created by indicator-applet-sus existing.
+  * debian/indicator-applet-sus.install: List files that are now
+    used by the new binary package.
+
+  [ Ken VanDine ]
+  * debian/control:
+    - Set both Vcs-Bzr and Vcs-Bzr-Browser, with ~ubuntu-desktop 
+
+  [ Martin Pitt ]
+  * Flush changelog.
+  * debian/control: Fix Vcs-* links.
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Tue, 25 Aug 2009 08:35:00 +0200
