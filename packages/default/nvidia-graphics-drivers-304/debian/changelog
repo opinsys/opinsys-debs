@@ -1,3 +1,9 @@
+nvidia-graphics-drivers-304 (304.131-0ubuntu0.14.04.1+opinsys1) trusty-security; urgency=medium
+
+  * Add two more patches that were missing.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Thu, 18 Feb 2016 10:07:36 +0200
+
 nvidia-graphics-drivers-304 (304.131-0ubuntu0.14.04.1) trusty-security; urgency=medium
 
   * debian/substvars:
