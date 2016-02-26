@@ -4,7 +4,7 @@ Index: oracle-java/Makefile
 +++ oracle-java/Makefile	2014-01-16 11:17:50.407458588 +0200
 @@ -0,0 +1,11 @@
 +BINDIR = opt/java
-+DISTFILE = jre-8u66-linux-i586.tar.gz
++DISTFILE = jre-8u74-linux-i586.tar.gz
 +
 +all:
 +	mkdir -p $(BINDIR)
