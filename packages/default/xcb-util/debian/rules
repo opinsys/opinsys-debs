@@ -24,7 +24,9 @@ cleanbuilddir::
 	# Specific to Git Debian package
 	rm -f Doxyfile .gitmodules autogen.sh
 
+PACKAGE = xcb-util
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
 get-orig-source:
-	git archive upstream | gzip -9 > ../xcb-util_$(ORIG_MAJOR)+git$(ORIG_GIT).orig.tar.gz
-
-.PHONY: get-orig-source
+	wget -c https://xcb.freedesktop.org/dist/$(PACKAGE)-$(SRC_VERSION).tar.gz -O ../$(TARBALL)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
