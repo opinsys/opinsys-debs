@@ -1,0 +1,126 @@
+From 9a8b44dd6fc63f2562a17395c54f5f439cad9008 Mon Sep 17 00:00:00 2001
+From: Robert Ancell <robert.ancell@canonical.com>
+Date: Fri, 2 Oct 2015 14:22:42 +1300
+Subject: [PATCH xf86-video-intel 2/2] Revert "sna: Be robust in handling DPMS
+ failures"
+
+This reverts commit 7d9a74622e5a936e4860fcef8358619bf59adae8.
+---
+ src/sna/sna_display.c | 41 ++++++++++++++---------------------------
+ 1 file changed, 14 insertions(+), 27 deletions(-)
+
+--- a/src/sna/sna_display.c
++++ b/src/sna/sna_display.c
+@@ -262,7 +262,7 @@ struct sna_output {
+ 	int panel_vdisplay;
+ 
+ 	uint32_t dpms_id;
+-	uint8_t dpms_mode;
++	int dpms_mode;
+ 	struct backlight backlight;
+ 	int backlight_active_level;
+ 
+@@ -300,7 +300,6 @@ enum { /* XXX copied from hw/xfree86/mod
+ 	OPTION_DEFAULT_MODES,
+ };
+ 
+-static void __sna_output_dpms(xf86OutputPtr output, int dpms, int fixup);
+ static void sna_crtc_disable_cursor(struct sna *sna, struct sna_crtc *crtc);
+ 
+ static bool is_zaphod(ScrnInfoPtr scrn)
+@@ -1099,7 +1098,7 @@ sna_crtc_force_outputs_on(xf86CrtcPtr cr
+ 		if (output->crtc != crtc)
+ 			continue;
+ 
+-		__sna_output_dpms(output, DPMSModeOn, false);
++		output->funcs->dpms(output, DPMSModeOn);
+ 		if (to_sna_output(output)->last_detect)
+ 			to_sna_output(output)->last_detect = now;
+ 	}
+@@ -1131,7 +1130,7 @@ sna_crtc_force_outputs_off(xf86CrtcPtr c
+ 		if (output->crtc != crtc)
+ 			continue;
+ 
+-		__sna_output_dpms(output, DPMSModeOff, false);
++		output->funcs->dpms(output, DPMSModeOff);
+ 	}
+ }
+ 
+@@ -1356,7 +1355,7 @@ sna_crtc_apply(xf86CrtcPtr crtc)
+ 		 * and we lose track of the user settings.
+ 		 */
+ 		if (output->crtc == NULL)
+-			__sna_output_dpms(output, DPMSModeOff, false);
++			output->funcs->dpms(output, DPMSModeOff);
+ 
+ 		if (output->crtc != crtc)
+ 			continue;
+@@ -3907,7 +3906,7 @@ sna_output_destroy(xf86OutputPtr output)
+ }
+ 
+ static void
+-__sna_output_dpms(xf86OutputPtr output, int dpms, int fixup)
++sna_output_dpms(xf86OutputPtr output, int dpms)
+ {
+ 	struct sna *sna = to_sna(output->scrn);
+ 	struct sna_output *sna_output = output->driver_private;
+@@ -3934,9 +3933,8 @@ __sna_output_dpms(xf86OutputPtr output,
+ 	if (sna_output->backlight.iface && dpms != DPMSModeOn) {
+ 		if (old_dpms == DPMSModeOn) {
+ 			sna_output->backlight_active_level = sna_output_backlight_get(output);
+-			DBG(("%s(%s:%d): saving current backlight %d\n",
+-			     __FUNCTION__, output->name, sna_output->id,
+-			     sna_output->backlight_active_level));
++			DBG(("%s: saving current backlight %d\n",
++			     __FUNCTION__, sna_output->backlight_active_level));
+ 		}
+ 		sna_output->dpms_mode = dpms;
+ 		sna_output_backlight_off(sna_output);
+@@ -3946,31 +3944,18 @@ __sna_output_dpms(xf86OutputPtr output,
+ 	    drmModeConnectorSetProperty(sna->kgem.fd,
+ 					sna_output->id,
+ 					sna_output->dpms_id,
+-					dpms)) {
+-		DBG(("%s(%s:%d): failed to set DPMS to %d (fixup? %d)\n",
+-		     __FUNCTION__, output->name, sna_output->id, dpms, fixup));
+-		if (fixup) {
+-			sna_crtc_disable(output->crtc, false);
+-			return;
+-		}
+-	}
++					dpms))
++		dpms = old_dpms;
+ 
+ 	if (sna_output->backlight.iface && dpms == DPMSModeOn) {
+-		DBG(("%s(%d:%d: restoring previous backlight %d\n",
+-		     __FUNCTION__, output->name, sna_output->id,
+-		     sna_output->backlight_active_level));
++		DBG(("%s: restoring previous backlight %d\n",
++		     __FUNCTION__, sna_output->backlight_active_level));
+ 		sna_output_backlight_on(sna_output);
+ 	}
+ 
+ 	sna_output->dpms_mode = dpms;
+ }
+ 
+-static void
+-sna_output_dpms(xf86OutputPtr output, int dpms)
+-{
+-	__sna_output_dpms(output, dpms, true);
+-}
+-
+ static bool
+ sna_property_ignore(drmModePropertyPtr prop)
+ {
+@@ -4836,8 +4821,10 @@ reset:
+ 		sna_output->dpms_mode = sna_output->prop_values[i];
+ 		DBG(("%s: found 'DPMS' (idx=%d, id=%d), initial value=%d\n",
+ 		     __FUNCTION__, i, sna_output->dpms_id, sna_output->dpms_mode));
+-	} else
++	} else {
++		sna_output->dpms_id = -1;
+ 		sna_output->dpms_mode = DPMSModeOff;
++	}
+ 
+ 	sna_output->possible_encoders = possible_encoders;
+ 	sna_output->attached_encoders = attached_encoders;
