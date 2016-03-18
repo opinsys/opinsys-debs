@@ -5,3 +5,4 @@
 12_wpa_gui_knotify_support.patch
 dbus-available-sta.patch
 session-ticket.patch
+13_iapp_reuseport.patch
