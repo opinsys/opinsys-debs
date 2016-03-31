@@ -1,3 +1,9 @@
+wpa (2.5-0+opinsys2) trusty; urgency=medium
+
+  * Add patch "IAPP: Set SO_REUSEPORT on listening socket"
+
+ -- Opinsys Developers <dev@opinsys.fi>  Thu, 31 Mar 2016 10:42:41 +0300
+
 wpa (2.5-0+opinsys1) quantal; urgency=low
 
   * New upstream release.
