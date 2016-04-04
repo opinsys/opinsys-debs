@@ -1,0 +1,391 @@
+commit 80db93ed6b05fade9e0c7a581cc2b503f66d2416
+Author: Chris Wilson <chris@chris-wilson.co.uk>
+Date:   Wed Jul 24 01:44:30 2013 +0100
+
+    sna: Add XMir support
+    
+    With lots of updates by Christopher James Halse Rogers as he updated the
+    XMir API - but now supposedly frozen!
+    
+    "<RAOF> ickle: I think the xmir api should be pretty much stable now,
+    barring people coming up with more awesome ways of doing things."
+    
+    Signed-off-by: Christopher James Halse Rogers <raof@ubuntu.com>
+    Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -67,6 +67,7 @@ intel_drv_la_SOURCES = \
+ 	intel_driver.h \
+ 	intel_options.c \
+ 	intel_module.c \
++	intel_xmir.h \
+ 	compat-api.h \
+ 	$(NULL)
+ 
+--- a/src/intel_device.c
++++ b/src/intel_device.c
+@@ -410,10 +410,23 @@ static int __intel_open_device__legacy(c
+ 	return fd_set_nonblock(drmOpen(NULL, id));
+ }
+ 
++static int __intel_open_xmir(const struct pci_device *pci)
++{
++	char id[20];
++
++	snprintf(id, sizeof(id),
++		 "pci:%04x:%02x:%02x.%d",
++		 pci->domain, pci->bus, pci->dev, pci->func);
++	return xmir_get_drm_fd(id);
++}
++
+ static int __intel_open_device(const struct pci_device *pci, const char *path)
+ {
+ 	int fd;
+ 
++	if (xorgMir)
++		return __intel_open_xmir(pci);
++
+ 	if (path == NULL) {
+ 		if (pci == NULL)
+ 			return -1;
+--- a/src/intel_driver.h
++++ b/src/intel_driver.h
+@@ -1,6 +1,8 @@
+ #ifndef INTEL_DRIVER_H
+ #define INTEL_DRIVER_H
+ 
++#include "intel_xmir.h"
++
+ struct xf86_platform_device;
+ 
+ #define INTEL_VERSION 4000
+@@ -141,6 +143,6 @@ void intel_detect_chipset(ScrnInfoPtr sc
+ 	default_accel_method__ == x; \
+ })
+ 
+-#define hosted() (0)
++#define hosted() (xorgMir)
+ 
+ #endif /* INTEL_DRIVER_H */
+--- /dev/null
++++ b/src/intel_xmir.h
+@@ -0,0 +1,15 @@
++#ifndef INTEL_XMIR_H
++#define INTEL_XMIR_H
++
++#include <xorg-server.h>
++
++#if XMIR
++#include <xf86Priv.h>
++#include <xmir.h>
++#else
++typedef struct xmir_screen xmir_screen;
++#define xorgMir 0
++#define xmir_get_drm_fd(id) -1
++#endif
++
++#endif /* INTEL_XMIR_H */
+--- a/src/sna/Makefile.am
++++ b/src/sna/Makefile.am
+@@ -81,6 +81,7 @@ libsna_la_SOURCES = \
+ 	sna_video_overlay.c \
+ 	sna_video_sprite.c \
+ 	sna_video_textured.c \
++	sna_xmir.c \
+ 	gen2_render.c \
+ 	gen2_render.h \
+ 	gen3_render.c \
+--- a/src/sna/sna.h
++++ b/src/sna/sna.h
+@@ -363,6 +363,7 @@ struct sna {
+ 
+ 	EntityInfoPtr pEnt;
+ 	const struct intel_device_info *info;
++	xmir_screen *xmir;
+ 
+ 	ScreenBlockHandlerProcPtr BlockHandler;
+ 	ScreenWakeupHandlerProcPtr WakeupHandler;
+@@ -1237,4 +1238,18 @@ static inline void sigtrap_put(void)
+ extern int getline(char **line, size_t *len, FILE *file);
+ #endif
+ 
++/* sna_xmir.c */
++
++#if XMIR
++bool sna_xmir_create(struct sna *sna);
++bool sna_xmir_pre_init(struct sna *sna);
++void sna_xmir_init(struct sna *sna, ScreenPtr screen);
++void sna_xmir_post_damage(struct sna *sna);
++#else
++inline static bool sna_xmir_create(struct sna *sna) { return true; }
++inline static bool sna_xmir_pre_init(struct sna *sna) { return true; }
++inline static void sna_xmir_init(struct sna *sna, ScreenPtr screen) { }
++inline static void sna_xmir_post_damage(struct sna *sna) { }
++#endif
++
+ #endif /* _SNA_H */
+--- a/src/sna/sna_dri2.c
++++ b/src/sna/sna_dri2.c
+@@ -3154,6 +3154,13 @@ void sna_dri2_destroy_window(WindowPtr w
+ void sna_dri2_decouple_window(WindowPtr win) { }
+ #endif
+ 
++#if DRI2INFOREC_VERSION >= 8 && XMIR
++static int sna_dri_auth_magic2(ScreenPtr screen, uint32_t magic)
++{
++	return xmir_auth_drm_magic(to_sna_from_screen(screen)->xmir, magic);
++}
++#endif
++
+ static bool has_i830_dri(void)
+ {
+ 	return access(DRI_DRIVER_PATH "/i830_dri.so", R_OK) == 0;
+@@ -3310,6 +3317,13 @@ bool sna_dri2_open(struct sna *sna, Scre
+ 	}
+ #endif
+ 
++#if DRI2INFOREC_VERSION >= 8 && XMIR
++	if (sna->xmir) {
++		info.version = 8;
++		info.AuthMagic2 = sna_dri_auth_magic2;
++	}
++#endif
++
+ #if USE_ASYNC_SWAP
+ 	info.version = 10;
+ 	info.scheduleSwap0 = 1;
+--- a/src/sna/sna_driver.c
++++ b/src/sna/sna_driver.c
+@@ -604,6 +604,9 @@ static Bool sna_pre_init(ScrnInfoPtr scr
+ 		goto cleanup;
+ 	}
+ 
++	if (!sna_xmir_create(sna))
++		goto cleanup;
++
+ 	/* Sanity check */
+ 	if (hosted() && (sna->flags & SNA_IS_HOSTED) == 0) {
+ 		xf86DrvMsg(scrn->scrnIndex, X_ERROR,
+@@ -615,6 +618,7 @@ static Bool sna_pre_init(ScrnInfoPtr scr
+ 	xf86DrvMsg(scrn->scrnIndex, X_PROBED, "CPU: %s\n",
+ 		   sna_cpu_features_to_string(sna->cpu_features, buf));
+ 
++	/* XXX query depth from host */
+ 	if (!xf86SetDepthBpp(scrn, 24, 0, 0,
+ 			     Support32bppFb |
+ 			     SupportConvert24to32 | PreferConvert24to32))
+@@ -648,6 +652,9 @@ static Bool sna_pre_init(ScrnInfoPtr scr
+ 
+ 	sna_setup_capabilities(scrn, fd);
+ 
++	if (!sna_xmir_pre_init(sna))
++		goto cleanup;
++
+ 	kgem_init(&sna->kgem, fd,
+ 		  xf86GetPciInfoForEntity(pEnt->index),
+ 		  sna->info->gen);
+@@ -749,6 +756,8 @@ sna_block_handler(BLOCKHANDLER_ARGS_DECL
+ 
+ 	if (*tv == NULL || ((*tv)->tv_usec | (*tv)->tv_sec) || has_shadow(sna))
+ 		sna_accel_block_handler(sna, tv);
++
++	sna_xmir_post_damage(sna);
+ }
+ 
+ static void
+@@ -1159,6 +1168,8 @@ sna_screen_init(SCREEN_INIT_ARGS_DECL)
+ 	if (!miDCInitialize(screen, xf86GetPointerScreenFuncs()))
+ 		return FALSE;
+ 
++	sna_xmir_init(sna, screen); /* after DirectCursor is initialised */
++
+ 	if (sna_cursors_init(screen, sna))
+ 		xf86DrvMsg(scrn->scrnIndex, X_INFO, "HW Cursor enabled\n");
+ 
+--- /dev/null
++++ b/src/sna/sna_xmir.c
+@@ -0,0 +1,183 @@
++/***************************************************************************
++
++ Copyright 2013 Intel Corporation.  All Rights Reserved.
++
++ Permission is hereby granted, free of charge, to any person obtaining a
++ copy of this software and associated documentation files (the
++ "Software"), to deal in the Software without restriction, including
++ without limitation the rights to use, copy, modify, merge, publish,
++ distribute, sub license, and/or sell copies of the Software, and to
++ permit persons to whom the Software is furnished to do so, subject to
++ the following conditions:
++
++ The above copyright notice and this permission notice (including the
++ next paragraph) shall be included in all copies or substantial portions
++ of the Software.
++
++ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
++ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
++ IN NO EVENT SHALL INTEL, AND/OR ITS SUPPLIERS BE LIABLE FOR ANY CLAIM,
++ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
++ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
++ THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++
++ **************************************************************************/
++
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
++#include "sna.h"
++
++#if XMIR
++
++/* Theory of Operation
++ * -------------------
++ *
++ *  1. Clients render to their pixmaps and Windows aggregating damage.
++ *  2. Before blocking, we walk the list of dirty Windows and submit
++ *     any damage to Mir. This consumes the xfer buffer.
++ *  3. Clients continue to render and we accumulate damage. However,
++ *     as there is now no xfer buffer free, damage accumulates.
++ *  4. Mir reports that its exchange has complete and gives us a new
++ *     transport buffer.
++ *  5. Before going to sleep, we iterate over dirty Windows and copy
++ *     their damage into the xfer buffer and send back to Mir.
++ *
++ *  Clients render uninterrupted, but we only send damage to Mir once
++ *  every frame.
++ */
++
++#define FORCE_FULL_REDRAW 0
++
++static void
++sna_xmir_copy_to_mir(xmir_window *xmir_win, RegionPtr region)
++{
++	PixmapPtr pixmap = get_window_pixmap(xmir_window_to_windowptr(xmir_win));
++	struct sna *sna = to_sna_from_pixmap(pixmap);
++	const BoxRec *dst_box = xmir_window_get_drawable_region(xmir_win);
++	struct kgem_bo *src, *dst;
++	BoxRec *box;
++	const int pitch = xmir_window_get_stride(xmir_win);
++	int16_t sx, sy, dx, dy;
++	int n;
++
++#if FORCE_FULL_REDRAW
++	RegionRec whole = { { 0, 0, pixmap->drawable.width, pixmap->drawable.height } };
++	region = &whole;
++#endif
++
++	assert(region);
++
++	DBG(("%s: copying region (%d, %d), (%d, %d) x %d, dst box=(%d, %d), (%d, %d), pitch=%d, fd=%d\n",
++	     __FUNCTION__,
++	     region->extents.x1, region->extents.y1,
++	     region->extents.x2, region->extents.y2,
++	     REGION_NUM_RECTS(region),
++	     dst_box->x1, dst_box->y1,
++	     dst_box->x2, dst_box->y2,
++	     pitch, xmir_window_get_fd(xmir_win)));
++
++	box = REGION_RECTS(region);
++	n = REGION_NUM_RECTS(region);
++	if (n == 0)
++		return;
++
++	dst = kgem_create_for_prime(&sna->kgem,
++				    xmir_window_get_fd(xmir_win),
++				    pitch * (dst_box->y2 - dst_box->y1));
++	if (dst == NULL)
++		return;
++
++	dst->pitch = pitch;
++
++	if (get_window_deltas(pixmap, &sx, &sy))
++		RegionTranslate(region, sx, sy);
++
++	dx = sx + dst_box->x1;
++	dy = sy + dst_box->y1;
++
++	src = NULL;
++	if (!wedged(sna))
++		src = __sna_render_pixmap_bo(sna, pixmap, &region->extents, true);
++	if (src && sna->render.copy_boxes(sna, GXcopy,
++					  pixmap, src, 0, 0,
++					  pixmap, dst, -dx, -dy,
++					  box, n, COPY_LAST)) {
++		kgem_submit(&sna->kgem);
++		n = 0;
++	} else {
++		void *ptr = kgem_bo_map__gtt(&sna->kgem, dst);
++		if (ptr && sna_drawable_move_region_to_cpu(&pixmap->drawable,
++							   region, MOVE_READ)) {
++			kgem_bo_sync__gtt(&sna->kgem, dst);
++			if (sigtrap_get() == 0) {
++				do {
++					memcpy_blt(pixmap->devPrivate.ptr, ptr,
++						   pixmap->drawable.bitsPerPixel,
++						   pixmap->devKind, dst->pitch,
++						   box->x1, box->y1,
++						   box->x1 - dx, box->y1 - dy,
++						   box->x2 - box->x1,
++						   box->y2 - box->y1);
++					box++;
++				} while (--n);
++				sigtrap_put();
++			}
++		}
++	}
++
++	if (sx | sy)
++		RegionTranslate(region, -sx, -sy);
++
++	if (n == 0)
++		xmir_submit_rendering_for_window(xmir_win, region);
++
++	kgem_bo_destroy(&sna->kgem, dst);
++}
++
++static xmir_driver sna_xmir_driver = {
++	XMIR_DRIVER_VERSION,
++	sna_xmir_copy_to_mir
++};
++
++bool sna_xmir_create(struct sna *sna)
++{
++	if (!xorgMir)
++		return true;
++
++	sna->xmir = xmir_screen_create(sna->scrn);
++	if (sna->xmir == NULL)
++		return false;
++
++	sna->flags |= SNA_IS_HOSTED;
++	return true;
++}
++
++bool sna_xmir_pre_init(struct sna *sna)
++{
++	if (sna->xmir == NULL)
++		return true;
++
++	return xmir_screen_pre_init(sna->scrn, sna->xmir, &sna_xmir_driver);
++}
++
++void sna_xmir_init(struct sna *sna, ScreenPtr screen)
++{
++	if (sna->xmir == NULL)
++		return;
++
++	xmir_screen_init(screen, sna->xmir);
++}
++
++void sna_xmir_post_damage(struct sna *sna)
++{
++	if (sna->xmir == NULL)
++		return;
++
++	xmir_screen_for_each_damaged_window(sna->xmir,
++					    sna_xmir_copy_to_mir);
++}
++
++#endif
