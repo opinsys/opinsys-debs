@@ -1,3 +1,9 @@
+oracle-java (1.8.77-0+opinsys1) trusty; urgency=medium
+
+  * Update to Java 8u77
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 05 Apr 2016 10:04:19 +0300
+
 oracle-java (1.8.74-0+opinsys1) trusty; urgency=medium
 
   * Update to Java 8u74.
