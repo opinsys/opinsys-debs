@@ -1,3 +1,9 @@
+mesa (11.0.9-0opinsys1) trusty; urgency=medium
+
+  * Update to new upstream version
+
+ -- Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>  Mon, 18 Apr 2016 08:59:33 +0300
+
 mesa (11.0.2-1ubuntu4) wily; urgency=medium
 
   * core-fix-EXT_texture_format_BGRA8888.patch: Cherry pick upstream commit
