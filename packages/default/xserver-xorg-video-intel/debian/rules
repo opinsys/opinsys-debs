@@ -71,5 +71,5 @@ PACKAGE = xf86-video-intel
 SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
 TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
 get-orig-source:
-	wget -c http://mirror.opinsys.fi/ubuntu/pool/main/x/xserver-xorg-video-intel/xserver-xorg-video-intel_2.99.917+git20160218.orig.tar.gz -O ../$(TARBALL)
+	wget -c http://mirror.opinsys.fi/ubuntu/pool/main/x/xserver-xorg-video-intel/xserver-xorg-video-intel_2.99.917%2bgit20160325.orig.tar.gz -O ../$(TARBALL)
 	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .
