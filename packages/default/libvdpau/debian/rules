@@ -47,3 +47,10 @@ override_dh_makeshlibs:
 
 override_dh_strip:
 	dh_strip --dbg-package=libvdpau1-dbg
+
+PACKAGE := $(shell dpkg-parsechangelog | sed -r -n 's/^Source: //p')
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -r -n 's/^Version: (([0-9]+):)?(.*)-.*/\3/p')
+get-orig-source:
+	wget -O ../$(PACKAGE)_$(SRC_VERSION).orig.tar.gz \
+	  https://people.freedesktop.org/~aplattner/vdpau/$(PACKAGE)-$(SRC_VERSION).tar.gz
+	tar -z -x -f ../$(PACKAGE)_$(SRC_VERSION).orig.tar.gz --strip-components=1
