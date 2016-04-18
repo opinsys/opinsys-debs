@@ -74,9 +74,9 @@ else
 	EGL_DISPLAYS += wayland
 
 # Mir isn't built on AArch64 and PPC
-    ifeq (,$(filter $(DEB_HOST_ARCH),arm64 powerpc ppc64 ppc64el))
-	EGL_DISPLAYS += mir
-    endif
+#    ifeq (,$(filter $(DEB_HOST_ARCH),arm64 powerpc ppc64 ppc64el))
+#	EGL_DISPLAYS += mir
+#    endif
 
     ifeq (,$(filter $(DEB_HOST_ARCH), s390 s390x))
 	DRI_DRIVERS += nouveau
@@ -296,3 +296,10 @@ gentarball: SOURCE=mesa
 gentarball: UV=$(shell dpkg-parsechangelog|awk '/^Version:/ {print $$2}'|sed 's/-.*$$//')
 gentarball:
 	git archive --format=tar upstream-experimental --prefix=$(SOURCE)-$(UV)/ | gzip -9 > ../$(SOURCE)_$(UV).orig.tar.gz
+
+PACKAGE := $(shell dpkg-parsechangelog | sed -r -n 's/^Source: //p')
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -r -n 's/^Version: (([0-9]+):)?(.*)-.*/\3/p')
+get-orig-source:
+	wget -O ../$(PACKAGE)_$(SRC_VERSION).orig.tar.gz \
+	  https://mesa.freedesktop.org/archive/$(SRC_VERSION)/mesa-$(SRC_VERSION).tar.gz
+	tar -z -x -f ../$(PACKAGE)_$(SRC_VERSION).orig.tar.gz --strip-components=1
