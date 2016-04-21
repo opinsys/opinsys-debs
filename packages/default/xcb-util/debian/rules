@@ -1,0 +1,32 @@
+#!/usr/bin/make -f
+
+DEB_DH_INSTALL_SOURCEDIR=debian/tmp
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/rules/autoreconf.mk
+
+DEB_DH_MAKESHLIBS_ARGS=-V
+
+ORIG_MAJOR=$(shell git describe upstream | cut -d- -f1)
+ORIG_GIT=$(shell git describe upstream | cut -d- -f2)
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+DEB_CONFIGURE_EXTRA_FLAGS += --libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH)
+
+post-patches:: configure-stamp
+configure-stamp:
+	test -f configure || sh ./autogen.sh $(DEB_CONFIGURE_NORMAL_ARGS)
+	touch configure-stamp
+
+cleanbuilddir::
+	rm -f configure-stamp
+
+	# Specific to Git Debian package
+	rm -f Doxyfile .gitmodules autogen.sh
+
+PACKAGE = xcb-util
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+get-orig-source:
+	wget -c https://xcb.freedesktop.org/dist/$(PACKAGE)-$(SRC_VERSION).tar.gz -O ../$(TARBALL)
+	tar -z -x -f ../$(TARBALL) --strip-components=1 -C .

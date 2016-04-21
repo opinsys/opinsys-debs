@@ -1,0 +1,12 @@
+#01-synaptics-dont-grab-if-not-on-current-VT.patch
+02-do-not-use-synaptics-for-keyboards.patch
+03-bug-return-val.patch
+101_resolution_detect_option.patch
+103_enable_cornertapping.patch
+104_always_enable_tapping.patch
+106_always_enable_vert_edge_scroll.patch
+115_evdev_only.patch
+118_quell_error_msg.patch
+124_syndaemon_events.patch
+128_disable_three_click_action.patch
+129_disable_three_touch_tap.patch

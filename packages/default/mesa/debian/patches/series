@@ -1,0 +1,4 @@
+07_gallium-fix-build-failure-on-powerpcspe.diff
+
+# Ubuntu patches.
+i915-dont-default-to-2.1.patch
