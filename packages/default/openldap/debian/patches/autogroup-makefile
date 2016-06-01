@@ -3,7 +3,7 @@
 @@ -2,11 +2,11 @@
  
  LDAP_SRC = ../../..
- LDAP_BUILD = ../../..
+ LDAP_BUILD = $(LDAP_SRC)
 -LDAP_INC = -I$(LDAP_BUILD)/include -I$(LDAP_SRC)/include -I$(LDAP_SRC)/servers/slapd
 -LDAP_LIB = $(LDAP_BUILD)/libraries/libldap_r/libldap_r.la \
 -	$(LDAP_BUILD)/libraries/liblber/liblber.la
@@ -16,7 +16,7 @@
  CC = gcc
  OPT = -g -O2 -Wall
  DEFS = 
-@@ -16,13 +16,13 @@ LIBS = $(LDAP_LIB)
+@@ -16,13 +16,13 @@
  PROGRAMS = autogroup.la
  LTVER = 0:0:0
  

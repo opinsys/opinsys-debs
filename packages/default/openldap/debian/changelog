@@ -1,3 +1,9 @@
+openldap (2.4.44-1+opinsys1) precise; urgency=medium
+
+  * New upstream version
+
+ -- Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>  Wed, 01 Jun 2016 17:04:12 +0300
+
 openldap (2.4.40-33+opinsys2) precise; urgency=medium
 
   * Rebuild.
