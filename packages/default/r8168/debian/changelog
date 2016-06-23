@@ -1,3 +1,9 @@
+r8168 (8.042.00-1+opinsys1) trusty; urgency=medium
+
+  * Fix section to restricted instead of non-free
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Thu, 23 Jun 2016 14:38:31 +0300
+
 r8168 (8.042.00-1) unstable; urgency=medium
 
   * New upstream release 8.042.00 (2016-05-12).
