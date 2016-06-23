@@ -1,5 +1,5 @@
 Source: r8168
-Section: non-free/kernel
+Section: restricted/kernel
 Priority: extra
 Maintainer: Andreas Beckmann <anbe@debian.org>
 Build-Depends: debhelper (>= 9), dkms
