@@ -1,3 +1,30 @@
+r8168 (8.042.00-1) unstable; urgency=medium
+
+  * New upstream release 8.042.00 (2016-05-12).
+  * linux-4.5.patch: Remove, fixed upstream.
+
+ -- Andreas Beckmann <anbe@debian.org>  Sat, 28 May 2016 12:42:06 +0200
+
+r8168 (8.041.01-1) unstable; urgency=medium
+
+  * New upstream release 8.041.01 (2016-01-12).
+  * linux-4.5.patch: New, fix building the module for Linux 4.5.
+  * Bump Standards-Version to 3.9.6 (no changes needed).
+  * Update Vcs-Git URL.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 08 Apr 2016 18:34:17 +0200
+
+r8168 (8.041.00-1) unstable; urgency=medium
+
+  [ Andreas Beckmann ]
+  * New upstream release 8.041.00 (2015-12-08).  (Closes: #808124)
+  * Update watch file to use the https://github.com/mtorromeo/r8168 mirror.
+
+  [ Dmitry Smirnov ]
+  * Remove myself from Uploaders.
+
+ -- Andreas Beckmann <anbe@debian.org>  Fri, 18 Dec 2015 14:18:32 +0100
+
 r8168 (8.040.00-1) unstable; urgency=medium
 
   * New upstream release 8.040.00 (2015-05-14).
