@@ -1,3 +1,9 @@
+oracle-java (1.8.102-0+opinsys1) trusty; urgency=medium
+
+  * Update to Java 8u102
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Wed, 10 Aug 2016 15:31:17 +0300
+
 oracle-java (1.8.92-0+opinsys1) trusty; urgency=medium
 
   * Update to Java 8u92
