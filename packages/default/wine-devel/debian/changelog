@@ -1,0 +1,9 @@
+wine-devel (1.9.17~ubuntu14.04.1) trusty; urgency=low
+
+  * Auto build.
+
+ -- Sebastian Lackner <sebastian@fds-team.de>  Sun, 21 Aug 2016 13:59:25 +0000
+
+wine-devel (1.9.17) unstable; urgency=low
+  * Auto build.
+ -- Michael Müller <michael@fds-team.de>  Sun, 21 Aug 2016 13:18:12 -0000
