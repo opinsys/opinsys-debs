@@ -9,6 +9,8 @@ WINESERVER=/opt/wine-devel/bin/wineserver
 
 export WINEARCH WINEDLLOVERRIDES WINEPREFIX WINESERVER
 
+tisoftdir=/opt/TINspireCXCASStudentSoftware
+
 if [ ! -e "$WINEPREFIX" ]; then
     # Create $WINEPREFIX
 
@@ -16,7 +18,6 @@ if [ ! -e "$WINEPREFIX" ]; then
 
     country=$( echo "$LANG" | cut -d . -f 1 | cut -d _ -f 2)
     language=$(echo "$LANG" | cut -d . -f 1 | cut -d _ -f 1)
-    tisoftdir=/opt/TINspireCXCASStudentSoftware
 
     tiuserwinedir="${WINEPREFIX}/drive_c/users/${USER}/Application Data/Texas Instruments/TI-Nspire CX CAS Student Software"
     mkdir -p "$tiuserwinedir"
@@ -28,13 +29,14 @@ if [ ! -e "$WINEPREFIX" ]; then
 	country=${country}
 	EOF
 
-    tiwineroot="${WINEPREFIX}/drive_c/users/Public/Application Data/TI-Nspire CX CAS"
+    tiwineroot="${WINEPREFIX}/drive_c/users/Public/Application Data/TI-Nspire CX CAS/res"
     mkdir -p "$tiwineroot"
     cp "${tisoftdir}/resources/settings.properties" \
        "${tiwineroot}/res/settings.properties"
     cp "${tisoftdir}/resources/deployment.properties" \
        "${tiwineroot}/res/deployment.properties"
+    mkdir -p "${WINEPREFIX}/drive_c/windows/Fonts/"
     cp ${tisoftdir}/.wineprefix/drive_c/Program Files/TI\ Education/TI-Nspire\ CX\ CAS\ Student\ Software/fonts/* "${WINEPREFIX}/drive_c/windows/Fonts/"
 fi
 
-/opt/wine-devel/bin/wine "${WINEPREFIX}/.wineprefix/drive_c/Program Files/TI Education/TI-Nspire CX CAS Student Software/TI-Nspire CX CAS Student Software.exe"
+/opt/wine-devel/bin/wine "${tisoftdir}/.wineprefix/drive_c/Program Files/TI Education/TI-Nspire CX CAS Student Software/TI-Nspire CX CAS Student Software.exe"
