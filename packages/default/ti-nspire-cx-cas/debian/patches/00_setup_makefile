@@ -1,13 +1,19 @@
 --- /dev/null	2016-08-26 10:50:50.790452070 +0300
-+++ ti-nspire-cx-cas/Makefile	2016-08-26 12:30:22.407826735 +0300
-@@ -0,0 +1,11 @@
++++ ti-nspire-cx-cas/Makefile	2016-08-26 14:04:43.092213913 +0300
+@@ -0,0 +1,17 @@
 +.PHONY: all
 +all:
 +
-+.PHONY: install
-+install:
++.PHONY: installdirs
++installdirs:
 +	mkdir -p $(DESTDIR)/opt/TINspireCXCASStudentSoftware/
-+	cp -pR TINspireCXCASStudentSoftware/.wineprefix \
++	mkdir -p $(DESTDIR)/opt/TINspireCXCASStudentSoftware/bin/
++
++.PHONY: install
++install: installdirs
++	install debian/additions/ti_nspire_cx_cas \
++	    $(DESTDIR)/opt/TINspireCXCASStudentSoftware/bin/
++	cp -pR debian/additions/resources .wineprefix \
 +	    $(DESTDIR)/opt/TINspireCXCASStudentSoftware/
 +
 +.PHONY: clean

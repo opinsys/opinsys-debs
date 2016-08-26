@@ -1,0 +1,40 @@
+#!/bin/sh
+
+set -eu
+
+WINEARCH=win32
+WINEDLLOVERRIDES="mscoree,mshtml="
+WINEPREFIX=~/.wineprefix-ti-nspire-cx-cas
+WINESERVER=/opt/wine-devel/bin/wineserver
+
+export WINEARCH WINEDLLOVERRIDES WINEPREFIX WINESERVER
+
+if [ ! -e "$WINEPREFIX" ]; then
+    # Create $WINEPREFIX
+
+    winetricks win7
+
+    country=$( echo "$LANG" | cut -d . -f 1 | cut -d _ -f 2)
+    language=$(echo "$LANG" | cut -d . -f 1 | cut -d _ -f 1)
+    tisoftdir=/opt/TINspireCXCASStudentSoftware
+
+    tiuserwinedir="${WINEPREFIX}/drive_c/users/${USER}/Application Data/Texas Instruments/TI-Nspire CX CAS Student Software"
+    mkdir -p "$tiuserwinedir"
+    cp "${tisoftdir}/resources/preferences.properties" \
+       "${tiuserwinedir}/preferences.properties"
+    # Set the locale and country
+    cat <<-EOF >> "${tiuserwinedir}/preferences.properties"
+	locale=${language}
+	country=${country}
+	EOF
+
+    tiwineroot="${WINEPREFIX}/drive_c/users/Public/Application Data/TI-Nspire CX CAS"
+    mkdir -p "$tiwineroot"
+    cp "${tisoftdir}/resources/settings.properties" \
+       "${tiwineroot}/res/settings.properties"
+    cp "${tisoftdir}/resources/deployment.properties" \
+       "${tiwineroot}/res/deployment.properties"
+    cp ${tisoftdir}/.wineprefix/drive_c/Program Files/TI\ Education/TI-Nspire\ CX\ CAS\ Student\ Software/fonts/* "${WINEPREFIX}/drive_c/windows/Fonts/"
+fi
+
+/opt/wine-devel/bin/wine "${WINEPREFIX}/.wineprefix/drive_c/Program Files/TI Education/TI-Nspire CX CAS Student Software/TI-Nspire CX CAS Student Software.exe"

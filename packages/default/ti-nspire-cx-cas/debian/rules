@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 %:
-	dh $@ --scriptdir=foo
+	dh $@
 
 override_dh_fixperms:
 override_dh_shlibdeps:
@@ -14,4 +14,4 @@ TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
 get-orig-source:
 	wget http://private-archive.opinsys.fi/.distfiles/ti-nspire-cx-cas/$(PACKAGE)_$(SRC_VERSION).tar.gz \
           -O../$(TARBALL)
-	tar -zxf ../$(TARBALL) -C .
+	tar -zxf ../$(TARBALL) --strip-components=1 -C .
