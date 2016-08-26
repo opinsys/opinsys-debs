@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=TI-Nspire CX CAS Student Software
+Description=TI-Nspire CX CAS Student Software
+Exec=/opt/TINspireCXCASStudentSoftware/bin/ti_nspire_cx_cas
+Type=Application
+StartupNotify=true
+Icon=/opt/TINspireCXCASStudentSoftware/icons/ti_nspire_cx_cas.png

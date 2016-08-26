@@ -1,6 +1,6 @@
 --- /dev/null	2016-08-26 10:50:50.790452070 +0300
-+++ ti-nspire-cx-cas/Makefile	2016-08-26 14:04:43.092213913 +0300
-@@ -0,0 +1,17 @@
++++ ti-nspire-cx-cas/Makefile	2016-08-26 15:10:38.118374544 +0300
+@@ -0,0 +1,22 @@
 +.PHONY: all
 +all:
 +
@@ -8,11 +8,16 @@
 +installdirs:
 +	mkdir -p $(DESTDIR)/opt/TINspireCXCASStudentSoftware/
 +	mkdir -p $(DESTDIR)/opt/TINspireCXCASStudentSoftware/bin/
++	mkdir -p $(DESTDIR)/opt/TINspireCXCASStudentSoftware/icons/
 +
 +.PHONY: install
 +install: installdirs
 +	install debian/additions/ti_nspire_cx_cas \
 +	    $(DESTDIR)/opt/TINspireCXCASStudentSoftware/bin/
++	install -m 644 debian/additions/ti_nspire_cx_cas.desktop \
++            $(DESTDIR)/opt/TINspireCXCASStudentSoftware/
++	install -m 644 debian/additions/icons/ti_nspire_cx_cas.png \
++            $(DESTDIR)/opt/TINspireCXCASStudentSoftware/icons/
 +	cp -pR debian/additions/resources .wineprefix \
 +	    $(DESTDIR)/opt/TINspireCXCASStudentSoftware/
 +
