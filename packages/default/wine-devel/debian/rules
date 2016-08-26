@@ -91,7 +91,7 @@ else
 	dh_shlibdeps -l $(CURDIR)/debian/tmp//opt/wine-devel/lib/
 endif
 
-SRC_VERSION := $(shell dpkg-parsechangelog | awk '$$1 == "Version:" { print $$2 }')
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -nE '/^Version/s/-[0-9]+~opinsys.*//p'  | awk '{ print $$2 }')
 get-orig-source:
 	wget -O ../wine-devel_$(SRC_VERSION).orig.tar.gz \
 	    http://ppa.launchpad.net/wine/wine-builds/ubuntu/pool/main/w/wine-devel/wine-devel_$(SRC_VERSION).tar.gz
