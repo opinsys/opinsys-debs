@@ -1,3 +1,9 @@
+wine-devel (1.9.17~ubuntu14.04.1-0~opinsys1) trusty; urgency=low
+
+  * Add ~opinsys1 to version number, because we have patched this.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Fri, 26 Aug 2016 15:47:35 +0300
+
 wine-devel (1.9.17~ubuntu14.04.1) trusty; urgency=low
 
   * Auto build.

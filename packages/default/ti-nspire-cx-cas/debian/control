@@ -8,7 +8,8 @@ Homepage: https://education.ti.com/fi/suomi/products/opetusohjelmistot/ti-nspire
 
 Package: ti-nspire-cx-cas
 Architecture: i386
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, wine-devel (>= 1.9.17~ubuntu14.04.1-0~opinsys1),
+ winetricks
 Description: TI-Nspire CX CAS Opiskelijan ohjelmisto
  TI-Nspire CX CAS Opiskelijan ohjelmisto
  .
