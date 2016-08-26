@@ -1,0 +1,14 @@
+--- /dev/null	2016-08-26 10:50:50.790452070 +0300
++++ ti-nspire-cx-cas/Makefile	2016-08-26 12:30:22.407826735 +0300
+@@ -0,0 +1,11 @@
++.PHONY: all
++all:
++
++.PHONY: install
++install:
++	mkdir -p $(DESTDIR)/opt/TINspireCXCASStudentSoftware/
++	cp -pR TINspireCXCASStudentSoftware/.wineprefix \
++	    $(DESTDIR)/opt/TINspireCXCASStudentSoftware/
++
++.PHONY: clean
++clean:

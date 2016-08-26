@@ -1,0 +1,14 @@
+Source: ti-nspire-cx-cas
+Section: misc
+Priority: extra
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+Homepage: https://education.ti.com/fi/suomi/products/opetusohjelmistot/ti-nspire-cx-cas-tietokoneohjelmisto/tabs/overview
+
+Package: ti-nspire-cx-cas
+Architecture: i386
+Depends: ${misc:Depends}
+Description: TI-Nspire CX CAS Opiskelijan ohjelmisto
+ TI-Nspire CX CAS Opiskelijan ohjelmisto
+ .

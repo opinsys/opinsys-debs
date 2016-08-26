@@ -1,0 +1,17 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --scriptdir=foo
+
+override_dh_fixperms:
+override_dh_shlibdeps:
+override_dh_strip:
+
+PACKAGE = $(shell dpkg-parsechangelog | sed -ne 's/^Source: //p')
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+TARBALL = $(PACKAGE)_$(SRC_VERSION).orig.tar.gz
+.PHONY: get-orig-source
+get-orig-source:
+	wget http://private-archive.opinsys.fi/.distfiles/ti-nspire-cx-cas/$(PACKAGE)_$(SRC_VERSION).tar.gz \
+          -O../$(TARBALL)
+	tar -zxf ../$(TARBALL) -C .
