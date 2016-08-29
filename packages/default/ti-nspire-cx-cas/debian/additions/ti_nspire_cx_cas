@@ -39,6 +39,9 @@ if [ ! -e "${WINEPREFIX}/setup_done" ]; then
     cp ${tisoftdir}/.wineprefix/drive_c/Program\ Files/TI\ Education/TI-Nspire\ CX\ CAS\ Student\ Software/fonts/* "${WINEPREFIX}/drive_c/windows/Fonts/"
 
     touch "${WINEPREFIX}/setup_done"
+
+    # wait for some time for wineserver to finish
+    sleep 8
 fi
 
 /opt/wine-devel/bin/wine "${tisoftdir}/.wineprefix/drive_c/Program Files/TI Education/TI-Nspire CX CAS Student Software/TI-Nspire CX CAS Student Software.exe"
