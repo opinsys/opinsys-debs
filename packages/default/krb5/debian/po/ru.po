@@ -8,16 +8,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krb5_1.6.dfsg.4~beta1-10\n"
 "Report-Msgid-Bugs-To: krb5@packages.debian.org\n"
-"POT-Creation-Date: 2009-03-12 15:40-0700\n"
+"POT-Creation-Date: 2014-10-20 17:18-0400\n"
 "PO-Revision-Date: 2009-03-09 00:11:57+0300\n"
 "Last-Translator: Alyoshin Sergey <alyoshin.s@gmail.com>\n"
 "Language-Team: Russian <debian-l10n-russian@lists.debian.org>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
-"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. Type: note
 #. Description
@@ -54,32 +55,6 @@ msgid ""
 msgstr ""
 "Пожалуйста, прочтите также файл /usr/share/doc/krb5-kdc/README.KDC и "
 "руководство администратора из пакета krb5-doc."
-
-#. Type: boolean
-#. Description
-#: ../krb5-admin-server.templates:3001
-msgid "Run the Kerberos V5 administration daemon (kadmind)?"
-msgstr "Запускать службу администрирования Kerberos V5 (kadmind)?"
-
-#. Type: boolean
-#. Description
-#: ../krb5-admin-server.templates:3001
-msgid ""
-"Kadmind serves requests to add/modify/remove principals in the Kerberos "
-"database."
-msgstr ""
-"Kadmind обслуживает запросы на добавление, изменение и/или удаление "
-"принципалов в базе данных Kerberos."
-
-#. Type: boolean
-#. Description
-#: ../krb5-admin-server.templates:3001
-msgid ""
-"It is required by the kpasswd program, used to change passwords.  With "
-"standard setups, this daemon should run on the master KDC."
-msgstr ""
-"Он требуется программе kpasswd, используемой для изменения паролей. При "
-"стандартной установке эта служба должна работать на главном KDC."
 
 #. Type: boolean
 #. Description
@@ -145,6 +120,23 @@ msgid ""
 msgstr ""
 "Выберите этот параметр, если хотите удалить базу данных KDC сейчас, при этом "
 "будут удалены все пользовательские учётные записи и пароли в KDC."
+
+#~ msgid "Run the Kerberos V5 administration daemon (kadmind)?"
+#~ msgstr "Запускать службу администрирования Kerberos V5 (kadmind)?"
+
+#~ msgid ""
+#~ "Kadmind serves requests to add/modify/remove principals in the Kerberos "
+#~ "database."
+#~ msgstr ""
+#~ "Kadmind обслуживает запросы на добавление, изменение и/или удаление "
+#~ "принципалов в базе данных Kerberos."
+
+#~ msgid ""
+#~ "It is required by the kpasswd program, used to change passwords.  With "
+#~ "standard setups, this daemon should run on the master KDC."
+#~ msgstr ""
+#~ "Он требуется программе kpasswd, используемой для изменения паролей. При "
+#~ "стандартной установке эта служба должна работать на главном KDC."
 
 #~ msgid "Kerberos V4 compatibility mode to use:"
 #~ msgstr "Используемый режим совместимости с Kerberos V4:"

@@ -20,12 +20,3 @@ _Description: Setting up a Kerberos Realm
  Please also read the /usr/share/doc/krb5-kdc/README.KDC file
  and the administration guide found in the krb5-doc package.
 
-Template: krb5-admin-server/kadmind
-Type: boolean
-Default: true
-_Description: Run the Kerberos V5 administration daemon (kadmind)?
- Kadmind serves requests to add/modify/remove principals in the
- Kerberos database.
- .
- It is required by the kpasswd program, used to change passwords. 
- With standard setups, this daemon should run on the master KDC.

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krb5\n"
 "Report-Msgid-Bugs-To: krb5@packages.debian.org\n"
-"POT-Creation-Date: 2009-03-12 15:40-0700\n"
+"POT-Creation-Date: 2014-10-20 17:18-0400\n"
 "PO-Revision-Date: 2013-08-04 13:54-0300\n"
 "Last-Translator: Fernando Ike de Oliveira (fike) <fike@midstorm.org>\n"
 "Language-Team: Brazilian Portuguese <debian-l10n-portuguese@lists.debian."
@@ -54,32 +54,6 @@ msgid ""
 msgstr ""
 "Por favor, leia também o arquivo /usr/share/doc/krb5-kdc/README.KDC e o guia "
 "de administração encontrado no pacote krb5-doc."
-
-#. Type: boolean
-#. Description
-#: ../krb5-admin-server.templates:3001
-msgid "Run the Kerberos V5 administration daemon (kadmind)?"
-msgstr "Executar o daemon de administração do Kerberos V5 (kadmind)?"
-
-#. Type: boolean
-#. Description
-#: ../krb5-admin-server.templates:3001
-msgid ""
-"Kadmind serves requests to add/modify/remove principals in the Kerberos "
-"database."
-msgstr ""
-"O kadmind atende requisições para adicionar/modificar/remover \"principals\" "
-"no banco de dados do Kerberos."
-
-#. Type: boolean
-#. Description
-#: ../krb5-admin-server.templates:3001
-msgid ""
-"It is required by the kpasswd program, used to change passwords.  With "
-"standard setups, this daemon should run on the master KDC."
-msgstr ""
-"Ele é necessário para o programa kpasswd, usado para alterar senhas. Com "
-"configurações padrão, este daemon deveria ser executado no KDC mestre."
 
 #. Type: boolean
 #. Description
@@ -146,3 +120,20 @@ msgid ""
 msgstr ""
 "Escolha esta opção se você deseja excluir o banco de dados do KDC agora, "
 "excluindo todas as contas de usuários e senhas do KDC."
+
+#~ msgid "Run the Kerberos V5 administration daemon (kadmind)?"
+#~ msgstr "Executar o daemon de administração do Kerberos V5 (kadmind)?"
+
+#~ msgid ""
+#~ "Kadmind serves requests to add/modify/remove principals in the Kerberos "
+#~ "database."
+#~ msgstr ""
+#~ "O kadmind atende requisições para adicionar/modificar/remover \"principals"
+#~ "\" no banco de dados do Kerberos."
+
+#~ msgid ""
+#~ "It is required by the kpasswd program, used to change passwords.  With "
+#~ "standard setups, this daemon should run on the master KDC."
+#~ msgstr ""
+#~ "Ele é necessário para o programa kpasswd, usado para alterar senhas. Com "
+#~ "configurações padrão, este daemon deveria ser executado no KDC mestre."

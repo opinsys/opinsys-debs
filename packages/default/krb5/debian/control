@@ -5,7 +5,7 @@ Build-Depends: debhelper (>= 8.1.3), byacc | bison,
  comerr-dev, docbook-to-man, doxygen,
  libkeyutils-dev [linux-any], libldap2-dev,
  libncurses5-dev, libssl-dev,  ss-dev, 
- libverto-dev (>= 0.2.4), pkg-config
+ libverto-dev (>= 0.2.4), pkg-config, dh-systemd
 build-depends-indep: python-cheetah, python-lxml, python-sphinx, doxygen-latex
 Standards-Version: 3.9.5
 Maintainer: Sam Hartman <hartmans@debian.org>
@@ -422,8 +422,8 @@ Depends: ${misc:Depends},  libkrad0 (= ${binary:Version}),
  comerr-dev, libverto-dev (>= 0.2.4)
 Priority: extra
 Suggests: libkrb5-dev
-Replaces: libkrb5-dev (<< 1.12)
-Breaks: krb5-multidev (<<1.12), libkrb5-dev (<<1.12)
+Replaces: libkrb5-dev (<< 1.12+dfsg-2)
+Breaks: krb5-multidev (<<1.12+dfsg-2), libkrb5-dev (<<1.12+dfsg-2)
 Description: MIT Kerberos RADIUS Library Development
  This package includes development headers for libkrad0, the MIT
  Kerberos RADIUS library.  You should not use this RADIUS library in

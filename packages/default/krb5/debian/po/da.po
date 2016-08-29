@@ -8,10 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krb5\n"
 "Report-Msgid-Bugs-To: krb5@packages.debian.org\n"
-"POT-Creation-Date: 2009-02-21 13:55-0500\n"
+"POT-Creation-Date: 2014-10-20 17:18-0400\n"
 "PO-Revision-Date: 2010-06-02 17:30+01:00\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <debian-l10n-danish@lists.debian.org> \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -39,8 +40,8 @@ msgid ""
 "However, installing this package does not automatically set up a Kerberos "
 "realm.  This can be done later by running the \"krb5_newrealm\" command."
 msgstr ""
-"Installation af denne pakke medfører dog ikke automatisk, at et "
-"Kerberos-rige bliver sat op. Dette kan gøres senere ved at køre kommandoen "
+"Installation af denne pakke medfører dog ikke automatisk, at et Kerberos-"
+"rige bliver sat op. Dette kan gøres senere ved at køre kommandoen "
 "»krb5_newrealm«."
 
 #. Type: note
@@ -52,32 +53,6 @@ msgid ""
 msgstr ""
 "Læs venligst også filen /usr/share/doc/krb5-kdc/README.KDC og "
 "administrationsvejledningen, der kan ses i pakken krb5-doc."
-
-#. Type: boolean
-#. Description
-#: ../krb5-admin-server.templates:3001
-msgid "Run the Kerberos V5 administration daemon (kadmind)?"
-msgstr "Skal administrationsdæmonen Kerberos5 (kadmind) køres?"
-
-#. Type: boolean
-#. Description
-#: ../krb5-admin-server.templates:3001
-msgid ""
-"Kadmind serves requests to add/modify/remove principals in the Kerberos "
-"database."
-msgstr ""
-"Kadmindservere anmoder om at tilføje/ændre/fjerne vigtige ting i "
-"kerberosdatabasen."
-
-#. Type: boolean
-#. Description
-#: ../krb5-admin-server.templates:3001
-msgid ""
-"It is required by the kpasswd program, used to change passwords.  With "
-"standard setups, this daemon should run on the master KDC."
-msgstr ""
-"Den er krævet af kpasswd-programmet, brugt til at ændre adgangskoder. "
-"Med standardopsætning, skal denne dæmon køre på master-KDC'en."
 
 #. Type: boolean
 #. Description
@@ -144,3 +119,19 @@ msgstr ""
 "Vælg denne indstilling hvis du ønsker at slette KDC-databasen nu, dermed "
 "slettes alle brugerkonti og adgangskoder i KDC'en."
 
+#~ msgid "Run the Kerberos V5 administration daemon (kadmind)?"
+#~ msgstr "Skal administrationsdæmonen Kerberos5 (kadmind) køres?"
+
+#~ msgid ""
+#~ "Kadmind serves requests to add/modify/remove principals in the Kerberos "
+#~ "database."
+#~ msgstr ""
+#~ "Kadmindservere anmoder om at tilføje/ændre/fjerne vigtige ting i "
+#~ "kerberosdatabasen."
+
+#~ msgid ""
+#~ "It is required by the kpasswd program, used to change passwords.  With "
+#~ "standard setups, this daemon should run on the master KDC."
+#~ msgstr ""
+#~ "Den er krævet af kpasswd-programmet, brugt til at ændre adgangskoder. Med "
+#~ "standardopsætning, skal denne dæmon køre på master-KDC'en."

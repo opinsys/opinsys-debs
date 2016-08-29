@@ -70,7 +70,6 @@ configure-stamp:
 	--with-system-verto \
 		--libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
 		--sysconfdir=/etc \
-		--disable-ipv6 \
 		$(SYSTEM) $(CACHE)
 	touch configure-stamp
 
@@ -88,7 +87,7 @@ build-stamp: configure-stamp
 	touch build-stamp
 
 build-indep-stamp: build-stamp
-	cd build/doc && make substhtml
+	cd build/doc && make substhtml substpdf
 	ln -sf /usr/share/javascript/jquery/jquery.js build/doc/html_subst/_static/jquery.js
 	ln -sf /usr/share/javascript/underscore/underscore.js build/doc/html_subst/_static/underscore.js
 	ln -sf /usr/share/javascript/sphinxdoc/1.0/doctools.js build/doc/html_subst/_static/doctools.js
@@ -128,7 +127,7 @@ install: build-arch
 	install -m644 src/util/ac_check_krb5.m4 \
 		debian/libkrb5-dev/usr/share/aclocal
 
-	dh_install --sourcedir=debian/tmp --fail-missing $(EXCLUDE)
+	dh_install --fail-missing $(EXCLUDE)
 	set -e ; find debian/krb5-multidev/usr/lib/$(DEB_HOST_MULTIARCH)/mit-krb5 -type l -name \*.so -print |\
 		while read linkname; do \
 		ln -s -f ../`readlink $$linkname` \
@@ -187,7 +186,9 @@ binary-arch: build-arch install
 	dh_installchangelogs  -Xdoc/CHANGES
 	dh_installdocs
 	dh_installdebconf
-	dh_installinit --upstart-only
+	DH_OPTIONS= dh_installinit -pkrb5-kdc --error-handler=init_error -- defaults 18 18 
+		DH_OPTIONS= dh_installinit -pkrb5-admin-server -- defaults 18 18 
+	dh_systemd_enable
 	dh_lintian
 	set -e ; for pkg in $(LIB_PACKAGES) ; do \
 		DH_OPTIONS="" dh_strip -p$$pkg --dbg-package=libkrb5-dbg; \
@@ -209,7 +210,7 @@ binary-arch: build-arch install
 binary: binary-indep binary-arch
 .PHONY: build clean configure binary-indep binary-arch binary install
 
-SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+SRC_VERSION = 1.12.1
 get-orig-source:
 	wget http://web.mit.edu/kerberos/dist/krb5/1.12/krb5-$(SRC_VERSION)-signed.tar -O ../krb5-$(SRC_VERSION)-signed.tar
 	tar -x -f ../krb5-$(SRC_VERSION)-signed.tar -C ..

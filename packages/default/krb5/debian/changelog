@@ -1,28 +1,120 @@
-krb5 (1.12.1-14+opinsys2) precise; urgency=medium
-
-  * Pick patches from Debian krb5 1.12.1+dfsg-17
-
- -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Wed, 11 Feb 2015 12:40:39 +0200
-
-krb5 (1.12.1-14+opinsys1) precise; urgency=medium
-
-  * Fix multiarch builds by not generating debian/changelog
-  * Version number is semantically wrong now: this package is not
-    packaged 14 times in Debian. It should be 1.12.1-0+opinsys2. But
-    previous production version was
-    1.12.1-13+precise+master.21fcec099230abffa0181ee8ac21e6f11630bb85
-    so this just tries to be a bit newer. Version number must be fixed
-    when a newer upstream version is packaged.
-
- -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 03 Feb 2015 10:32:35 +0200
-
-krb5 (1.12.1-0+opinsys1) precise; urgency=low
+krb5 (1.12.1+dfsg-20+opinsys1) jessie; urgency=low
 
   * Update to new upstream version using debian packaging as base
   * Included additional patches:
     - debian/patches/opinsys-increase-max-number-of-realms
 
  -- Veli-Matti Lintu <veli-matti.lintu@opinsys.fi>  Thu, 09 Oct 2014 14:23:33 +0300
+
+krb5 (1.12.1+dfsg-19+deb8u2) jessie-security; urgency=high
+
+  * Non-maintainer upload by the Security Team.
+  * Verify decoded kadmin C strings [CVE-2015-8629]
+    CVE-2015-8629: An authenticated attacker can cause kadmind to read
+    beyond the end of allocated memory by sending a string without a
+    terminating zero byte. Information leakage may be possible for an
+    attacker with permission to modify the database. (Closes: #813296)
+  * Check for null kadm5 policy name [CVE-2015-8630]
+    CVE-2015-8630: An authenticated attacker with permission to modify a
+    principal entry can cause kadmind to dereference a null pointer by
+    supplying a null policy value but including KADM5_POLICY in the mask.
+    (Closes: #813127)
+  * Fix leaks in kadmin server stubs [CVE-2015-8631]
+    CVE-2015-8631: An authenticated attacker can cause kadmind to leak
+    memory by supplying a null principal name in a request which uses one.
+    Repeating these requests will eventually cause kadmind to exhaust all
+    available memory. (Closes: #813126)
+
+ -- Salvatore Bonaccorso <carnil@debian.org>  Sun, 31 Jan 2016 11:48:01 +0100
+
+krb5 (1.12.1+dfsg-19+deb8u1) jessie-security; urgency=high
+
+  * Import upstream patches for four CVEs:
+    - CVE-2015-2695: SPNEGO context aliasing during establishment,
+      Closes: #803083
+    - CVE-2015-2696: IAKERB context aliasing during establishment,
+      Closes: #803084
+    - CVE-2015-2697: unsafe string handling in TGS processing,
+      Closes: #803088
+    - CVE-2015-2698: regression (memory corruption) in patch for CVE-2015-2696
+  * In addition to CVE-2015-2698, the upstream patches for CVE-2015-2695
+    and CVE-2015-2696 introduced regressions preventing the use of
+    gss_import_sec_context() with contexts established using IAKERB
+    or SPNEGO; the fixes for those regressions are included here.
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Wed, 04 Nov 2015 22:05:10 -0500
+
+krb5 (1.12.1+dfsg-19) unstable; urgency=medium
+
+  * mark systemd unit directories as optional, Closes: #780831
+
+ -- Sam Hartman <hartmans@debian.org>  Fri, 20 Mar 2015 16:22:33 -0400
+
+krb5 (1.12.1+dfsg-18) unstable; urgency=high
+
+  * Import upstream patch for CVE-2014-5355, Closes: #778647
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Wed, 18 Feb 2015 12:52:14 -0500
+
+krb5 (1.12.1+dfsg-17) unstable; urgency=high
+
+  * MITKRB5-SA-2015-001
+    - CVE-2014-5352: gss_process_context_token() incorrectly frees context
+    - CVE-2014-9421: kadmind doubly frees partial deserialization results
+    - CVE-2014-9422: kadmind incorrectly validates server principal name  
+      - CVE-2014-9423: libgssrpc server applications leak uninitialized bytes
+
+
+ -- Sam Hartman <hartmans@debian.org>  Tue, 03 Feb 2015 10:29:35 -0500
+
+krb5 (1.12.1+dfsg-16) unstable; urgency=medium
+
+  * Import upstream patches for CVE-2014-5353 and CVE-2014-5354,
+    Closes: #773226, Closes: #773228
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Mon, 15 Dec 2014 16:18:26 -0500
+
+krb5 (1.12.1+dfsg-15) unstable; urgency=medium
+
+  * Also apply slapd-before-kdc.conf to krb5-admin-server.service.d,
+    Closes: #769710
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Fri, 21 Nov 2014 12:36:08 -0500
+
+krb5 (1.12.1+dfsg-14) unstable; urgency=medium
+
+  * The upstream patch in 1.12.1+dfsg-13 was incomplete; pull in
+    another upstream patch upon which it depended, to fix the
+    kfreebsd build, Closes: #768379
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Fri, 07 Nov 2014 13:17:36 -0500
+
+krb5 (1.12.1+dfsg-13) unstable; urgency=medium
+
+  * Remove the ExecReload line added in 1.12.1+dfsg-12; it is not
+    a regression from the SysV init script and therefore not suitable
+    for jessie post-freeze
+  * Apply upstream patch to fix build on FreeBSD 10.1, Closes: #768379
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Thu, 06 Nov 2014 18:08:26 -0500
+
+krb5 (1.12.1+dfsg-12) unstable; urgency=medium
+
+  * Fix typo in krb5-kdc EnvironmentFile name, Closes: #768344
+  * Add an ExecReload line to krb5-kdc.service to help with log rotation
+
+ -- Benjamin Kaduk <kaduk@mit.edu>  Thu, 06 Nov 2014 15:30:44 -0500
+
+krb5 (1.12.1+dfsg-11) unstable; urgency=medium
+
+  * Provide systemd service units for krb5-kdc, Partially affects: #734161
+  * Provide systemd overrides to start  slapd first when krb5-kdc-ldap is
+    installed, Thanks Michael Biebl, Closes: #758992
+  * Provide kadmind service unit, Closes: #734161
+  * Drop support for RUN_KADMIND in favor of update-rc.d disable
+  * In krb5_newrealm, use service rather than calling init scripts directly
+
+ -- Sam Hartman <hartmans@debian.org>  Mon, 20 Oct 2014 16:51:09 -0400
 
 krb5 (1.12.1+dfsg-10) unstable; urgency=medium
 

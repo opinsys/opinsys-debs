@@ -2,6 +2,11 @@
 
 set -e
 
+# Failing to start should not break installs or upgrades
+init_error() {
+    true
+    }
+
 if [ "configure" = "$1" ] || [ "reconfigure" = "$1" ] ; then
     . /usr/share/debconf/confmodule
     db_version 2.0

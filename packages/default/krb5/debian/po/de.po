@@ -8,10 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: krb5 1.6.dfsg.4~beta1-10\n"
 "Report-Msgid-Bugs-To: krb5@packages.debian.org\n"
-"POT-Creation-Date: 2009-02-21 13:55-0500\n"
+"POT-Creation-Date: 2014-10-20 17:18-0400\n"
 "PO-Revision-Date: 2009-03-05 22:45+0100\n"
 "Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
 "Language-Team: de <debian-l10n-german@lists.debian.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -55,32 +56,6 @@ msgstr ""
 
 #. Type: boolean
 #. Description
-#: ../krb5-admin-server.templates:3001
-msgid "Run the Kerberos V5 administration daemon (kadmind)?"
-msgstr "Soll der Kerberos V5-Administrations-Daemon (kadmind) laufen?"
-
-#. Type: boolean
-#. Description
-#: ../krb5-admin-server.templates:3001
-msgid ""
-"Kadmind serves requests to add/modify/remove principals in the Kerberos "
-"database."
-msgstr ""
-"Kadmind bedient Anfragen, um Prinzipale in der Kerberos-Datenbank "
-"hinzuzufügen/zu verändern/zu entfernen."
-
-#. Type: boolean
-#. Description
-#: ../krb5-admin-server.templates:3001
-msgid ""
-"It is required by the kpasswd program, used to change passwords.  With "
-"standard setups, this daemon should run on the master KDC."
-msgstr ""
-"Es wird vom Kpasswd-Programm benötigt, dass zum Ändern von Passwörtern "
-"verwendet wird. Im Normalfall sollte der Daemon auf dem Master-KDC laufen."
-
-#. Type: boolean
-#. Description
 #: ../krb5-kdc.templates:2001
 msgid "Create the Kerberos KDC configuration automatically?"
 msgstr "Die Kerberos-KDC-Konfiguration automatisch erstellen?"
@@ -92,8 +67,8 @@ msgid ""
 "The Kerberos Key Distribution Center (KDC) configuration files, in /etc/"
 "krb5kdc, may be created automatically."
 msgstr ""
-"Die Konfigurationsdateien des »Kerberos Key Distribution Center« (KDC) in /etc/"
-"krb5kdc können automatisch erstellt werden."
+"Die Konfigurationsdateien des »Kerberos Key Distribution Center« (KDC) in /"
+"etc/krb5kdc können automatisch erstellt werden."
 
 #. Type: boolean
 #. Description
@@ -145,6 +120,23 @@ msgstr ""
 "gelöscht werden soll. Dies löscht alle Benutzerkonten und Passwörter in dem "
 "KDC."
 
+#~ msgid "Run the Kerberos V5 administration daemon (kadmind)?"
+#~ msgstr "Soll der Kerberos V5-Administrations-Daemon (kadmind) laufen?"
+
+#~ msgid ""
+#~ "Kadmind serves requests to add/modify/remove principals in the Kerberos "
+#~ "database."
+#~ msgstr ""
+#~ "Kadmind bedient Anfragen, um Prinzipale in der Kerberos-Datenbank "
+#~ "hinzuzufügen/zu verändern/zu entfernen."
+
+#~ msgid ""
+#~ "It is required by the kpasswd program, used to change passwords.  With "
+#~ "standard setups, this daemon should run on the master KDC."
+#~ msgstr ""
+#~ "Es wird vom Kpasswd-Programm benötigt, dass zum Ändern von Passwörtern "
+#~ "verwendet wird. Im Normalfall sollte der Daemon auf dem Master-KDC laufen."
+
 #~ msgid "Kerberos V4 compatibility mode to use:"
 #~ msgstr "Zu benutzender Kerberos V4-Kompatibilitäts-Modus:"
 
@@ -169,12 +161,12 @@ msgstr ""
 #~ "Kerberos V4 clients; or to \"none\", which tells the KDC to not respond "
 #~ "to Kerberos V4 requests at all."
 #~ msgstr ""
-#~ "Alternativ kann der Modus auch auf »full« gesetzt werden, wodurch Kerberos "
-#~ "V4-Clients anfängliche Tickets ohne vorherige Authentifizierung erhalten "
-#~ "können, selbst wenn prauth normalerweise nötig wäre. Eine weitere "
-#~ "Möglichkeit ist »disable«, wobei dann Protokollversionsfehler an alle "
-#~ "Kerberos V4-Clients gesandt werden und »none«, der den KDC anweist, auf "
-#~ "Kerberos V4-Anfragen überhaupt nicht zu reagieren."
+#~ "Alternativ kann der Modus auch auf »full« gesetzt werden, wodurch "
+#~ "Kerberos V4-Clients anfängliche Tickets ohne vorherige Authentifizierung "
+#~ "erhalten können, selbst wenn prauth normalerweise nötig wäre. Eine "
+#~ "weitere Möglichkeit ist »disable«, wobei dann Protokollversionsfehler an "
+#~ "alle Kerberos V4-Clients gesandt werden und »none«, der den KDC anweist, "
+#~ "auf Kerberos V4-Anfragen überhaupt nicht zu reagieren."
 
 #~ msgid "Run a Kerberos V5 to Kerberos V4 ticket conversion daemon?"
 #~ msgstr "Einen Kerberos V5-auf-V4 Ticket-Konvertier-Daemon betreiben?"
@@ -280,6 +272,6 @@ msgstr ""
 #~ "Krb524d ist ein Daemon, der Kerberos5-Tickets für das Programm krb524init "
 #~ "in Kerberos4-Tickets umwandelt. Haben Sie Kerberos4 aktiviert, dann "
 #~ "sollten Sie wahrscheinlich diesen Dienst laufen lassen. Insbesondere wenn "
-#~ "der Kerberos4-Kompatibilitäts-Modus auf »ohne vorherige Authentifizierung« "
-#~ "gesetzt ist, ist krb524d wichtig, wenn Sie irgendwelche Kerberos4-Dienste "
-#~ "haben."
+#~ "der Kerberos4-Kompatibilitäts-Modus auf »ohne vorherige "
+#~ "Authentifizierung« gesetzt ist, ist krb524d wichtig, wenn Sie "
+#~ "irgendwelche Kerberos4-Dienste haben."

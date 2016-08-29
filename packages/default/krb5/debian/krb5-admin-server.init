@@ -71,12 +71,6 @@ do_stop()
 
 case "$1" in 
   start)
-    if [ "$RUN_KADMIND" = false ] ; then
-        if [ "$VERBOSE" != no ] ; then
-            log_action_msg "Not starting $DESC per configuration"
-        fi
-        exit 0
-    fi
     [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
     do_start
     case "$?" in
