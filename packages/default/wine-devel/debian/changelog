@@ -1,3 +1,9 @@
+wine-devel (1.9.17~ubuntu14.04.1-0~opinsys2) trusty; urgency=medium
+
+  * Terminate string with NUL.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Mon, 29 Aug 2016 12:45:13 +0300
+
 wine-devel (1.9.17~ubuntu14.04.1-0~opinsys1) trusty; urgency=low
 
   * Add ~opinsys1 to version number, because we have patched this.

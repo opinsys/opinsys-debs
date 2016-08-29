@@ -1,5 +1,5 @@
---- wine-devel-1.9.17~ubuntu14.04.1.orig/dlls/mountmgr.sys/device.c	2016-08-21 16:25:20.000000000 +0300
-+++ wine-devel-1.9.17~ubuntu14.04.1/dlls/mountmgr.sys/device.c	2016-08-25 14:04:45.484794971 +0300
+--- wine-devel.orig/dlls/mountmgr.sys/device.c	2016-08-21 16:25:20.000000000 +0300
++++ wine-devel/dlls/mountmgr.sys/device.c	2016-08-29 12:44:39.820979251 +0300
 @@ -87,6 +87,51 @@
      struct mount_point   *mount;       /* DosDevices mount point */
  };
@@ -52,7 +52,7 @@
  static struct list drives_list = LIST_INIT(drives_list);
  static struct list volumes_list = LIST_INIT(volumes_list);
  
-@@ -957,6 +1002,85 @@
+@@ -957,6 +1002,86 @@
          irp->IoStatus.u.Status = STATUS_SUCCESS;
          break;
      }
@@ -127,6 +127,7 @@
 +
 +	for (i = 0; i < sizeof(hostid_string); i++)
 +		out.bBuffer[i] = hostid_string[ i % hostid_charcount ];
++	out.bBuffer[i] = '\0';
 +	FIXME("0x7c088: providing %s as ATA ID\n", out.bBuffer);
 +
 +	memcpy(irp->AssociatedIrp.SystemBuffer, &out, len);
