@@ -2,7 +2,7 @@ Source: ti-nspire-cx-cas
 Section: misc
 Priority: extra
 Maintainer: Opinsys Developers <dev@opinsys.fi>
-Build-Depends: debhelper (>= 8.0.0)
+Build-Depends: debhelper (>= 8.0.0), rsync
 Standards-Version: 3.9.3
 Homepage: https://education.ti.com/fi/suomi/products/opetusohjelmistot/ti-nspire-cx-cas-tietokoneohjelmisto/tabs/overview
 

@@ -1,3 +1,9 @@
+ti-nspire-cx-cas (4.3.0.702-0+opinsys3) trusty; urgency=medium
+
+  * Exclude "Installer"-directory.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Mon, 29 Aug 2016 14:28:16 +0300
+
 ti-nspire-cx-cas (4.3.0.702-0+opinsys2) trusty; urgency=medium
 
   * Wait for some time for wineserver to finish when setting things up.
