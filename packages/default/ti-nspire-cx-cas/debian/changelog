@@ -1,3 +1,10 @@
+ti-nspire-cx-cas (4.3.0.702-0+opinsys4) trusty; urgency=medium
+
+  * Do some tricks so we could hope to have mime-type associations work
+    correctly.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Mon, 29 Aug 2016 16:48:22 +0300
+
 ti-nspire-cx-cas (4.3.0.702-0+opinsys3) trusty; urgency=medium
 
   * Exclude "Installer"-directory.

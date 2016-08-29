@@ -11,7 +11,7 @@ export WINEARCH WINEDLLOVERRIDES WINEPREFIX WINESERVER
 
 tisoftdir=/opt/TINspireCXCASStudentSoftware
 
-if [ ! -e "${WINEPREFIX}/setup_done" ]; then
+if [ ! -e "${WINEPREFIX}/.setup_done.1" ]; then
     # Create $WINEPREFIX
 
     winetricks win7
@@ -38,10 +38,26 @@ if [ ! -e "${WINEPREFIX}/setup_done" ]; then
     mkdir -p "${WINEPREFIX}/drive_c/windows/Fonts/"
     cp ${tisoftdir}/.wineprefix/drive_c/Program\ Files/TI\ Education/TI-Nspire\ CX\ CAS\ Student\ Software/fonts/* "${WINEPREFIX}/drive_c/windows/Fonts/"
 
-    touch "${WINEPREFIX}/setup_done"
+    mkdir -p "${WINEPREFIX}/drive_c/Program Files/TI Education"
+    ln -fns "${tisoftdir}/.wineprefix/drive_c/Program Files/TI Education/TI-Nspire CX CAS Student Software" \
+      "${WINEPREFIX}/drive_c/Program Files/TI Education/TI-Nspire CX CAS Student Software"
 
-    # wait for some time for wineserver to finish
-    sleep 8
+    # Wait for some time for wineserver to finish, but try to continue as soon
+    # as possible.  One minute should be enough in all cases (there might be
+    # another wineserver running, we do not care about that).
+    i=0
+    while pgrep -x wineserver >/dev/null && [ "$i" -lt 600 ]; do
+      sleep 0.1
+      i=$(($i + 1))
+    done
+
+    for filename in system.reg userdef.reg user.reg; do
+      # "juhaerk" was the login that was used to install the pack
+      awk -v user="$USER" '{ gsub("juhaerk", user); print }' \
+        "${tisoftdir}/.wineprefix/${filename}" > "${WINEPREFIX}/${filename}"
+    done
+
+    touch "${WINEPREFIX}/.setup_done.1"
 fi
 
 /opt/wine-devel/bin/wine "${tisoftdir}/.wineprefix/drive_c/Program Files/TI Education/TI-Nspire CX CAS Student Software/TI-Nspire CX CAS Student Software.exe"
