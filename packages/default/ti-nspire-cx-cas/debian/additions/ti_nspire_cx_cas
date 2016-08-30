@@ -11,10 +11,19 @@ export WINEARCH WINEDLLOVERRIDES WINEPREFIX WINESERVER
 
 tisoftdir=/opt/TINspireCXCASStudentSoftware
 
-if [ ! -e "${WINEPREFIX}/.setup_done.1" ]; then
-    # Create $WINEPREFIX
+run_setup() {
+    # Setup $WINEPREFIX for user
 
     winetricks win7
+
+    # Wait for some time for wineserver to finish, but try to continue as soon
+    # as possible.  One minute should be enough in all cases (there might be
+    # another wineserver running, we do not care about that).
+    i=0
+    while pgrep -x wineserver >/dev/null && [ "$i" -lt 600 ]; do
+      sleep 0.1
+      i=$(($i + 1))
+    done
 
     country=$( echo "$LANG" | cut -d . -f 1 | cut -d _ -f 2)
     language=$(echo "$LANG" | cut -d . -f 1 | cut -d _ -f 1)
@@ -42,21 +51,81 @@ if [ ! -e "${WINEPREFIX}/.setup_done.1" ]; then
     ln -fns "${tisoftdir}/.wineprefix/drive_c/Program Files/TI Education/TI-Nspire CX CAS Student Software" \
       "${WINEPREFIX}/drive_c/Program Files/TI Education/TI-Nspire CX CAS Student Software"
 
-    # Wait for some time for wineserver to finish, but try to continue as soon
-    # as possible.  One minute should be enough in all cases (there might be
-    # another wineserver running, we do not care about that).
-    i=0
-    while pgrep -x wineserver >/dev/null && [ "$i" -lt 600 ]; do
-      sleep 0.1
-      i=$(($i + 1))
-    done
-
     for filename in system.reg userdef.reg user.reg; do
       # "juhaerk" was the login that was used to install the pack
       awk -v user="$USER" '{ gsub("juhaerk", user); print }' \
         "${tisoftdir}/.wineprefix/${filename}" > "${WINEPREFIX}/${filename}"
     done
 
+    # mimetype associations
+    mkdir -p ~/.local/share/applications
+    cat <<-EOF > ~/.local/share/applications/wine-extension-tns.desktop
+	[Desktop Entry]
+	Type=Application
+	Name=TI-Nspire CX CAS Student Software
+	MimeType=application/x-wine-extension-tns;
+	Exec=env WINEPREFIX="${WINEPREFIX}" /opt/wine-devel/bin/wine start /ProgIDOpen TI-NspireCXCAS-SS.Document %f
+	NoDisplay=true
+	StartupNotify=true
+	Icon=E542_TI-Nspire CX CAS Student Software.0
+	EOF
+    cat <<-EOF > ~/.local/share/applications/wine-extension-tnsp.desktop
+	[Desktop Entry]
+	Type=Application
+	Name=TI-Nspire CX CAS Student Software
+	MimeType=application/x-wine-extension-tnsp;
+	Exec=env WINEPREFIX="${WINEPREFIX}" /opt/wine-devel/bin/wine start /ProgIDOpen TI-NspireCXCAS-SS-tnsp.Document %f
+	NoDisplay=true
+	StartupNotify=true
+	Icon=E542_TI-Nspire CX CAS Student Software.0
+	EOF
+
+    mkdir -p ~/.local/share/mime/application
+    cat <<-EOF > ~/.local/share/mime/application/x-wine-extension-tns.xml
+	<?xml version="1.0" encoding="utf-8"?>
+	<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="application/x-wine-extension-tns">
+	  <!--Created automatically by update-mime-database. DO NOT EDIT!-->
+	  <glob pattern="*.tns"/>
+	  <comment>TI-Nspire CX CAS Student Software Document</comment>
+	</mime-type>
+	EOF
+    cat <<-EOF > ~/.local/share/mime/application/x-wine-extension-tnsp.xml
+	<?xml version="1.0" encoding="utf-8"?>
+	<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="application/x-wine-extension-tnsp">
+	  <!--Created automatically by update-mime-database. DO NOT EDIT!-->
+	  <glob pattern="*.tnsp"/>
+	  <comment>TI-Nspire CX CAS Student Software Document</comment>
+	</mime-type>
+	EOF
+
+    mkdir -p ~/.local/share/mime/packages
+    cat <<-EOF > ~/.local/share/mime/packages/x-wine-extension-tns.xml
+	<?xml version="1.0" encoding="UTF-8"?>
+	<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+	  <mime-type type="application/x-wine-extension-tns">
+	    <glob pattern="*.tns"/>
+	    <comment>TI-Nspire CX CAS Student Software Document</comment>
+	  </mime-type>
+	</mime-info>
+	EOF
+    cat <<-EOF > ~/.local/share/mime/packages/x-wine-extension-tnsp.xml
+	<?xml version="1.0" encoding="UTF-8"?>
+	<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+	  <mime-type type="application/x-wine-extension-tnsp">
+	    <glob pattern="*.tnsp"/>
+	    <comment>TI-Nspire CX CAS Student Software Document</comment>
+	  </mime-type>
+	</mime-info>
+	EOF
+
+    xdg-mime default wine-extension-tns.desktop \
+	application/x-wine-extension-tns
+    xdg-mime default wine-extension-tnsp.desktop \
+	application/x-wine-extension-tnsp
+}
+
+if [ ! -e "${WINEPREFIX}/.setup_done.1" ]; then
+    run_setup
     touch "${WINEPREFIX}/.setup_done.1"
 fi
 
