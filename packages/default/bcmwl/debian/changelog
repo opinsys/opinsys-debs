@@ -1,14 +1,46 @@
-bcmwl (6.30.223.248+bdcom-0ubuntu7+opinsys2) trusty; urgency=medium
+bcmwl (6.30.223.248+bdcom-0ubuntu11+opinsys2) trusty; urgency=medium
 
   * Fix debian/changelog to use trusty as the suite.
 
  -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 10 Nov 2015 15:14:18 +0200
 
-bcmwl (6.30.223.248+bdcom-0ubuntu7+opinsys1) wily; urgency=medium
+bcmwl (6.30.223.248+bdcom-0ubuntu11+opinsys1) trusty; urgency=medium
 
   * debian/scripts/opinsys-get-orig-source: download upstream source
 
  -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Tue, 10 Nov 2015 14:55:04 +0200
+
+bcmwl (6.30.223.248+bdcom-0ubuntu11) yakkety; urgency=medium
+
+  * debian/patches/0020-add-support-for-linux-4.8.patch:
+    - Fix whitespace issue that prevented DKMS from applying the patch.
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Fri, 02 Sep 2016 17:41:43 +0200
+
+bcmwl (6.30.223.248+bdcom-0ubuntu10) yakkety; urgency=medium
+
+  * debian/dkms.conf.in,
+    debian/patches/0020-add-support-for-linux-4.8.patch:
+    - Add support for Linux 4.8. Thanks to Krzysztof Kolasa.
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Mon, 22 Aug 2016 16:17:41 +0200
+
+bcmwl (6.30.223.248+bdcom-0ubuntu9) yakkety; urgency=medium
+
+  * debian/dkms.conf.in,
+    debian/patches/0020-add-support-for-linux-4.7.patch:
+    - Add support for Linux 4.7. Thanks to Vincent Gerris for pointing out
+      the solution.
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Thu, 04 Aug 2016 16:53:09 +0200
+
+bcmwl (6.30.223.248+bdcom-0ubuntu8) xenial; urgency=medium
+
+  * debian/dkms.conf.in,
+    debian/patches/0020-add-support-for-linux-4.3.patch:
+    - Add support for Linux 4.3.
+
+ -- Alberto Milone <alberto.milone@canonical.com>  Mon, 16 Nov 2015 18:03:52 +0100
 
 bcmwl (6.30.223.248+bdcom-0ubuntu7) wily; urgency=medium
 
