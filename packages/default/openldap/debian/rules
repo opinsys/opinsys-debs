@@ -26,12 +26,14 @@ slapddir	:= $(CURDIR)/debian/slapd/usr/sbin
 
 MAKEVARS	:= STRIP=
 
-VERSION = 2.4.40
-URL     = http://ftp.debian.org/debian/pool/main/o/openldap
-TARBALL = openldap_$(VERSION).orig.tar.gz
+VERSION      = 2.4.40
+URL          = http://ftp.debian.org/debian/pool/main/o/openldap
+TARBALL      = openldap_$(VERSION)+dfsg.orig.tar.gz
+ORIG_TARBALL = openldap_$(VERSION).orig.tar.gz
+
 get-orig-source:
-	wget $(URL)/$(TARBALL) -O ../$(TARBALL)
-	tar xzf ../$(TARBALL) --strip-components=1 -C .
+	wget $(URL)/$(TARBALL) -O ../$(ORIG_TARBALL)
+	tar xzf ../$(ORIG_TARBALL) --strip-components=1 -C .
 
 %:
 	dh $@ --with quilt,autoreconf --builddirectory=$(builddir)
