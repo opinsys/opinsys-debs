@@ -1,3 +1,9 @@
+openldap (2.4.40-33+opinsys3) precise; urgency=medium
+
+  * Fix get-orig-source target.
+
+ -- Tuomas Räsänen <tuomasjjrasanen@tjjr.fi>  Thu, 13 Oct 2016 12:29:57 +0300
+
 openldap (2.4.40-33+opinsys2) precise; urgency=medium
 
   * Rebuild.
