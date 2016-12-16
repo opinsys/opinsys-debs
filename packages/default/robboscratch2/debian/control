@@ -1,0 +1,12 @@
+Source: robboscratch2
+Section: utils
+Priority: optional
+Maintainer: Opinsys Developers <dev@opinsys.fi>
+Build-Depends: debhelper (>= 8)
+Standards-Version: 3.9.3
+
+Package: robboscratch2
+Architecture: i386
+Depends: ${misc:Depends}, wmctrl
+Description: Robboscratch
+ Robboscratch is a robot programming environment.

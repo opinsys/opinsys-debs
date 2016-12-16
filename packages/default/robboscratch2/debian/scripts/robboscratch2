@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -eu
+
+cd /opt/robboscratch2
+
+CLASSPATH=""
+
+ITEMS=$(find -name '*.jar')
+for ITEM in $ITEMS; do
+   CLASSPATH="$CLASSPATH:$ITEM"
+done
+
+wmctrl -a Flash || true
+
+exec /opt/robboscratch2/java/bin/java -classpath "$CLASSPATH" \
+  -Xmx256m scratchduino.robot.Main

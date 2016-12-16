@@ -1,0 +1,19 @@
+diff -ruN robboscratch2.orig/Makefile robboscratch2/Makefile
+--- robboscratch2.orig/Makefile	1970-01-01 03:00:00.000000000 +0300
++++ robboscratch2/Makefile	2016-12-16 10:52:00.774664048 +0200
+@@ -0,0 +1,15 @@
++all:
++
++install:
++	mkdir -p $(DESTDIR)/opt \
++		 $(DESTDIR)/usr/bin \
++		 $(DESTDIR)/usr/share/applications \
++		 $(DESTDIR)/usr/share/pixmaps
++	cp -R opt/robboscratch2 $(DESTDIR)/opt/
++	install debian/scripts/robboscratch2 $(DESTDIR)/usr/bin/
++	install -m 644 usr/share/applications/robboscratch2.desktop \
++                $(DESTDIR)/usr/share/applications/
++	install -m 644 usr/share/pixmaps/robboscratch2.png \
++                $(DESTDIR)/usr/share/pixmaps/
++
++clean:
