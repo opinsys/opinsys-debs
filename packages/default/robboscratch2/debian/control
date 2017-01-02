@@ -7,6 +7,6 @@ Standards-Version: 3.9.3
 
 Package: robboscratch2
 Architecture: i386
-Depends: ${misc:Depends}, wmctrl
+Depends: ${misc:Depends}, libgtk2.0-0, fontconfig, libnss3, libssl1.0.0, libasound2, libc6, libgif4 | libgif7, libjpeg8, libpng12-0, libpulse0, libx11-6, libxext6, libxi6, libxrender1, libxtst6, libxt6, libasound2-plugins, libcurl3, wmctrl
 Description: Robboscratch
  Robboscratch is a robot programming environment.
