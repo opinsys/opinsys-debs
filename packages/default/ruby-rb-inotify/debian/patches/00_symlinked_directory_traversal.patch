@@ -1,0 +1,24 @@
+commit 8e1b6692e81285fb1a0df995625ec988d5985d6f
+Author: Juha Erkkilä <Juha.Erkkila@opinsys.fi>
+Date:   Wed Jan 4 12:27:03 2017 +0200
+
+    Do not follow into symlinked directories when traversing directories
+    and :dont_follow and :recursive are in effect.
+
+diff --git a/lib/rb-inotify/notifier.rb b/lib/rb-inotify/notifier.rb
+index c2f6ddc..d81d990 100644
+--- a/lib/rb-inotify/notifier.rb
++++ b/lib/rb-inotify/notifier.rb
+@@ -195,7 +195,11 @@ module INotify
+         d = File.join(path, base)
+         binary_d = d.respond_to?(:force_encoding) ? d.dup.force_encoding('BINARY') : d
+         next if binary_d =~ /\/\.\.?$/ # Current or parent directory
+-        watch(d, *flags, &callback) if !RECURSIVE_BLACKLIST.include?(d) && File.directory?(d)
++        next if RECURSIVE_BLACKLIST.include?(d)
++        next if flags.include?(:dont_follow) && File.symlink?(d)
++        next if !File.directory?(d)
++
++        watch(d, *flags, &callback)
+       end
+ 
+       dir.close
