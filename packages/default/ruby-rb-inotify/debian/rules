@@ -4,3 +4,10 @@ export GEM2DEB_TEST_RUNNER = --check-dependencies
 
 %:
 	dh $@ --buildsystem=ruby --with ruby
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+get-orig-source:
+	wget http://archive.ubuntu.com/ubuntu/pool/universe/r/ruby-rb-inotify/ruby-rb-inotify_$(SRC_VERSION).orig.tar.gz \
+	  -O ../ruby-rb-inotify_$(SRC_VERSION).orig.tar.gz
+	tar -zx -f ../ruby-rb-inotify_$(SRC_VERSION).orig.tar.gz \
+	  --strip-components=1 -C .
