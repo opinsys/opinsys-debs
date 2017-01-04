@@ -1,0 +1,69 @@
+ruby-rb-inotify (0.9.7-1) unstable; urgency=medium
+
+  * Team upload.
+  * Imported Upstream version 0.9.7
+  * Update packaging using dh-make-ruby -w
+
+ -- Thiago Ribeiro <thiago@pencillabs.com>  Tue, 01 Mar 2016 16:58:08 -0300
+
+ruby-rb-inotify (0.9.5-1) unstable; urgency=medium
+
+  * Imported Upstream version 0.9.5
+  * Bump Standards-Version to 3.9.5 (no changes needed)
+
+ -- Cédric Boutillier <boutil@debian.org>  Sat, 21 Jun 2014 00:16:58 +0200
+
+ruby-rb-inotify (0.9.2-1) unstable; urgency=low
+
+  * Imported Upstream version 0.9.2
+  * debian/control:
+    + remove obsolete DM-Upload-Allowed flag
+    + drop transitional packages
+    + update my email address
+    + bump Standards-Version to 3.9.4 (no changes needed)
+    + use canonical URI in Vcs-* fields
+
+ -- Cédric Boutillier <boutil@debian.org>  Wed, 25 Sep 2013 07:53:10 +0200
+
+ruby-rb-inotify (0.8.8-2) unstable; urgency=low
+
+  * Bump build dependency on gem2deb to >= 0.3.0~
+
+ -- Cédric Boutillier <cedric.boutillier@gmail.com>  Tue, 26 Jun 2012 15:14:11 +0200
+
+ruby-rb-inotify (0.8.8-1) unstable; urgency=low
+
+  * New upstream release
+  * Transition to the new Ruby policy
+    + rename source and binary packages
+    + use gem2deb packaging tool
+  * Bump Standards-Version: to 3.9.3 (no changes needed)
+  * Add myself to Uploaders: 
+  * Override lintian warnings about duplicate descriptions of transitional
+    packages
+
+ -- Cédric Boutillier <cedric.boutillier@gmail.com>  Mon, 14 May 2012 11:48:01 +0200
+
+librb-inotify-ruby (0.7.0-4) unstable; urgency=medium
+
+  * Changed librb-inotify-ruby1.9.1 Architecture: to all
+
+ -- Micah Anderson <micah@debian.org>  Sat, 20 Mar 2010 16:53:28 -0400
+
+librb-inotify-ruby (0.7.0-3) unstable; urgency=low
+
+  * Fix librb-inotify-ruby Depends to depend on librb-inotify-ruby1.8
+
+ -- Micah Anderson <micah@debian.org>  Sat, 20 Mar 2010 16:51:45 -0400
+
+librb-inotify-ruby (0.7.0-2) unstable; urgency=medium
+
+  * Fix Build-Depends to include ruby1.8 and ruby1.9.1 (Closes: #574089)
+
+ -- Micah Anderson <micah@debian.org>  Tue, 16 Mar 2010 13:31:09 -0400
+
+librb-inotify-ruby (0.7.0-1) unstable; urgency=low
+
+  * Initial release (Closes: #572694)
+
+ -- Micah Anderson <micah@debian.org>  Thu, 04 Mar 2010 15:45:17 -0500
