@@ -1,9 +1,7 @@
 Source: racket
 Section: lisp
 Priority: optional
-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-XSBC-Original-Maintainer: David Bremner <bremner@debian.org>
-Uploaders: James McCoy <jamessan@debian.org>
+Maintainer: Asumu Takikawa <asumu@racket-lang.org>
 Standards-Version: 3.9.3
 Build-Depends: autotools-dev, cdbs, debhelper (>= 7.0.0), patchutils, libffi-dev,
  libfreetype6-dev, libjpeg-dev, libpango1.0-dev, libpng-dev, libssl-dev,
@@ -17,7 +15,9 @@ Homepage: http://www.racket-lang.org/
 Package: racket
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}, racket-common (= ${source:Version})
-Recommends: racket-doc (>= ${source:Upstream-Version})
+Recommends: racket-doc (>= ${source:Upstream-Version}),
+            libglib2.0-0, libpangocairo-1.0-0, libjpeg62-turbo, libpng16-16,
+            libgtk2.0-0, libgdk-pixbuf2.0-0, libunique-1.0-0
 Breaks: plt-scheme (<<5.0~)
 Replaces: plt-scheme (<<5.0~)
 Provides: plt-scheme
@@ -56,26 +56,3 @@ Replaces: plt-scheme-doc (<<5.0~)
 Provides: plt-scheme-doc
 Description: extensible programming language in the Scheme family (documentation)
  This package includes all of the documentation for Racket.
-
-Package: plt-scheme
-Section: oldlibs
-Priority: extra
-Architecture: all
-Depends: racket, ${misc:Depends}
-Description: Racket Programming Environment (transitional package)
- Racket (previously PLT Scheme) is an innovative programming language
- that builds on a rich academic and practical tradition.
- .
- This is a dummy package to aid in transitioning from the plt-scheme package
- to the racket package.
-
-Package: plt-scheme-doc
-Section: oldlibs
-Priority: extra
-Architecture: all
-Depends: racket-doc, ${misc:Depends}
-Description: PLT Scheme Documentation (transitional package)
- This package includes all of the documentation for PLT Scheme.
- .
- This is a dummy package to aid in transitioning from the plt-scheme-doc
- package to the racket-doc package.
