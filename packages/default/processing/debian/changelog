@@ -1,3 +1,9 @@
+processing (3.3-0+opinsys1) trusty; urgency=medium
+
+  * Update processing to version 3.3.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Mon, 13 Feb 2017 10:50:52 +0200
+
 processing (3.0b5-0+opinsys1) trusty; urgency=medium
 
   * Update processing to version 3.0b5.  Use the internal java, because
