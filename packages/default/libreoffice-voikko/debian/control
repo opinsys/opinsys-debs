@@ -11,9 +11,7 @@ Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/libreoffice-voikko
 
 Package: libreoffice-voikko
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, voikko-fi, libreoffice-core
-Recommends: libreoffice | libreoffice-writer | libreoffice-calc | libreoffice-impress | libreoffice-draw
-Enhances: libreoffice
+Depends: ${shlibs:Depends}, ${misc:Depends}, voikko-fi
 Provides: libreoffice-spellcheck-fi, libreoffice-hyphenation-fi
 Description: Spellchecker, grammar checker and hyphenator for LibreOffice
  LibreOffice is a full-featured office productivity suite that provides
@@ -31,4 +29,5 @@ Description: Spellchecker, grammar checker and hyphenator for LibreOffice
  automatically activated after installing this package. If this is not the
  case, go to "Writing Aids" settings in LibreOffice and activate Voikko
  components manually.
-
+ .
+ This package version (by Opinsys) is without dependencies to libreoffice.
