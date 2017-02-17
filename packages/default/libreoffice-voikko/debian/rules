@@ -1,0 +1,31 @@
+#!/usr/bin/make -f
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	VOIKKO_DEBUG = FULL
+else
+	VOIKKO_DEBUG = NO
+endif
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export DEB_BUILD_HARDENING=1
+
+%:
+	dh $@ --fail-missing --parallel
+
+override_dh_auto_clean:
+	sh -c ". /usr/lib/libreoffice/sdk/setsdkenv_unix.sh && $(MAKE) VOIKKO_DEBUG=$(VOIKKO_DEBUG) clean"
+        
+override_dh_auto_build:
+	sh -c ". /usr/lib/libreoffice/sdk/setsdkenv_unix.sh && $(MAKE) VOIKKO_DEBUG=$(VOIKKO_DEBUG) oxt"
+
+override_dh_auto_install:
+	mkdir -p debian/tmp/usr/lib/libreoffice/share/extensions/voikko
+	unzip -d debian/tmp/usr/lib/libreoffice/share/extensions/voikko/ build/voikko.oxt
+
+override_dh_auto_test:
+
+SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
+get-orig-source:
+	wget http://archive.ubuntu.com/ubuntu/pool/main/libr/libreoffice-voikko/libreoffice-voikko_$(SRC_VERSION).orig.tar.gz \
+	  -O ../libreoffice-voikko_$(SRC_VERSION).orig.tar.gz
+	tar --strip-components=1 -C . -zxf ../libreoffice-voikko_$(SRC_VERSION).orig.tar.gz

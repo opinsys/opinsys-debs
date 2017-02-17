@@ -1,0 +1,349 @@
+libreoffice-voikko (4.0-1) unstable; urgency=medium
+
+  * Update watch file
+  * Imported Upstream version 4.0
+  * Drop both patches not needed anymore
+  * Update package description to match current upstream description
+  * Add Vcs urls
+
+ -- Timo Jyrinki <timo@debian.org>  Sat, 07 Dec 2013 18:36:31 +0200
+
+libreoffice-voikko (3.4.1-2) unstable; urgency=low
+
+  [ Rene Engelhard ]
+  * fix build with LibreOffice 4.1.0
+
+ -- Timo Jyrinki <timo@debian.org>  Sun, 28 Jul 2013 20:21:05 +0300
+
+libreoffice-voikko (3.4.1-1) unstable; urgency=low
+
+  * New upstream release
+  * debian/rules: add clean/test targets, adjust install
+
+ -- Timo Jyrinki <timo@debian.org>  Tue, 23 Jul 2013 18:22:50 +0300
+
+libreoffice-voikko (3.4-1) unstable; urgency=low
+
+  * New upstream release
+  * Change to debhelper 9, simplify packaging
+  * Update Standards-Version
+  * Enable hardening-wrapper
+  * Add lintian-override for the image file
+
+ -- Timo Jyrinki <timo@debian.org>  Tue, 21 May 2013 19:08:10 +0300
+
+libreoffice-voikko (3.3-3) unstable; urgency=low
+
+  * Upload to unstable
+  * Update Standards-Version
+
+ -- Timo Jyrinki <timo@debian.org>  Wed, 04 Apr 2012 11:32:35 +0300
+
+libreoffice-voikko (3.3-2) experimental; urgency=low
+
+  [ Rene Engelhard ]
+  * stop using basis-link. it's gone (Closes: #661181)
+
+ -- Timo Jyrinki <timo@debian.org>  Sat, 25 Feb 2012 11:21:28 +0200
+
+libreoffice-voikko (3.3-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Timo Jyrinki <timo@debian.org>  Tue, 07 Feb 2012 20:54:27 +0200
+
+libreoffice-voikko (3.2-3) unstable; urgency=low
+
+  * Fix debian-rules-missing-recommended-target
+  * Fix debug build, thanks for patch to Timo Lindfors (Closes: #652297)
+  * Update Standards-Version to 3.9.2
+
+ -- Timo Jyrinki <timo@debian.org>  Sat, 17 Dec 2011 11:34:07 +0200
+
+libreoffice-voikko (3.2-2) unstable; urgency=low
+
+  * Remove the transitional package, already provided by OOo
+
+ -- Timo Jyrinki <timo@debian.org>  Wed, 06 Apr 2011 13:10:51 +0300
+
+libreoffice-voikko (3.2-1) unstable; urgency=low
+
+  * Upstream 3.2rc2 released as 3.2 without changes
+  * Add transitional package openoffice.org-voikko (Closes: #613084)
+
+ -- Timo Jyrinki <timo@debian.org>  Tue, 05 Apr 2011 17:37:35 +0300
+
+libreoffice-voikko (3.2~rc2-1) unstable; urgency=low
+
+  * New upstream release candidate.
+
+ -- Timo Jyrinki <timo@debian.org>  Thu, 17 Feb 2011 16:46:56 +0200
+
+libreoffice-voikko (3.2~rc1-1) unstable; urgency=low
+
+  * New upstream release candidate.
+
+ -- Timo Jyrinki <timo@debian.org>  Mon, 14 Feb 2011 19:22:29 +0200
+
+libreoffice-voikko (3.1.2+svn20110205-1) unstable; urgency=low
+
+  * Fix off-by-one in version number and ITP bug number
+  * Upload to unstable, since libreoffice was also uploaded
+
+ -- Timo Jyrinki <timo@debian.org>  Tue, 08 Feb 2011 08:28:13 +0200
+
+libreoffice-voikko (3.1.2+svn20100205-1) experimental; urgency=low
+
+  * New upstream snapshot (Closes: #612078)
+  * Switch from openoffice.org-voikko to libreoffice-voikko
+  * Change installation to LO 3.3 style
+  * Update Standards-Version to 3.9.1
+  * Increast debhelper dependency to 7
+
+ -- Timo Jyrinki <timo@debian.org>  Sun, 06 Feb 2011 15:00:46 +0200
+
+openoffice.org-voikko (3.1.1-1) unstable; urgency=low
+
+  * New upstream release
+  * Update Standards-Version to 3.8.4
+  * Change to 3.0 (quilt) source format
+
+ -- Timo Jyrinki <timo@debian.org>  Wed, 26 May 2010 21:54:25 +0300
+
+openoffice.org-voikko (3.1-2) unstable; urgency=low
+
+  * Don't provide ooo-thesaurus-fi, wrong and not used (Closes: #529490)
+
+ -- Timo Jyrinki <timo@debian.org>  Tue, 09 Jun 2009 22:10:57 +0300
+
+openoffice.org-voikko (3.1-1) unstable; urgency=low
+
+  * New upstream release (Closes: #528283)
+  - Grammar checking enabled by default
+  * Depend on libvoikko 2.1 (grammar features)
+  * Update description to describe grammar checking as well (Closes: #512517)
+  * Update Standards-Version (no changes)
+  * One more place to change GPL 2 -> 3 in copyright file 
+  * Debhelper compat 4 -> 5 and likewise for the related dependency
+  * Add back Pre-Depends
+  - Ubuntu folks found it is still needed, LP: #364654
+  - Only pre-depend on ooo-common this time
+
+ -- Timo Jyrinki <timo@debian.org>  Wed, 13 May 2009 13:25:15 +0300
+
+openoffice.org-voikko (3.0.1-2) unstable; urgency=low
+
+  * Upload to unstable
+  * Update copyright (GPL3 like it should be)
+  * Disable grammar checking which is not yet mature (wait for 3.1)
+  * Remove Pre-Depends which is not anymore needed and is best avoided
+
+ -- Timo Jyrinki <timo@debian.org>  Fri, 20 Feb 2009 10:00:24 +0200
+
+openoffice.org-voikko (3.0.1-1) experimental; urgency=low
+
+  * New upstream release
+  * Update maintainer address
+  * Update dependencies to openoffice.org 3.0.1 and libvoikko 2.0
+  * Sync with upstream debian packaging:
+  - Drop HypMinWordLength.patch 
+  - Update description
+
+ -- Timo Jyrinki <timo@debian.org>  Tue, 13 Jan 2009 15:42:09 +0200
+
+openoffice.org-voikko (2.2-4) unstable; urgency=low
+
+  * Add voikko-fi to Depends since not dep from libvoikko anymore
+  - Could be Recommends, but ooo-voikko does not cope well without
+  * Update Standards-Version to 3.8.0, no changes
+
+ -- Timo Jyrinki <timo.jyrinki@iki.fi>  Fri, 18 Jul 2008 15:59:39 +0300
+
+openoffice.org-voikko (2.2-3) unstable; urgency=low
+
+  * Add Pre-Depends for etch -> lenny upgrades (Closes: #476573)
+  * Modify preinst to remove also multiple previous voikko extensions
+  * Fix lintian warning about debian/copyright phrasing
+
+ -- Timo Jyrinki <timo.jyrinki@iki.fi>  Mon, 21 Apr 2008 00:26:02 +0300
+
+openoffice.org-voikko (2.2-2) unstable; urgency=low
+
+  * Synchronize with upstream packaging:
+    - Update README.Debian instructions
+    - Update premrm, postinst, control, and add preinst for OOo 2.4 era
+    - Install .oxt to new directory (Closes: #474383)
+
+ -- Timo Jyrinki <timo.jyrinki@iki.fi>  Tue, 15 Apr 2008 16:58:04 +0300
+
+openoffice.org-voikko (2.2-1) unstable; urgency=low
+
+  * New upstream release
+  * Update Standards-Version to 3.7.3 (no changes)
+  * Add Homepage field to control file
+  * Add hyphenation patch from upstream, and information about its usage
+
+ -- Timo Jyrinki <timo.jyrinki@iki.fi>  Mon, 18 Feb 2008 10:20:08 +0200
+
+openoffice.org-voikko (2.1-1) unstable; urgency=low
+
+  * New upstream release
+  * Update dependencies
+
+ -- Timo Jyrinki <timo.jyrinki@iki.fi>  Sun, 18 Nov 2007 00:55:16 +0200
+
+openoffice.org-voikko (2.0.1-2) unstable; urgency=low
+
+  * Fix prerm/postinst to handle OOo 2.3 changes
+
+ -- Timo Jyrinki <timo.jyrinki@iki.fi>  Tue, 14 Aug 2007 15:26:05 +0300
+
+openoffice.org-voikko (2.0.1-1) unstable; urgency=low
+
+  * New upstream release
+  * Sync with upstream Debian packaging, ie:
+  * Remove openoffice.org-soikko conflict, not in Debian anymore
+  * Fix copyright file (missing line)
+  * Install the new Changelog
+
+ -- Timo Jyrinki <timo.jyrinki@iki.fi>  Wed, 16 May 2007 00:05:27 +0300
+
+openoffice.org-voikko (2.0-1) unstable; urgency=low
+
+  * New upstream release
+  * Update copyright to reflect that the whole package is now under GPL
+  * Update dependencies, update maintainer scripts
+
+ -- Timo Jyrinki <timo.jyrinki@iki.fi>  Sat, 05 May 2007 04:24:28 +0300
+
+openoffice.org-voikko (1.2-1) unstable; urgency=low
+
+  * New upstream version
+  * Remove workaround hack for the bug #387224 (not needed anymore)
+  * Add quotes in prerm and postinst in two places
+  * Change conflicts generation a bit
+  * Text changes because of component rename
+  * Fix wrong filename on Linux/SPARC (Closes: #403627)
+  * Update home page, watch file
+
+ -- Timo Jyrinki <timo.jyrinki@iki.fi>  Sat, 31 Mar 2007 18:18:03 +0300
+
+openoffice.org-voikko (1.1-4) unstable; urgency=low
+
+  * Change Linux_x86 to Linux_* in generate_dependencies.sh
+  * Remove stlport from Makefile (not needed anymore)
+  * Change dependencies as requested
+  * Add OOo components to Recommends
+
+ -- Timo Jyrinki <timo.jyrinki@iki.fi>  Sat,  7 Oct 2006 11:41:48 +0300
+
+openoffice.org-voikko (1.1-3) unstable; urgency=low
+
+  * Fix bashism (use of "source") in debian/rules
+
+ -- Timo Jyrinki <timo.jyrinki@iki.fi>  Sat, 30 Sep 2006 15:16:23 +0300
+
+openoffice.org-voikko (1.1-2) unstable; urgency=low
+
+  * Add conflict with openoffice.org-soikko
+  * Update debian/copyright again
+
+ -- Timo Jyrinki <timo.jyrinki@iki.fi>  Tue, 26 Sep 2006 17:59:36 +0300
+
+openoffice.org-voikko (1.1-1) unstable; urgency=low
+
+  * Change package name to openoffice.org-voikko
+  * Complete ITP (Closes: #388803)
+  * Clean debian/watch
+  * Indent homepages in debian/control by two spaces
+  * Add COPYING from upstream SVN to clarify copyright issues
+  * Update debian/copyright
+  * Change CFLAGS to CC_FLAGS in debian/rules
+  * Add #DEBHELPER# tokens to prerm and postinst scripts.
+  * Update Standards-Version to 3.7.2
+  * Clean up debian/rules
+
+ -- Timo Jyrinki <timo.jyrinki@iki.fi>  Mon, 25 Sep 2006 20:37:25 +0300
+
+oo2-voikko (1.1-0hf4) unstable; urgency=low
+
+  * Use /tmp instead of /root as a temporary HOME directory for unopkg
+  * Add workaround for the bug #387224 (Debian Bug Tracking System)
+
+ -- Teemu Likonen <tlikonen@iki.fi>  Mon, 18 Sep 2006 23:17:08 +0300
+
+oo2-voikko (1.1-0hf3) unstable; urgency=low
+
+  * Remove "preinst" script.
+  * Make "postinst" and "prerm" more independed of language component's name.
+
+ -- Teemu Likonen <tlikonen@iki.fi>  Wed, 13 Sep 2006 12:27:48 +0300
+
+oo2-voikko (1.1-0hf2) unstable; urgency=low
+
+  * Don't cancel install/remove even if OpenOffice is running. Warning is
+    given during configure instead.
+
+ -- Teemu Likonen <tlikonen@iki.fi>  Wed, 13 Sep 2006 09:27:00 +0300
+
+oo2-voikko (1.1-0hf1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Teemu Likonen <tlikonen@iki.fi>  Sat,  2 Sep 2006 13:26:24 +0300
+
+oo2-voikko (1.0+svn20060829-0hf1) unstable; urgency=low
+
+  * New SVN snapshot (r413)
+
+ -- Teemu Likonen <tlikonen@iki.fi>  Tue, 29 Aug 2006 14:34:21 +0300
+
+oo2-voikko (1.0-0hf1) unstable; urgency=low
+
+  * New upstream release
+  * Lot of information moved from package's description to README.Debian
+  * Added "Enhances: openoffice.org" field to control file
+
+ -- Teemu Likonen <tlikonen@iki.fi>  Tue, 25 Jul 2006 21:04:54 +0300
+
+oo2-voikko (0.4-0hf2) unstable; urgency=low
+
+  * Added dynamic "Conflicts" and "Depends" definition so that binary package
+    conflicts now with any newer OpenOffice.org's upstream version. From now on
+    oo2-voikko has to be built for every OpenOffice.org's upstream update. This
+    is to prevent possible (and likely) problems with incompatible UNO
+    components between OpenOffice.org versions.
+
+ -- Teemu Likonen <tlikonen@iki.fi>  Tue,  4 Jul 2006 17:17:31 +0300
+
+oo2-voikko (0.4-0hf1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Teemu Likonen <tlikonen@iki.fi>  Sun, 21 May 2006 13:36:15 +0300
+
+oo2-voikko (0.3-0hf3) unstable; urgency=low
+
+  * Changed source package name to 'oo2-voikko' to reflect upstream naming.
+  * Now 'dpatch' utility handles patches.
+  * Updated build and binary package dependencies.
+  * Dropped binary support for official www.openoffice.org's .deb packages and
+    for old Debian/Ubuntu OpenOffice.org versions.
+
+ -- Teemu Likonen <tlikonen@iki.fi>  Wed, 17 May 2006 22:24:16 +0300
+
+openoffice.org-voikko (0.3-0hf2) unstable; urgency=low
+
+  * Added 'zip' to build dependencies
+  * Updated binary package dependencies
+  * Minor improvements to postinst and prerm scripts
+  * Package name changed
+
+ -- Teemu Likonen <tlikonen@iki.fi>  Sun, 16 Apr 2006 23:27:10 +0300
+
+openoffice.org2-voikko (0.3-0hf1) unstable; urgency=low
+
+  * Initial release
+
+ -- Teemu Likonen <tlikonen@iki.fi>  Sat, 15 Apr 2006 22:19:38 +0300
+
