@@ -4,7 +4,7 @@ set -e
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
-version=jre1.8.0_131
+version=jre1.8.0_144
 
 update-alternatives --remove \
   mozilla-javaplugin.so \
