@@ -1,3 +1,9 @@
+ekapeli-alku (46-0+opinsys1) trusty; urgency=medium
+
+  * Update to 46.
+
+ -- Juha Erkkilä <Juha.Erkkila@opinsys.fi>  Tue, 22 Aug 2017 07:54:49 +0300
+
 ekapeli-alku (15-0+opinsys2) trusty; urgency=medium
 
   * Add ekapeli-alku.desktop.
