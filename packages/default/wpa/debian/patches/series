@@ -3,6 +3,7 @@
 06_wpa_gui_menu_exec_path.patch
 07_dbus_service_syslog.patch
 12_wpa_gui_knotify_support.patch
+13_iapp_reuseport.patch
 wpa_gui_desktop_add-keywords-entry.patch
 wpasupplicant_fix-systemd-unit-dependencies.patch
 wpasupplicant_P2P-Validate-SSID-element-length-before-copying-it-C.patch
