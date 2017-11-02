@@ -506,4 +506,4 @@ CONFIG_BGSCAN_SIMPLE=y
 CONFIG_IBSS_RSN=y
 
 # Ubuntu-specific; from path android_hal_firmware_path.patch
-CONFIG_ANDROID_HAL=y
+# CONFIG_ANDROID_HAL=y
