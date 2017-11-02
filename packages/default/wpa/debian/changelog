@@ -1,27 +1,401 @@
-wpa (2.5-0+opinsys2) trusty; urgency=medium
+wpa (2.4-0ubuntu6.2) xenial-security; urgency=medium
 
-  * Add patch "IAPP: Set SO_REUSEPORT on listening socket"
+  * SECURITY UPDATE: Multiple issues in WPA protocol
+    - debian/patches/2017-1/*.patch: Add patches from Debian stretch
+    - CVE-2017-13077, CVE-2017-13078, CVE-2017-13079, CVE-2017-13080,
+      CVE-2017-13081, CVE-2017-13082, CVE-2017-13086, CVE-2017-13087,
+      CVE-2017-13088
+  * SECURITY UPDATE: Denial of service issues
+    - debian/patches/2016-1/*.patch: Add patches from Debian stretch
+    - CVE-2016-4476
+    - CVE-2016-4477
+  * This package does _not_ contain the changes from 2.4-0ubuntu6.1 in
+    xenial-proposed.
 
- -- Opinsys Developers <dev@opinsys.fi>  Thu, 31 Mar 2016 10:42:41 +0300
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Mon, 16 Oct 2017 07:58:48 -0400
 
-wpa (2.5-0+opinsys1) quantal; urgency=low
+wpa (2.4-0ubuntu6) xenial; urgency=medium
+
+  * debian/patches/wpasupplicant_band_selection_aa517ae2.patch: add the last 
+    missing 5 GHz band selection related cherry-pick from Debian that was not 
+    included in wpa 2.4 (LP: #1517040)
+
+ -- Timo Jyrinki <timo-jyrinki@ubuntu.com>  Tue, 19 Jan 2016 12:36:00 +0200
+
+wpa (2.4-0ubuntu5) xenial; urgency=medium
+
+  * SECURITY UPDATE: unauthorized WNM Sleep Mode GTK control
+    - debian/patches/CVE-2015-5310.patch: Ignore Key Data in WNM Sleep Mode
+      Response frame if no PMF in use in wpa_supplicant/wnm_sta.c.
+    - CVE-2015-5310
+  * SECURITY UPDATE: EAP-pwd missing last fragment length validation
+    - debian/patches/CVE-2015-5315-1.patch: Fix last fragment length
+      validation in src/eap_peer/eap_pwd.c.
+    - debian/patches/CVE-2015-5315-2.patch: Fix last fragment length
+      validation in src/eap_server/eap_server_pwd.c.
+    - CVE-2015-5315
+  * SECURITY UPDATE: EAP-pwd peer error path failure on unexpected Confirm
+    message
+    - debian/patches/CVE-2015-5316.patch: fix error path in
+      src/eap_peer/eap_pwd.c.
+    - CVE-2015-5316
+  * SECURITY UPDATE: denial of service in NDEF record parser
+    - debian/patches/CVE-2015-8041.patch: validate payload lengths in
+      src/wps/ndef.c.
+    - CVE-2015-8041
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Tue, 10 Nov 2015 13:38:25 -0500
+
+wpa (2.4-0ubuntu4) xenial; urgency=medium
+
+  * Add debian/system-sleep/wpasupplicant: Call wpa_cli suspend/resume
+    before/after suspend, like the pm-utils hook. In some cases this brings
+    back missing Wifi connection after resuming. (LP: #1422143)
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Mon, 26 Oct 2015 14:24:30 +0100
+
+wpa (2.4-0ubuntu3) wily; urgency=medium
+
+  * debian/patches/dbus-fix-operations-for-p2p-mgmt.patch: fix operations
+    when P2P management interface is used (LP: #1482439)
+
+ -- Ricardo Salveti de Araujo <rsalveti@rsalveti.net>  Wed, 07 Oct 2015 10:21:39 -0300
+
+wpa (2.4-0ubuntu2) wily; urgency=medium
+
+  * debian/config/wpasupplicant/linux:
+    - Reduce the delta to Debian by removing the double setting of CONFIG_AP
+      and CONFIG_P2P. The only actual delta is CONFIG_ANDROID_HAL.
+
+ -- Timo Jyrinki <timo-jyrinki@ubuntu.com>  Mon, 03 Aug 2015 22:03:51 +0300
+
+wpa (2.4-0ubuntu1) wily; urgency=medium
 
   * New upstream release.
+  * Merge with Debian unstable; remaining changes:
+    - debian/patches/session-ticket.patch: disable the TLS Session Ticket
+      extension to fix auth with 802.1x PEAP on some hardware.
+    - debian/patches/android_hal_fw_path_change.patch: add a DBus method for
+      requesting a firmware change when working with the Android HAL; this is
+      used to set a device in P2P or AP mode; conditional to CONFIG_ANDROID_HAL
+      being enabled.
+    - debian/config/wpasupplicant/linux: enable CONFIG_ANDROID_HAL.
+    - debian/control: Build-Depends on android-headers to get the required wifi
+      headers for the HAL support.
+    - debian/patches/dbus-available-sta.patch: Make the list of connected
+      stations available on DBus for hotspot mode; along with some of the
+      station properties, such as rx/tx packets, bytes, capabilities, etc.
+    - debian/patches/CVE-2015-4141.patch: check chunk size: src/wps/httpread.c
+      - CVE-2015-4141
+    - debian/patches/CVE-2015-4142.patch: check length in src/ap/wmm.c.
+      - CVE-2015-4142
+    - debian/patches/CVE-2015-4143-4146.patch: check lengths in
+        src/eap_peer/eap_pwd.c, src/eap_server/eap_server_pwd.c.
+      - CVE-2015-4143, CVE-2015-4144, CVE-2015-4145, CVE-2015-4146
+    - debian/config/wpasupplicant/linux:
+      - Enable CONFIG_AP_MODE (AP mode support) (LP: #1209511).
+      - Enable CONFIG_P2P (Wi-Fi Direct support).
+  * debian/patches/wpa_supplicant-MACsec-fix-build-failure-for-IEEE8021.patch,
+    debian/patches/include-ieee802_11_common.c-in-wpa_supplicant-build-.patch,
+    d/p/hostapd_fix-hostapd-operation-without-hw_mode-driver-data.patch:
+    dropped patches included upstream.
+  * Refreshed all patches.
 
- -- Opinsys Developers <dev@opinsys.fi>  Sun, 13 Dec 2015 18:00:12 +0200
+ -- Mathieu Trudel-Lapierre <mathieu-tl@ubuntu.com>  Mon, 27 Jul 2015 17:29:24 -0400
 
-wpa (2.0-0+opinsys1) quantal; urgency=low
+wpa (2.3-2) unstable; urgency=high
 
-  * New upstream release.
+  * remove Kel Modderman from Uploaders as per his request, many thanks for
+    all past efforts Kel.
+  * fix systemd unit dependencies for wpasupplicant, it needs to be started
+    before the network target (Closes: 780552), many thanks to Michael Biebl
+    <biebl@debian.org> for reporting and suggesting the patch.
+  * hostapd: avoid segfault with driver=wired, by merging upstream commit
+    e9b783d58c23a7bb50b2f25bce7157f1f3b5d58b "Fix hostapd operation without
+    hw_mode driver data."
+  * import "P2P: Validate SSID element length before copying it
+    (CVE-2015-1863)" from upstream (Closes: #783148).
 
- -- Opinsys Developers <dev@opinsys.fi>  Fri, 15 Feb 2013 15:19:43 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Thu, 23 Apr 2015 05:02:21 +0200
 
-wpa (1.1-0+opinsys1) quantal; urgency=low
+wpa (2.3-1) unstable; urgency=medium
 
-  * New upstream release.
-  * debian/patches/11_wpa_gui_ftbfs_gcc_4_7.patch: removed
+  * New upstream release:
+    - fixed by the new upstream version:
+      + wpa: arbitrary command execution via action scripts (Closes: #765352).
+        wpasupplicant: fixed wpa_cli action script execution to use more
+        robust mechanism (CVE-2014-3686).
+        hostapd: fixed hostapd_cli action script execution to use more robust
+        mechanism (CVE-2014-3686).
+      + wpasupplicant: MAC addressing changing broken after updating to 2.2-1
+        (Closes: #763775).
+      + drop ap_config_c_fix-typo-for-capabilities, applied upstream.
+    - backport "Include ieee802_11_common.c in wpa_supplicant build
+      unconditionally" from HEAD, to fix a newly introduced FTBS on, at least,
+      kfreebsd.
+  * bump standards version to 3.9.6, no changes necessary.
 
- -- Opinsys Developers <dev@opinsys.fi>  Wed, 09 Jan 2013 12:47:03 +0200
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Tue, 14 Oct 2014 21:29:37 +0200
+
+wpa (2.2-1) unstable; urgency=medium
+
+  * New upstream release:
+    - import suggested changes from Gerald Turner <gturner@unzane.com> (see
+      #718651 for details).
+      + disable ACS for hostapd on kfreebsd-any (FTBS).
+    - fixed by the new upstream version:
+      + wpa_supplicant: OpenSSL: tls_connection_handshake - Failed to read
+      (Closes: #561081).
+      + wpasupplicant: new upstream release 2.2 (Closes: #718651).
+      + wpasupplicant: -s option not documented in man page (Closes: #608135).
+    - refresh patches:
+      + drop 13_human_readable_signal.patch, applied upstream.
+      + drop hostapd_fix-WDS-VLAN-bridge-handling.patch, applied upstream.
+      + drop fix-spelling-s-algorith-algorithm.patch, applied upstream.
+    - adapt build configs for hostapd/ wpa_supplicant 2.2:
+      + sync with updated upstream defconfigs.
+      + keep Hotspot 2.0 support disabled for the time being.
+      + hostapd: keep sqlite3 support disabled for the time being.
+    - update debian/copyright manually, the wpa v2 branch was relicensed from
+      (BSD-3-clause || GPL-2) to BSD-3-clause only (for the most part). This
+      doesn't change the licensing state as the BSD-3-clause license is 
+      compatible with GPL-2.
+  * drop pre-wheezy /lib/init/rw/sendsigs.omit.d/ migration support, invert the
+    versioned initscripts dependency to a versioned breaks relation.
+  * migrate from /var/run/ to /run/.
+  * adapt get-orig-source for wpa 2.2.
+  * drop version qualifiers for libnl3 build dependencies, as they're
+    fullfilled by wheezy.
+  * drop version qualifiers for the lsb-base build dependency, as they're
+    fullfilled by squeeze.
+  * shorten short description for hostapd.
+  * sort debian/control entries.
+  * make lintian happy (invalid-short-name-in-dep5-copyright bsd) and call it
+    BSD-3-clause.
+  * enable DEBUG_SYSLOG and set DEBUG_SYSLOG_FACILITY=LOG_DAEMON, as requested
+    by Cyril Brulebois <kibi@debian.org> to improve logging options for d-i and
+    netcfg (Closes: #761922).
+  * fix various typos around "existence", thanks to A. Costa <agcosta@gis.net>,
+    (Closes: #683636).
+  * ap_config.c: fix typo for "capabilities".
+  * remove no longer required lintian override (spelling-error-in-binary for
+    the).
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Wed, 17 Sep 2014 04:52:36 +0200
+
+wpa (2.1-0ubuntu8) wily; urgency=medium
+
+  * SECURITY UPDATE: memcpy overflow in P2P functionality
+    - debian/patches/CVE-2015-1863.patch: validate SID element length in
+      src/p2p/p2p.c.
+    - CVE-2015-1863
+  * SECURITY UPDATE: denial of service via WPS UPnP
+    - debian/patches/CVE-2015-4141.patch: check chunk size in
+      src/wps/httpread.c.
+    - CVE-2015-4141
+  * SECURITY UPDATE: denial of service via AP mode WMM Action frame
+    - debian/patches/CVE-2015-4142.patch: check length in src/ap/wmm.c.
+    - CVE-2015-4142
+  * SECURITY UPDATE: denial of service via EAP-pwd
+    - debian/patches/CVE-2015-4143-4146.patch: check lengths in
+      src/eap_peer/eap_pwd.c, src/eap_server/eap_server_pwd.c.
+    - CVE-2015-4143
+    - CVE-2015-4144
+    - CVE-2015-4145
+    - CVE-2015-4146
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Mon, 15 Jun 2015 10:21:54 -0400
+
+wpa (2.1-0ubuntu7) vivid; urgency=medium
+
+  Cherry-pick from Debian svn:
+  * Add wpasupplicant_fix-systemd-unit-dependencies.patch: Fix systemd unit
+    dependencies for wpasupplicant, it needs to be started before the network
+    target (Closes: 780552, LP: #1431774).
+
+ -- Martin Pitt <martin.pitt@ubuntu.com>  Fri, 27 Mar 2015 14:07:35 +0100
+
+wpa (2.1-0ubuntu6) vivid; urgency=medium
+
+  * debian/patches/dbus-available-sta.patch: Make the list of connected
+    stations available on DBus for hotspot mode; along with some of the
+    station properties, such as rx/tx packets, bytes, capabilities, etc.
+
+ -- Mathieu Trudel-Lapierre <mathieu-tl@ubuntu.com>  Fri, 19 Dec 2014 13:29:30 -0500
+
+wpa (2.1-0ubuntu5) vivid; urgency=medium
+
+  * debian/patches/android_hal_fw_path_change.patch: add a DBus method for
+    requesting a firmware change when working with the Android HAL; this is
+    used to set a device in P2P or AP mode; conditional to CONFIG_ANDROID_HAL
+    being enabled.
+  * debian/config/wpasupplicant/linux: enable CONFIG_ANDROID_HAL.
+  * debian/control: Build-Depends on android-headers to get the required wifi
+    headers for the HAL support.
+
+ -- Mathieu Trudel-Lapierre <mathieu-tl@ubuntu.com>  Mon, 08 Dec 2014 21:05:25 -0500
+
+wpa (2.1-0ubuntu4) utopic; urgency=medium
+
+  * SECURITY UPDATE: arbitrary command execution via unsanitized string
+    passed to action scripts by wpa_cli and hostapd_cli
+    - debian/patches/CVE-2014-3686.patch: added os_exec() helper to
+      src/utils/os.h, src/utils/os_unix.c, src/utils/os_win32.c,
+      use instead of system() in wpa_supplicant/wpa_cli.c,
+      hostapd/hostapd_cli.c.
+    - CVE-2014-3686
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Fri, 10 Oct 2014 09:15:39 -0400
+
+wpa (2.1-0ubuntu3) utopic; urgency=medium
+
+  * debian/patches/git_update_scan_res_for_apscan_1_068e3877.patch: update
+    scan results when using ap_scan=1; this avoids 4-way handshake failures
+    while roaming. (LP: #1348105)
+
+ -- Mathieu Trudel-Lapierre <mathieu-tl@ubuntu.com>  Mon, 22 Sep 2014 18:28:29 +0100
+
+wpa (2.1-0ubuntu2) utopic; urgency=medium
+
+  * No-change rebuild with pkg-create-dbgsym 0.65 so that the full set of
+    debug symbol packages are generated.
+
+ -- Colin Watson <cjwatson@ubuntu.com>  Sat, 26 Jul 2014 22:26:29 +0100
+
+wpa (2.1-0ubuntu1) trusty; urgency=medium
+
+  * New upstream release (LP: #1099755)
+  * debian/get-orig-source: update for new git repository for the current
+    hostap/wpasupplicant versions.
+  * Dropped patches due to being applied upstream and included in the current
+    source tarball:
+    - debian/patches/11_wpa_gui_ftbfs_gcc_4_7.patch
+    - debian/patches/13_human_readable_signal.patch
+    - debian/patches/git_deinit_p2p_context_on_mgmt_remove_ff1f9c8.patch
+    - debian/patches/libnl3-includes.patch
+  * debian/patches/git_accept_client_cert_from_server.patch: revert the commit:
+    "OpenSSL: Do not accept SSL Client certificate for server", which breaks
+    many AAA servers that include both client and server EKUs. Cherry-picked
+    from hostap git commit b62d5b5.
+
+ -- Mathieu Trudel-Lapierre <mathieu-tl@ubuntu.com>  Tue, 04 Mar 2014 16:13:24 -0500
+
+wpa (1.1-1) unstable; urgency=medium
+
+  * New upstream release:
+    - drop 11_wpa_gui_ftbfs_gcc_4_7, applied upstream.
+    - drop EAP-TLS-server_fix-TLS-Message-length-validation, applied upstream.
+    - fixes:
+      - EAP access point constantly roaming with proactive key caching
+        (Closes: #711063).
+  * enable IBSS RSN, thanks to Nicolas Cavallari <batchman@free.fr>
+    (Closes: #678147).
+  * enable simple AP support for wpasupplicant, thanks to Patrik Flykt
+    <patrik.flykt@linux.intel.com> (Closes: #690536).
+  * use the readline6, wpa_cli doesn't link to openssl.
+  * link with --as-needed.
+  * compress binaries with xz.
+  * debian/get-orig-source: switch to xz compressed upstream tarballs.
+  * debian/get-orig-source: adapt for the post 1.x upstream branch.
+  * debian/get-orig-source: support named snapshots, see debian/README.source
+    for detailed syntax and semantics.
+  * debian/README.source: explain fetching git snapshots by specifying their
+    git hash.
+  * debian/README.source: update to match current reality and apply grammar
+    fixes.
+  * debian/README.source: drop trailing whitespace.
+  * fix hardening flags, thanks a lot to Florent Daigniere
+    <nextgens@freenetproject.org> (Closes: #725865).
+  * debian/control: fold dependencies.
+  * bump standards version to 3.9.5, no changes necessary.
+  * reflect reality and adapt the maintainer mail address not to claim
+    representing Ubuntu.
+  * drop wheezy-specific comments in the configuration files.
+  * glob 'wpa-password' as well and hide its debugging output, this hopefully
+    closes: #728092.
+  * enable EAP-FAST, openssl in Debian is now new enough (Closes: #685685).
+  * update to new alioth URIs (vcs-field-not-canonical).
+  * add Keywords entry for desktop files (desktop-entry-lacks-keywords-entry).
+  * functions.sh: s/particuarly/particularly/, thanks to Vincent Lefevre
+    <vincent@vinc17.net> (Closes: #734422).
+  * fix FTBS using gcc-4.8 by linking with -ldl on kfreebsd-any; the udeb
+    packages don't provide EAP support and are therefore unaffected. This is
+    already accounted for by the upstream Makefile, however wrongly depending
+    on !CONFIG_DRIVER_BSD, while it is actually depending on the target libc
+    rather than the kernel (Closes: #737465). Thanks to Cyril Brulebois
+    <kibi@debian.org> and Steven Chamberlain <steven@pyro.eu.org>.
+  * import "hostapd: Fix WDS VLAN bridge handling" by Felix Fietkau
+    <nbd@openwrt.org> from upstream, thanks to Mark Hindley
+    <mark@hindley.org.uk> (Closes: #737109).
+  * drop build-conflicts with libqt3-dev as the package is no longer available
+    >= lenny, thanks to Michael Biebl <biebl@debian.org>.
+  * drop pre-dependency on dpkg (>= 1.15.6~), data.tar.xz-member-without-dpkg-
+    pre-depends is no longer a problem after Ubuntu lucid is EOL. Thanks to
+    Michael Biebl for noticing.
+  * drop build-dependency on libdbus-glib-1-dev, it is no longer required for
+    dbus-binding-tool, thanks to Michael Biebl.
+  * allow parallel building.
+  * fix spelling s/algorith/algorithm/.
+  * add lintian overrides for false positive spelling complaints.
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Fri, 21 Feb 2014 01:07:28 +0100
+
+wpa (1.0-3.1) unstable; urgency=low
+
+  * Non-Maintainer Upload
+  * enable IBSS RSN, thanks to Nicolas Cavallari <batchman@free.fr>
+    (Closes: #678147).
+
+ -- Daniel Kahn Gillmor <dkg@fifthhorseman.net>  Thu, 05 Dec 2013 13:56:15 -0500
+
+wpa (1.0-3ubuntu4) trusty; urgency=low
+
+  * debian/patches/git_deinit_p2p_context_on_mgmt_remove_ff1f9c8.patch:
+    deinitialize the P2P context when the management interface gets removed for
+    whatever reason, such as a suspend/resume cycle. (LP: #1210785)
+
+ -- Mathieu Trudel-Lapierre <mathieu-tl@ubuntu.com>  Mon, 18 Nov 2013 20:31:00 -0500
+
+wpa (1.0-3ubuntu3) trusty; urgency=low
+
+  * debian/config/wpasupplicant/linux: enable EAP-FAST (LP: #34982)
+
+ -- Mathieu Trudel-Lapierre <mathieu-tl@ubuntu.com>  Wed, 30 Oct 2013 09:25:39 -0700
+
+wpa (1.0-3ubuntu2) saucy; urgency=low
+
+  * debian/config/wpasupplicant/linux:
+    - Enable CONFIG_AP_MODE (AP mode support) (LP: #1209511).
+    - Enable CONFIG_P2P (Wi-Fi Direct support).
+
+ -- Mathieu Trudel-Lapierre <mathieu-tl@ubuntu.com>  Thu, 08 Aug 2013 10:20:17 -0400
+
+wpa (1.0-3ubuntu1) raring; urgency=low
+
+  * Merge from Debian unstable. Remaining changes:
+    - Enable CONFIG_IBSS_RSN, so that we can turn back on "secure" adhoc
+      support in NetworkManager using IBSS RSN (WPA2).
+    - debian/wpasupplicant.postinst, debian/hostapd.postinst: Only move
+      sendsigs.omit.d/*.pid if the target isn't the same as the source (as is
+      the case when /lib/init/rw is a symlink to /run)
+    - debian/patches/dbus-activation-cmdline.patch: have wpasupplicant create
+      a pid file in /run/sendsigs.omit.d when activated by DBus.
+    - debian/patches/session-ticket.patch: disable the TLS Session Ticket
+      extension to fix auth with 802.1x PEAP on some hardware.
+
+ -- Logan Rosen <logatronico@gmail.com>  Fri, 30 Nov 2012 11:49:00 -0500
+
+wpa (1.0-3) unstable; urgency=high
+
+  * ship forgotten README-P2P.
+  * revert to GNU readline for wpa_cli, instead of using the internal readline
+    implementation added in wpa 1~. Prefer libreadline-gplv2-dev, because libnl
+    is GPL-2 (only) - switching back to the internal readline implementation is
+    targeted for wheezy+1 (Closes: #677993, #678077).
+  * Fix DoS via specially crafted EAP-TLS messages with longer message
+    length than TLS data length (CVE-2012-4445, DSA 2557-1, Closes: #689990).
+
+ -- Stefan Lippers-Hollmann <s.l-h@gmx.de>  Mon, 08 Oct 2012 17:48:04 +0200
 
 wpa (1.0-2ubuntu5) quantal; urgency=low
 
@@ -147,7 +521,7 @@ wpa (1.0~rc3-1) experimental; urgency=low
 
 wpasupplicant (0.7.3-6) unstable; urgency=low
 
-  * add "hostap: Allow linking with libnl-3" from Ben Greear 
+  * add "hostap: Allow linking with libnl-3" from Ben Greear
     <greearb@candelatech.com> to allow building against libnl3 3.2.
   * raise versioned build-dependency to (>= 3.2.3-2~), we need
     libnl-genl-3-200-udeb and expect it in /lib/.
@@ -214,12 +588,12 @@ wpasupplicant (0.7.3-4) unstable; urgency=low
 wpasupplicant (0.7.3-3.1) unstable; urgency=low
 
   * Non-maintainer upload with the agreement of Kel Modderman.
-  
+
   [ Stefan Lippers-Hollmann ]
   * bump standards version to 3.9.2, no changes necessary.
 
   [ Gaudenz Steinlin ]
-  * Add wpasupplicant-udeb for debian-installer. Thanks to 
+  * Add wpasupplicant-udeb for debian-installer. Thanks to
     Mathew Palmer for providing the initial patch. (Closes: #610931)
   * Build against libnl3
 
@@ -302,7 +676,7 @@ wpasupplicant (0.7.3-1) experimental; urgency=low
   * Bump policy version to 3.9.1:
     - Include full text of the employed BSD license variant and no longer
       refer to Debian's common license template.
-  * Bump compat level to 8 and debhelper build-depends to >= 7.9.3~ 
+  * Bump compat level to 8 and debhelper build-depends to >= 7.9.3~
     accordingly, retaining backportability for squeeze (plain lenny isn't an
     option due to simplified dh7 usage).
   * Refresh patch series and merge with new upstream (0.7.3).
@@ -317,7 +691,7 @@ wpasupplicant (0.7.3-1) experimental; urgency=low
 wpasupplicant (0.6.10-2.1) unstable; urgency=low
 
   * Non-maintainer upload approved by Kel Modderman.
-  * Added patch 31_fallback_to_full_EAP_authentication.patch (closes: #582917). 
+  * Added patch 31_fallback_to_full_EAP_authentication.patch (closes: #582917).
 
  -- Micha Lenk <micha@debian.org>  Sun, 28 Nov 2010 12:22:01 +0100
 
@@ -534,7 +908,7 @@ wpasupplicant (0.6.6-1) experimental; urgency=low
 
 wpasupplicant (0.6.5-2) experimental; urgency=low
 
-  * Bugfix: "Missing -d in testing for a directory in init script". 
+  * Bugfix: "Missing -d in testing for a directory in init script".
     Thanks to Braun Gábor <braung@renyi.hu> for reporting and the patch.
     (Closes: #506328)
 
@@ -1191,7 +1565,7 @@ wpasupplicant (0.5.5-2) unstable; urgency=low
   * Strip surrounding quotes from wpa-ssid if present, instead of just whining
     about them.
   * Update email address in copyright blurb of functions.sh, ifupdown.sh and
-    wpa_action.sh.  
+    wpa_action.sh.
 
  -- Kel Modderman <kelmo@kanotixguide.org>  Thu,  5 Oct 2006 08:04:01 +1000
 
@@ -1280,7 +1654,7 @@ wpasupplicant (0.5.4-4) unstable; urgency=low
     check for this path in ifupdown.sh should now support both alternatives.
   * Move LOCKFILE and LOGFILE into WPA_ namespace. [wpa_action.sh]
   * Use semi-colon instead of comma for verbose output as that seems to be a
-    standard among many different applications. 
+    standard among many different applications.
 
  -- Kel Modderman <kelrin@tpg.com.au>  Tue,  8 Aug 2006 20:04:11 +1000
 
@@ -1295,7 +1669,7 @@ wpasupplicant (0.5.4-3) unstable; urgency=low
   * Add a 5 second timeout loop to init_wpa_supplicant() that waits for the
     ctrl_interface socket to be established before allowing wpa_cli to launch,
     and avoid a race condition. This means other functions no longer need to
-    test for existance of the ctrl_interface socket. [ifupdown.sh]
+    test for existence of the ctrl_interface socket. [ifupdown.sh]
   * Rename WPA_DRIVER to WPA_SUP_DRIVER to conform with name scheme of other
     similar variables. [ifupdown.sh]
   * Add (untested) wpa-bridge support to ifupdown.sh. This is an experimental
@@ -1380,7 +1754,7 @@ wpasupplicant (0.5.4-2) unstable; urgency=low
     with Ubuntu. (lp#51351)
   * Update wpa_action.8 with the behaviour of wpa_action when IFSTATE_FILE or
     INTERFACES_FILE cannot be found, and the pathnames searched for their
-    existance.
+    existence.
   * Mention wpa_cli(8) in Custom Action Script section of README.Debian, as it
     contains information about environment variables available to the script
     at runtime.
@@ -1454,8 +1828,8 @@ wpasupplicant (0.5.3+20060522-3) unstable; urgency=low
 
   [Reinhard Tartler]
   * review and make the warnings in debian/NEWS even more obvious.
-  * advertise the manpage wpa_action(8) and the implemented roaming solution 
-    better. 
+  * advertise the manpage wpa_action(8) and the implemented roaming solution
+    better.
 
   [Kel Modderman]
   * Bugfix: /etc/network/ifstate is not guarenteed to exist, we should grep
@@ -1707,7 +2081,7 @@ wpasupplicant (0.4.8-0ubuntu2) dapper; urgency=low
   * take the complete packaging from our experimental branch. The last upload
     did not document all changes properly (see the list above), and had still
     a lot of issues.
-  * fixing typo in the preinst 
+  * fixing typo in the preinst
 
  -- Reinhard Tartler <siretart@tauware.de>  Mon, 27 Mar 2006 15:28:22 +0200
 
@@ -1730,7 +2104,7 @@ wpasupplicant (0.5.1-1) experimental; urgency=low
   * Clean up handling of madwifi includes
     - dpatch contains description of origin
     - dpatch does not modify upstream, use CFLAGS to include madwifi headers
-  * Add wpa_background manpage provided by upstream. 
+  * Add wpa_background manpage provided by upstream.
 
  -- Kel Modderman <kelrin@tpg.com.au>  Tue, 14 Mar 2006 23:00:47 +1000
 
@@ -1800,7 +2174,7 @@ wpasupplicant (0.4.7-3) unstable; urgency=low
 
   * Another brown paper bag release.
   * Fix mistype of $CONFIG_FILE variable name in default script. Also make
-    this the same variable checked for existance in the init script, as that
+    this the same variable checked for existence in the init script, as that
     was another bug I missed. (closes: #350900)
 
  -- Kyle McMartin <kyle@debian.org>  Wed, 01 Feb 2006 09:21:41 -0500
@@ -1824,7 +2198,7 @@ wpasupplicant (0.4.7-1) unstable; urgency=low
     without a patch to OpenSSL. (closes: #322174)
   * Comment out most of the default config file, some people kept the
     whole file verbatim, causing OpenSSL to try and load some uncommon
-    libraries people likely didn't have installed, resulting in 
+    libraries people likely didn't have installed, resulting in
     wpasupplicant segfaulting (closes: #330138, #336423)
   * Also for #336423, Suggest: libengine-pkcs11-openssl, and document why.
   * Make more noise when the daemon fails to run. (closes: #346265)
@@ -1833,7 +2207,7 @@ wpasupplicant (0.4.7-1) unstable; urgency=low
     interfaces. (closes: #322175)
   * Document typical location of config file in manpage. Note,
     wpasupplicant no longer implicitly finds a config file. (closes: #315963)
-  * Add simple WPA-PSK example to default config file. (closes: #331533)  
+  * Add simple WPA-PSK example to default config file. (closes: #331533)
   * Split up $OPTIONS in default/wpasupplicant. (closes: #331533)
 
  -- Kyle McMartin <kyle@debian.org>  Sat, 28 Jan 2006 02:30:27 -0500
@@ -1860,7 +2234,7 @@ wpasupplicant (0.4.6-0.2) unstable; urgency=low
   * Set NMU version to 0.2 for Norbert's convenience.
   * Marked /etc/init.d/wpasupplicant as a conffile (should really use
     debhelper4 to take care of this, but I'm not going to make the other
-    changes needed for this). 
+    changes needed for this).
 
  -- Drew Parsons <dparsons@debian.org>  Thu, 10 Nov 2005 20:34:35 +1100
 
@@ -1887,7 +2261,7 @@ wpasupplicant (0.4.2-1) unstable; urgency=low
 
   * New upstream release.
   * Add debhelper flag to postinst.
-	
+
  -- Kyle McMartin <kyle@debian.org>  Sat, 18 Jun 2005 19:04:02 -0400
 
 wpasupplicant (0.4.1-0) unstable; urgency=low
@@ -1974,7 +2348,7 @@ wpasupplicant (0.3.1-1) unstable; urgency=low
     must be disabled, since it requires a header file with an
     "All Rights Reserved" copyright. LinuxAnt DriverLoader is similarly
     disabled, though NDISWrapper is supported.
- 
+
  -- Kyle McMartin <kyle@debian.org>  Thu, 16 Dec 2004 12:39:01 -0500
 
 wpasupplicant (0.2.5-2) unstable; urgency=low

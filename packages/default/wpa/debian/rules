@@ -1,13 +1,18 @@
 #!/usr/bin/make -f
 
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+include /usr/share/dpkg/buildflags.mk
+
 # The build system doesn't use CPPFLAGS, pass them to CFLAGS/CXXFLAGS to
 # enable the missing (hardening) flags
-CFLAGS   += -MMD -Wall $(CPPFLAGS)
-CXXFLAGS += $(CPPFLAGS)
+DEB_CFLAGS_MAINT_APPEND   = -MMD -Wall $(shell dpkg-buildflags --get CPPFLAGS)
+DEB_CXXFLAGS_MAINT_APPEND = $(shell dpkg-buildflags --get CPPFLAGS)
+DEB_LDFLAGS_MAINT_APPEND  = -Wl,--as-needed
+export DEB_CFLAGS_MAINT_APPEND DEB_CXXFLAGS_MAINT_APPEND DEB_LDFLAGS_MAINT_APPEND
 
-UCFLAGS  = -MMD -Wall -g -Os
+UCFLAGS   = -MMD -Wall -g -Os -fPIC
 
-BINDIR   = /sbin
+BINDIR    = /sbin
 V = 1
 
 DEB_BUILD_GNU_TYPE := $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
@@ -117,18 +122,14 @@ override_dh_installchangelogs:
 override_dh_gencontrol:
 	dh_gencontrol -phostapd -- '-v1:$(VERSION)'
 	dh_gencontrol --remaining-packages
+
+override_dh_builddeb:
+	dh_builddeb -- -Zxz -z6
 ### end dh overrides
 
 %:
-	dh $@
+	dh ${@} --parallel
 
-SRC_VERSION := $(shell dpkg-parsechangelog | sed -ne 's/^Version: \(\([0-9]\+\):\)\?\(.*\)-.*/\3/p')
-.PHONY: get-orig-source
 get-orig-source:
-	mkdir ../wpa-$(SRC_VERSION)
-	wget -c http://hostap.epitest.fi/releases/hostapd-$(SRC_VERSION).tar.gz -O ../hostapd-$(SRC_VERSION).tar.gz
-	wget -c http://hostap.epitest.fi/releases/wpa_supplicant-$(SRC_VERSION).tar.gz -O ../wpa_supplicant-$(SRC_VERSION).tar.gz
-	tar -z -x -f ../hostapd-$(SRC_VERSION).tar.gz --strip-components=1 -C ../wpa-$(SRC_VERSION)
-	tar -z -x -f ../wpa_supplicant-$(SRC_VERSION).tar.gz --strip-components=1 -C ../wpa-$(SRC_VERSION)
-	tar --exclude='debian*' -z -c -f ../wpa_$(SRC_VERSION).orig.tar.gz ../wpa-$(SRC_VERSION)
-	tar -z -x -f ../wpa_$(SRC_VERSION).orig.tar.gz --strip-components=1 -C .
+	chmod +x $(CURDIR)/debian/get-orig-source
+	$(CURDIR)/debian/get-orig-source $(CURDIR)

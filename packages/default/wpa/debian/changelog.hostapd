@@ -117,7 +117,7 @@ hostapd (1:0.6.10-1) unstable; urgency=low
     no sane defaults. Instead provide the configuration as an example
     only and take care to remove previously installed conffiles which
     remain unedited on upgrade.
-  * Clean up init.d script a bit by using existance of hostapd daemon
+  * Clean up init.d script a bit by using existence of hostapd daemon
     configuration file as defined in /etc/default/hostapd as conditional
     for starting instead of magic RUN_DAEMON variable.
   * Update README.Debian to contain information about the example
@@ -298,7 +298,7 @@ hostapd (1:0.5.5-1) unstable; urgency=low
 
   [ Kel Modderman ]
   * New upstream release.
-  * Allow hostapd to install, by first checking for existance of
+  * Allow hostapd to install, by first checking for existence of
     /etc/hostapd/hostapd.conf before attempting to change permissions.
 
   [ Faidon Liambotis ]
